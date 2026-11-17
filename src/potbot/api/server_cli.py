@@ -159,6 +159,7 @@ def application(args: argparse.Namespace) -> FastAPI:
     )
     from potbot.api.ui_api_setup import register_api_setup_routes
     from potbot.api.ui_context import register_context_routes
+    from potbot.api.ui_operations import register_operation_routes
     from potbot.api.ui_operator_s13 import register_operator_routes
     from potbot.api.ui_resources import register_ui_routes
 
@@ -167,6 +168,9 @@ def application(args: argparse.Namespace) -> FastAPI:
         app, database, authenticate, settings.allowed_origins, context.workspace_id
     )
     register_context_routes(
+        app, database, authenticate, settings.allowed_origins, context.workspace_id
+    )
+    register_operation_routes(
         app, database, authenticate, settings.allowed_origins, context.workspace_id
     )
     # The separate setup-token capability is resolved at request time. Ordinary

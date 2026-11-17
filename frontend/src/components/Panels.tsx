@@ -107,6 +107,7 @@ export function MenuPanel() {
     </div>)}
     {isLive && <div className="menu-section">
       <h2>OPERATOR SETUP</h2>
+      <a className="menu-item" href={`/tools?workspace=${encodeURIComponent(workspace.id)}`}><span>Operations and readiness</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href="/setup/apis"><span>Remote API credentials</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href="/setup/tools"><span>Tool testing and upgrades</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href="/setup/operator"><span>Operator health and release gates</span><span aria-hidden="true">↗</span></a>
@@ -292,7 +293,7 @@ export function DownloadsPanel() {
 
 export function InstallationsPanel() {
   const { demo, models, modelStatus, refreshModels, transfers, transfersStatus,
-    refreshTransfers, queueTransfer, openPanel } = useWorkspace();
+    refreshTransfers, queueTransfer, openPanel, workspace } = useWorkspace();
   const [manifest, setManifest] = useState("{}");
   const [confirm, setConfirm] = useState(false);
   const [formStatus, setFormStatus] = useState("");
@@ -309,6 +310,7 @@ export function InstallationsPanel() {
   return <section className="settings-panel panel-scroll" aria-label="Model catalogue and installations">
     <span className="eyebrow">USER PREFERENCES / MODELS</span><h2>Model catalogue</h2>
     <p role="status">{modelStatus}</p>
+    {!demo && <p><a href={`/tools?workspace=${encodeURIComponent(workspace.id)}`}>Inspect operations, readiness and recent accounting ↗</a></p>}
     <button type="button" disabled={demo} onClick={() => refreshModels()}>Refresh catalogue</button>
     <p className="muted-note">These profiles describe candidate models, not installed weights or validated runtimes.
       Only the immutable artifact worker can mark an installation complete after checking file size and SHA-256.</p>

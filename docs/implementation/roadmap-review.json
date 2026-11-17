@@ -871,6 +871,7 @@
       "id": "catalogue",
       "owners": [
         "U04",
+        "U05",
         "U11",
         "U13",
         "U16"
@@ -888,6 +889,24 @@
           "symbol": "build_inventory",
           "sha256": "67f3218d14e95a772c65556c6a4acc5408ebe422c026063ac9da70b5f8630ce6",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
+        },
+        {
+          "path": "src/potbot/controller/operation_catalogue.py",
+          "symbol": "OperationCatalogue",
+          "sha256": "64b9b6f65d01c70a6ee2d389d425818694fbc084478d168ec750b896925c4ce8",
+          "basis": "Read-only bounded statement snapshot, principal-owned joins and deterministic cursor/evidence projection; no runtime admission"
+        },
+        {
+          "path": "src/potbot/api/ui_operations.py",
+          "symbol": "register_operation_routes",
+          "sha256": "71c500bfde821a3c8f945d8a4a674784eddf07bae72f3af2ae88e8e24f09bdb8",
+          "basis": "Authenticated fixed-workspace GET adapters with bounded queries and sanitized existing error semantics"
+        },
+        {
+          "path": "src/potbot/api/operations_cli.py",
+          "symbol": "main",
+          "sha256": "f5d956b259a1c3e1ad54759f7ba61a37203ef26e805c14eb7de388e0aa1158e0",
+          "basis": "Read-only list/inspect CLI reuses the same service and keeps help independent of optional runtimes"
         }
       ],
       "tests": [
@@ -896,15 +915,47 @@
           "symbol": "test_committed_inventory_cog_durable_stats_and_workspace_api",
           "sha256": "5df669e90e6cb0c49e6d428959e64f539002a3dda824976c9df072760baa446e",
           "basis": "source inspection; test definition is not an individual executed result"
+        },
+        {
+          "path": "tests/unit/test_operation_catalogue.py",
+          "symbol": "test_accounting_is_deduplicated_preserves_origins_and_never_attaches_to_same_named_tool",
+          "sha256": "c9d8d8bdf82ff2f69eafe18eb29f6fe8eaf4281ab5322c32833545cbde2c458f",
+          "basis": "Regression definition for namespace-aware history and reservation/provenance accounting; executed results are separately retained"
+        },
+        {
+          "path": "tests/integration/test_operation_catalogue.py",
+          "symbol": "test_catalogue_joins_real_hosted_descriptor_usage_once_and_never_writes",
+          "sha256": "355b6c46884c567fc5a6ee8d6e817b59f11f4f7d21d6a3750a5c8c3253fe0d99",
+          "basis": "Real PostgreSQL restricted-role owner/history/usage joins; mocked hosted provider does not qualify a live endpoint"
+        },
+        {
+          "path": "tests/integration/test_operation_catalogue.py",
+          "symbol": "test_catalogue_enforces_same_workspace_principal_context_and_workspace_rls",
+          "sha256": "355b6c46884c567fc5a6ee8d6e817b59f11f4f7d21d6a3750a5c8c3253fe0d99",
+          "basis": "Real PostgreSQL workspace and same-workspace principal/context visibility boundary"
+        },
+        {
+          "path": "tests/unit/test_ui_operations.py",
+          "symbol": "test_untrusted_scope_never_reaches_catalogue",
+          "sha256": "dbfeb44a0e9b105897c3c16381b87ea1382bc82935d591e62f67b05c0f8884e1",
+          "basis": "Authentication, workspace and origin checks precede catalogue reads"
+        },
+        {
+          "path": "tests/unit/test_operations_cli.py",
+          "symbol": "test_help_requires_no_database_web_or_native_dependencies",
+          "sha256": "9b648202455dda114dc01f139a32e4d4befbb513ea590f3d8104f6e0f0f5f564",
+          "basis": "CLI help import boundary and same-service adapter tests"
         }
       ],
-      "assessment": "T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool.",
-      "support_scope": "Exact-source core inventory and lookup subset. Broad operation catalogue, acquisition and ecosystem lifecycle are incomplete.",
+      "assessment": "T01.1 source inventory and core semantic lookup are retained. U04-C adds a bounded principal-scoped read-only PostgreSQL projection over existing context, sealed Syn, published skill, model and S11/S12 records, with API/CLI/UI and owned recent invocation accounting. Current runtime authorization is not inferred from stored metadata.",
+      "support_scope": "Read-only operation catalogue, conservative recorded readiness/holds, exact-source evidence and partial deduplicated ledger projection. No live discovery, credential presence, host admission, new registry, dispatcher, settlement or acquisition authority.",
       "remaining": [
-        "Implement curated registry snapshots, readiness states, quarantine/test/approval/update/revocation",
-        "Reconcile all selected IBM/DanceFlow/WordPress capabilities and concurrency footprints"
+        "Add authorized current installation/session/dependency/credential observations and exact-host qualification",
+        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Broaden invocation ownership coverage without exposing workspace-only private histories or double counting reservations",
+        "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints"
       ],
-      "next_action": "Extend the existing capability/installation registry and operator UI; do not create a second tool registry."
+      "next_action": "Qualify the catalogue on a representative authorized workspace, then extend existing runtime/context/grant owners with live eligibility and acquisition adapters; keep historical readiness separate from current execution permission."
     },
     {
       "id": "devices",
@@ -68650,23 +68701,24 @@
     },
     {
       "path": "docs/implementation/recent-potbot-development-reconciliation.md",
-      "sha256": "7cbec6c43ccb253ca428f91d9db3a49e321f34c2f8afe516c85928ec981e13d0",
+      "sha256": "13cb0fa6a1c8770c7bc16ec3dd87d12a0fce3f7faeb2946dae7ac1a991c372a6",
       "families": [
-        "audit",
-        "durable",
-        "sandbox",
         "accounting",
+        "audit",
+        "catalogue",
+        "context",
+        "durable",
+        "frontend",
+        "memory-admission",
         "models",
         "reasoning",
+        "recovery",
         "research",
-        "context",
-        "memory-admission",
-        "semantic",
-        "frontend",
-        "recovery"
+        "sandbox",
+        "semantic"
       ],
-      "disposition": "retained_requirement_or_implementation_narrative",
-      "assessment": "Separate retained source claims, reviewed obligations and executed acceptance. Preserve 21 ID namespaces and both P plan versions; audit closure does not close product work.; Existing action intents, durable receipts, recovery claims, at-least-once outbox and generation fences already cover the local supervised-tool path. This is not exactly-once execution across arbitrary remote producers.; Linux/WSL shared-workspace and isolated-worker source contracts exist. Docker builds system images; Bubblewrap executes admitted work. An OCI identity does not certify unpacked rootfs content or host isolation.; Descendant/file-access and per-task exit/cgroup accounting have source implementations. The local host has not passed the complete TASKSTATS/loss/delegation gate; heartbeat readiness is independent.; Model catalogs, typed generation/invocation, provider adapters and budget boundaries exist. Listed/default/tiny/hosted models remain distinct from measured host-qualified deployments; no paid or weight-loading calls occur in this audit.; Bounded R6 reasoning, PostgreSQL checkpoints/steering and R6.1 task accounting exist. Shared ensemble selection, independent candidates, full temporal scheduling and safe cross-branch composition remain partial.; Immutable repository inspection/audit and solve-graph linkage exist. General external source acquisition, evaluated example adaptation and authoritative need resolution still require admitted providers and independent effect evidence.; Application context migrations 29-33, registered-object lifecycle, projections, scoped RPC and ordinary worker launch integration exist. Root MODEL/MEMORY and standalone Stage 2 SQLite describe historical development contracts.; General immutable memory proposals, accepted-head CAS, bitemporal correction, applicability, feedback/episodes/procedures and deletion-safe lifecycle are retained future requirements. Context triples and vectors do not implement them.; Pinned native Type catalogs, strict typed validation and exact snapshot lookup exist. Seven question profiles, typed descendants, semantic opposition/guards and all-examples completeness remain broader obligations.; Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete.; Current launch, migration and package CI foundations are present; source previews are not the qualified operational baseline. Full backup/deletion-journal restore, outages, capacity and upgrade qualification remain required.",
+      "disposition": "reviewed_follow_on_with_explicit_runtime_limits",
+      "assessment": "RD18 is now mapped to the U04-C read-only catalogue increment. Its remaining live eligibility, acquisition, broader ownership and runtime qualification obligations are retained; other RD rows keep their prior scope.",
       "narrative": [
         {
           "locator": "line:1-14",
@@ -68757,18 +68809,21 @@
         },
         {
           "locator": "line:61-76",
-          "sha256": "06ab203adf040bba7db23031b2d1ca37448b4588bbee8a8056113a5e2ff8f0ce",
+          "sha256": "4b77d79d98ae46870535303110daac4799480ef6c5012159ad044e42944ba1a8",
           "families": [
-            "artifacts",
-            "browser",
+            "accounting",
+            "audit",
             "catalogue",
-            "configuration",
-            "guest-logs",
-            "identity",
-            "journal",
-            "mcp",
+            "context",
+            "durable",
+            "frontend",
+            "memory-admission",
+            "models",
+            "reasoning",
+            "recovery",
+            "research",
             "sandbox",
-            "tool-upgrade"
+            "semantic"
           ]
         },
         {
@@ -69775,25 +69830,143 @@
       ]
     },
     {
-      "path": "docs/implementation/unified-development-roadmap.md",
-      "sha256": "58d18392038ac4b90e44e80c431b438a11ad1b48fe0315c960446508e164fb9e",
+      "path": "docs/implementation/u04-c-operation-catalogue.md",
+      "sha256": "37909af0fabb811b2b48751cbeccbd1dc3dd7348079bd8f6c138a694a639985c",
       "families": [
-        "audit",
-        "transport-recovery"
+        "catalogue",
+        "tool-upgrade",
+        "accounting",
+        "models",
+        "skills",
+        "frontend"
       ],
       "disposition": "reviewed_follow_on_with_explicit_runtime_limits",
-      "assessment": "November17 follow-through records S12 implementation and current producer coverage. U00 historical checkpoint, stage IDs and independent runtime qualification remain unchanged.",
+      "assessment": "Reviewed U04-C sources/visibility, conservative readiness, owned invocation/ledger joins, API/CLI/UI contracts, bounded snapshots and explicit remaining acquisition/native gates.",
       "narrative": [
         {
-          "locator": "line:1-28",
-          "sha256": "3fda5267f1107832b3c3e9fed0d97137bad77c1e190cc8d1226a76e3ab8177ac",
+          "locator": "line:1-12",
+          "sha256": "6a1199cbcb546398731ad9976881c7b84825a52f6736b655793bc3afbc41e83d",
           "families": [
-            "audit",
-            "transport-recovery"
+            "catalogue",
+            "tool-upgrade",
+            "accounting",
+            "models",
+            "skills",
+            "frontend"
           ]
         },
         {
-          "locator": "line:29-36",
+          "locator": "line:13-50",
+          "sha256": "ec7ba2e60b288215b159a58a20e0b16f3ce89200dec470d2aa5cc7636cd54250",
+          "families": [
+            "catalogue",
+            "tool-upgrade",
+            "accounting",
+            "models",
+            "skills",
+            "frontend"
+          ]
+        },
+        {
+          "locator": "line:51-75",
+          "sha256": "c6a9dbd026f062ef88cb549321b6d2b7de9615430f025147383e332162bafd6f",
+          "families": [
+            "catalogue",
+            "tool-upgrade",
+            "accounting",
+            "models",
+            "skills",
+            "frontend"
+          ]
+        },
+        {
+          "locator": "line:76-106",
+          "sha256": "b64f47ad2ef6e10929e8dcdee89f14ff3ecf660ae3305afb30eb0ba6b87dcfb1",
+          "families": [
+            "catalogue",
+            "tool-upgrade",
+            "accounting",
+            "models",
+            "skills",
+            "frontend"
+          ]
+        },
+        {
+          "locator": "line:107-140",
+          "sha256": "0ba3d23756e1237c64d09451c29cd9aabef227259c3b9279863dc20ebb7e27a4",
+          "families": [
+            "catalogue",
+            "tool-upgrade",
+            "accounting",
+            "models",
+            "skills",
+            "frontend"
+          ]
+        },
+        {
+          "locator": "line:141-160",
+          "sha256": "d633ed44fede862ab7f387b32ffbe0640213e7ce8b83a77de887fb0a690f21ee",
+          "families": [
+            "catalogue",
+            "tool-upgrade",
+            "accounting",
+            "models",
+            "skills",
+            "frontend"
+          ]
+        },
+        {
+          "locator": "line:161-175",
+          "sha256": "5dceb9564696102c1414bef45dc2997bb049dde85a61f77a6ac32b31c0e1ebcd",
+          "families": [
+            "catalogue",
+            "tool-upgrade",
+            "accounting",
+            "models",
+            "skills",
+            "frontend"
+          ]
+        },
+        {
+          "locator": "line:176-199",
+          "sha256": "6e0950f70801d40742f1c3fd8ea5d77677b90ffb4bb9a94f1b85b9f2bd755eb4",
+          "families": [
+            "catalogue",
+            "tool-upgrade",
+            "accounting",
+            "models",
+            "skills",
+            "frontend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/unified-development-roadmap.md",
+      "sha256": "9b01b4780d20ea91e837fdc960bcb43981c96099fcfbe432abbfc5500981f337",
+      "families": [
+        "audit",
+        "transport-recovery",
+        "catalogue",
+        "tool-upgrade",
+        "frontend"
+      ],
+      "disposition": "reviewed_follow_on_with_explicit_runtime_limits",
+      "assessment": "The November 17 U04-C follow-on records the principal-scoped catalogue after merged S12. The U00 audit checkpoint, canonical stage namespaces and independent runtime qualification remain intact.",
+      "narrative": [
+        {
+          "locator": "line:1-36",
+          "sha256": "288660e824581dda3287e601fd6c1aa09c53b5a2c5e33bcf79d94bda774624ae",
+          "families": [
+            "audit",
+            "transport-recovery",
+            "catalogue",
+            "tool-upgrade",
+            "frontend"
+          ]
+        },
+        {
+          "locator": "line:37-44",
           "sha256": "076016b54fff41fb78ff8fdcc90229d963fc5d746b89b7706eeebb49f54312c8",
           "families": [
             "audit",
@@ -69838,7 +70011,7 @@
           ]
         },
         {
-          "locator": "line:37-70",
+          "locator": "line:45-78",
           "sha256": "4c193a4a608fa975564b4f8db4bfe008307a41cf3d1b25c33882bcb783543194",
           "families": [
             "audit",
@@ -69883,7 +70056,7 @@
           ]
         },
         {
-          "locator": "line:71-92",
+          "locator": "line:79-100",
           "sha256": "3a83e4a3a3332d3ef4289fcfc3504ed4ab122ebf1cf45fdf94886f89bda19cce",
           "families": [
             "accounting",
@@ -69906,21 +70079,21 @@
           ]
         },
         {
-          "locator": "line:93-94",
+          "locator": "line:101-102",
           "sha256": "730dc617da00361212299c3f3bf7caa292eeb8375c4645a26f895fe255a9c69d",
           "families": [
             "audit"
           ]
         },
         {
-          "locator": "line:95-100",
+          "locator": "line:103-108",
           "sha256": "092663dafe878c1956a3843788aa7a58148603391dc7efc03a2ab4bf50b05224",
           "families": [
             "audit"
           ]
         },
         {
-          "locator": "line:101-106",
+          "locator": "line:109-114",
           "sha256": "382e3775074d6d89fbfe589167a208ad320459466fe816e1e619c4a2326bceab",
           "families": [
             "durable",
@@ -69931,7 +70104,7 @@
           ]
         },
         {
-          "locator": "line:107-110",
+          "locator": "line:115-118",
           "sha256": "ee0b5d377f44b86a968882f762dcddf5486951504484fae6f57bbdc4b5d897cf",
           "families": [
             "tool-schema",
@@ -69944,7 +70117,7 @@
           ]
         },
         {
-          "locator": "line:111-114",
+          "locator": "line:119-122",
           "sha256": "9b8568dc87a1fd913d2775e2cea463e8cc54271de5fdbd471a3846c47413462e",
           "families": [
             "models",
@@ -69957,7 +70130,7 @@
           ]
         },
         {
-          "locator": "line:115-120",
+          "locator": "line:123-128",
           "sha256": "9a38ce04ac2df10970d4c69ae459dab6757ed121e4c0135233670ccf0927cca1",
           "families": [
             "frontend",
@@ -69965,7 +70138,7 @@
           ]
         },
         {
-          "locator": "line:121-126",
+          "locator": "line:129-134",
           "sha256": "80b60f56644c374154018b6472010f50693d60ee0bd0831560224d401b134c72",
           "families": [
             "automation",
@@ -69973,7 +70146,7 @@
           ]
         },
         {
-          "locator": "line:127-136",
+          "locator": "line:135-144",
           "sha256": "4b39689d3f86890624016437f1019a9f443b42259c348acd3976344d39f5cb18",
           "families": [
             "durable",
@@ -69983,7 +70156,7 @@
           ]
         },
         {
-          "locator": "line:137-144",
+          "locator": "line:145-152",
           "sha256": "b003d17be8b130279262508d8ce74d558262ad1760056625d2ba42e2b0ce17c5",
           "families": [
             "audit",
@@ -69991,7 +70164,7 @@
           ]
         },
         {
-          "locator": "line:145-172",
+          "locator": "line:153-180",
           "sha256": "cbc4b785f9baeac0b04d3321ea4a8fed61bf8a1816999c534cb2eb9667797027",
           "families": [
             "audit",
@@ -69999,7 +70172,7 @@
           ]
         },
         {
-          "locator": "line:173-186",
+          "locator": "line:181-194",
           "sha256": "fad8ad3bc0f5c2f2834281f8aaa52d60a6cf39c7bbfccd4fae9aee0a7b60f130",
           "families": [
             "accounting",
@@ -70012,29 +70185,32 @@
           ]
         },
         {
-          "locator": "line:187-205",
-          "sha256": "1b06f39aefe5beb3ec4fe7bc9a0730108651dbc9dffc638f4bd0326ded4b9754",
+          "locator": "line:195-213",
+          "sha256": "9a816b643c8de3c90ffcd39518602f2b95dd314f4427fb5860fbec6866c30e69",
           "families": [
             "audit",
-            "transport-recovery"
+            "transport-recovery",
+            "catalogue",
+            "tool-upgrade",
+            "frontend"
           ]
         },
         {
-          "locator": "line:206-217",
+          "locator": "line:214-225",
           "sha256": "8fd9aa45ac7a56661637b71fa0a5607b1b2b45780bdea5c35f0434b61d7925a3",
           "families": [
             "audit"
           ]
         },
         {
-          "locator": "line:218-222",
+          "locator": "line:226-230",
           "sha256": "c6f1c77f80e48b91c4a197f815afa2760f516f5eff7fc07b87bbbe7ffc5b2197",
           "families": [
             "compatibility"
           ]
         },
         {
-          "locator": "line:223-231",
+          "locator": "line:231-239",
           "sha256": "a3a63964c24da210b3a841a4fa93e2529b30a3e255e67e78853aea0f4d0192ad",
           "families": [
             "compatibility",
@@ -70042,7 +70218,7 @@
           ]
         },
         {
-          "locator": "line:232-236",
+          "locator": "line:240-244",
           "sha256": "28dfd2784d97841df10d40c27bf4c7f21bc278c11ace17b0339a9ee74ece1daa",
           "families": [
             "evaluation"
@@ -80518,13 +80694,16 @@
     },
     {
       "key": "recent-development:RD18",
-      "requirement_sha256": "bdedff1641a7dc2b31255d48557dd670dbec66621914cd7d27ca2b46cbb6f41e",
+      "requirement_sha256": "4496abf17cf44aa313eab763b5c1cb8164f6ed57b565a23fef606d414adb29a0",
       "families": [
-        "catalogue"
+        "catalogue",
+        "accounting",
+        "tool-upgrade",
+        "frontend"
       ],
       "status": "partial",
-      "assessment": "Requirement: Unified operation catalogue, acquisition/update/rollback and shared invocation/budget presentation. Saved `tool-platform-audit.md`; [tool contract][contracts12], [discovery][discovery].. T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool.",
-      "next_action": "For RD18 (Unified operation catalogue, acquisition/update/rollback and shared invocation/budget presentation. Saved `tool-platform-audit.md`; [tool contract][contracts12], [discovery][discovery].): Extend the existing capability/installation registry and operator UI; do not create a second tool registry."
+      "assessment": "T01.1 source inventory and core semantic lookup are retained. U04-C adds a bounded principal-scoped read-only PostgreSQL projection over existing context, sealed Syn, published skill, model and S11/S12 records, with API/CLI/UI and owned recent invocation accounting. Current runtime authorization is not inferred from stored metadata.",
+      "next_action": "Qualify the catalogue on a representative authorized workspace, then extend existing runtime/context/grant owners with live eligibility and acquisition adapters; keep historical readiness separate from current execution permission."
     },
     {
       "key": "recent-development:RD19",
@@ -81777,10 +81956,12 @@
       "key": "unified:U04",
       "requirement_sha256": "7f1a1e829ccf1f5ddca50253821fed65731cd7210251bfe4e3ca4a1cf0c1f083",
       "families": [
-        "tool-schema"
+        "tool-schema",
+        "catalogue",
+        "tool-upgrade"
       ],
       "status": "partial",
-      "assessment": "Requirement: Semantic tool platform. Typed installed Cogs, sealed ports, controller-only grants and distinct transformation/dispatch/verification receipts are implemented for selected core operations. Every adapter and specialist still needs its own admitted binding.",
+      "assessment": "Requirement: Semantic tool platform. Existing typed Cog contracts and S12 release enforcement are joined by a read-only U04-C catalogue; each live adapter, specialist and acquisition path still requires its exact admitted binding and qualification.",
       "next_action": "For U04 (Semantic tool platform): Extend the current registered runtime; reject raw adapter dispatch and model-supplied authority."
     },
     {
@@ -81870,7 +82051,7 @@
         "frontend"
       ],
       "status": "partial",
-      "assessment": "Requirement: Next.js operator frontend. Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete.",
+      "assessment": "Requirement: Next.js operator frontend. Existing workspace/panel/chat/transfer foundations now include the U04-C operation list/detail, conservative readiness and partial linked accounting. Durable inference, PTY reconnect, graph push and every-agent load remain incomplete.",
       "next_action": "For U13 (Next.js operator frontend): Finish UI backend/frontend split against actual receipts; retain unavailable/empty/error states and user-controlled media."
     },
     {
@@ -81895,7 +82076,7 @@
     },
     {
       "key": "unified:U16",
-      "requirement_sha256": "19916645c4b3202fbc609f873843a52b8d9849dca0de4f1920e198ff9af84538",
+      "requirement_sha256": "758033a6c7d7495ba1cc5bbf1671056cd75ed428ddfb6cef3baf392329c84d8c",
       "families": [
         "recovery"
       ],
@@ -83525,12 +83706,13 @@
       },
       {
         "path": ".github/workflows/ci.yml",
-        "sha256": "367bb79b02619a4ed064fb6b02d8222bfc7d26361a9bc59abfbf26d88dfd4c29",
+        "sha256": "48ea72d1cd9cf32dbdaa38504a9bead1176aa1de54bf944a5dd226d327ee76ae",
         "name": "Potbot verification",
         "state": "active",
         "scope": [
           "Existing application, native identity and Linux accounting gates",
-          "Explicit PostgreSQL S12 migration/RLS/release-recovery test and retained JUnit"
+          "Explicit PostgreSQL S12 migration/RLS/release-recovery test and retained JUnit",
+          "Explicit U04-C unit/API/CLI and PostgreSQL ownership/linked-accounting acceptance with retained JUnit"
         ],
         "latest_inspected_run": {
           "id": 41532663749,
@@ -83541,7 +83723,7 @@
           "event": "push"
         },
         "at_reviewed_base": true,
-        "qualification_limit": "Existing historical runs do not qualify this patch. S12 injected-process database fixtures are distinct from installed native postflight."
+        "qualification_limit": "Historical checkpoint and merged S12 runs do not qualify this increment. Catalogue PostgreSQL fixtures establish database/projection boundaries, not live provider compatibility, credential eligibility or installed-host admission."
       },
       {
         "path": ".github/workflows/context-agent-rpc.yml",
@@ -84380,6 +84562,35 @@
       "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
       "review_family": "tool-upgrade",
       "evidence_boundary": "Local source, unit, frontend and scoped PostgreSQL checks are distinct from historical U00 CI. No installed native S12/profiler or graphical browser pass is claimed; final commit CI and host qualification remain required."
+    },
+    {
+      "id": "U04-C/operation-catalogue-and-linked-accounting",
+      "implementation_base": "6db5cd385fad5ba085be8f1affb4e0f9ebafec9a",
+      "source": "docs/implementation/u04-c-operation-catalogue.md",
+      "review_family": "catalogue",
+      "evidence_boundary": "Current source identities and local unit/API/CLI/frontend/real PostgreSQL results are scoped to this read-only follow-on. Merged S12 browser CI is historical to this increment. Final-commit CI and installed-host/native runtime qualification remain independent.",
+      "frontend_evidence": [
+        {
+          "path": "frontend/src/lib/operation-catalogue.ts",
+          "sha256": "b1bc87ff6bff47c16fcbf7f93b7c2aa6416cbf023d19e0549dd19559aeeaf011"
+        },
+        {
+          "path": "frontend/src/lib/server/operation-catalogue.ts",
+          "sha256": "386a11566c662de494f0e0b77eb21adb6c598653f6e59ec7b9bc6d00010f8af0"
+        },
+        {
+          "path": "frontend/src/app/tools/page.tsx",
+          "sha256": "55ddefe9727efed5e6bd5f929a965401af21718c610526d8a06e8b47dcf2155b"
+        },
+        {
+          "path": "frontend/tests/operation-catalogue.test.mjs",
+          "sha256": "a1b717cbd94494b8cd0d8433302f027dc93603c21a72d1325cad9189bddeab75"
+        },
+        {
+          "path": "frontend/tests/operation-catalogue-routes.test.mjs",
+          "sha256": "10d7415ca2bd6f0c7579c24dec5b6b6435f1fb083c6a93274f8ff69f471a6e16"
+        }
+      ]
     }
   ]
 }

@@ -165,6 +165,22 @@ jobs:
           path: artifacts/shared-tool-release-s12.xml
           if-no-files-found: warn
           retention-days: 14
+      - name: Verify scoped operation catalogue and linked accounting on PostgreSQL
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_operation_catalogue.py
+          tests/unit/test_ui_operations.py
+          tests/unit/test_operations_cli.py
+          tests/integration/test_operation_catalogue.py
+          --junitxml=artifacts/operation-catalogue-u04-c.xml
+      - name: Retain operation catalogue acceptance
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: operation-catalogue-u04-c
+          path: artifacts/operation-catalogue-u04-c.xml
+          if-no-files-found: warn
+          retention-days: 14
       - name: Qualify MODEL.md context, ACLs, recovery and refresh against PostgreSQL
         run: >-
           uv run --locked python -m pytest -q

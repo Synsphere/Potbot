@@ -6,6 +6,14 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**17 November 2026, after the S12 merge:** [U04-C operation catalogue](u04-c-operation-catalogue.md)
+adds a principal-scoped read-only projection over existing tool/Cog/model/skill
+records, release holds, recent invocations and ledger accounting, with API,
+CLI and workspace UI entry points. It is based on merged main
+`6db5cd385fad5ba085be8f1affb4e0f9ebafec9a`. Current runtime authorization,
+credential eligibility, acquisition breadth and installed-host qualification
+remain independent gates; this increment does not complete U04/M4/T04.
+
 **17 November 2026:** [S12 release enforcement and execution qualification](s12-tool-release-and-execution-qualification.md)
 adds the PostgreSQL postflight/release decision, held-tool admission, operator
 projection and migration 38. It also hardens T01.4 report freshness, fences browser
@@ -191,7 +199,7 @@ These suffixes identify work within existing U packages. They do not renumber th
 | U02-P | U01/U02/U06 | Mount/identity matrix; read-only ordinary shared-tool access with operator-unlocked scoped maintenance writes; enforced concurrency; and OS-native `/etc/ai` watcher loss/overflow fencing plus reconciliation; RD11–RD13/RD15. |
 | U02-L | U02/U03/U16 | Agent `/var/logs/ai` mount, creator-only writes, actual tool aliases/destinations and operator watch/archive/recovery; RD16, distinct from host Xpra S17. |
 | U04-R | U02/U04/U16 | Qualify the implemented S12 PostgreSQL postflight/release gate, installed-source/pin readback, held-tool admission and rollback on the actual operator host; S11 approval or S13 health is insufficient; RD14. |
-| U04-C | U04/U05/U11/U13 | Aggregate operation/readiness/accounting catalogue, acquisition lifecycle, concurrency and actual connector/KeywordMoves coverage; RD12/RD18/RD19. |
+| U04-C | U04/U05/U11/U13 | Extend and qualify the [read-only operation/readiness/accounting catalogue](u04-c-operation-catalogue.md), then authorized live eligibility, acquisition lifecycle, concurrency and actual connector/KeywordMoves coverage; RD12/RD18/RD19. |
 | U07-Q | U02/U05/U07/U13/U16 | Native service/vault, provider and inbound API matrix, model downloads/cache paths and installed/runnable/qualified readiness; RD01–RD04. |
 | U08-T | U01/U04/U08/U14 | Existing fenced reasoning/accounting plus ensemble verification, temporal steering, atomic leaf scheduling and active research; RD05–RD09. |
 | U09-C | U06/U09/U11/U13 | Preserve data-only state/history and Stage 10D integration; close constructor/protocol, semantic-reconciliation and authored-skill gaps; RD26–RD29. |

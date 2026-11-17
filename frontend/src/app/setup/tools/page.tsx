@@ -33,7 +33,9 @@ export default function ToolUpgradeSetup() {
         if (!active || !Array.isArray(data.workspaces)) return;
         const known = (data.workspaces as Workspace[]).filter(w => typeof w.id === "string" && typeof w.name === "string");
         setWorkspaces(known);
-        if (known.length) { setWorkspaceId(known[0].id); void refresh(known[0].id); }
+        const requested = new URLSearchParams(window.location.search).get("workspace");
+        const selected = known.find(workspace => workspace.id === requested) ?? known[0];
+        if (selected) { setWorkspaceId(selected.id); void refresh(selected.id); }
         else setNotice("No authorized workspace configured.");
       }).catch(() => { if (active) setNotice("Sign in to the operator workspace to manage tool upgrades."); });
     return () => { active = false; };
@@ -63,6 +65,7 @@ export default function ToolUpgradeSetup() {
       <span className={styles.kicker}>OPERATOR SETUP / SHARED TOOLS</span>
       <h1>Tool testing and upgrades</h1>
       <p>Review S9-tested source revisions and explicitly approve promotion. The browser cannot run installers or change executable hashes; an independent host worker enforces the upgrade.</p>
+      <a className={styles.back} href={`/tools${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>View operation readiness and evidence ↗</a>
     </header>
     <section className={styles.toolbar} aria-label="Authorized workspace">
       <label>Workspace
