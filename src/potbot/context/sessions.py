@@ -11,7 +11,7 @@ import hmac
 import json
 import re
 import secrets
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -78,8 +78,14 @@ def _seconds(value: int) -> int:
 
 
 class ContextSessionStore:
-    def __init__(self, database: ContextDatabase) -> None:
+    def __init__(
+        self,
+        database: ContextDatabase,
+        *,
+        skill_setup_token: Callable[[], str | None] | None = None,
+    ) -> None:
         self.database = database
+        self.skill_setup_token = skill_setup_token
 
     @staticmethod
     def _now(conn: Any) -> datetime:
@@ -321,7 +327,9 @@ class ContextSessionStore:
         context = grant.principal
         with self.database.transaction(context) as conn:
             session = self._lock(conn, grant)
-            service = WorkspaceContextService(_BoundTransaction(context, conn))
+            service = WorkspaceContextService(
+                _BoundTransaction(context, conn), skill_setup_token=self.skill_setup_token
+            )
             skills = SessionSkillCatalogue(conn, grant, session, service)
             mutates = (
                 request.mutates

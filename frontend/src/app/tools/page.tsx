@@ -28,6 +28,8 @@ function Detail({ item, workspaceId, principalId, snapshot }: { item: Operation;
         {item.updateAvailable === true && <span className={styles.update}>Update available</span>}</div>
     </div>
     <OperationWorkbench key={`${workspaceId}:${principalId}:${item.id}:${snapshot}`} workspaceId={workspaceId} principalId={principalId} operationId={item.id} />
+    {item.kind === "skill" && <section className={styles.detailSection}><h3>Skill packages</h3><p className={styles.muted}>Review imported instructions and resources, exact releases, activation and rollback in the skill workshop.</p>
+      <a className={styles.linkButton} href={`/skills?workspace=${encodeURIComponent(workspaceId)}`}>Open skill workshop <span aria-hidden="true">↗</span></a></section>}
     <section className={styles.detailSection} aria-labelledby="readiness-title">
       <h3 id="readiness-title">Readiness and holds</h3>
       {item.reasons.length ? <ul className={styles.reasons}>{orderedOperationReasons(item.reasons).map(reason => <li key={reason}>
@@ -271,6 +273,6 @@ export default function OperationCataloguePage() {
         </div>}
       </aside>
     </div>
-    <footer className={styles.footer}><span>One view over existing workspace records.</span><a href={`/setup/tools${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Tool upgrade review ↗</a><a href="/setup/operator">Operator health ↗</a></footer>
+    <footer className={styles.footer}><span>One view over existing workspace records.</span><a href={`/skills${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Skill workshop ↗</a><a href={`/setup/tools${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Tool upgrade review ↗</a><a href="/setup/operator">Operator health ↗</a></footer>
   </main>;
 }

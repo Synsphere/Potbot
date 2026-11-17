@@ -97,11 +97,17 @@ class LaunchContext:
 class ContextExecutionBinding:
     """Installed by ExecutionCogRuntime, not a guest-selectable profile or DSN."""
 
-    def __init__(self, database: Any, principal: WorkspaceContext) -> None:
+    def __init__(
+        self,
+        database: Any,
+        principal: WorkspaceContext,
+        *,
+        skill_setup_token: Callable[[], str | None] | None = None,
+    ) -> None:
         if not isinstance(principal, WorkspaceContext):
             raise ScopeDeniedError("Execution context requires authenticated identity")
         self.database, self.principal = database, principal
-        self.service = WorkspaceContextService(database)
+        self.service = WorkspaceContextService(database, skill_setup_token=skill_setup_token)
 
     def install(self, operations: tuple[Any, ...]) -> None:
         objects = [operation_record(op) for op in operations]
@@ -317,7 +323,12 @@ async def execute_context_operation(
             provide_value=api_read,
         )
         channel = ContextWorkerChannel(
-            store=ContextSessionStore(binding.database),
+            store=ContextSessionStore(
+                binding.database,
+                skill_setup_token=getattr(
+                    getattr(binding, "service", None), "skill_setup_token", None
+                ),
+            ),
             principal=actor,
             agent_id=agent_id,
             guard=guard,

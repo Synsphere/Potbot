@@ -7,12 +7,16 @@ Published code and live MODEL/MEMORY documents have separate revision histories.
 
 from __future__ import annotations
 
+import base64
+import hashlib
+import json
+from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 from uuid import NAMESPACE_URL, UUID, uuid5
 
 from potbot.context.model import document_templates, sha256
-from potbot.context.rpc_contract import SkillRequest
-from potbot.context.service import WorkspaceContextService
+from potbot.context.rpc_contract import MAX_FRAME_BYTES, SCHEMA, SkillRequest
+from potbot.context.service import WorkspaceContextService, native_skill_setup_token
 from potbot.context.skills import validate_skill
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import InvalidInputError, RevisionConflictError, ScopeDeniedError
@@ -41,37 +45,72 @@ def skill_identity(workspace_id: UUID, agent_id: UUID, slug: str) -> tuple[UUID,
 
 
 def _summary(row: dict[str, Any]) -> dict[str, Any]:
+    origin = row.get("origin", "authored")
+    namespace = (
+        "imported-" + row["owner_principal_id"].hex
+        if origin == "acquired"
+        else "agent-" + row["owner_agent_id"].hex
+    )
     return {
         "skill_id": str(row["id"]),
         "name": row["slug"],
-        "namespace": "agent-" + row["owner_agent_id"].hex,
+        "namespace": namespace,
         "context_name": row["context_name"],
         "context_object_id": str(row["context_object_id"]),
         "revision": row["draft_revision"],
         "release_sha256": row["latest_sha256"],
         "state": row["state"],
+        "origin": origin,
+        "enabled": row.get("enabled", True),
         "trusted": False,
         "automatically_activated": False,
     }
 
 
 def published_skills(
-    conn: Any, context: WorkspaceContext, *, limit: int = 25, after: UUID | None = None
+    conn: Any,
+    context: WorkspaceContext,
+    *,
+    limit: int = 25,
+    after: UUID | None = None,
+    include_acquired: bool = True,
+    setup_token: Callable[[], str | None] | None = None,
 ) -> dict[str, Any]:
     if (
         type(limit) is not int
         or not 1 <= limit <= 50
         or (after is not None and not isinstance(after, UUID))
+        or type(include_acquired) is not bool
     ):
         raise InvalidInputError("Invalid skill page")
     rows = conn.execute(
         "SELECT * FROM workspace_context_skills WHERE workspace_id=%s AND published "
-        "AND state='active' AND (%s::uuid IS NULL OR id>%s) ORDER BY id LIMIT %s",
-        (context.workspace_id, after, after, limit + 1),
+        "AND state='active' AND (origin='authored' OR (enabled AND %s)) "
+        "AND (%s::uuid IS NULL OR id>%s) ORDER BY id LIMIT %s",
+        (context.workspace_id, include_acquired, after, after, limit + 1),
     ).fetchall()
     page = rows[:limit]
+    visible = []
+    token: str | None = None
+    resolved = False
+    for result in page:
+        row = dict(result)
+        if row.get("origin", "authored") == "acquired":
+            if not include_acquired:
+                continue
+            from potbot.context.skill_acquisition import verify_active_control
+
+            if not resolved:
+                token = (setup_token or native_skill_setup_token)()
+                resolved = True
+            try:
+                verify_active_control(conn, context, row, token)
+            except (ScopeDeniedError, RevisionConflictError, InvalidInputError):
+                continue
+        visible.append(_summary(row))
     return {
-        "skills": [_summary(dict(row)) for row in page],
+        "skills": visible,
+        # Advance over examined rows even when no imported row is authorized.
         "next": str(page[-1]["id"]) if len(rows) > limit else None,
     }
 
@@ -87,6 +126,9 @@ def load_skill(
 
     Returned text is data for an explicitly selected skill, not a higher-priority
     instruction or permission to execute anything. No implicit 'latest' loading.
+    Acquired packages require that exact digest to remain current and enabled.
+    An update or rollback rejects later old-digest reads; it never substitutes
+    different bytes and cannot recall bytes already returned to the caller.
     """
     row = conn.execute(
         "SELECT k.*,r.source_revision,v.content,v.sha256 AS content_sha256 "
@@ -100,15 +142,104 @@ def load_skill(
     ).fetchone()
     if row is None:
         raise ScopeDeniedError(_DENIED)
+    if row.get("origin", "authored") == "acquired":
+        from potbot.context.skill_acquisition import verify_active_release
+
+        verified = verify_active_release(
+            conn, context, skill_id, release_sha256, service.skill_setup_token()
+        )
+        row = verified["row"]
+        docs = service.read_triple(context, "skill", row["context_name"])
+        result = {
+            **_summary(dict(row)),
+            "revision": verified["release"]["source_revision"],
+            "release_sha256": release_sha256,
+            "sha256": release_sha256,
+            "content_sha256": verified["content_sha256"],
+            "content": verified["content"],
+            "manifest": verified["manifest"],
+            "provenance": verified["provenance"],
+            "context": docs,
+            "classification": "untrusted-skill-data",
+            "resource_access": "context-rpc",
+        }
+        # Preserve complete original text and its digest. A response that cannot
+        # fit the existing Context frame fails before the session transaction
+        # commits; the caller can still read SKILL.md through bounded ranges.
+        envelope = {
+            "schema": SCHEMA,
+            "request_id": "00000000-0000-0000-0000-000000000000",
+            "ok": True,
+            "result": result,
+        }
+        if (
+            len(
+                json.dumps(
+                    envelope, ensure_ascii=False, allow_nan=False, separators=(",", ":")
+                ).encode("utf-8")
+            )
+            > MAX_FRAME_BYTES
+        ):
+            raise InvalidInputError(
+                "Skill load exceeds the Context frame; read SKILL.md resource ranges"
+            )
+        return result
     if row["content_sha256"] != release_sha256 or sha256(row["content"]) != release_sha256:
         raise RevisionConflictError("Published skill integrity check failed")
     docs = service.read_triple(context, "skill", row["context_name"])
     return {
         **_summary(dict(row)),
         "revision": row["source_revision"],
+        "release_sha256": release_sha256,
         "sha256": release_sha256,
         "content": row["content"],
         "context": docs,
+        "classification": "untrusted-skill-data",
+    }
+
+
+def read_skill_resource(
+    conn: Any,
+    context: WorkspaceContext,
+    service: WorkspaceContextService,
+    request: SkillRequest,
+) -> dict[str, Any]:
+    """Read verified acquired bytes through the current authenticated session only."""
+    from potbot.context.skill_acquisition import verify_active_release
+
+    if request.method != "skills.read":
+        raise InvalidInputError("A pinned skill resource request is required")
+    assert request.skill_id is not None and request.release_sha256 is not None
+    assert request.resource_path is not None
+    assert request.offset is not None and request.max_bytes is not None
+    verified = verify_active_release(
+        conn,
+        context,
+        request.skill_id,
+        request.release_sha256,
+        service.skill_setup_token(),
+    )
+    package = verified["package"]
+    data = package.files.get(request.resource_path)
+    if not isinstance(data, bytes):
+        raise ScopeDeniedError(_DENIED)
+    if request.offset > len(data):
+        raise InvalidInputError("Skill resource range starts after the resource")
+    part = data[request.offset : request.offset + request.max_bytes]
+    end = request.offset + len(part)
+    return {
+        "skill_id": str(request.skill_id),
+        "release_sha256": request.release_sha256,
+        "revision": verified["release"]["source_revision"],
+        "resource_path": request.resource_path,
+        "resource_sha256": hashlib.sha256(data).hexdigest(),
+        "size": len(data),
+        "offset": request.offset,
+        "next_offset": end,
+        "eof": end == len(data),
+        "encoding": "base64",
+        "data": base64.b64encode(part).decode("ascii"),
+        "range_sha256": hashlib.sha256(part).hexdigest(),
         "classification": "untrusted-skill-data",
     }
 
@@ -136,7 +267,8 @@ class SessionSkillCatalogue:
             raise ScopeDeniedError(_DENIED)
         row = dict(row)
         owns = (
-            row["owner_principal_id"] == self.context.principal_id
+            row.get("origin", "authored") == "authored"
+            and row["owner_principal_id"] == self.context.principal_id
             and row["owner_agent_id"] == self.grant.agent_id
         )
         # Agent isolation is checked even when the host login owns both agents.
@@ -155,6 +287,10 @@ class SessionSkillCatalogue:
         row = self._row(skill_id, write=write)
         if row["state"] != "active":
             raise ScopeDeniedError(_DENIED)
+        if row.get("origin", "authored") == "acquired":
+            from potbot.context.skill_acquisition import verify_active_control
+
+            verify_active_control(self.conn, self.context, row, self.service.skill_setup_token())
         # For writes the row lock serializes with archival/revocation. Other
         # agents may read published skill context, but cannot alter the author's.
         return row["context_name"], row["context_object_id"]
@@ -233,12 +369,20 @@ class SessionSkillCatalogue:
     def execute(self, request: SkillRequest) -> dict[str, Any]:
         context = self.context
         if request.method == "skills.list":
-            return published_skills(self.conn, context, limit=request.limit, after=request.after)
+            return published_skills(
+                self.conn,
+                context,
+                limit=request.limit,
+                after=request.after,
+                setup_token=self.service.skill_setup_token,
+            )
         if request.method == "skills.load":
             assert request.skill_id is not None and request.release_sha256 is not None
             return load_skill(
                 self.conn, context, self.service, request.skill_id, request.release_sha256
             )
+        if request.method == "skills.read":
+            return read_skill_resource(self.conn, context, self.service, request)
         if request.method == "skills.create":
             assert request.name is not None and request.content is not None
             validate_skill(request.name, request.content)
@@ -288,11 +432,13 @@ class SessionSkillCatalogue:
             version = self._version(row)
             self.conn.execute(
                 "INSERT INTO workspace_context_skill_releases "
-                "(workspace_id,skill_id,sha256,source_revision,session_id) VALUES (%s,%s,%s,%s,%s) "
+                "(workspace_id,skill_id,sha256,content_sha256,source_revision,session_id) "
+                "VALUES (%s,%s,%s,%s,%s,%s) "
                 "ON CONFLICT (workspace_id,skill_id,sha256) DO NOTHING",
                 (
                     context.workspace_id,
                     row["id"],
+                    version["sha256"],
                     version["sha256"],
                     version["revision"],
                     self.grant.session_id,

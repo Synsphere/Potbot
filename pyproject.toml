@@ -21,7 +21,8 @@ providers = [
     "httpx>=0.28,<1",
     "protobuf>=5,<7",
 ]
-web = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "websockets>=15,<17"]
+web = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "websockets>=15,<17", "PyYAML>=6.0.3,<7"]
+skills = ["PyYAML>=6.0.3,<7"]
 security = ["cryptography==50.0.2"]
 debugger = [
     "debugpy==1.8.22",
@@ -48,6 +49,7 @@ dev = [
   "mypy>=1.15,<2",
   "protobuf>=5,<7",
   "pytest>=8.3,<10",
+  "PyYAML>=6.0.3,<7",
   "ruff>=0.11,<1",
   "types-jsonschema>=4.26.0.20261006",
   "types-protobuf>=7.35.1.20260906",

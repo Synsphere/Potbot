@@ -121,7 +121,10 @@ async def dispatch_context_worker(
         if manager is None or agent_id is None:
             raise ScopeDeniedError("Context worker binding disappeared during launch")
         channel = ContextWorkerChannel(
-            store=ContextSessionStore(manager.service.database),
+            store=ContextSessionStore(
+                manager.service.database,
+                skill_setup_token=getattr(manager.service, "skill_setup_token", None),
+            ),
             principal=principal,
             agent_id=agent_id,
             guard=guard,

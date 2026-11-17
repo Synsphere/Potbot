@@ -16,6 +16,7 @@ SCHEMA = "potbot-context-rpc/v1"
 MAX_FRAME_BYTES = 2 * 1024 * 1024
 MAX_CHANNEL_BYTES = 8 * 1024 * 1024
 MAX_CHANNEL_REQUESTS = 256
+MAX_SKILL_RESOURCE_BYTES = 65_536
 
 
 def _pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -100,6 +101,7 @@ _SKILL_FIELDS = {
     "skills.archive": {"skill_id", "expected_revision", "reason"},
     "skills.list": {"limit", "after"},
     "skills.load": {"skill_id", "release_sha256"},
+    "skills.read": {"skill_id", "release_sha256", "resource_path", "offset", "max_bytes"},
 }
 _SKILL_MUTATIONS = frozenset(("skills.create", "skills.save", "skills.publish", "skills.archive"))
 
@@ -130,6 +132,9 @@ class SkillRequest:
     limit: int = 25
     after: UUID | None = None
     reason: str = ""
+    resource_path: str | None = None
+    offset: int | None = None
+    max_bytes: int | None = None
 
     def __post_init__(self) -> None:
         if (
@@ -147,6 +152,9 @@ class SkillRequest:
                 ("expected_revision", self.expected_revision),
                 ("release_sha256", self.release_sha256),
                 ("after", self.after),
+                ("resource_path", self.resource_path),
+                ("offset", self.offset),
+                ("max_bytes", self.max_bytes),
             )
             if value is not None
         }
@@ -178,6 +186,19 @@ class SkillRequest:
             or (self.after is not None and not isinstance(self.after, UUID))
         ):
             raise InvalidInputError("Invalid skill discovery bounds")
+        if self.method == "skills.read":
+            from potbot.context.skill_packages import validate_resource_path
+
+            if not isinstance(self.resource_path, str):
+                raise InvalidInputError("An exact skill resource path is required")
+            validate_resource_path(self.resource_path)
+            if (
+                type(self.offset) is not int
+                or not 0 <= self.offset < 2**31
+                or type(self.max_bytes) is not int
+                or not 1 <= self.max_bytes <= MAX_SKILL_RESOURCE_BYTES
+            ):
+                raise InvalidInputError("Invalid skill resource range")
         if (
             not isinstance(self.reason, str)
             or len(self.reason) > 1000
@@ -207,6 +228,9 @@ class SkillRequest:
             str(self.after) if self.after else None,
             self.reason,
         ]
+        # Existing mutation receipts retain their original fingerprints.
+        if self.method == "skills.read":
+            material.extend((self.resource_path, self.offset, self.max_bytes))
         raw = json.dumps(material, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
         return hashlib.sha256(raw).hexdigest()
 

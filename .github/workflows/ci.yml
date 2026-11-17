@@ -203,6 +203,36 @@ jobs:
         env:
           POTBOT_WORKBENCH_CONTRACT_FIXTURE: artifacts/operation-workbench-http-contract.json
         run: node --experimental-strip-types --test frontend/tests/operation-workbench-contract.test.mjs
+      - name: Verify complete portable skill acquisition and migration on PostgreSQL
+        env:
+          POTBOT_SKILL_CONTRACT_OUTPUT: artifacts/u04-a-skill-http-contract.json
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_skill_packages.py
+          tests/unit/test_ui_skills.py
+          tests/unit/test_skills_cli.py
+          tests/unit/test_context_acquired_skills.py
+          tests/unit/test_context_skill_lifecycle.py
+          tests/unit/test_context_agent_rpc.py
+          tests/integration/test_skill_acquisition.py
+          tests/integration/test_skill_acquisition_api.py
+          tests/integration/test_context_acquired_skills.py
+          tests/integration/test_context_skills.py
+          --junitxml=artifacts/skill-acquisition-u04-a.xml
+      - name: Verify actual skill HTTP responses against the frontend contract
+        env:
+          POTBOT_SKILL_CONTRACT_OUTPUT: artifacts/u04-a-skill-http-contract.json
+        run: node --experimental-strip-types --test frontend/tests/skill-acquisition-contract.test.mjs
+      - name: Retain portable skill acquisition acceptance
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: skill-acquisition-u04-a
+          path: |
+            artifacts/skill-acquisition-u04-a.xml
+            artifacts/u04-a-skill-http-contract.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Retain operation workbench acceptance
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

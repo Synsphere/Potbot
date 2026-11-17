@@ -106,6 +106,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         from potbot.api.operations_cli import main as operations_main
 
         return operations_main(args[1:])
+    if args and args[0] == "skills":
+        from potbot.context.skills_cli import main as skills_main
+
+        return skills_main(args[1:])
 
     parser = argparse.ArgumentParser(
         prog="potbot",
@@ -122,6 +126,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     commands.add_parser("serve", help="serve the authenticated REST API, dashboard and job streams")
     commands.add_parser("jobs", help="inspect the durable queue and run hosted-model workers")
     commands.add_parser("operations", help="inspect, check, run and monitor scoped operations")
+    commands.add_parser("skills", help="import, review, install and manage portable skill releases")
     commands.add_parser("service", help="install/start/stop the persistent user service")
     commands.add_parser("embedding", help="set up, index, and query local Qwen embeddings")
     commands.add_parser(

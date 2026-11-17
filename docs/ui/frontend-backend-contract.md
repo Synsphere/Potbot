@@ -141,3 +141,23 @@ workspace selection is inferred from user-controlled query strings:
 The backend's `model.generate` job cannot be presented as a file download.
 Future transfer and installation routes require new backend implementation;
 frontend UI placeholders cannot authorize installs or invent progress events.
+
+## U04-A portable skill acquisition (implemented)
+
+`/api/ui/skills` mirrors only the fixed implemented `/v1/ui/skills` routes in
+[the portable skill lifecycle contract](../implementation/u04-a-portable-skill-acquisition.md#http-and-browser-workflow).
+The `potbot-skill-acquisition/v1` envelope binds workspace and principal on every
+response. Sources/manifests remain bounded untrusted data; the bridge validates
+their fields and preserves declared unsupported requirements for explicit review.
+
+The backend owns private package storage, full-package digests, exact review/CAS,
+independent setup capability, immutable control history and current approval
+verification. The frontend owns presentation and retained request identity,
+with no alternate installed registry or execution authority. Source imports
+accept bounded bytes or an exact public GitHub identity, never a host filesystem
+path. Resource reads are digest-verified bounded chunks; complete browser
+downloads verify size and hash before a local result is offered.
+
+PostgreSQL HTTP acceptance exports its actual responses for the frontend
+contract gate. Unit/source projection tests and a successful build remain
+separate from rendered interaction and deployed native-host qualification.

@@ -100,6 +100,16 @@ It reuses the PostgreSQL queue, operator credentials, runtime grants and budget
 ledger. Migration 39 adds private ownership and immutable checked-run bindings;
 installed-host and live-provider qualification remain separate evidence gates.
 
+The [U04-A portable skill lifecycle](docs/implementation/u04-a-portable-skill-acquisition.md)
+adds the complete acquisition workflow after that workbench: bounded ZIP/local
+directory/pinned public GitHub import, private review, explicit installation and
+activation, authenticated Context resource loading, update diffs, rollback,
+disable and terminal revocation. The API, `potbot skills` CLI and `/skills`
+workshop share the existing PostgreSQL skill authority. Migration 40 preserves
+authored skill history while adding full-package release identities and signed
+operator controls. Bundled code remains inspectable data; executable dependency
+installation and host qualification keep their existing independent gates.
+
 ## Install and check
 
 Run the entry point for your platform from the extracted checkout:

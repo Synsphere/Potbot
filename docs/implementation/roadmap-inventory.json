@@ -29,12 +29,12 @@
     },
     {
       "path": "README.md",
-      "sha256": "b9a5d84c596b0eceed561ff83afa5351d3692d236763dabbf0348aae2be2e0a6",
-      "bytes": 31555,
+      "sha256": "b4d195f62fc5e42f650c0671a623fd033d030beceda0877f79745536893944b0",
+      "bytes": 32275,
       "kind": "narrative_text",
-      "text_sha256": "b9a5d84c596b0eceed561ff83afa5351d3692d236763dabbf0348aae2be2e0a6",
-      "characters": 31553,
-      "lines": 533,
+      "text_sha256": "b4d195f62fc5e42f650c0671a623fd033d030beceda0877f79745536893944b0",
+      "characters": 32273,
+      "lines": 543,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1225,12 +1225,12 @@
     },
     {
       "path": "docs/implementation/plugin-discovery-strategy.md",
-      "sha256": "b3ec886218935780416cabb3ea7eda5ffbc5b85439ae04784081ec52cc6894bc",
-      "bytes": 12414,
+      "sha256": "3996728139dd112f4a93400cb5babbbaf252977df05f4f9f8cb741c96c28af16",
+      "bytes": 13014,
       "kind": "narrative_text",
-      "text_sha256": "b3ec886218935780416cabb3ea7eda5ffbc5b85439ae04784081ec52cc6894bc",
-      "characters": 12394,
-      "lines": 64,
+      "text_sha256": "3996728139dd112f4a93400cb5babbbaf252977df05f4f9f8cb741c96c28af16",
+      "characters": 12994,
+      "lines": 73,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1245,12 +1245,12 @@
     },
     {
       "path": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "sha256": "6f291c7e2a2241ca25c3094f00cc4a1c9d49f487be55f61d873284288780896e",
-      "bytes": 13864,
+      "sha256": "ce18264738dd153854b8f3706d0a3a6092c2cd3998c1e25d1f43c4b2709e820a",
+      "bytes": 14609,
       "kind": "narrative_text",
-      "text_sha256": "6f291c7e2a2241ca25c3094f00cc4a1c9d49f487be55f61d873284288780896e",
-      "characters": 13860,
-      "lines": 102,
+      "text_sha256": "ce18264738dd153854b8f3706d0a3a6092c2cd3998c1e25d1f43c4b2709e820a",
+      "characters": 14605,
+      "lines": 113,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1414,6 +1414,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/implementation/u04-a-portable-skill-acquisition.md",
+      "sha256": "90623c403f2b2442f47cb58d8d6a4311c25a9bc1ffcf515032b015f824f5ac0e",
+      "bytes": 18392,
+      "kind": "narrative_text",
+      "text_sha256": "90623c403f2b2442f47cb58d8d6a4311c25a9bc1ffcf515032b015f824f5ac0e",
+      "characters": 18376,
+      "lines": 305,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": "docs/implementation/u04-c-operation-catalogue.md",
       "sha256": "10469983f300a1d789ff5e9b8a10b7dbbe717f9cb0c1854f3d741c494d5bd77a",
       "bytes": 11538,
@@ -1435,12 +1445,12 @@
     },
     {
       "path": "docs/implementation/unified-development-roadmap.md",
-      "sha256": "1b946eaa79437dbcbf86dda2699e645f2b7e6c394a6c2b8e009aad8c064a46d7",
-      "bytes": 33534,
+      "sha256": "6e7af60a2fc734b7d022aa2ae6281ab987787d620e57bc09825db522f09b9117",
+      "bytes": 34647,
       "kind": "narrative_text",
-      "text_sha256": "1b946eaa79437dbcbf86dda2699e645f2b7e6c394a6c2b8e009aad8c064a46d7",
-      "characters": 33378,
-      "lines": 255,
+      "text_sha256": "6e7af60a2fc734b7d022aa2ae6281ab987787d620e57bc09825db522f09b9117",
+      "characters": 34491,
+      "lines": 267,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1896,22 +1906,22 @@
     },
     {
       "path": "docs/ui/frontend-backend-contract.md",
-      "sha256": "7660d2a1dfcdc3351a1f0c763ab29556be90a2f5d513b650fe61ac58969119db",
-      "bytes": 8551,
+      "sha256": "8078a3f161ec92c94504abdd30d186f0451e0464761b201d306affba40045383",
+      "bytes": 9802,
       "kind": "narrative_text",
-      "text_sha256": "7660d2a1dfcdc3351a1f0c763ab29556be90a2f5d513b650fe61ac58969119db",
-      "characters": 8549,
-      "lines": 143,
+      "text_sha256": "8078a3f161ec92c94504abdd30d186f0451e0464761b201d306affba40045383",
+      "characters": 9800,
+      "lines": 163,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
       "path": "docs/ui/implementation-plan.md",
-      "sha256": "eb150e7aaba7a3f58fd96743eee4cf7d6f07e8b8e74d5e4592197f6a3f37fa28",
-      "bytes": 18786,
+      "sha256": "5551ec95fb565ddbfd62c2e5da800c73da96cc40b74b018a31447cee38325ccf",
+      "bytes": 19848,
       "kind": "narrative_text",
-      "text_sha256": "eb150e7aaba7a3f58fd96743eee4cf7d6f07e8b8e74d5e4592197f6a3f37fa28",
-      "characters": 18766,
-      "lines": 308,
+      "text_sha256": "5551ec95fb565ddbfd62c2e5da800c73da96cc40b74b018a31447cee38325ccf",
+      "characters": 19826,
+      "lines": 325,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1996,12 +2006,12 @@
     },
     {
       "path": "frontend/README.md",
-      "sha256": "8b0981551d61a754837a3d70146d498e4ba809a2034e88d795536695221e52e9",
-      "bytes": 17627,
+      "sha256": "20c4330e806a6a155857ec0da27edb88c221bda5920b5d7a57f5b9fbaa9516f9",
+      "bytes": 20240,
       "kind": "narrative_text",
-      "text_sha256": "8b0981551d61a754837a3d70146d498e4ba809a2034e88d795536695221e52e9",
-      "characters": 17611,
-      "lines": 333,
+      "text_sha256": "20c4330e806a6a155857ec0da27edb88c221bda5920b5d7a57f5b9fbaa9516f9",
+      "characters": 20222,
+      "lines": 375,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -3619,7 +3629,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Installed transport Cog factories in open PR13 are not merged into main",
         "Pin protocol/deployment/schema/auth scope and reconcile uncertain mutations across layered retries",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -3718,7 +3728,7 @@
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Broader GraphQL/protobuf/reflection/subscription features remain unsupported",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify managed credentials and broader API transport profiles separately.",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
@@ -5199,7 +5209,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S00",
       "title": "inventory/pin official specifications and sample package fixtures, mapping existing T01\u2013T48 and C00\u2013C09 milestones (no duplicate infrastructure).",
-      "locator": "line:80",
+      "locator": "line:91",
       "source_claim": "requirements_only",
       "requirement_sha256": "f2704adce09e6ee4ee9143a356d0faaac0ef95e58479e813d0edce801b40b329",
       "unified_owners": [
@@ -5225,10 +5235,12 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For S00 (inventory/pin official specifications and sample package fixtures, mapping existing T01\u2013T48 and C00\u2013C09 milestones (no duplicate infrastructure).): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
       "review_families": [
@@ -5253,7 +5265,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S01",
       "title": "Source adapters and catalogue federation",
-      "locator": "line:38",
+      "locator": "line:49",
       "source_claim": "requirements_only",
       "requirement_sha256": "f76073a485d8cf27a6333a88809866518bfc0bb6f9165f19d8d495134319b5f4",
       "unified_owners": [
@@ -5279,12 +5291,14 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
-      "next_action": "For S01 (Source adapters and catalogue federation): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
+      "next_action": "Extend the bounded U04-A portable-data owner with the remaining requirement-specific registry, executable, vendor or installed-host gate; preserve current signed read authorization and explicit unsupported behavior.",
       "review_families": [
         "compatibility",
         "skills"
@@ -5299,7 +5313,7 @@
         "U15",
         "U16"
       ],
-      "assessment": "Requirement: Source adapters and catalogue federation. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility."
+      "assessment": "Requirement: Source adapters and catalogue federation. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility. U04-A adds bounded ZIP/local and pinned public GitHub adapters; ClawHub/skills.sh federation, task-led search and production retrieval qualification remain open."
     },
     {
       "key": "external-skills:S02",
@@ -5307,7 +5321,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S02",
       "title": "Portable skill intermediate representation",
-      "locator": "line:42",
+      "locator": "line:53",
       "source_claim": "requirements_only",
       "requirement_sha256": "7f677a27d947eb73b1abc1bb2a995fd3e1bd169f6f773cc6b1968bed3fdb6050",
       "unified_owners": [
@@ -5333,12 +5347,14 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
-      "next_action": "For S02 (Portable skill intermediate representation): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
+      "next_action": "Extend the bounded U04-A portable-data owner with the remaining requirement-specific registry, executable, vendor or installed-host gate; preserve current signed read authorization and explicit unsupported behavior.",
       "review_families": [
         "compatibility",
         "skills"
@@ -5353,7 +5369,7 @@
         "U15",
         "U16"
       ],
-      "assessment": "Requirement: Portable skill intermediate representation. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility."
+      "assessment": "Requirement: Portable skill intermediate representation. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility. U04-A preserves original SKILL.md and all bounded resource bytes in a portable content-addressed manifest, with source identity and explicit unsupported declarations; complete vendor behavior translation remains open."
     },
     {
       "key": "external-skills:S03",
@@ -5361,7 +5377,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S03",
       "title": "Readiness, visibility and invocation",
-      "locator": "line:46",
+      "locator": "line:57",
       "source_claim": "requirements_only",
       "requirement_sha256": "94914321aee5c87ceb8f08dfe3c699d8793da31b652e3c04462c7cf404542f4b",
       "unified_owners": [
@@ -5387,12 +5403,14 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
-      "next_action": "For S03 (Readiness, visibility and invocation): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
+      "next_action": "Extend the bounded U04-A portable-data owner with the remaining requirement-specific registry, executable, vendor or installed-host gate; preserve current signed read authorization and explicit unsupported behavior.",
       "review_families": [
         "compatibility",
         "skills"
@@ -5407,7 +5425,7 @@
         "U15",
         "U16"
       ],
-      "assessment": "Requirement: Readiness, visibility and invocation. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility."
+      "assessment": "Requirement: Readiness, visibility and invocation. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility. U04-A separates imported/installed/enabled state from current signed availability and offers exact authenticated reads; measured dependency readiness, per-agent selection, filesystem views and task execution remain open."
     },
     {
       "key": "external-skills:S04",
@@ -5415,7 +5433,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S04",
       "title": "Dependencies and secret broker",
-      "locator": "line:50",
+      "locator": "line:61",
       "source_claim": "requirements_only",
       "requirement_sha256": "56dc3e92e2ed8cc6e7c20fe43ee3e9f51a18e7a3dd5d496deda17293695f2d99",
       "unified_owners": [
@@ -5441,10 +5459,12 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For S04 (Dependencies and secret broker): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
       "review_families": [
@@ -5469,7 +5489,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S05",
       "title": "Native Cog compatibility shims",
-      "locator": "line:54",
+      "locator": "line:65",
       "source_claim": "requirements_only",
       "requirement_sha256": "acc7744c37640daee4b6a58a889c701eb881da1fbeea51ee6ac0728a64ee8df7",
       "unified_owners": [
@@ -5495,10 +5515,12 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For S05 (Native Cog compatibility shims): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
       "review_families": [
@@ -5523,7 +5545,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S06",
       "title": "Workflows, hooks and commands",
-      "locator": "line:58",
+      "locator": "line:69",
       "source_claim": "requirements_only",
       "requirement_sha256": "015a626ee5a759815cc6461f21aebfc30e4267427a4ccfb81ada2705dd052456",
       "unified_owners": [
@@ -5549,10 +5571,12 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For S06 (Workflows, hooks and commands): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
       "review_families": [
@@ -5577,7 +5601,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S07",
       "title": "Supply-chain verification and update policy",
-      "locator": "line:62",
+      "locator": "line:73",
       "source_claim": "requirements_only",
       "requirement_sha256": "4284bc14d1c1a7ce8e98397a2f5a345041e1eb25817fefe32bfcf7f530118938",
       "unified_owners": [
@@ -5603,12 +5627,14 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
-      "next_action": "For S07 (Supply-chain verification and update policy): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
+      "next_action": "Extend the bounded U04-A portable-data owner with the remaining requirement-specific registry, executable, vendor or installed-host gate; preserve current signed read authorization and explicit unsupported behavior.",
       "review_families": [
         "compatibility",
         "skills"
@@ -5623,7 +5649,7 @@
         "U15",
         "U16"
       ],
-      "assessment": "Requirement: Supply-chain verification and update policy. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility."
+      "assessment": "Requirement: Supply-chain verification and update policy. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility. U04-A adds bounded parser checks, exact source/manifest review, signed controls, immutable resources and current-key revocation defenses; publisher trust, sandbox dependency audits and real package task qualification remain separate."
     },
     {
       "key": "external-skills:S08",
@@ -5631,7 +5657,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S08",
       "title": "Discovery UI and CLI",
-      "locator": "line:66",
+      "locator": "line:77",
       "source_claim": "requirements_only",
       "requirement_sha256": "282e831aa35a1c5bce3826fa901ba32daefd51aae4a1f05d918fdaa49743889a",
       "unified_owners": [
@@ -5657,12 +5683,14 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
-      "next_action": "For S08 (Discovery UI and CLI): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
+      "next_action": "Extend the bounded U04-A portable-data owner with the remaining requirement-specific registry, executable, vendor or installed-host gate; preserve current signed read authorization and explicit unsupported behavior.",
       "review_families": [
         "compatibility",
         "skills"
@@ -5677,7 +5705,7 @@
         "U15",
         "U16"
       ],
-      "assessment": "Requirement: Discovery UI and CLI. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility."
+      "assessment": "Requirement: Discovery UI and CLI. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility. U04-A completes the bounded portable acquisition/review/lifecycle UI and CLI with resource inspection and stable retry identities; full registry search and executable installer workflows remain open."
     },
     {
       "key": "external-skills:S09",
@@ -5685,7 +5713,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S09",
       "title": "Compatibility qualification suite",
-      "locator": "line:70",
+      "locator": "line:81",
       "source_claim": "requirements_only",
       "requirement_sha256": "10649bcfe39ce9f4b1152e757ae9b31a3606555ff06b7314ae09ab86f2112f8a",
       "unified_owners": [
@@ -5711,12 +5739,14 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
-      "next_action": "For S09 (Compatibility qualification suite): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
+      "next_action": "Extend the bounded U04-A portable-data owner with the remaining requirement-specific registry, executable, vendor or installed-host gate; preserve current signed read authorization and explicit unsupported behavior.",
       "review_families": [
         "compatibility",
         "skills"
@@ -5731,7 +5761,7 @@
         "U15",
         "U16"
       ],
-      "assessment": "Requirement: Compatibility qualification suite. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility."
+      "assessment": "Requirement: Compatibility qualification suite. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility. U04-A adds adversarial package and real PostgreSQL/Context/protocol acceptance using explicit fixtures; this does not qualify arbitrary third-party vendors, native hosts or successful real tasks."
     },
     {
       "key": "external-skills:S10",
@@ -5739,7 +5769,7 @@
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
       "id": "S10",
       "title": "Native authoring and publication",
-      "locator": "line:74",
+      "locator": "line:85",
       "source_claim": "requirements_only",
       "requirement_sha256": "604b62404f511fbdebe806fc68f5cbe219463cb7894050ac3f2995adbda948e4",
       "unified_owners": [
@@ -5765,10 +5795,12 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Pin actual packages/specifications/licenses and test each semantic substitution",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Require denied-authority, version drift, browser identity and unsupported-feature cases"
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Require denied-authority, version drift, browser identity and unsupported-feature cases",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For S10 (Native authoring and publication): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
       "review_families": [
@@ -5962,8 +5994,10 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation"
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For M4 (Plugin manifest, hooks, qualification): Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
       "review_families": [
@@ -12193,7 +12227,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Installed transport Cog factories in open PR13 are not merged into main",
         "Pin protocol/deployment/schema/auth scope and reconcile uncertain mutations across layered retries",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -12292,7 +12326,7 @@
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Broader GraphQL/protobuf/reflection/subscription features remain unsupported",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify managed credentials and broader API transport profiles separately.",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
@@ -26338,7 +26372,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Installed transport Cog factories in open PR13 are not merged into main",
         "Pin protocol/deployment/schema/auth scope and reconcile uncertain mutations across layered retries",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -26387,7 +26421,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Installed transport Cog factories in open PR13 are not merged into main",
         "Pin protocol/deployment/schema/auth scope and reconcile uncertain mutations across layered retries",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -26436,7 +26470,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Installed transport Cog factories in open PR13 are not merged into main",
         "Pin protocol/deployment/schema/auth scope and reconcile uncertain mutations across layered retries",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -26485,7 +26519,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Installed transport Cog factories in open PR13 are not merged into main",
         "Pin protocol/deployment/schema/auth scope and reconcile uncertain mutations across layered retries",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -26535,7 +26569,7 @@
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Broader GraphQL/protobuf/reflection/subscription features remain unsupported",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify managed credentials and broader API transport profiles separately.",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
@@ -26584,7 +26618,7 @@
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Broader GraphQL/protobuf/reflection/subscription features remain unsupported",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify managed credentials and broader API transport profiles separately.",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
@@ -26633,7 +26667,7 @@
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Broader GraphQL/protobuf/reflection/subscription features remain unsupported",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify managed credentials and broader API transport profiles separately.",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
@@ -26682,7 +26716,7 @@
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Broader GraphQL/protobuf/reflection/subscription features remain unsupported",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify managed credentials and broader API transport profiles separately.",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
@@ -27942,7 +27976,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Preserve shared Git lock, remote HEAD CAS and mutation readback across workspaces",
         "Qualify restart/network interruption, retention/deletion/cache invalidation and slow-consumer memory bounds",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -27991,7 +28025,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Preserve shared Git lock, remote HEAD CAS and mutation readback across workspaces",
         "Qualify restart/network interruption, retention/deletion/cache invalidation and slow-consumer memory bounds",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -28748,24 +28782,33 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Close remaining constructor/protocol and per-launch snapshot coverage",
         "Complete real loss-aware syscall/task-exit accounting for every executable Cog route",
         "Connect job-backed inference, principal-aware workspace discovery and resumable terminal/graph APIs",
         "Cross-producer crash boundaries and durable approval/cancellation adoption remain incomplete",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Keep 60 BPM, 180-second weighted glow, separate 2-second flash and every-agent coverage; top-eight busy-CPU shares are partial",
+        "Preserve data-only projections, source-backed reconciliation/conflicts and operator-only grants",
         "Preserve exact orb, reduced-motion/accessibility and metric timing/denominator contracts",
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
         "Qualify power-loss persistence, native credential rotation/recovery and hostile concurrent maintenance on the supported filesystem/host.",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence",
+        "Qualify the installed directed route with signed Syn and worker packages, two Agents and fault fencing.",
         "Remote effects need target idempotency/status evidence; uncertainty cannot release budget or replay blindly",
-        "Run complete activation, repin, real postflight, native operator restart and rollback on the signed-image qualified host."
+        "Run complete activation, repin, real postflight, native operator restart and rollback on the signed-image qualified host.",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
-      "next_action": "Run the controlled workbench on an authorized installed host, then deliver the next acquisition/connector lifecycle milestone through existing maintenance and execution owners. Keep conservative catalogue observations separate from current signed admission.",
+      "next_action": "Qualify the supported operation and portable-data workflows on an authorized installed host, then extend executable acquisition and connector breadth through existing owners; preserve the separation between observations and current signed admission.",
       "review_families": [
         "catalogue",
         "accounting",
         "tool-upgrade",
         "durable",
+        "skills",
+        "context",
         "frontend"
       ],
       "reviewed_unified_owners": [
@@ -28774,14 +28817,16 @@
         "U03",
         "U04",
         "U05",
+        "U06",
         "U07",
         "U08",
+        "U09",
         "U11",
         "U12",
         "U13",
         "U16"
       ],
-      "assessment": "The merged U04-C read-only catalogue and partial linked accounting are retained. U04-E completes the supported operation workbench: signed worker eligibility, explicit one-check/one-run launch, current dispatch revalidation, owned progress, cancellation and verified results for existing native Cog and hosted model handlers. Fixture/database acceptance does not qualify a deployed host or live provider."
+      "assessment": "The merged U04-C read-only catalogue and partial linked accounting are retained. U04-E completes the supported operation workbench: signed worker eligibility, explicit one-check/one-run launch, current dispatch revalidation, owned progress, cancellation and verified results for existing native Cog and hosted model handlers. Fixture/database acceptance does not qualify a deployed host or live provider. U04-A adds acquired skill installation/control records and the complete portable-data workshop while retaining conservative operation readiness. Actual imported Context reads independently verify the current signed approval and complete package."
     },
     {
       "key": "recent-development:RD19",
@@ -28810,7 +28855,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Installed transport Cog factories in open PR13 are not merged into main",
         "Pin protocol/deployment/schema/auth scope and reconcile uncertain mutations across layered retries",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -29248,8 +29293,10 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation"
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For RD29 (Shared `/usr/local/skills`, agent-authored portable skills, context and controlled concurrent changes. [Stage 10C][ctx49], [external skills][skills], [compatibility][compat].): Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
       "review_families": [
@@ -31170,7 +31217,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
       ],
@@ -31212,7 +31259,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
       ],
@@ -31649,7 +31696,7 @@
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Complete each enabled operation binding, inherited Ember and handler/executable drift checks",
         "Enumerate every model, workflow, MCP/resource/prompt, internal job and denial/cache producer",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Preserve C01-C07 and direct trigger/emitter monitoring for nested and pure Cogs",
         "Qualify fan-in, loss, retention and complete replay without fabricating terminal measurements",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -31703,7 +31750,7 @@
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Complete each enabled operation binding, inherited Ember and handler/executable drift checks",
         "Enumerate every model, workflow, MCP/resource/prompt, internal job and denial/cache producer",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Preserve C01-C07 and direct trigger/emitter monitoring for nested and pure Cogs",
         "Qualify fan-in, loss, retention and complete replay without fabricating terminal measurements",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -31757,7 +31804,7 @@
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Complete each enabled operation binding, inherited Ember and handler/executable drift checks",
         "Enumerate every model, workflow, MCP/resource/prompt, internal job and denial/cache producer",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Preserve C01-C07 and direct trigger/emitter monitoring for nested and pure Cogs",
         "Qualify fan-in, loss, retention and complete replay without fabricating terminal measurements",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -31811,7 +31858,7 @@
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Complete each enabled operation binding, inherited Ember and handler/executable drift checks",
         "Enumerate every model, workflow, MCP/resource/prompt, internal job and denial/cache producer",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Preserve C01-C07 and direct trigger/emitter monitoring for nested and pure Cogs",
         "Qualify fan-in, loss, retention and complete replay without fabricating terminal measurements",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
@@ -32222,23 +32269,30 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
-        "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
+        "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For T04.1 (Curated registry and trusted package catalog): Extend the existing capability/installation registry and operator UI; do not create a second tool registry.",
       "review_families": [
-        "catalogue"
+        "catalogue",
+        "skills"
       ],
       "reviewed_unified_owners": [
         "U04",
         "U05",
+        "U06",
         "U07",
+        "U09",
         "U11",
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Curated registry and trusted package catalog. T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool."
+      "assessment": "Requirement: Curated registry and trusted package catalog. T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool. U04-A adds private source snapshots and exact approved portable manifests to the existing skill authority; curated publisher trust and executable package registration remain open."
     },
     {
       "key": "tools:T04.2",
@@ -32264,7 +32318,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
       ],
@@ -32306,7 +32360,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
       ],
@@ -32348,23 +32402,30 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
-        "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence"
+        "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For T04.4 (Versioning, health, revocation and install lifecycle): Extend the existing capability/installation registry and operator UI; do not create a second tool registry.",
       "review_families": [
-        "catalogue"
+        "catalogue",
+        "skills"
       ],
       "reviewed_unified_owners": [
         "U04",
         "U05",
+        "U06",
         "U07",
+        "U09",
         "U11",
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Versioning, health, revocation and install lifecycle. T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool."
+      "assessment": "Requirement: Versioning, health, revocation and install lifecycle. T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool. U04-A implements portable data package update, rollback, disable and terminal revocation; executable tool health, postflight and installation remain with existing S9-S12 owners."
     },
     {
       "key": "tools:T05.1",
@@ -32702,7 +32763,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify live coding handoffs, composition and exact returned-patch scoring",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence",
@@ -32749,7 +32810,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify live coding handoffs, composition and exact returned-patch scoring",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence",
@@ -32796,7 +32857,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify live coding handoffs, composition and exact returned-patch scoring",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence",
@@ -32843,7 +32904,7 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Qualify live coding handoffs, composition and exact returned-patch scoring",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence",
@@ -33712,7 +33773,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U00",
       "title": "Repository audit and roadmap reconciliation",
-      "locator": "line:93",
+      "locator": "line:104",
       "source_claim": "requirements_only",
       "requirement_sha256": "8e02c7ec68153a9ea09c732dec24853b9d7a65b2a370e9a8f4738bfa9147c8a3",
       "unified_owners": [
@@ -33744,7 +33805,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U01",
       "title": "Durable execution and provenance",
-      "locator": "line:94",
+      "locator": "line:105",
       "source_claim": "requirements_only",
       "requirement_sha256": "9acdee3308aa30755f1fe04ec78556f755c8fdaea9f3650d1e91888677f1e70d",
       "unified_owners": [
@@ -33783,7 +33844,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U02",
       "title": "Sandbox and shared filesystem",
-      "locator": "line:95",
+      "locator": "line:106",
       "source_claim": "requirements_only",
       "requirement_sha256": "f27fdf68725090cd51f00f3e8e157e472beffda2bec5975494fa151feccd2fcb",
       "unified_owners": [
@@ -33817,7 +33878,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U03",
       "title": "Worker/Cog resource supervision",
-      "locator": "line:96",
+      "locator": "line:107",
       "source_claim": "requirements_only",
       "requirement_sha256": "6fd056f50d44fd62e2b1400ccaef0bd8fa3533bf3359fc38f87327b70ac49e54",
       "unified_owners": [
@@ -33851,7 +33912,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U04",
       "title": "Semantic tool platform",
-      "locator": "line:97",
+      "locator": "line:108",
       "source_claim": "requirements_only",
       "requirement_sha256": "7f1a1e829ccf1f5ddca50253821fed65731cd7210251bfe4e3ca4a1cf0c1f083",
       "unified_owners": [
@@ -33866,18 +33927,23 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
         "Complete each enabled operation binding, inherited Ember and handler/executable drift checks",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
         "Preserve C01-C07 and direct trigger/emitter monitoring for nested and pure Cogs",
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
         "Qualify power-loss persistence, native credential rotation/recovery and hostile concurrent maintenance on the supported filesystem/host.",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints",
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence",
-        "Run complete activation, repin, real postflight, native operator restart and rollback on the signed-image qualified host."
+        "Run complete activation, repin, real postflight, native operator restart and rollback on the signed-image qualified host.",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For U04 (Semantic tool platform): Extend the current registered runtime; reject raw adapter dispatch and model-supplied authority.",
       "review_families": [
-        "tool-schema",
         "catalogue",
+        "skills",
+        "tool-schema",
         "tool-upgrade"
       ],
       "reviewed_unified_owners": [
@@ -33886,11 +33952,12 @@
         "U05",
         "U06",
         "U07",
+        "U09",
         "U11",
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Semantic tool platform. Existing typed Cogs/S12 and the merged catalogue now support the full U04-E controlled native/hosted operation workflow. Broader acquisition, ecosystem routes, installed host and connector qualification remain independent."
+      "assessment": "Requirement: Semantic tool platform. Existing typed Cogs/S12 and the merged catalogue now support the full U04-E controlled native/hosted operation workflow. Broader acquisition, ecosystem routes, installed host and connector qualification remain independent. U04-A completes the bounded portable skill data lifecycle alongside U04-E; executable acquisition, broader registered routes, live readiness and host qualification remain independent."
     },
     {
       "key": "unified:U05",
@@ -33898,7 +33965,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U05",
       "title": "Artifact transfer and GitHub concurrency",
-      "locator": "line:98",
+      "locator": "line:109",
       "source_claim": "requirements_only",
       "requirement_sha256": "ed7818d7731f55710e5596d2c7140fe8019d9f7aea09798f7beb98c9325bcd3d",
       "unified_owners": [
@@ -33933,7 +34000,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U06",
       "title": "Syn identity and security",
-      "locator": "line:99",
+      "locator": "line:110",
       "source_claim": "requirements_only",
       "requirement_sha256": "b1c9ad84bd4653b301fc1c4018085bbe1682203c76101ec7699a150a61575e86",
       "unified_owners": [
@@ -33967,7 +34034,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U07",
       "title": "Models, providers and credentials",
-      "locator": "line:100",
+      "locator": "line:111",
       "source_claim": "requirements_only",
       "requirement_sha256": "fb5a6e3ca91f5eb19db215baa1ad991f2c8dfbaef5a49235b6078a3656f438aa",
       "unified_owners": [
@@ -34002,7 +34069,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U08",
       "title": "Reasoning graph and steering",
-      "locator": "line:101",
+      "locator": "line:112",
       "source_claim": "requirements_only",
       "requirement_sha256": "acd521ce50bb19d6a89620dbd8c6b7d22c0b5fdfbfc12473defc60181486ae9b",
       "unified_owners": [
@@ -34037,7 +34104,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U09",
       "title": "Prompt/context and MODEL.md",
-      "locator": "line:102",
+      "locator": "line:113",
       "source_claim": "requirements_only",
       "requirement_sha256": "bf7f84edb02e60ef8572c505c67b36685ed81f02f76d975b7579d467aec1c647",
       "unified_owners": [
@@ -34066,7 +34133,7 @@
         "U09",
         "U11"
       ],
-      "assessment": "Requirement: Prompt/context and MODEL.md. Application context migrations 29-33, registered-object lifecycle, projections, scoped RPC and ordinary worker launch integration exist. Root MODEL/MEMORY and standalone Stage 2 SQLite describe historical development contracts."
+      "assessment": "Requirement: Prompt/context and MODEL.md. Application context migrations 29-33, registered-object lifecycle, projections, scoped RPC and ordinary worker launch integration exist. Root MODEL/MEMORY and standalone Stage 2 SQLite describe historical development contracts. U04-A adds exact acquired instruction/resource loading through genuine Context sessions, separate live context and no persistent imported byte projection; wider constructor/protocol coverage remains partial."
     },
     {
       "key": "unified:U10",
@@ -34074,7 +34141,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U10",
       "title": "Memory and embeddings",
-      "locator": "line:103",
+      "locator": "line:114",
       "source_claim": "requirements_only",
       "requirement_sha256": "b6213afccf90e68ccc7c32c0570bfb65875adfcee9e8d122c302949b726b8a53",
       "unified_owners": [
@@ -34113,7 +34180,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U11",
       "title": "Plugin and skills ecosystem",
-      "locator": "line:104",
+      "locator": "line:115",
       "source_claim": "requirements_only",
       "requirement_sha256": "322a12f1c3178717f393a21212982f61c81d989ac76dfb3750bc2aa78fb7daf7",
       "unified_owners": [
@@ -34127,8 +34194,10 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures",
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation"
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
       "next_action": "For U11 (Plugin and skills ecosystem): Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports.",
       "review_families": [
@@ -34140,7 +34209,7 @@
         "U09",
         "U11"
       ],
-      "assessment": "Requirement: Plugin and skills ecosystem. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility."
+      "assessment": "Requirement: Plugin and skills ecosystem. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility. U04-A implements original-byte portable manifests, explicit source review, controlled install/activation/update/rollback/revocation and authenticated resources in the existing registry; vendor hooks/execution and registry federation remain partial."
     },
     {
       "key": "unified:U12",
@@ -34148,7 +34217,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U12",
       "title": "Browser automation",
-      "locator": "line:105",
+      "locator": "line:116",
       "source_claim": "requirements_only",
       "requirement_sha256": "aa5729d418f9e0fe07f81549990e6b9f43eec398d40b8162c1b9b3e989e51e9f",
       "unified_owners": [
@@ -34185,7 +34254,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U13",
       "title": "Next.js operator frontend",
-      "locator": "line:106",
+      "locator": "line:117",
       "source_claim": "requirements_only",
       "requirement_sha256": "61130383fd5028063cb79292776e3db7c15abb9d82b934f4fc4ccaff5e813962",
       "unified_owners": [
@@ -34212,7 +34281,7 @@
         "U12",
         "U13"
       ],
-      "assessment": "Requirement: Next.js operator frontend. Existing workspace/panel/chat/transfer foundations now include the full U04-E check/launch/owned monitoring/cancel/result workflow with stable mutation recovery. Durable chat inference, PTY reconnect, graph push and every-agent load remain incomplete."
+      "assessment": "Requirement: Next.js operator frontend. Existing workspace/panel/chat/transfer foundations now include the full U04-E check/launch/owned monitoring/cancel/result workflow with stable mutation recovery. Durable chat inference, PTY reconnect, graph push and every-agent load remain incomplete. U04-A adds the complete portable skill workshop, bounded resource review/download and durable scoped mutation recovery; rendered host, inference/PTY/graph and every-agent UI gates remain separate."
     },
     {
       "key": "unified:U14",
@@ -34220,7 +34289,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U14",
       "title": "Evaluation and adaptation",
-      "locator": "line:107",
+      "locator": "line:118",
       "source_claim": "requirements_only",
       "requirement_sha256": "ece56c3dd0f7832182cab7633829be39bed5d475573ed31c82e1a8e61ecd69a3",
       "unified_owners": [
@@ -34256,7 +34325,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U15",
       "title": "Automation and interoperability",
-      "locator": "line:108",
+      "locator": "line:119",
       "source_claim": "requirements_only",
       "requirement_sha256": "4d287b3521c0deaa365e86a77a852cab18577f972d57b0eeb333c4133c8051f1",
       "unified_owners": [
@@ -34289,9 +34358,9 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U16",
       "title": "CI, release and deployment qualification",
-      "locator": "line:109",
+      "locator": "line:120",
       "source_claim": "requirements_only",
-      "requirement_sha256": "313735683d5f494b213779262a4d808bc9ad7c6d3c54c07f9c4fd806d7c96e47",
+      "requirement_sha256": "fe8d3758647d08589ed8cb889576f311d42b3e1d8c88d055a359ca2b53203ec6",
       "unified_owners": [
         "U16"
       ],
@@ -35548,12 +35617,12 @@
     },
     {
       "path": "src/potbot/context/runtime_integration.py",
-      "sha256": "bdc4d3ae7185f98d4f6211af5d03499909b0a57ffecb0ff0e3d8407b0fca0f6d",
-      "bytes": 16781,
+      "sha256": "6c6a02cdda2caf9fa398a5e8fa0289a7416bfa5f34f5f0c18a9d6767de363ea8",
+      "bytes": 17101,
       "kind": "narrative_text",
-      "text_sha256": "bdc4d3ae7185f98d4f6211af5d03499909b0a57ffecb0ff0e3d8407b0fca0f6d",
-      "characters": 16781,
-      "lines": 419,
+      "text_sha256": "6c6a02cdda2caf9fa398a5e8fa0289a7416bfa5f34f5f0c18a9d6767de363ea8",
+      "characters": 17101,
+      "lines": 430,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -35920,12 +35989,12 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "sha256": "c549f9ac918bd25bf2b19ea46927d555dfb663a0ee394d3ca36ed1ac68e70634",
-      "bytes": 16601,
+      "sha256": "85cb520d23a92521645e3c0bf1e3f016419ee3562dc62f00d848b09020609423",
+      "bytes": 18073,
       "kind": "narrative_text",
-      "text_sha256": "c549f9ac918bd25bf2b19ea46927d555dfb663a0ee394d3ca36ed1ac68e70634",
-      "characters": 16599,
-      "lines": 328,
+      "text_sha256": "85cb520d23a92521645e3c0bf1e3f016419ee3562dc62f00d848b09020609423",
+      "characters": 18071,
+      "lines": 358,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36239,7 +36308,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "cbb9c8497eb2c21f76b156f520be6dd2bf9c960889c12bbef97cc529173e7c39",
+  "review_sha256": "d3fa5ea944512aff919da61c58847c5306e0b0f458e6f5600f85b7a4a38e2d8e",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -36289,19 +36358,20 @@
     },
     {
       "source": "README.md",
-      "locator": "line:1-102",
-      "sha256": "15bc789e5dabf41b828ebd0b82a584f1a3a664e873271558d5b499bdeffd37cb",
+      "locator": "line:1-112",
+      "sha256": "eb3b0c63e5a481a3f5be9d5ba6f0286cc6aa2973cac1e0dba517a8cc6a8e13e4",
       "excerpt": "# potbot\n\nAn evidence-driven, multi-model coding agent, built in stages from the architecture\nand implementation plan in `docs/`.\n\nFor the current delivery orde",
       "review_families": [
         "audit",
         "foundation",
         "catalogue",
+        "skills",
         "frontend"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:103-175",
+      "locator": "line:113-185",
       "sha256": "5f26eccfd87920c2708fbeaed5cbb98b75156b1d34439b5a3f335cbab91bd731",
       "excerpt": "## Install and check\n\nRun the entry point for your platform from the extracted checkout:\n\n```powershell\n# Windows Command Prompt: start.bat\n# Windows PowerShell",
       "review_families": [
@@ -36311,7 +36381,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:176-191",
+      "locator": "line:186-201",
       "sha256": "5689f55fe90f94c53113dd0b1bbda33d5657a0f6c1c93e4a556178e094a78299",
       "excerpt": "## Work with tasks\n\nProvision the application schema, a workspace, and a restricted database principal\nwith `potbot admin`. Then submit and inspect tasks throug",
       "review_families": [
@@ -36321,7 +36391,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:192-210",
+      "locator": "line:202-220",
       "sha256": "4036e8789e575a45036555c7457f49d9bea65e48b66bb2118f94f4c27b4e27f0",
       "excerpt": "## First verified patch\n\nThe [Phase 4 guide](docs/phase-4.md) documents the full scripted fixture, its\ncheckpoint/resume commands, exported manifest, and accept",
       "review_families": [
@@ -36331,7 +36401,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:211-231",
+      "locator": "line:221-241",
       "sha256": "4133870806c1292b693f0a1dc54d1b0e284520d91d8f995e4f8e1799f71e12a3",
       "excerpt": "## Model foundation\n\nThe [Phase 5 guide](docs/phase-5.md) describes model proposal admission, exact\nrecipient contexts, separately budgeted schema repair, resta",
       "review_families": [
@@ -36341,7 +36411,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:232-254",
+      "locator": "line:242-264",
       "sha256": "f6eb0f8ce0d9553bd770e3aa012be90acdf0ba12894b7c4f0668ac37c6dcba85",
       "excerpt": "## OpenAI-compatible client API and persistent service\n\nThe [OpenAI compatibility and persistent service guide](docs/openai-compatible-service.md)\nadds `/v1/cha",
       "review_families": [
@@ -36351,7 +36421,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:255-267",
+      "locator": "line:265-277",
       "sha256": "fab7a8976917a66451ea5cd7555038ba69463d2a9821c64a3d9a668f00baea42",
       "excerpt": "## Model-aware prompting and R3/R4 reasoning\n\nThe [R3/R4 integration guide](docs/implementation/18-model-prompts-r3-r4.md)\nadds a versioned, model-aware prompt ",
       "review_families": [
@@ -36361,7 +36431,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:268-288",
+      "locator": "line:278-298",
       "sha256": "96ad153d1dfaad68b6947f9cc63ac4b79f9bcea33512fd344719df58447d3cfb",
       "excerpt": "## Hosted models, API and job dashboard\n\nThe [hosted jobs guide](docs/hosted-jobs.md) covers credentials, operator policy,\ntask startup, accounting and this inc",
       "review_families": [
@@ -36371,7 +36441,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:289-297",
+      "locator": "line:299-307",
       "sha256": "f9d2022de0886f2ecdcf84e5e40516d96e024979eb788867c36955d4d064356c",
       "excerpt": "## DanceFlow KeywordMoves workflow acceptance\n\nThe [pinned KeywordMoves workflow acceptance guide](docs/implementation/22-danceflow-keywordmoves-workflow-accept",
       "review_families": [
@@ -36381,7 +36451,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:298-325",
+      "locator": "line:308-335",
       "sha256": "28ea5a68406567ec887ab4bdd1c37858f30910ac26eec99967a054b251c26d6b",
       "excerpt": "## Repository capture and controlled execution\n\nThe [Phase 3 guide](docs/phase-3.md) describes its original migration history and the complete\n`prepare`, `run`,",
       "review_families": [
@@ -36391,7 +36461,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:326-358",
+      "locator": "line:336-368",
       "sha256": "22bb9fc2431de416732f531312adb21e5040b74228b2b93e5bbb1dda408f2e3b",
       "excerpt": "## Standard local vector embeddings\n\nThe reference integration uses **Qwen/Qwen3-Embedding-0.6B**, pinned to revision\n`97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3`",
       "review_families": [
@@ -36401,7 +36471,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:359-380",
+      "locator": "line:369-390",
       "sha256": "10c9775a16cb363018ded062b71dd42564189ff410d9144aacfe9c168151f9b5",
       "excerpt": "## SYN semantic catalogs and exact inventories\n\nImport public SYN snapshots, resolve scoped references, enumerate instances by\ndeclared type, and rank selected ",
       "review_families": [
@@ -36411,7 +36481,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:381-404",
+      "locator": "line:391-414",
       "sha256": "28b05a6ab181b79140a25d2968a553d6bb3c9885d8b5775b671076ba6f372449",
       "excerpt": "### Expanded hierarchy and native primitive placement\n\nThe opt-in [Potbot hierarchy](docs/type-hierarchy-and-syn-primitives.md) adds the\n80 APS 0.2 declarations",
       "review_families": [
@@ -36421,7 +36491,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:405-418",
+      "locator": "line:415-428",
       "sha256": "c135f44d97c795b7faf116038158946f2ae2fe6321dba49b9de062187114e376",
       "excerpt": "## Semantic types and release identities\n\nThe committed [vocabulary package](vocab/) supplies 45 data types, including six\nabstract families, plus entity types,",
       "review_families": [
@@ -36431,7 +36501,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:419-426",
+      "locator": "line:429-436",
       "sha256": "d383330052d8a2c31d599506dcf027476ab5741cc5b449c06a32763bb06023e6",
       "excerpt": "## Object memory implementation plan\n\nThe [per-object memory implementation plan](docs/object-memory/implementation-plan.md)\nspecifies a separate memory graph f",
       "review_families": [
@@ -36441,7 +36511,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:427-440",
+      "locator": "line:437-450",
       "sha256": "b6e2a9c05e76b61c49a7a8dc33fd6af1a3dd21ee02892d3ad0e2ff482d585d29",
       "excerpt": "## Package boundaries\n\n| Package | Responsibility |\n| --- | --- |\n| `potbot.domain` | Immutable contracts, provenance, configuration, identity, error taxonomy |",
       "review_families": [
@@ -36451,7 +36521,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:441-450",
+      "locator": "line:451-460",
       "sha256": "39865c858d7b046cd4d93a5d3853113f664f3ac62b8f905400ab8d77f54d9214",
       "excerpt": "## Reuse before implementation\n\nThe standard reasoning policy requires discovery of existing libraries, tools, and\ninternal workflows before proposing new code.",
       "review_families": [
@@ -36461,7 +36531,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:451-463",
+      "locator": "line:461-473",
       "sha256": "730b080416e9551dc00d2bf5ebf2ab7bed609895618fa82c3e9256717376f0d6",
       "excerpt": "## Live steering and evidence-ranked reasoning (R2.5/R5)\n\nThe `potbot` virtual model now evaluates queued user steering prompts at\nreasoning checkpoints and ran",
       "review_families": [
@@ -36471,7 +36541,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:464-471",
+      "locator": "line:474-481",
       "sha256": "5fa95998ef21805fb03a8636768bda09e5bfb2afec8acfd6bac63502c83be5fc",
       "excerpt": "### PostgreSQL-backed reasoning and upstream OpenAI/Gemini models\n\nThe [reasoning runtime/provider guide](docs/implementation/20-postgres-reasoning-and-model-pr",
       "review_families": [
@@ -36481,7 +36551,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:472-491",
+      "locator": "line:482-501",
       "sha256": "cd32e5febea707573895f57831105edf5ecfe8aaf31fa720ca9ef013d275556a",
       "excerpt": "## Model-role benchmarks and agentic graph monitoring\n\nPotbot includes an **opt-in**, source-reproducible benchmark runner for comparing\nsmall local models and ",
       "review_families": [
@@ -36491,7 +36561,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:492-513",
+      "locator": "line:502-523",
       "sha256": "f2da1273708cc6fb7522280c8d6764c1aebac6274b58bbc317d9d5d8721845f5",
       "excerpt": "## Atomic task planning and small specialist models (R7 foundation)\n\nPotbot also supplies a bounded atomic-operation taxonomy, non-executing recursive\nDAG valid",
       "review_families": [
@@ -36501,7 +36571,7 @@
     },
     {
       "source": "README.md",
-      "locator": "line:514-533",
+      "locator": "line:524-543",
       "sha256": "bd90755f628c0be09c13ec76abd84d62275d698f99e8d97352c2a12ce7e32d14",
       "excerpt": "## Reliable Python tests on Windows\n\nRun focused tests through `pwsh ./scripts/Invoke-Tests.ps1 <test-path> [...]`.\nThe wrapper probes create/read/atomic-rename",
       "review_families": [
@@ -115574,16 +115644,18 @@
     },
     {
       "source": "docs/implementation/plugin-discovery-strategy.md",
-      "locator": "line:1-6",
-      "sha256": "9fdceacdd0bf28d70ce2a4fe2a638b18cc683f92a3e165e060f5bf14f4c6b409",
+      "locator": "line:1-15",
+      "sha256": "918f6c112968e001385b192c26c23267ea197370009e991a187f1bd4408dda3f",
       "excerpt": "# Potbot plugin and capability discovery strategy\n\nStrategy update: 23 October 2026. Baseline inspected: `e2f7b2e423ceb7360df76b18b076de09bf39936a`. This docume",
       "review_families": [
-        "catalogue"
+        "catalogue",
+        "skills",
+        "tool-upgrade"
       ]
     },
     {
       "source": "docs/implementation/plugin-discovery-strategy.md",
-      "locator": "line:7-16",
+      "locator": "line:16-25",
       "sha256": "f2f655803119fdd6dbab4733bea82520ebba677b6a1fd74a5e23dfcc01e2f215",
       "excerpt": "## Purpose and authority\n\nHelp Potbot find a suitable capability from a user's task, explain credible implementation choices and admit an installation only unde",
       "review_families": [
@@ -115592,7 +115664,7 @@
     },
     {
       "source": "docs/implementation/plugin-discovery-strategy.md",
-      "locator": "line:17-22",
+      "locator": "line:26-31",
       "sha256": "6647d9e143ac6a074872341e9f5264263b01cd092ca1a47110c8aefafc12e0ec",
       "excerpt": "## Current implementation boundary\n\n[MCP transport evidence](02-mcp-transports.md) distinguishes protocol tests from production qualification, and retains outst",
       "review_families": [
@@ -115601,7 +115673,7 @@
     },
     {
       "source": "docs/implementation/plugin-discovery-strategy.md",
-      "locator": "line:23-34",
+      "locator": "line:32-43",
       "sha256": "797bf56f06b9693863bcadd5ad1cb445a8cf94d987e54e45e9bcb516bdf3c965",
       "excerpt": "## Ordered work in the existing stages\n\n1. **T04.1 \u2014 Record candidate sources.** Extend the existing local catalogue with declared source adapters for the offic",
       "review_families": [
@@ -115610,7 +115682,7 @@
     },
     {
       "source": "docs/implementation/plugin-discovery-strategy.md",
-      "locator": "line:35-47",
+      "locator": "line:44-56",
       "sha256": "eb047c64a12eb47c24d1f62aadda16b9a4ba9703b6f0ca23a5891d1c46b333f2",
       "excerpt": "## Discovery channels and their limits\n\n| Channel | Strategy and required evidence |\n| --- | --- |\n| Official MCP Registry | Inspect `server.json`, underlying p",
       "review_families": [
@@ -115619,7 +115691,7 @@
     },
     {
       "source": "docs/implementation/plugin-discovery-strategy.md",
-      "locator": "line:48-57",
+      "locator": "line:57-66",
       "sha256": "277663b9849f3576c22f4edd6cd8100980e3e26b81c0c8a25c91638383abea63",
       "excerpt": "## Keyword-aware, ownership-neutral benchmark\n\nExtend the existing forty-request golden set rather than inventing a competing benchmark. Freeze prompts, expecte",
       "review_families": [
@@ -115628,7 +115700,7 @@
     },
     {
       "source": "docs/implementation/plugin-discovery-strategy.md",
-      "locator": "line:58-64",
+      "locator": "line:67-73",
       "sha256": "74d3df1452ea00a3c6420f9687536eac99fdcc3a5d304b1cb89053908780fb54",
       "excerpt": "## Continuing research and update policy\n\nKeep an evidence log per experiment: question, hypothesis, primary source/date, host/model/version, installation state",
       "review_families": [
@@ -115718,17 +115790,20 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:1-4",
-      "sha256": "f04c48b839e55bebaca6ea647b55d5dabeec096bcbabd3b21316a3fb463f6b33",
+      "locator": "line:1-15",
+      "sha256": "99b200b8f7f8a5b85d5f817ae00008b2bcc342675e9a70654c9676cb06c6e2c3",
       "excerpt": "# Potbot external skill ecosystem integration\n\nStatus: proposed research-driven plan, 2026-11-01. Complements `unified-development-roadmap.md`, `cross-agent-com",
       "review_families": [
         "compatibility",
-        "skills"
+        "skills",
+        "context",
+        "identity",
+        "frontend"
       ]
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:5-8",
+      "locator": "line:16-19",
       "sha256": "da71c75a7a59c82e1ebda2b9280713fb4e1e327772b65fd90f138d9057202aac",
       "excerpt": "## Goal and non-goals\n\nRun compatible OpenClaw, Codex and Claude Code skills and workflows *natively* on Potbot's operator-mediated SYN Cog runtime, without req",
       "review_families": [
@@ -115738,7 +115813,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:9-17",
+      "locator": "line:20-28",
       "sha256": "8c86f54dec3d6b1e19b545dddc1d4e32545a54c2baa53b89237a41d13e6cd448",
       "excerpt": "## Sources and source-of-truth\n\n1. Official ClawHub `https://clawhub.ai/` and OpenClaw `https://docs.openclaw.ai/clawhub`, `https://docs.openclaw.ai/skills`, `h",
       "review_families": [
@@ -115748,7 +115823,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:18-21",
+      "locator": "line:29-32",
       "sha256": "aee6b81fb362ef422b3c2c6835c6171f57ec37fa3e1ffe9ad596f5c185ca55f6",
       "excerpt": "## Sampled breadth: 71 directory entries / 10 categories\n\nThe named directory includes GPT Prompt Chainer, LLM Router, Prompt Optimizer, Context Window Manager,",
       "review_families": [
@@ -115758,7 +115833,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:22-35",
+      "locator": "line:33-46",
       "sha256": "2bda20a0ffd65c2db9f20b195883e70e98dd313404ad5d411d8ce2a983977cb0",
       "excerpt": "### Capability gap matrix and actions\n\n| Skill class | Required native Potbot Cogs / services | Compatibility and safety qualification |\n|---|---|---|\n| Browser",
       "review_families": [
@@ -115768,7 +115843,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:36-37",
+      "locator": "line:47-48",
       "sha256": "a32d62095d170c27e61727c4a3eca1da684e79a1ccd761b4ba431fb264019d20",
       "excerpt": "## Required architecture changes",
       "review_families": [
@@ -115778,7 +115853,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:38-41",
+      "locator": "line:49-52",
       "sha256": "f76073a485d8cf27a6333a88809866518bfc0bb6f9165f19d8d495134319b5f4",
       "excerpt": "### S01: Source adapters and catalogue federation\n\nImplement `SkillSource` interface with `search`, `inspect`, `resolve`, `fetch`, `verify`, `update_status`; im",
       "review_families": [
@@ -115788,7 +115863,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:42-45",
+      "locator": "line:53-56",
       "sha256": "7f677a27d947eb73b1abc1bb2a995fd3e1bd169f6f773cc6b1968bed3fdb6050",
       "excerpt": "### S02: Portable skill intermediate representation\n\nPreserve original SKILL.md and supporting assets, YAML frontmatter, version, name, description, command ali",
       "review_families": [
@@ -115798,7 +115873,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:46-49",
+      "locator": "line:57-60",
       "sha256": "94914321aee5c87ceb8f08dfe3c699d8793da31b652e3c04462c7cf404542f4b",
       "excerpt": "### S03: Readiness, visibility and invocation\n\nSeparate discovered / installed / verified / ready / visible / active / qualified statuses. Check dependencies in",
       "review_families": [
@@ -115808,7 +115883,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:50-53",
+      "locator": "line:61-64",
       "sha256": "56dc3e92e2ed8cc6e7c20fe43ee3e9f51a18e7a3dd5d496deda17293695f2d99",
       "excerpt": "### S04: Dependencies and secret broker\n\nTranslate brew/node/go/uv/download installer hints into reviewed, version-pinned sandbox package plans; deny unsupporte",
       "review_families": [
@@ -115818,7 +115893,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:54-57",
+      "locator": "line:65-68",
       "sha256": "acc7744c37640daee4b6a58a889c701eb881da1fbeea51ee6ac0728a64ee8df7",
       "excerpt": "### S05: Native Cog compatibility shims\n\nMaintain one canonical `syn://cog/...` input/output contract per operation and expose alias/schema adapters for OpenCla",
       "review_families": [
@@ -115828,7 +115903,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:58-61",
+      "locator": "line:69-72",
       "sha256": "015a626ee5a759815cc6461f21aebfc30e4267427a4ccfb81ada2705dd052456",
       "excerpt": "### S06: Workflows, hooks and commands\n\nImport slash commands, prompt chains, workflow DAGs, subagents and vendor-specific hooks into declarative task contracts",
       "review_families": [
@@ -115838,7 +115913,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:62-65",
+      "locator": "line:73-76",
       "sha256": "4284bc14d1c1a7ce8e98397a2f5a345041e1eb25817fefe32bfcf7f530118938",
       "excerpt": "### S07: Supply-chain verification and update policy\n\nRecord ClawHub `.clawhub/origin.json`, workspace `.clawhub/lock.json` semantics where importing existing i",
       "review_families": [
@@ -115848,7 +115923,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:66-69",
+      "locator": "line:77-80",
       "sha256": "282e831aa35a1c5bce3826fa901ba32daefd51aae4a1f05d918fdaa49743889a",
       "excerpt": "### S08: Discovery UI and CLI\n\nExpose task-led search across sources, inspect raw skill, dependencies, permission diff, compatibility score and *evidence*, choo",
       "review_families": [
@@ -115858,7 +115933,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:70-73",
+      "locator": "line:81-84",
       "sha256": "10649bcfe39ce9f4b1152e757ae9b31a3606555ff06b7314ae09ab86f2112f8a",
       "excerpt": "### S09: Compatibility qualification suite\n\nPin representative real packages after verifying canonical source: at least 3 per category across 10 categories, wit",
       "review_families": [
@@ -115868,7 +115943,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:74-77",
+      "locator": "line:85-88",
       "sha256": "5df86cb08df5b5a1a1b97cca3b2d4c215178cd35ea8cc5b506ea3152e15e0cd8",
       "excerpt": "### S10: Native authoring and publication\n\nAllow Potbot to generate portable AgentSkills-compliant SKILL.md and optional vendor adapters, validate portability, ",
       "review_families": [
@@ -115878,7 +115953,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:78-91",
+      "locator": "line:89-102",
       "sha256": "e7aa1af2c0ef82e25379ba9046f96d908bbb73bda796c4b35511598773f3f975",
       "excerpt": "## Delivery order and integration\n\n1. S00 inventory/pin official specifications and sample package fixtures, mapping existing T01\u2013T48 and C00\u2013C09 milestones (no",
       "review_families": [
@@ -115888,7 +115963,7 @@
     },
     {
       "source": "docs/implementation/potbot-skill-ecosystem-integration.md",
-      "locator": "line:92-102",
+      "locator": "line:103-113",
       "sha256": "672b65772dddcb84dabdbb2eec68af613fc675f94c47d545205b9ece77c62dbd",
       "excerpt": "## Documentation references\n\n- https://openclaw-skillshub.com/skills/ (independent curated catalogue)\n- https://openclaw-skillshub.com/about (non-affiliation)\n-",
       "review_families": [
@@ -117116,6 +117191,118 @@
       ]
     },
     {
+      "source": "docs/implementation/u04-a-portable-skill-acquisition.md",
+      "locator": "line:1-13",
+      "sha256": "544fd4a7c00b1bb73b57b83693371b5e29fad80ec0ec019c3669a44d355e19f6",
+      "excerpt": "# U04-A portable skill acquisition and lifecycle\n\n**Patch baseline:** `c10b9d24de033b8ee93785d2b37e703b9d5e6f75`, reviewed 17 November 2026.\n**Milestone:** a co",
+      "review_families": [
+        "skills",
+        "catalogue",
+        "context",
+        "identity",
+        "frontend",
+        "tool-upgrade"
+      ]
+    },
+    {
+      "source": "docs/implementation/u04-a-portable-skill-acquisition.md",
+      "locator": "line:14-33",
+      "sha256": "297936d1a4422fe980a4756c6f756a667655c9fe0757cbfa3a9fabba4846331b",
+      "excerpt": "## Completed workflow\n\n| Step | Result |\n| --- | --- |\n| Acquire | A bounded ZIP, CLI local directory, or public GitHub repository at an exact commit becomes a ",
+      "review_families": [
+        "skills",
+        "catalogue",
+        "context",
+        "identity",
+        "frontend",
+        "tool-upgrade"
+      ]
+    },
+    {
+      "source": "docs/implementation/u04-a-portable-skill-acquisition.md",
+      "locator": "line:34-95",
+      "sha256": "9b4f300d33ae5f6d2e6c30b5af180222e282be482dba3ceef60f2226f93e24f3",
+      "excerpt": "## Sources and portable format\n\n`context/skill_packages.py` implements three explicit entry points:\n\n- **ZIP upload:** an archive containing root `SKILL.md`, on",
+      "review_families": [
+        "skills",
+        "catalogue",
+        "context",
+        "identity",
+        "frontend",
+        "tool-upgrade"
+      ]
+    },
+    {
+      "source": "docs/implementation/u04-a-portable-skill-acquisition.md",
+      "locator": "line:96-137",
+      "sha256": "6d9ab0ef1e60db1219471b75f1a624af0f3369e7d6bc30d27252e1acd2c4f2e8",
+      "excerpt": "## Identity, approvals and migration 40\n\nThe release digest hashes the canonical manifest of **every file**. A resource\nupdate therefore produces a new release ",
+      "review_families": [
+        "skills",
+        "catalogue",
+        "context",
+        "identity",
+        "frontend",
+        "tool-upgrade"
+      ]
+    },
+    {
+      "source": "docs/implementation/u04-a-portable-skill-acquisition.md",
+      "locator": "line:138-184",
+      "sha256": "0a5d73a08db95c1a3afe7bb59d648398805485513919df08e91626ad8f89c1c3",
+      "excerpt": "## Context loading and revocation\n\nExisting `skills.list` and `skills.load` include enabled acquired skills whose\ncurrent approval verifies. `skills.load` requi",
+      "review_families": [
+        "skills",
+        "catalogue",
+        "context",
+        "identity",
+        "frontend",
+        "tool-upgrade"
+      ]
+    },
+    {
+      "source": "docs/implementation/u04-a-portable-skill-acquisition.md",
+      "locator": "line:185-226",
+      "sha256": "518eafab4bfe2b129dfc11655606e7ac775c872709486e4e4e78b812eca9d2df",
+      "excerpt": "## HTTP and browser workflow\n\nAll responses use `potbot-skill-acquisition/v1` with explicit `workspaceId` and\n`principalId` and private no-store caching. The br",
+      "review_families": [
+        "skills",
+        "catalogue",
+        "context",
+        "identity",
+        "frontend",
+        "tool-upgrade"
+      ]
+    },
+    {
+      "source": "docs/implementation/u04-a-portable-skill-acquisition.md",
+      "locator": "line:227-262",
+      "sha256": "6194badf476dcb257a952525892314913875eeed2ae5608c72e9bea6139a91e3",
+      "excerpt": "## CLI\n\nInstall the `skills` extra for standalone CLI parsing; the `web` extra includes\nthe same YAML dependency. Help does not load PostgreSQL, YAML, network c",
+      "review_families": [
+        "skills",
+        "catalogue",
+        "context",
+        "identity",
+        "frontend",
+        "tool-upgrade"
+      ]
+    },
+    {
+      "source": "docs/implementation/u04-a-portable-skill-acquisition.md",
+      "locator": "line:263-305",
+      "sha256": "0b69e95e880ca8d9cf823e73382e5d64d679908392ab287eb089d5fd9e0f452e",
+      "excerpt": "## Acceptance and remaining programme\n\nThe dedicated gate covers parser attacks and budgets, private package/RLS\nboundaries, current-key signatures, raw-SQL for",
+      "review_families": [
+        "skills",
+        "catalogue",
+        "context",
+        "identity",
+        "frontend",
+        "tool-upgrade"
+      ]
+    },
+    {
       "source": "docs/implementation/u04-c-operation-catalogue.md",
       "locator": "line:1-17",
       "sha256": "bc8a5f1c38aa863ff07f3d8db117ea281787a75101d8acbc0af0c7390aebf390",
@@ -117379,20 +117566,22 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:1-46",
-      "sha256": "d8b0c4f6ee1c185f8df9b55602baf2926ce147dc533357dec24340582fc77b32",
+      "locator": "line:1-57",
+      "sha256": "10dfde0ceeb0c435707e021c2238ca92e67e9624fd004ba7905e489313667039",
       "excerpt": "# Potbot unified development roadmap\n\n**U00-A completed, 2 November 2026:** the [closeout](u00-a-closeout.md) reconciles\nthe pinned main `95610037311c80cdf71633",
       "review_families": [
         "audit",
         "transport-recovery",
         "catalogue",
         "tool-upgrade",
+        "skills",
+        "context",
         "frontend"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:47-54",
+      "locator": "line:58-65",
       "sha256": "076016b54fff41fb78ff8fdcc90229d963fc5d746b89b7706eeebb49f54312c8",
       "excerpt": "## Baseline and source-of-truth rules\n\nOlder README phase summaries (`0.5.0.dev8`/`dev9`) are historical; the reviewed main reports `0.5.0.dev11`. They are not ",
       "review_families": [
@@ -117439,7 +117628,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:55-88",
+      "locator": "line:66-99",
       "sha256": "4c193a4a608fa975564b4f8db4bfe008307a41cf3d1b25c33882bcb783543194",
       "excerpt": "## Existing plans to reconcile\n\n| Source | Scope |\n|---|---|\n| `docs/implementation/09-tool-plan-gap-audit.md` | 18 additional requirement groups and independen",
       "review_families": [
@@ -117486,7 +117675,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:89-110",
+      "locator": "line:100-121",
       "sha256": "3a83e4a3a3332d3ef4289fcfc3504ed4ab122ebf1cf45fdf94886f89bda19cce",
       "excerpt": "## Unified work packages\n\n| ID | Workstream | Remaining / qualification scope | Modernization | Dependencies |\n|---|---|---|---|---|\n| U00 | Repository audit an",
       "review_families": [
@@ -117511,7 +117700,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:111-112",
+      "locator": "line:122-123",
       "sha256": "730dc617da00361212299c3f3bf7caa292eeb8375c4645a26f895fe255a9c69d",
       "excerpt": "## Delivery waves and gates",
       "review_families": [
@@ -117520,7 +117709,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:113-118",
+      "locator": "line:124-129",
       "sha256": "092663dafe878c1956a3843788aa7a58148603391dc7efc03a2ab4bf50b05224",
       "excerpt": "### Wave 0 \u2014 Inventory, reconcile and pin (U00)\n\nPin current main SHA. Enumerate every `docs/` plan, issue, PR, stage-status document and CI acceptance job. Bui",
       "review_families": [
@@ -117529,7 +117718,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:119-124",
+      "locator": "line:130-135",
       "sha256": "382e3775074d6d89fbfe589167a208ad320459466fe816e1e619c4a2326bceab",
       "excerpt": "### Wave 1 \u2014 Secure durable foundation (U01\u2013U03, U06)\n\nExtend existing PostgreSQL/Syn execution rather than introducing a second job engine. Add fenced leases, ",
       "review_families": [
@@ -117542,7 +117731,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:125-128",
+      "locator": "line:136-139",
       "sha256": "ee0b5d377f44b86a968882f762dcddf5486951504484fae6f57bbdc4b5d897cf",
       "excerpt": "### Wave 2 \u2014 Tools, plugins, transport and browser (U04\u2013U05, U11\u2013U12)\n\nComplete existing T01\u2013T04 milestones, typed Cog contracts, debugger, discovery, concurren",
       "review_families": [
@@ -117557,7 +117746,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:129-132",
+      "locator": "line:140-143",
       "sha256": "9b8568dc87a1fd913d2775e2cea463e8cc54271de5fdbd471a3846c47413462e",
       "excerpt": "### Wave 3 \u2014 Intelligence and memory (U07\u2013U10)\n\nQualify actual local/hosted models and inference costs. Integrate live multi-model reasoning graphs, scheduling,",
       "review_families": [
@@ -117572,7 +117761,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:133-138",
+      "locator": "line:144-149",
       "sha256": "9a38ce04ac2df10970d4c69ae459dab6757ed121e4c0135233670ccf0927cca1",
       "excerpt": "### Wave 4 \u2014 Frontend and empirical optimization (U13\u2013U14)\n\nFinish real backend streaming, workspace controls, monitoring sprite, graph checkpoint timeline, pro",
       "review_families": [
@@ -117582,7 +117771,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:139-144",
+      "locator": "line:150-155",
       "sha256": "80b60f56644c374154018b6472010f50693d60ee0bd0831560224d401b134c72",
       "excerpt": "### Wave 5 \u2014 Automation and release (U15\u2013U16)\n\nAdd durable event subscriptions, schedules, A2A and channels under the same operator policy. Qualify all supporte",
       "review_families": [
@@ -117592,7 +117781,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:145-154",
+      "locator": "line:156-165",
       "sha256": "4b39689d3f86890624016437f1019a9f443b42259c348acd3976344d39f5cb18",
       "excerpt": "## Critical engineering invariants\n\n1. Do not create parallel authoritative PostgreSQL stores, schedulers, plugin registries or Syn event logs.\n2. Preserve the ",
       "review_families": [
@@ -117604,7 +117793,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:155-162",
+      "locator": "line:166-173",
       "sha256": "b003d17be8b130279262508d8ce74d558262ad1760056625d2ba42e2b0ce17c5",
       "excerpt": "### Syn transport for application RPC\n\nUse the [Syn RPC implementation sequence](syn-release-dependency-and-node-deployment.md#route-application-rpc-through-syn",
       "review_families": [
@@ -117614,7 +117803,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:163-190",
+      "locator": "line:174-201",
       "sha256": "cbc4b785f9baeac0b04d3321ea4a8fed61bf8a1816999c534cb2eb9667797027",
       "excerpt": "## First next milestone\n\n**U01-A: durable side-effect and crash recovery gap closure.** U00-A's\n[reviewed closeout](u00-a-closeout.md) is complete. Preserve the",
       "review_families": [
@@ -117624,7 +117813,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:191-204",
+      "locator": "line:202-215",
       "sha256": "fad8ad3bc0f5c2f2834281f8aaa52d60a6cf39c7bbfccd4fae9aee0a7b60f130",
       "excerpt": "## Required follow-through from the monitoring chat\n\n| Work item | Existing U owner | Deliverable and gate |\n|---|---|---|\n| U03-Q | U03, U02, U16 | Qualify eve",
       "review_families": [
@@ -117639,20 +117828,22 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:205-224",
-      "sha256": "eaf53c0954d338a923656c3c7495e82dad2476603ed0922da418286daebdaede",
+      "locator": "line:216-236",
+      "sha256": "6ebeee5a8b2fc702208ab3bf751c6123e82aa71d2e65a617805420501afe6ae2",
       "excerpt": "## Required follow-through from the other recent development conversations\n\n| Work item | Existing U owner | Deliverable and gate in the recent-development reco",
       "review_families": [
         "audit",
         "transport-recovery",
         "catalogue",
         "tool-upgrade",
+        "skills",
+        "context",
         "frontend"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:225-236",
+      "locator": "line:237-248",
       "sha256": "8fd9aa45ac7a56661637b71fa0a5607b1b2b45780bdea5c35f0434b61d7925a3",
       "excerpt": "## References\n\n- `docs/implementation/agent-runtime-modernization.md`\n- `docs/implementation/09-tool-plan-gap-audit.md`\n- `docs/implementation/plugin-discovery-",
       "review_families": [
@@ -117661,7 +117852,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:237-241",
+      "locator": "line:249-253",
       "sha256": "c6f1c77f80e48b91c4a197f815afa2760f516f5eff7fc07b87bbbe7ffc5b2197",
       "excerpt": "## Cross-agent ecosystem compatibility (C00\u2013C09)\n\nAdd the companion [cross-agent compatibility plan](cross-agent-compatibility.md) as a required cross-cutting w",
       "review_families": [
@@ -117670,7 +117861,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:242-250",
+      "locator": "line:254-262",
       "sha256": "a3a63964c24da210b3a841a4fa93e2529b30a3e255e67e78853aea0f4d0192ad",
       "excerpt": "## External skill ecosystem discovery and native execution (S00\u2013S10)\n\nThe cross-agent C00\u2013C09 programme is extended by [external skill ecosystem integration](po",
       "review_families": [
@@ -117680,7 +117871,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:251-255",
+      "locator": "line:263-267",
       "sha256": "28dfd2784d97841df10d40c27bf4c7f21bc278c11ace17b0339a9ee74ece1daa",
       "excerpt": "## Agent benchmarking and testing (B00\u2013B10)\n\nAdd [Potbot agent benchmarking and testing](potbot-agent-benchmarking-plan.md) as the qualification specification f",
       "review_families": [
@@ -121419,11 +121610,24 @@
     },
     {
       "source": "docs/ui/frontend-backend-contract.md",
-      "locator": "line:131-143",
-      "sha256": "69bb59206350a3e0b874b4145e1626690767ec533be53339cad17fae8277ce45",
+      "locator": "line:131-144",
+      "sha256": "9bce1a2799037b750888504c9a3f605a891dfcf81c555675b7d63ede884419fd",
       "excerpt": "## UI-8 routes backed by *existing* read-only Potbot services\n\nThese operator-authenticated Next.js projections are implemented and no\nworkspace selection is in",
       "review_families": [
-        "frontend"
+        "frontend",
+        "skills",
+        "identity"
+      ]
+    },
+    {
+      "source": "docs/ui/frontend-backend-contract.md",
+      "locator": "line:145-163",
+      "sha256": "5aeb338b9d89201e83a1465402d07292dbc336a7ceb2971da2bcaa4e0b3f9695",
+      "excerpt": "## U04-A portable skill acquisition (implemented)\n\n`/api/ui/skills` mirrors only the fixed implemented `/v1/ui/skills` routes in\n[the portable skill lifecycle c",
+      "review_families": [
+        "frontend",
+        "skills",
+        "identity"
       ]
     },
     {
@@ -121572,11 +121776,24 @@
     },
     {
       "source": "docs/ui/implementation-plan.md",
-      "locator": "line:296-308",
-      "sha256": "7eb8ff29e96f885e810d016684233b071b4adefd81168ccda31fa1d73a916c27",
+      "locator": "line:296-309",
+      "sha256": "5ddc06f3f488e3275fc85613453e20d75a3d094de343d6028d80740fdd5a365a",
       "excerpt": "### UI-11: authorized workspace Xpra application sessions\n\nThe operator-only Xpra bridge now supports pinned launch recipes, session\ninventory, detach/reattach,",
       "review_families": [
-        "frontend"
+        "frontend",
+        "skills",
+        "catalogue"
+      ]
+    },
+    {
+      "source": "docs/ui/implementation-plan.md",
+      "locator": "line:310-325",
+      "sha256": "dbed15b4df1233cc82abb7995c014e63c86219df3039cc6d3c7d07a5e484c84e",
+      "excerpt": "## U04-A \u2014 portable skill workshop\n\nThe `/skills` workshop now covers private ZIP or pinned public GitHub import,\nfull package/source review, exact install plan",
+      "review_families": [
+        "frontend",
+        "skills",
+        "catalogue"
       ]
     },
     {
@@ -122170,11 +122387,24 @@
     },
     {
       "source": "frontend/README.md",
-      "locator": "line:320-333",
-      "sha256": "751b010097d981900ee314d4abc683b3b96c76ba1b8e9c2199d2c1dd2b60c622",
+      "locator": "line:320-334",
+      "sha256": "2390484a6ac47c590dec755c2e28855be05b93d4759054b3e38bb65035dd413c",
       "excerpt": "### UI-11 \u2014 Qualified Xpra application sessions\n\nThe Xpra application manager now exposes an operator-pinned Launch menu and\nrunning-process sessions. Bash/xter",
       "review_families": [
-        "frontend"
+        "frontend",
+        "skills",
+        "identity"
+      ]
+    },
+    {
+      "source": "frontend/README.md",
+      "locator": "line:335-375",
+      "sha256": "4d04c2445322e6bcd8f0d81507fafca7dee13e21f8f9efaae3e620b4bc40c70d",
+      "excerpt": "## U04-A \u2014 Portable skill acquisition workshop\n\nOpen **Skill import and release workshop** from the workspace menu, or visit\n`/skills?workspace=<authorized-work",
+      "review_families": [
+        "frontend",
+        "skills",
+        "identity"
       ]
     },
     {
@@ -122435,8 +122665,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "dc26fc18e4c8ef39faee4f842b7c4b5ff03cb0da45a745cea2e09284c819361f",
-          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained."
+          "sha256": "6ba047f246b86e4659c7119e0424f645c11f967b624d26f6eaa19978b0d8db5d",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact."
         }
       ],
       "tests": [
@@ -122517,14 +122747,14 @@
         {
           "path": "tests/integration/test_operation_workbench.py",
           "symbol": "test_concurrent_same_key_launches_have_one_durable_run",
-          "sha256": "8420c93e9697e6ffdcae348c6750e313987104648ce547b6aeb2d3df709e4852",
-          "basis": "Competing real PostgreSQL submissions retain one checked run under the same command identity"
+          "sha256": "16b96a2904611d805ea1afc2db6834efb4c5f6af9a8d56c3f3440b0746525d9f",
+          "basis": "Competing real PostgreSQL submissions retain one checked run under the same command identity U04-A current-source review: The historical migration38-to39 owner backfill test now explicitly selects revisions through39; later migration40 no longer changes the meaning of that retained acceptance fixture."
         },
         {
           "path": "tests/integration/test_operation_workbench.py",
           "symbol": "test_expired_check_blocks_new_launch_but_committed_retry_still_returns_original",
-          "sha256": "8420c93e9697e6ffdcae348c6750e313987104648ce547b6aeb2d3df709e4852",
-          "basis": "Expired checks cannot create work while a committed retry preserves the original job"
+          "sha256": "16b96a2904611d805ea1afc2db6834efb4c5f6af9a8d56c3f3440b0746525d9f",
+          "basis": "Expired checks cannot create work while a committed retry preserves the original job U04-A current-source review: The historical migration38-to39 owner backfill test now explicitly selects revisions through39; later migration40 no longer changes the meaning of that retained acceptance fixture."
         }
       ],
       "assessment": "Existing action intents, durable receipts, recovery claims, at-least-once outbox and generation fences already cover the local supervised-tool path. This is not exactly-once execution across arbitrary remote producers. U04-E also retains purpose-signed checks, a unique run per check, immutable request bindings and same-key recovery on the existing queue; possible effects are never replayed automatically.",
@@ -122718,6 +122948,12 @@
           "symbol": "NativeBrokerError",
           "sha256": "4807980b686496e49b545f4d09be889ec429773b6c9285708f832df5ffabbc0f",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
+        },
+        {
+          "path": "src/potbot/context/skill_acquisition.py",
+          "symbol": "verify_active_control",
+          "sha256": "b85d44a7dba1e312e7c6b38937fcaea3348b208445a0b3662546f32003906949",
+          "basis": "Current native setup key independently verifies exact owner/workspace/package/source/control state before guest access"
         }
       ],
       "tests": [
@@ -122732,10 +122968,28 @@
           "symbol": "test_offline_verify_never_opens_native_broker",
           "sha256": "99961aa27a2f268cb919804e61dd263161eff09db0b69d80377b8ab2733d8c1d",
           "basis": "source inspection; test definition is not an individual executed result"
+        },
+        {
+          "path": "tests/integration/test_skill_acquisition.py",
+          "symbol": "test_raw_database_release_and_control_cannot_be_laundered_into_approval",
+          "sha256": "37d96470de1c90a6398de8a733a5bc034dd630a7d467530e9931c4445cf29a54",
+          "basis": "Raw SQL changes and forged retained releases cannot become approved through control operations"
+        },
+        {
+          "path": "tests/integration/test_context_acquired_skills.py",
+          "symbol": "test_rotated_operator_key_requires_reviewed_reinstall_before_context_access",
+          "sha256": "932997e38bcf035efc19af56f39e13d64a1f07a41892fbd12871cbb37b9882e4",
+          "basis": "Key rotation denies reads until a fresh reviewed install and separate activation; genuine existing session then reads verified bytes"
+        },
+        {
+          "path": "tests/integration/test_context_acquired_skills.py",
+          "symbol": "test_shared_consumer_loads_owner_signed_package_but_cannot_mutate_it",
+          "sha256": "932997e38bcf035efc19af56f39e13d64a1f07a41892fbd12871cbb37b9882e4",
+          "basis": "Shared readers verify the owner's approval while guest imported mutations and foreign-workspace access remain denied"
         }
       ],
-      "assessment": "Public Agent/Credential/Ember contracts and a native broker exist. Historical hardware/temporary-key and standalone service descriptions are superseded in deployment by the official Syn-owned runtime contracts.",
-      "support_scope": "Public policy/signature validation and limited native custody tests; not a claim of TPM or independently trusted physical-device attestation.",
+      "assessment": "Public Agent/Credential/Ember contracts and a native broker exist. Historical hardware/temporary-key and standalone service descriptions are superseded in deployment by the official Syn-owned runtime contracts. U04-A uses the independent native setup capability to sign exact imported package/source/control identities; token rotation and raw database forgery cannot authorize guest reads. Reviewed installation is required to recover a rotated approval.",
+      "support_scope": "Public policy/signature validation and limited native custody tests; not a claim of TPM or independently trusted physical-device attestation. U04-A covers application-level scoped package decisions and current-key checks; it neither replaces Syn credential custody nor establishes hardware attestation.",
       "remaining": [
         "Retain owner-approved host-bound virtual-device IDs per Agent",
         "Qualify recovery, revocation, memory custody and every enabled platform; TPM/HSM remains future scope"
@@ -123297,12 +123551,6 @@
           "basis": "Authenticated fixed-workspace GET adapters with bounded queries and sanitized existing error semantics"
         },
         {
-          "path": "src/potbot/controller/operation_catalogue.py",
-          "symbol": "OperationCatalogue",
-          "sha256": "cad294d8efb72ffdd8f949caef88fb8bfe4746160c5ad3a097e2ff3475d4be06",
-          "basis": "Read-only scoped catalogue retains native thing references and conservative readiness without admission effects"
-        },
-        {
           "path": "src/potbot/controller/operation_workbench.py",
           "symbol": "OperationWorkbench",
           "sha256": "f311dca16016fe41ff1f07671b7145c1a929c7f9159360a388a285c3eab4e0d8",
@@ -123343,6 +123591,12 @@
           "symbol": "main",
           "sha256": "a22c88135e0c3c498e7c89147ff243f002eb7d9c1ce99bc72e3b8bda1ffab087",
           "basis": "Catalogue and complete controlled workbench CLI reuse existing scope, native capability and job authority"
+        },
+        {
+          "path": "src/potbot/controller/operation_catalogue.py",
+          "symbol": "OperationCatalogue",
+          "sha256": "47f7addf5cab22d11fa6dbe27687f42a86387bf3fb5c0b0c96a90af6c78368e0",
+          "basis": "Read-only records distinguish acquired disabled/revoked/installed state and explicitly leave current signature/runtime admission unevaluated"
         }
       ],
       "tests": [
@@ -123397,8 +123651,8 @@
         {
           "path": "tests/integration/test_operation_workbench.py",
           "symbol": "test_all_job_paths_and_raw_rls_preserve_same_workspace_principal_privacy",
-          "sha256": "8420c93e9697e6ffdcae348c6750e313987104648ce547b6aeb2d3df709e4852",
-          "basis": "Restricted PostgreSQL application identities deny peer reads/events/cancel/claims and direct table access"
+          "sha256": "16b96a2904611d805ea1afc2db6834efb4c5f6af9a8d56c3f3440b0746525d9f",
+          "basis": "Restricted PostgreSQL application identities deny peer reads/events/cancel/claims and direct table access U04-A current-source review: The historical migration38-to39 owner backfill test now explicitly selects revisions through39; later migration40 no longer changes the meaning of that retained acceptance fixture."
         },
         {
           "path": "tests/integration/test_operation_workbench_api.py",
@@ -123411,17 +123665,23 @@
           "symbol": "test_ambiguous_launch_response_retains_key_without_retry_or_sensitive_error",
           "sha256": "95778ef41306d18e75cdacf6621400b42b7cb32240aa23b8fbb125290edeb907",
           "basis": "Qualification protocol fixture preserves uncertain launch identity and safe evidence without retrying effects"
+        },
+        {
+          "path": "tests/unit/test_context_acquired_skills.py",
+          "symbol": "test_operation_catalogue_reports_imported_records_without_granting_access",
+          "sha256": "b0fe77ed96875c9002c11c69c6ad0f95f3911f0b4c81576b1f6dbb0052a707b6",
+          "basis": "Acquired records retain conservative readiness and no implicit execution authority"
         }
       ],
-      "assessment": "The merged U04-C read-only catalogue and partial linked accounting are retained. U04-E completes the supported operation workbench: signed worker eligibility, explicit one-check/one-run launch, current dispatch revalidation, owned progress, cancellation and verified results for existing native Cog and hosted model handlers. Fixture/database acceptance does not qualify a deployed host or live provider.",
-      "support_scope": "API/CLI/UI operation lifecycle over existing JobService, worker, native installation, persistent grant, hosted policy and budget owners. Migration 39 binds private principal ownership and immutable check/run authority. Checks do not execute, call providers, issue one-use Syn grants, reserve or settle budget.",
+      "assessment": "The merged U04-C read-only catalogue and partial linked accounting are retained. U04-E completes the supported operation workbench: signed worker eligibility, explicit one-check/one-run launch, current dispatch revalidation, owned progress, cancellation and verified results for existing native Cog and hosted model handlers. Fixture/database acceptance does not qualify a deployed host or live provider. U04-A adds acquired skill installation/control records and the complete portable-data workshop while retaining conservative operation readiness. Actual imported Context reads independently verify the current signed approval and complete package.",
+      "support_scope": "API/CLI/UI operation lifecycle over existing JobService, worker, native installation, persistent grant, hosted policy and budget owners. Migration 39 binds private principal ownership and immutable check/run authority. Checks do not execute, call providers, issue one-use Syn grants, reserve or settle budget. U04-A uses the existing skill registry; catalogue observations perform no credential lookup or execution admission and do not claim package runtime qualification.",
       "remaining": [
         "Qualify the complete installed native host and explicitly selected live provider using retained exact-source evidence",
-        "Extend acquisition discovery/staging and ecosystem lifecycle through existing S9-S12 and grant owners",
+        "Extend registry discovery, executable staging/dependency eligibility and ecosystem lifecycle through existing S9-S12 and grant owners",
         "Add admitted workflow/connector/local-model routes and broader non-job invocation ownership without duplicating authority",
         "Qualify selected IBM/DanceFlow/WordPress/KeywordMoves capabilities and actual concurrency footprints"
       ],
-      "next_action": "Run the controlled workbench on an authorized installed host, then deliver the next acquisition/connector lifecycle milestone through existing maintenance and execution owners. Keep conservative catalogue observations separate from current signed admission."
+      "next_action": "Qualify the supported operation and portable-data workflows on an authorized installed host, then extend executable acquisition and connector breadth through existing owners; preserve the separation between observations and current signed admission."
     },
     {
       "id": "devices",
@@ -123664,7 +123924,7 @@
         }
       ],
       "assessment": "S9-S11 retain staged build/test, signed operator approval and fenced activation. S12 now implements migration-38 PostgreSQL postflight/release, durable host denial projections, exact installed readback, independent repin, one-attempt postflight and controlled rollback. Normal and installed native launch admission fail closed for held or altered tools; interpreter and writable-mount bypasses are covered. This source implementation does not establish native-host qualification.",
-      "support_scope": "Reviewed S9-S12 source plus real Git/lease and PostgreSQL migration, RLS, MAC, release/restart and failure tests. PostgreSQL tests inject explicit process receipts; native execution is an independent gate.",
+      "support_scope": "Reviewed S9-S12 source plus real Git/lease and PostgreSQL migration, RLS, MAC, release/restart and failure tests. PostgreSQL tests inject explicit process receipts; native execution is an independent gate. U04-A portable skill acquisition is data-only and does not bypass or replace S9-S12 executable installation, independent repin, postflight or rollback authority.",
       "remaining": [
         "Run complete activation, repin, real postflight, native operator restart and rollback on the signed-image qualified host.",
         "Qualify power-loss persistence, native credential rotation/recovery and hostile concurrent maintenance on the supported filesystem/host."
@@ -123707,8 +123967,8 @@
         {
           "path": "src/potbot/context/runtime_integration.py",
           "symbol": "execute_context_operation",
-          "sha256": "bdc4d3ae7185f98d4f6211af5d03499909b0a57ffecb0ff0e3d8407b0fca0f6d",
-          "basis": "Reviewed shared Cog log source. Live acceptance requires a separate execution record."
+          "sha256": "6c6a02cdda2caf9fa398a5e8fa0289a7416bfa5f34f5f0c18a9d6767de363ea8",
+          "basis": "Reviewed shared Cog log source. Live acceptance requires a separate execution record. U04-A current-source review: Context launches propagate the lazy native setup-key resolver into the existing authenticated session owner; launch authority is unchanged."
         }
       ],
       "tests": [
@@ -124214,14 +124474,14 @@
         {
           "path": "src/potbot/context/runtime_integration.py",
           "symbol": "LaunchContext",
-          "sha256": "bdc4d3ae7185f98d4f6211af5d03499909b0a57ffecb0ff0e3d8407b0fca0f6d",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "6c6a02cdda2caf9fa398a5e8fa0289a7416bfa5f34f5f0c18a9d6767de363ea8",
+          "basis": "inspected integration owner; not whole-requirement implementation proof U04-A current-source review: Context launches propagate the lazy native setup-key resolver into the existing authenticated session owner; launch authority is unchanged."
         },
         {
           "path": "src/potbot/context/worker_dispatch.py",
           "symbol": "dispatch_context_worker",
-          "sha256": "8c08346a8152f0d8dddf988645f1d67ccd7b253c4a92611bd1150d676444b250",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "da3d1184babe80c58ce5df089ea5da5e5c68a32163c621ce064d5eec4d98c431",
+          "basis": "inspected integration owner; not whole-requirement implementation proof U04-A current-source review: Existing Context dispatch forwards its trusted key resolver; no acquired package starts a new process or worker."
         },
         {
           "path": "src/potbot/context/syn_context_route.py",
@@ -124234,6 +124494,24 @@
           "symbol": "installed_context_route",
           "sha256": "ced0f0a095357fb6fe027a3e5fe08ecc5dc034b437a3439c07b93bb551e6e64c",
           "basis": "Reviewed selected installation and private endpoint; official release and managed worker qualification remain open."
+        },
+        {
+          "path": "src/potbot/context/skill_catalogue.py",
+          "symbol": "read_skill_resource",
+          "sha256": "dac1039ceada4a6698af38de4f5bab43d4c72682f393545ebaea44cc129bfa20",
+          "basis": "Exact current release, signature and complete-package validation precede every bounded resource range"
+        },
+        {
+          "path": "src/potbot/context/skill_projection.py",
+          "symbol": "SkillLibraryProjector",
+          "sha256": "c1457f3ea8446eb8421e2b0fad6de182bdb1abed08bc8f3a4b9705374c85f967",
+          "basis": "Imported packages are excluded from persistent mounted authored snapshots, preserving per-read revocation and cursor progress"
+        },
+        {
+          "path": "sandbox/clients/context_client.py",
+          "symbol": "ContextClient",
+          "sha256": "8b09517f07978fa9b84c802e45f66facc93d714ae2c84eca5ad01f517c370d44",
+          "basis": "Guest verifies bundle/text distinction, manifest digest, exact resource identity, byte ranges and payload integrity"
         }
       ],
       "tests": [
@@ -124266,10 +124544,40 @@
           "symbol": "test_managed_unit_restores_previous_bytes_if_route_restart_fails",
           "sha256": "ed9b86ced76f15e51244b364454bae424bb0fc8610a5bdcc098f29dc8be9f8a7",
           "basis": "Disposable unit and socket fixture with a simulated service manager failure."
+        },
+        {
+          "path": "tests/integration/test_context_acquired_skills.py",
+          "symbol": "test_import_install_activate_update_rollback_and_revoke_through_context",
+          "sha256": "932997e38bcf035efc19af56f39e13d64a1f07a41892fbd12871cbb37b9882e4",
+          "basis": "Real PostgreSQL and genuine Context session exercise complete portable lifecycle, resource-only updates and stale-digest denial"
+        },
+        {
+          "path": "tests/integration/test_context_acquired_skills.py",
+          "symbol": "test_acquired_package_uses_real_context_protocol_and_database_session",
+          "sha256": "932997e38bcf035efc19af56f39e13d64a1f07a41892fbd12871cbb37b9882e4",
+          "basis": "Actual framed guest subprocess and production Context/database protocol; process is an explicit non-sandbox fixture"
+        },
+        {
+          "path": "tests/integration/test_context_acquired_skills.py",
+          "symbol": "test_jsonb_numeric_metadata_round_trip_preserves_manifest_and_original_text",
+          "sha256": "932997e38bcf035efc19af56f39e13d64a1f07a41892fbd12871cbb37b9882e4",
+          "basis": "Real JSONB round-trip keeps canonical manifest stable while preserving original instruction bytes"
+        },
+        {
+          "path": "tests/integration/test_context_acquired_skills.py",
+          "symbol": "test_oversized_full_load_fails_without_truncation_and_resources_remain_readable",
+          "sha256": "932997e38bcf035efc19af56f39e13d64a1f07a41892fbd12871cbb37b9882e4",
+          "basis": "Oversized escaped load fails before session count commit; bounded SKILL.md resource reads remain available"
+        },
+        {
+          "path": "tests/integration/test_context_acquired_skills.py",
+          "symbol": "test_imported_skills_never_enter_legacy_shared_filesystem_projection",
+          "sha256": "932997e38bcf035efc19af56f39e13d64a1f07a41892fbd12871cbb37b9882e4",
+          "basis": "Active imported content leaves no persistent guest-mounted byte snapshot"
         }
       ],
-      "assessment": "Application context migrations 29-33, registered-object lifecycle, projections, scoped RPC and ordinary worker launch integration exist. Root MODEL/MEMORY and standalone Stage 2 SQLite describe historical development contracts. The optional directed Syn adapter binds delivery to the monitored worker, native Agent and active lease. The optional managed profile verifies the Syn release and operator route before serving Context requests.",
-      "support_scope": "Actual application context owners and final-result/lease atomicity tests; not full universal constructor/protocol adoption.",
+      "assessment": "Application context migrations 29-33, registered-object lifecycle, projections, scoped RPC and ordinary worker launch integration exist. Root MODEL/MEMORY and standalone Stage 2 SQLite describe historical development contracts. The optional directed Syn adapter binds delivery to the monitored worker, native Agent and active lease. The optional managed profile verifies the Syn release and operator route before serving Context requests. U04-A adds imported instruction/resource reads to genuine authenticated Context sessions, with exact current release/control validation, lazy native-key resolution, per-range integrity and unchanged transport bounds. Imported bytes never enter persistent mounted authored snapshots.",
+      "support_scope": "Actual application context owners and final-result/lease atomicity tests; not full universal constructor/protocol adoption. U04-A includes a real PostgreSQL session plus framed worker subprocess; this is protocol/database acceptance, not an installed Bubblewrap/Syn host pass.",
       "remaining": [
         "Close remaining constructor/protocol and per-launch snapshot coverage",
         "Preserve data-only projections, source-backed reconciliation/conflicts and operator-only grants",
@@ -124296,8 +124604,38 @@
         {
           "path": "src/potbot/context/skill_catalogue.py",
           "symbol": "SessionSkillCatalogue",
-          "sha256": "23b75940626a8c70abeb276f3dc5e2b66f8b0a3897dd1b3033712c9031ece29d",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "dac1039ceada4a6698af38de4f5bab43d4c72682f393545ebaea44cc129bfa20",
+          "basis": "inspected integration owner; not whole-requirement implementation proof U04-A current-source review: Authored ownership remains genuine; acquired identities use explicit principal namespaces and current signed digest-pinned resource reads."
+        },
+        {
+          "path": "src/potbot/context/skill_packages.py",
+          "symbol": "parse_skill_zip",
+          "sha256": "a3bb2ca54a181729b46042075d9c7d2e0c4ce01d4c587e26266b8997511a1b46",
+          "basis": "Bounded in-memory original-byte acquisition and portable manifest; archives are never extracted or executed"
+        },
+        {
+          "path": "src/potbot/context/skill_packages.py",
+          "symbol": "fetch_github_skill",
+          "sha256": "a3bb2ca54a181729b46042075d9c7d2e0c4ce01d4c587e26266b8997511a1b46",
+          "basis": "Exact-commit fixed-host GitHub adapter with bounded reads, no ambient credentials/proxy and no redirects; live source qualification remains separate"
+        },
+        {
+          "path": "src/potbot/context/skill_acquisition.py",
+          "symbol": "SkillAcquisition",
+          "sha256": "b85d44a7dba1e312e7c6b38937fcaea3348b208445a0b3662546f32003906949",
+          "basis": "Existing registry lifecycle, immutable private packages, exact reviewed plans, signed control/CAS, replay recovery and retained source/resource history"
+        },
+        {
+          "path": "src/potbot/context/skills_cli.py",
+          "symbol": "download_skill_resource",
+          "sha256": "c84f0c1eeaffdd7e14c7e03f90501740aef26e2b6aef7321cbc91a9faa6bb9e8",
+          "basis": "Existing-scope CLI and bounded whole-digest resource download before non-overwriting local publication"
+        },
+        {
+          "path": "src/potbot/persistence/schema.py",
+          "symbol": "application_migrations",
+          "sha256": "6ba047f246b86e4659c7119e0424f645c11f967b624d26f6eaa19978b0d8db5d",
+          "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions"
         }
       ],
       "tests": [
@@ -124312,15 +124650,53 @@
           "symbol": "test_create_provisions_shared_triple_and_worker_context_atomically",
           "sha256": "7c0bfbe0534ba7f302dfe0dc42e182d4e9d74275a8166321f18cfa4ba2e6fc03",
           "basis": "source inspection; test definition is not an individual executed result"
+        },
+        {
+          "path": "tests/unit/test_skill_packages.py",
+          "symbol": "test_zip_symlink_duplicates_and_unsafe_paths_are_never_extracted",
+          "sha256": "da759dea5e8fbc077a2ec67dc68b8444625ea33c9f791dddfc1adc6ea4356a8f",
+          "basis": "Parser attack and no-extraction regression definition; no executable package qualification claim"
+        },
+        {
+          "path": "tests/unit/test_skill_packages.py",
+          "symbol": "test_metadata_numbers_are_jsonb_stable_and_keys_are_valid_unicode",
+          "sha256": "da759dea5e8fbc077a2ec67dc68b8444625ea33c9f791dddfc1adc6ea4356a8f",
+          "basis": "Canonical metadata normalization and invalid-key rejection before persistent identity is calculated"
+        },
+        {
+          "path": "tests/integration/test_skill_acquisition.py",
+          "symbol": "test_source_only_update_retains_every_decision_and_exact_provenance",
+          "sha256": "37d96470de1c90a6398de8a733a5bc034dd630a7d467530e9931c4445cf29a54",
+          "basis": "Real PostgreSQL source-only update retains exact provenance without redefining immutable content identity"
+        },
+        {
+          "path": "tests/integration/test_skill_acquisition.py",
+          "symbol": "test_populated_v39_upgrade_preserves_genuine_authored_sessions_and_releases",
+          "sha256": "37d96470de1c90a6398de8a733a5bc034dd630a7d467530e9931c4445cf29a54",
+          "basis": "Populated revision39 upgrade preserves original authored release identities, text, context and real session ownership"
+        },
+        {
+          "path": "tests/integration/test_skill_acquisition_api.py",
+          "symbol": "test_http_import_review_install_resource_update_rollback_and_revoke",
+          "sha256": "f223739a4b2a202a84bc2779e2e076f6a41e9e36b94e57329d785e67925edcf2",
+          "basis": "Real HTTP/application/database lifecycle with an explicit package fixture; no live registry or sandbox execution claim"
+        },
+        {
+          "path": "tests/integration/test_skill_acquisition_api.py",
+          "symbol": "test_failed_import_is_atomic_and_source_retry_does_not_refetch",
+          "sha256": "f223739a4b2a202a84bc2779e2e076f6a41e9e36b94e57329d785e67925edcf2",
+          "basis": "Failed acquisition leaves no package and committed exact-key retry avoids repeating source retrieval"
         }
       ],
-      "assessment": "Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility.",
-      "support_scope": "Current authored-skill lifecycle and ACLs; no assumption of permission from SKILL text.",
+      "assessment": "Genuine agent-authored skill drafts/releases retain their existing Context session and namespace authority. U04-A completes a bounded portable-data lifecycle in that same registry: ZIP/local-directory/pinned-public-GitHub acquisition, immutable original text and resources, exact source/release review, disabled installation, explicit activation, digest-pinned Context loading, updates, rollback, disable and terminal revocation. This does not establish executable dependency readiness, publisher trust or full vendor behavior compatibility.",
+      "support_scope": "Migration 40 extends existing skill identities and releases with imported principal ownership, separate content/bundle digests, immutable package bytes and signed control history. Unit/protocol and real PostgreSQL tests cover scoped imports, current-key authority, source-only/resource-only updates, CAS/replay, populated-v39 migration, bounded resources and revocation. No imported code, hook, installer or dependency executes.",
       "remaining": [
-        "Qualify shared /usr/local/skills, import/export, resources, readiness and revocation",
-        "Implement zero-trust manifests/hooks, supply-chain/update policy and admitted real package fixtures"
+        "Add documented registry federation/search and publisher trust evidence for actual pinned third-party packages",
+        "Implement separately admitted executable dependency acquisition through existing S9-S12 and grant owners",
+        "Qualify per-agent visibility, filesystem/baseDir views, turn snapshots and native vendor substitutions without stale revocation access",
+        "Run installed-host source retrieval, native credential, sandbox and task-success qualification for the selected supported profiles"
       ],
-      "next_action": "Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports."
+      "next_action": "Build the next executable/registry acquisition vertical through existing tool maintenance and execution authorities; keep portable data availability distinct from measured runtime readiness and qualification."
     },
     {
       "id": "compatibility",
@@ -124432,6 +124808,12 @@
           "symbol": "register_operation_workbench_routes",
           "sha256": "392f98c1befc9ef737c91e09b226208d9629f16c12fa5a56e0dad312601b1fdd",
           "basis": "The frontend uses existing authenticated backend operations, with exact public scope and separate operator capability"
+        },
+        {
+          "path": "src/potbot/api/ui_skills.py",
+          "symbol": "register_skill_acquisition_routes",
+          "sha256": "4c22e32951f9d872d4cd7b627ab7d5f19e0a9929f747624cdd0ae6286ae0e601",
+          "basis": "Fixed authenticated scoped routes, setup-authorized exact-plan/CAS mutations, bounded bodies/resources and stable command keys"
         }
       ],
       "tests": [
@@ -124446,10 +124828,22 @@
           "symbol": "test_owned_cancel_does_not_require_or_read_setup_capability",
           "sha256": "02b88ba7e6d5ead1ecd8a46e1b3a533a8de35591921f2914f6434c6619d419bf",
           "basis": "Losing permission to launch does not prevent authenticated owner cancellation"
+        },
+        {
+          "path": "tests/unit/test_ui_skills.py",
+          "symbol": "test_all_mutation_capabilities_are_required_before_acquisition",
+          "sha256": "9b2ea511a2150a3486b3866dab70e0fe9949ba079839f888e2f935e3dba9d24d",
+          "basis": "Ordinary authentication, allowed Origin, setup capability and idempotency key precede acquisition effects"
+        },
+        {
+          "path": "tests/unit/test_ui_skills.py",
+          "symbol": "test_queries_and_cursor_bounds_do_not_accept_unknown_authority",
+          "sha256": "9b2ea511a2150a3486b3866dab70e0fe9949ba079839f888e2f935e3dba9d24d",
+          "basis": "Exact bounded selectors reject duplicate or caller-invented authority fields"
         }
       ],
-      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences.",
-      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance.",
+      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences. U04-A adds a complete /skills acquisition/review/install/activation/resource/update/rollback/disable/revoke workshop with scoped durable mutation recovery.",
+      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance. U04-A binds the browser to fixed authenticated BFF routes, exact plans/revisions and the server-only setup capability; TypeScript/Node/build checks remain distinct from rendered-browser qualification.",
       "remaining": [
         "Connect job-backed inference, principal-aware workspace discovery and resumable terminal/graph APIs",
         "Preserve exact orb, reduced-motion/accessibility and metric timing/denominator contracts"
@@ -124528,8 +124922,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "dc26fc18e4c8ef39faee4f842b7c4b5ff03cb0da45a745cea2e09284c819361f",
-          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained."
+          "sha256": "6ba047f246b86e4659c7119e0424f645c11f967b624d26f6eaa19978b0d8db5d",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact."
         },
         {
           "path": "src/potbot/service.py",

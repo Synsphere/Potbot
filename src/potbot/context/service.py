@@ -8,6 +8,7 @@ lease and obtain a trusted WorkspaceContext before calling this host-side API.
 from __future__ import annotations
 
 import hashlib
+from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 from uuid import UUID, uuid4
 
@@ -24,6 +25,18 @@ if TYPE_CHECKING:
     from potbot.context.transactions import ContextDatabase
 
 _DENIED = "The requested resource is not accessible."
+
+
+def native_skill_setup_token() -> str | None:
+    """Resolve the native operator key only when an acquired skill is requested."""
+    from potbot.service_credentials import ServiceCredentials
+
+    try:
+        return ServiceCredentials().store.get("api.setup_token")
+    except Exception:
+        # The caller treats an unavailable or locked key as denied; never put
+        # credential backend details in a guest-visible Context response.
+        return None
 
 
 def _reason(value: str) -> str:
@@ -53,8 +66,14 @@ class WorkspaceContextService:
     credentials, perform filesystem projection, or accept a caller-supplied actor.
     """
 
-    def __init__(self, database: ContextDatabase):
+    def __init__(
+        self,
+        database: ContextDatabase,
+        *,
+        skill_setup_token: Callable[[], str | None] | None = None,
+    ):
         self.database = database
+        self.skill_setup_token = skill_setup_token or native_skill_setup_token
 
     @staticmethod
     def _get_object(connection: Any, context: WorkspaceContext, kind: str, name: str) -> UUID:

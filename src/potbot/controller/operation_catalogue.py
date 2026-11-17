@@ -119,12 +119,14 @@ runtime_heads AS (
  WHERE d.workspace_id=%(workspace)s ORDER BY d.canonical_model,d.created_at DESC,d.id
  LIMIT %(cap)s
 ), skills AS (
- SELECT k.id,k.slug,k.owner_agent_id,k.context_object_id,r.source_revision,k.latest_sha256
+ SELECT k.id,k.slug,k.owner_agent_id,k.context_object_id,r.source_revision,k.latest_sha256,
+        k.origin,k.enabled,k.state AS skill_state,k.control_revision
  FROM workspace_context_skills k JOIN workspace_context_objects o
  ON o.workspace_id=k.workspace_id AND o.id=k.context_object_id
  JOIN workspace_context_skill_releases r ON r.workspace_id=k.workspace_id
  AND r.skill_id=k.id AND r.sha256=k.latest_sha256
- WHERE k.workspace_id=%(workspace)s AND k.published AND k.state='active'
+ WHERE k.workspace_id=%(workspace)s AND k.published
+ AND ((k.origin='authored' AND k.state='active') OR k.origin='acquired')
  AND (o.visibility='shared' OR o.owner_principal_id=%(principal)s)
  ORDER BY k.id LIMIT %(cap)s
 ), syn AS (
@@ -399,7 +401,15 @@ def project_observations(
         ref = "skill:" + identity
         name = (
             row["slug"]
-            if isinstance(row["slug"], str) and _LABEL.fullmatch(row["slug"])
+            if isinstance(row["slug"], str)
+            and (
+                _LABEL.fullmatch(row["slug"])
+                or (
+                    row.get("origin") == "acquired"
+                    and len(row["slug"]) <= 64
+                    and re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", row["slug"])
+                )
+            )
             else "Published skill"
         )
         selected = item("skill", ref, name)
@@ -407,6 +417,19 @@ def project_observations(
         selected["fingerprintSha256"] = _digest(row["latest_sha256"])
         selected["version"] = selected["fingerprintSha256"]
         selected["reasons"].append("skill_is_untrusted_data")
+        if row.get("origin") == "acquired":
+            selected["reasons"].extend(
+                ["acquired_skill_record_only", "skill_resource_access_requires_context_session"]
+            )
+            selected["state"] = "installed_unqualified"
+            if row.get("skill_state") == "revoked":
+                selected["state"] = "policy_disabled"
+                selected["reasons"].append("skill_revoked")
+            elif row.get("enabled") is not True:
+                selected["state"] = "policy_disabled"
+                selected["reasons"].append("skill_disabled")
+            else:
+                selected["reasons"].append("skill_activation_signature_not_evaluated")
         source(selected, "published_skill", identity, row["source_revision"], row["latest_sha256"])
     for row in observations["runtime"]:
         ref, name, valid = _reference(row["reference"], row["kind"], str(row["id"]))

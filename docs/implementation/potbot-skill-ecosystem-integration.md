@@ -2,6 +2,17 @@
 
 Status: proposed research-driven plan, 2026-11-01. Complements `unified-development-roadmap.md`, `cross-agent-compatibility.md`, and `plugin-discovery-strategy.md`. No claim that a third-party skill was installed, executed, or qualified. The independent ClawSkills directory advertises 5,705+ indexed entries but exposes 71 named curated listings; listing descriptions are not executable package audits.
 
+**Implementation follow-on, 17 November 2026:**
+[U04-A portable skill acquisition](u04-a-portable-skill-acquisition.md) now
+implements original-file preservation, bounded local ZIP/directory and exact
+public GitHub sources, requirement/loss reporting, reviewed installation,
+explicit activation, Context resource loading and update/rollback/revocation.
+It reuses the existing skill registry and preserves agent authoring authority.
+Imported package data is available through authenticated RPC rather than a
+persistent mounted tree. No package installer, proprietary hook or credential
+injection runs. The broader native interoperability, registry search, per-agent
+eligibility, turn snapshots and qualification programme below remains partial.
+
 ## Goal and non-goals
 
 Run compatible OpenClaw, Codex and Claude Code skills and workflows *natively* on Potbot's operator-mediated SYN Cog runtime, without requiring the original host agent. Preserve author intent, declared dependencies, skill files, commands and workflows. Do not promise arbitrary unmodified compatibility with proprietary tool names, privileged host APIs, unqualified OS dependencies or unsafe instructions. Report unsupported requirements and exact substitutions. No silent execution of installer scripts or automatic credential disclosure.

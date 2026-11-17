@@ -141,6 +141,8 @@ class SkillLibraryProjector(_ProjectionCustody):
 
     def _snapshot(self, context: WorkspaceContext, document: dict[str, Any]) -> dict[str, Any]:
         try:
+            if document.get("origin", "authored") != "authored":
+                raise ValueError
             namespace = document["namespace"]
             agent_id = UUID(hex=namespace.removeprefix("agent-"))
             identity, _, name = skill_identity(context.workspace_id, agent_id, document["name"])
@@ -226,8 +228,14 @@ class SkillLibraryProjector(_ProjectionCustody):
             total_bytes = 0
             while True:
                 with service.database.transaction(context) as conn:
-                    page = published_skills(conn, context, limit=25, after=after)
+                    # Acquired packages have per-read lifecycle and signature
+                    # checks. Never leave their bytes in a persistent guest mount.
+                    page = published_skills(
+                        conn, context, limit=25, after=after, include_acquired=False
+                    )
                     for item in page["skills"]:
+                        if item.get("origin", "authored") != "authored":
+                            continue
                         if len(entries) >= max_skills:
                             raise StateMismatchError("Skill catalogue exceeds projection bound")
                         view = load_skill(
@@ -245,7 +253,10 @@ class SkillLibraryProjector(_ProjectionCustody):
                         entries.append(self._snapshot(context, view))
                 if page["next"] is None:
                     break
-                after = UUID(page["next"])
+                next_after = UUID(page["next"])
+                if after is not None and next_after <= after:
+                    raise StateMismatchError("Skill projection cursor did not advance")
+                after = next_after
             raw = _json(
                 {
                     "schema": "potbot-authored-skills/v1",

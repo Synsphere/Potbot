@@ -331,3 +331,45 @@ See `docs/ui/ui11-xpra-application-sessions.md`.
 For multiple concurrent Xpra workspaces, set the server-only `POTBOT_UI_XPRA_BRIDGES_JSON`
 array with separate scoped bridge tokens and endpoints. Legacy single-workspace
 `POTBOT_UI_XPRA_BRIDGE_*` settings are still accepted.
+
+## U04-A — Portable skill acquisition workshop
+
+Open **Skill import and release workshop** from the workspace menu, or visit
+`/skills?workspace=<authorized-workspace-id>`. The workshop accepts a ZIP of up
+to 4 MiB or a public GitHub repository pinned to an exact 40-character commit
+and package directory. It provides private source review, declared requirements
+and unsupported-behavior findings, complete verified resource downloads, exact
+installation plans, explicit activation, updates, retained release history,
+rollback, disable and permanent revoke. Install, update and rollback leave the
+skill disabled. Invalid approval requires a freshly reviewed update before
+activation; revoke remains available to the owner.
+
+Deploy the backend's skill acquisition migration and HTTP routes alongside this
+frontend. Reads use the existing operator session and configured workspace
+backend bearer. Every mutation also requires the **server-only**
+`POTBOT_UI_SETUP_TOKEN` to match the backend's current setup capability. Keep it
+out of `NEXT_PUBLIC_*` variables and browser configuration. The BFF selects an
+allowlisted loopback backend, checks the exact origin, and forwards only fixed,
+bounded skill routes. Imports and history are private to the importing
+principal; shared readers see currently enabled, valid approved packages and
+cannot change another owner's controls.
+
+Activation makes approved instructions and resources available as **Context
+data**. The workshop has no Run action, does not execute packaged scripts or
+hooks, does not install dependencies, and makes no execution-readiness claim.
+Executable tool maintenance remains in `/setup/tools`.
+
+Before submitting, the browser retains the exact action body and idempotency
+key in IndexedDB, scoped to the tab, workspace and principal. Uncertain results
+offer an explicit **Retry exact request** action; reload never automatically
+resubmits. A failed authorization check during recovery retains the original
+receipt because an earlier attempt may have committed. If IndexedDB is
+unavailable, full, or already holds another tab's unresolved request, recovery
+falls back to memory and the UI warns that it is limited to the open tab. Keep
+that tab open until the outcome is confirmed. A duplicated tab cannot overwrite
+the other tab's durable pending receipt.
+
+`npm test`, `npm run typecheck` and `npm run build` cover the frontend gates.
+The skill contract test consumes a retained real HTTP/PostgreSQL lifecycle
+fixture; set `POTBOT_SKILL_CONTRACT_OUTPUT` to the fresh integration-test export
+to check the current backend wire responses directly.

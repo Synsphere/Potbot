@@ -306,3 +306,20 @@ file, the old read-only Xpra window viewer remains functional. Normal browser
 navigation has no newly granted network permission. Operator-process restart
 cannot yet migrate active GUI processes; process death and lease expiry are
 explicit and never silently replayed.
+
+## U04-A — portable skill workshop
+
+The `/skills` workshop now covers private ZIP or pinned public GitHub import,
+full package/source review, exact install plans, separate activation, resource
+inspection and verified downloads, update diffs, rollback, disable and revoke.
+It uses the same migration-40 Context skill owner as the CLI and HTTP API.
+Control decisions and retained releases have bounded paginated history.
+
+Fixed authenticated BFF routes keep setup credentials on the server. Strict
+scope projectors, late-response fences and an IndexedDB exact-key/body journal
+support deliberate recovery after uncertain responses. Storage failure is
+reported with the limited current-tab fallback. Imported content is escaped
+data; neither installation nor activation adds a Run action or claims sandbox
+dependency readiness. See [the milestone contract](../implementation/u04-a-portable-skill-acquisition.md)
+for deployment, migration, source bounds, current-release resource semantics
+and the independent installed-host/rendered-browser qualification gates.

@@ -163,6 +163,7 @@ def application(args: argparse.Namespace) -> FastAPI:
     from potbot.api.ui_operations import register_operation_routes
     from potbot.api.ui_operator_s13 import register_operator_routes
     from potbot.api.ui_resources import register_ui_routes
+    from potbot.api.ui_skills import register_skill_acquisition_routes
 
     register_ui_routes(app, database, authenticate, settings.allowed_origins)
     register_operator_routes(
@@ -199,6 +200,14 @@ def application(args: argparse.Namespace) -> FastAPI:
             setup_authorizer,
         )
     register_operation_workbench_routes(
+        app,
+        database,
+        authenticate,
+        settings.allowed_origins,
+        context.workspace_id,
+        setup_authorizer,
+    )
+    register_skill_acquisition_routes(
         app,
         database,
         authenticate,

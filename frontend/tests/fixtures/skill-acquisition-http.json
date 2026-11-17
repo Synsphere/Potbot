@@ -1,0 +1,2045 @@
+{
+  "active": {
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "schema": "potbot-skill-acquisition/v1",
+    "skill": {
+      "approvalValid": true,
+      "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+      "contextName": "imported-5d6d2bda6244478b96364e609749355b.review-documents",
+      "contextObjectId": "36751d07-eb5b-52f3-9abb-2c3ff13d94dd",
+      "createdAt": "2026-11-17T22:25:48.286179+00:00",
+      "enabled": true,
+      "id": "8ae72af2-bea3-5a92-95a2-1dbca29a0a43",
+      "manifest": {
+        "compatibility": {
+          "status": "review_required",
+          "unsupported": [
+            "OpenClaw dependency installers are retained but never executed",
+            "OpenClaw runtime gates and credential injection are not implemented",
+            "allowed-tools does not grant Potbot execution authority"
+          ]
+        },
+        "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "description": "Review document packages.",
+        "files": [
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "AGENTS.md",
+            "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+            "size": 45
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "SKILL.md",
+            "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+            "size": 306
+          },
+          {
+            "executable_hint": false,
+            "media_type": "application/octet-stream",
+            "path": "assets/empty.bin",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "references/guide.md",
+            "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+            "size": 76000
+          }
+        ],
+        "findings": [
+          {
+            "code": "context_files_are_resources",
+            "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+            "severity": "notice"
+          },
+          {
+            "code": "requirements_unverified",
+            "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+            "severity": "warning"
+          },
+          {
+            "code": "unsupported_behavior",
+            "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+            "severity": "warning"
+          }
+        ],
+        "metadata": {
+          "allowed-tools": "Read",
+          "description": "Review document packages.",
+          "license": "MIT",
+          "metadata": {
+            "openclaw": {
+              "install": [
+                {
+                  "kind": "uv",
+                  "package": "declared-only"
+                }
+              ],
+              "requires": {
+                "bins": [
+                  "python"
+                ],
+                "env": [
+                  "OPTIONAL_PROVIDER_TOKEN"
+                ]
+              }
+            },
+            "version": "1.0"
+          },
+          "name": "review-documents"
+        },
+        "name": "review-documents",
+        "requirements": [
+          {
+            "kind": "binary",
+            "name": "python",
+            "status": "unverified"
+          },
+          {
+            "kind": "environment",
+            "name": "OPTIONAL_PROVIDER_TOKEN",
+            "status": "unverified"
+          },
+          {
+            "kind": "tool",
+            "name": "Read",
+            "status": "unverified"
+          }
+        ],
+        "schema": "potbot-skill-package/v1"
+      },
+      "name": "review-documents",
+      "namespace": "imported-5d6d2bda6244478b96364e609749355b",
+      "origin": "acquired",
+      "owned": true,
+      "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+      "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+      "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+      "revision": 2,
+      "source": {
+        "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+        "kind": "zip",
+        "path": "",
+        "verification": "content-integrity-only"
+      },
+      "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+      "state": "active",
+      "updatedAt": "2026-11-17T22:25:48.351089+00:00"
+    },
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "history": {
+    "events": [
+      {
+        "action": "activate",
+        "createdAt": "2026-11-17T22:25:48.577931+00:00",
+        "enabled": true,
+        "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+        "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+        "revision": 5,
+        "source": {
+          "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+        "state": "active"
+      },
+      {
+        "action": "rollback",
+        "createdAt": "2026-11-17T22:25:48.547636+00:00",
+        "enabled": false,
+        "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+        "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+        "revision": 4,
+        "source": {
+          "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+        "state": "active"
+      }
+    ],
+    "nextCursor": "4",
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "releases": [
+      {
+        "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "createdAt": "2026-11-17T22:25:48.307555+00:00",
+        "current": true,
+        "manifest": {
+          "compatibility": {
+            "status": "review_required",
+            "unsupported": [
+              "OpenClaw dependency installers are retained but never executed",
+              "OpenClaw runtime gates and credential injection are not implemented",
+              "allowed-tools does not grant Potbot execution authority"
+            ]
+          },
+          "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+          "description": "Review document packages.",
+          "files": [
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "AGENTS.md",
+              "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+              "size": 45
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "SKILL.md",
+              "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+              "size": 306
+            },
+            {
+              "executable_hint": false,
+              "media_type": "application/octet-stream",
+              "path": "assets/empty.bin",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "references/guide.md",
+              "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+              "size": 76000
+            }
+          ],
+          "findings": [
+            {
+              "code": "context_files_are_resources",
+              "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+              "severity": "notice"
+            },
+            {
+              "code": "requirements_unverified",
+              "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+              "severity": "warning"
+            },
+            {
+              "code": "unsupported_behavior",
+              "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+              "severity": "warning"
+            }
+          ],
+          "metadata": {
+            "allowed-tools": "Read",
+            "description": "Review document packages.",
+            "license": "MIT",
+            "metadata": {
+              "openclaw": {
+                "install": [
+                  {
+                    "kind": "uv",
+                    "package": "declared-only"
+                  }
+                ],
+                "requires": {
+                  "bins": [
+                    "python"
+                  ],
+                  "env": [
+                    "OPTIONAL_PROVIDER_TOKEN"
+                  ]
+                }
+              },
+              "version": "1.0"
+            },
+            "name": "review-documents"
+          },
+          "name": "review-documents",
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python",
+              "status": "unverified"
+            },
+            {
+              "kind": "environment",
+              "name": "OPTIONAL_PROVIDER_TOKEN",
+              "status": "unverified"
+            },
+            {
+              "kind": "tool",
+              "name": "Read",
+              "status": "unverified"
+            }
+          ],
+          "schema": "potbot-skill-package/v1"
+        },
+        "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+        "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+        "revision": 1,
+        "source": {
+          "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2"
+      }
+    ],
+    "schema": "potbot-skill-acquisition/v1",
+    "skill": {
+      "approvalValid": true,
+      "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+      "contextName": "imported-5d6d2bda6244478b96364e609749355b.review-documents",
+      "contextObjectId": "36751d07-eb5b-52f3-9abb-2c3ff13d94dd",
+      "createdAt": "2026-11-17T22:25:48.286179+00:00",
+      "enabled": true,
+      "id": "8ae72af2-bea3-5a92-95a2-1dbca29a0a43",
+      "manifest": {
+        "compatibility": {
+          "status": "review_required",
+          "unsupported": [
+            "OpenClaw dependency installers are retained but never executed",
+            "OpenClaw runtime gates and credential injection are not implemented",
+            "allowed-tools does not grant Potbot execution authority"
+          ]
+        },
+        "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "description": "Review document packages.",
+        "files": [
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "AGENTS.md",
+            "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+            "size": 45
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "SKILL.md",
+            "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+            "size": 306
+          },
+          {
+            "executable_hint": false,
+            "media_type": "application/octet-stream",
+            "path": "assets/empty.bin",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "references/guide.md",
+            "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+            "size": 76000
+          }
+        ],
+        "findings": [
+          {
+            "code": "context_files_are_resources",
+            "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+            "severity": "notice"
+          },
+          {
+            "code": "requirements_unverified",
+            "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+            "severity": "warning"
+          },
+          {
+            "code": "unsupported_behavior",
+            "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+            "severity": "warning"
+          }
+        ],
+        "metadata": {
+          "allowed-tools": "Read",
+          "description": "Review document packages.",
+          "license": "MIT",
+          "metadata": {
+            "openclaw": {
+              "install": [
+                {
+                  "kind": "uv",
+                  "package": "declared-only"
+                }
+              ],
+              "requires": {
+                "bins": [
+                  "python"
+                ],
+                "env": [
+                  "OPTIONAL_PROVIDER_TOKEN"
+                ]
+              }
+            },
+            "version": "1.0"
+          },
+          "name": "review-documents"
+        },
+        "name": "review-documents",
+        "requirements": [
+          {
+            "kind": "binary",
+            "name": "python",
+            "status": "unverified"
+          },
+          {
+            "kind": "environment",
+            "name": "OPTIONAL_PROVIDER_TOKEN",
+            "status": "unverified"
+          },
+          {
+            "kind": "tool",
+            "name": "Read",
+            "status": "unverified"
+          }
+        ],
+        "schema": "potbot-skill-package/v1"
+      },
+      "name": "review-documents",
+      "namespace": "imported-5d6d2bda6244478b96364e609749355b",
+      "origin": "acquired",
+      "owned": true,
+      "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+      "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+      "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+      "revision": 5,
+      "source": {
+        "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+        "kind": "zip",
+        "path": "",
+        "verification": "content-integrity-only"
+      },
+      "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+      "state": "active",
+      "updatedAt": "2026-11-17T22:25:48.576394+00:00"
+    },
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "installed": {
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "schema": "potbot-skill-acquisition/v1",
+    "skill": {
+      "approvalValid": true,
+      "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+      "contextName": "imported-5d6d2bda6244478b96364e609749355b.review-documents",
+      "contextObjectId": "36751d07-eb5b-52f3-9abb-2c3ff13d94dd",
+      "createdAt": "2026-11-17T22:25:48.286179+00:00",
+      "enabled": false,
+      "id": "8ae72af2-bea3-5a92-95a2-1dbca29a0a43",
+      "manifest": {
+        "compatibility": {
+          "status": "review_required",
+          "unsupported": [
+            "OpenClaw dependency installers are retained but never executed",
+            "OpenClaw runtime gates and credential injection are not implemented",
+            "allowed-tools does not grant Potbot execution authority"
+          ]
+        },
+        "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "description": "Review document packages.",
+        "files": [
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "AGENTS.md",
+            "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+            "size": 45
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "SKILL.md",
+            "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+            "size": 306
+          },
+          {
+            "executable_hint": false,
+            "media_type": "application/octet-stream",
+            "path": "assets/empty.bin",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "references/guide.md",
+            "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+            "size": 76000
+          }
+        ],
+        "findings": [
+          {
+            "code": "context_files_are_resources",
+            "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+            "severity": "notice"
+          },
+          {
+            "code": "requirements_unverified",
+            "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+            "severity": "warning"
+          },
+          {
+            "code": "unsupported_behavior",
+            "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+            "severity": "warning"
+          }
+        ],
+        "metadata": {
+          "allowed-tools": "Read",
+          "description": "Review document packages.",
+          "license": "MIT",
+          "metadata": {
+            "openclaw": {
+              "install": [
+                {
+                  "kind": "uv",
+                  "package": "declared-only"
+                }
+              ],
+              "requires": {
+                "bins": [
+                  "python"
+                ],
+                "env": [
+                  "OPTIONAL_PROVIDER_TOKEN"
+                ]
+              }
+            },
+            "version": "1.0"
+          },
+          "name": "review-documents"
+        },
+        "name": "review-documents",
+        "requirements": [
+          {
+            "kind": "binary",
+            "name": "python",
+            "status": "unverified"
+          },
+          {
+            "kind": "environment",
+            "name": "OPTIONAL_PROVIDER_TOKEN",
+            "status": "unverified"
+          },
+          {
+            "kind": "tool",
+            "name": "Read",
+            "status": "unverified"
+          }
+        ],
+        "schema": "potbot-skill-package/v1"
+      },
+      "name": "review-documents",
+      "namespace": "imported-5d6d2bda6244478b96364e609749355b",
+      "origin": "acquired",
+      "owned": true,
+      "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+      "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+      "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+      "revision": 1,
+      "source": {
+        "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+        "kind": "zip",
+        "path": "",
+        "verification": "content-integrity-only"
+      },
+      "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+      "state": "active",
+      "updatedAt": "2026-11-17T22:25:48.286179+00:00"
+    },
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "list": {
+    "items": [
+      {
+        "approvalValid": true,
+        "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "contextName": "imported-5d6d2bda6244478b96364e609749355b.review-documents",
+        "contextObjectId": "36751d07-eb5b-52f3-9abb-2c3ff13d94dd",
+        "createdAt": "2026-11-17T22:25:48.286179+00:00",
+        "enabled": false,
+        "id": "8ae72af2-bea3-5a92-95a2-1dbca29a0a43",
+        "manifest": {
+          "compatibility": {
+            "status": "review_required",
+            "unsupported": [
+              "OpenClaw dependency installers are retained but never executed",
+              "OpenClaw runtime gates and credential injection are not implemented",
+              "allowed-tools does not grant Potbot execution authority"
+            ]
+          },
+          "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+          "description": "Review document packages.",
+          "files": [
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "AGENTS.md",
+              "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+              "size": 45
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "SKILL.md",
+              "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+              "size": 306
+            },
+            {
+              "executable_hint": false,
+              "media_type": "application/octet-stream",
+              "path": "assets/empty.bin",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "references/guide.md",
+              "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+              "size": 76000
+            }
+          ],
+          "findings": [
+            {
+              "code": "context_files_are_resources",
+              "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+              "severity": "notice"
+            },
+            {
+              "code": "requirements_unverified",
+              "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+              "severity": "warning"
+            },
+            {
+              "code": "unsupported_behavior",
+              "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+              "severity": "warning"
+            }
+          ],
+          "metadata": {
+            "allowed-tools": "Read",
+            "description": "Review document packages.",
+            "license": "MIT",
+            "metadata": {
+              "openclaw": {
+                "install": [
+                  {
+                    "kind": "uv",
+                    "package": "declared-only"
+                  }
+                ],
+                "requires": {
+                  "bins": [
+                    "python"
+                  ],
+                  "env": [
+                    "OPTIONAL_PROVIDER_TOKEN"
+                  ]
+                }
+              },
+              "version": "1.0"
+            },
+            "name": "review-documents"
+          },
+          "name": "review-documents",
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python",
+              "status": "unverified"
+            },
+            {
+              "kind": "environment",
+              "name": "OPTIONAL_PROVIDER_TOKEN",
+              "status": "unverified"
+            },
+            {
+              "kind": "tool",
+              "name": "Read",
+              "status": "unverified"
+            }
+          ],
+          "schema": "potbot-skill-package/v1"
+        },
+        "name": "review-documents",
+        "namespace": "imported-5d6d2bda6244478b96364e609749355b",
+        "origin": "acquired",
+        "owned": true,
+        "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+        "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+        "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+        "revision": 6,
+        "source": {
+          "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+        "state": "revoked",
+        "updatedAt": "2026-11-17T22:25:48.645622+00:00"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "schema": "potbot-skill-acquisition/v1",
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "package": {
+    "content": "---\nname: review-documents\ndescription: >-\n  Review document packages.\nlicense: MIT\nallowed-tools: Read\nmetadata:\n  version: \"1.0\"\n  openclaw:\n    requires:\n      bins: [python]\n      env: [OPTIONAL_PROVIDER_TOKEN]\n    install:\n      - kind: uv\n        package: declared-only\n---\nRead references/guide.md.\n",
+    "contentTruncated": false,
+    "package": {
+      "bytes": 76351,
+      "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+      "createdAt": "2026-11-17T22:25:48.210864+00:00",
+      "description": "Review document packages.",
+      "files": 4,
+      "id": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+      "manifest": {
+        "compatibility": {
+          "status": "review_required",
+          "unsupported": [
+            "OpenClaw dependency installers are retained but never executed",
+            "OpenClaw runtime gates and credential injection are not implemented",
+            "allowed-tools does not grant Potbot execution authority"
+          ]
+        },
+        "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "description": "Review document packages.",
+        "files": [
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "AGENTS.md",
+            "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+            "size": 45
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "SKILL.md",
+            "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+            "size": 306
+          },
+          {
+            "executable_hint": false,
+            "media_type": "application/octet-stream",
+            "path": "assets/empty.bin",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "references/guide.md",
+            "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+            "size": 76000
+          }
+        ],
+        "findings": [
+          {
+            "code": "context_files_are_resources",
+            "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+            "severity": "notice"
+          },
+          {
+            "code": "requirements_unverified",
+            "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+            "severity": "warning"
+          },
+          {
+            "code": "unsupported_behavior",
+            "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+            "severity": "warning"
+          }
+        ],
+        "metadata": {
+          "allowed-tools": "Read",
+          "description": "Review document packages.",
+          "license": "MIT",
+          "metadata": {
+            "openclaw": {
+              "install": [
+                {
+                  "kind": "uv",
+                  "package": "declared-only"
+                }
+              ],
+              "requires": {
+                "bins": [
+                  "python"
+                ],
+                "env": [
+                  "OPTIONAL_PROVIDER_TOKEN"
+                ]
+              }
+            },
+            "version": "1.0"
+          },
+          "name": "review-documents"
+        },
+        "name": "review-documents",
+        "requirements": [
+          {
+            "kind": "binary",
+            "name": "python",
+            "status": "unverified"
+          },
+          {
+            "kind": "environment",
+            "name": "OPTIONAL_PROVIDER_TOKEN",
+            "status": "unverified"
+          },
+          {
+            "kind": "tool",
+            "name": "Read",
+            "status": "unverified"
+          }
+        ],
+        "schema": "potbot-skill-package/v1"
+      },
+      "name": "review-documents",
+      "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+      "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+      "source": {
+        "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+        "kind": "zip",
+        "path": "",
+        "verification": "content-integrity-only"
+      },
+      "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2"
+    },
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "schema": "potbot-skill-acquisition/v1",
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "packages": {
+    "items": [
+      {
+        "bytes": 76351,
+        "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "createdAt": "2026-11-17T22:25:48.210864+00:00",
+        "description": "Review document packages.",
+        "files": 4,
+        "id": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+        "manifest": {
+          "compatibility": {
+            "status": "review_required",
+            "unsupported": [
+              "OpenClaw dependency installers are retained but never executed",
+              "OpenClaw runtime gates and credential injection are not implemented",
+              "allowed-tools does not grant Potbot execution authority"
+            ]
+          },
+          "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+          "description": "Review document packages.",
+          "files": [
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "AGENTS.md",
+              "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+              "size": 45
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "SKILL.md",
+              "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+              "size": 306
+            },
+            {
+              "executable_hint": false,
+              "media_type": "application/octet-stream",
+              "path": "assets/empty.bin",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "references/guide.md",
+              "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+              "size": 76000
+            }
+          ],
+          "findings": [
+            {
+              "code": "context_files_are_resources",
+              "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+              "severity": "notice"
+            },
+            {
+              "code": "requirements_unverified",
+              "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+              "severity": "warning"
+            },
+            {
+              "code": "unsupported_behavior",
+              "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+              "severity": "warning"
+            }
+          ],
+          "metadata": {
+            "allowed-tools": "Read",
+            "description": "Review document packages.",
+            "license": "MIT",
+            "metadata": {
+              "openclaw": {
+                "install": [
+                  {
+                    "kind": "uv",
+                    "package": "declared-only"
+                  }
+                ],
+                "requires": {
+                  "bins": [
+                    "python"
+                  ],
+                  "env": [
+                    "OPTIONAL_PROVIDER_TOKEN"
+                  ]
+                }
+              },
+              "version": "1.0"
+            },
+            "name": "review-documents"
+          },
+          "name": "review-documents",
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python",
+              "status": "unverified"
+            },
+            {
+              "kind": "environment",
+              "name": "OPTIONAL_PROVIDER_TOKEN",
+              "status": "unverified"
+            },
+            {
+              "kind": "tool",
+              "name": "Read",
+              "status": "unverified"
+            }
+          ],
+          "schema": "potbot-skill-package/v1"
+        },
+        "name": "review-documents",
+        "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+        "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+        "source": {
+          "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2"
+      },
+      {
+        "bytes": 365,
+        "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "createdAt": "2026-11-17T22:25:48.423737+00:00",
+        "description": "Review document packages.",
+        "files": 4,
+        "id": "a0e5675b-3014-49ea-96ce-9dba7ef53d20",
+        "manifest": {
+          "compatibility": {
+            "status": "review_required",
+            "unsupported": [
+              "OpenClaw dependency installers are retained but never executed",
+              "OpenClaw runtime gates and credential injection are not implemented",
+              "allowed-tools does not grant Potbot execution authority"
+            ]
+          },
+          "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+          "description": "Review document packages.",
+          "files": [
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "AGENTS.md",
+              "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+              "size": 45
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "SKILL.md",
+              "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+              "size": 306
+            },
+            {
+              "executable_hint": false,
+              "media_type": "application/octet-stream",
+              "path": "assets/empty.bin",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "references/guide.md",
+              "sha256": "b070a7b7bd448ff7d2308c7d337d742d857e0eb45ff42bb3d03e5831fad2cfee",
+              "size": 14
+            }
+          ],
+          "findings": [
+            {
+              "code": "context_files_are_resources",
+              "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+              "severity": "notice"
+            },
+            {
+              "code": "requirements_unverified",
+              "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+              "severity": "warning"
+            },
+            {
+              "code": "unsupported_behavior",
+              "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+              "severity": "warning"
+            }
+          ],
+          "metadata": {
+            "allowed-tools": "Read",
+            "description": "Review document packages.",
+            "license": "MIT",
+            "metadata": {
+              "openclaw": {
+                "install": [
+                  {
+                    "kind": "uv",
+                    "package": "declared-only"
+                  }
+                ],
+                "requires": {
+                  "bins": [
+                    "python"
+                  ],
+                  "env": [
+                    "OPTIONAL_PROVIDER_TOKEN"
+                  ]
+                }
+              },
+              "version": "1.0"
+            },
+            "name": "review-documents"
+          },
+          "name": "review-documents",
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python",
+              "status": "unverified"
+            },
+            {
+              "kind": "environment",
+              "name": "OPTIONAL_PROVIDER_TOKEN",
+              "status": "unverified"
+            },
+            {
+              "kind": "tool",
+              "name": "Read",
+              "status": "unverified"
+            }
+          ],
+          "schema": "potbot-skill-package/v1"
+        },
+        "name": "review-documents",
+        "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+        "releaseSha256": "a021dbf57aa583c0dcbad05c741fb29899fea4c9bd68ebe7ac264c19a4c23a8c",
+        "source": {
+          "archive_sha256": "d9ba5d8388c4deede1ae744bc56fe640814ba1bdfe1e88699fb2a65c7db45608",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "83b92d80418a7fc1ac1d1dd06c900e918e955f40c90b3b05d875773bd8f84fd1"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "schema": "potbot-skill-acquisition/v1",
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "plan": {
+    "plan": {
+      "action": "install",
+      "added": [
+        "AGENTS.md",
+        "SKILL.md",
+        "assets/empty.bin",
+        "references/guide.md"
+      ],
+      "changed": [],
+      "executable": false,
+      "expectedRevision": 0,
+      "name": "review-documents",
+      "package": {
+        "bytes": 76351,
+        "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "createdAt": "2026-11-17T22:25:48.210864+00:00",
+        "description": "Review document packages.",
+        "files": 4,
+        "id": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+        "manifest": {
+          "compatibility": {
+            "status": "review_required",
+            "unsupported": [
+              "OpenClaw dependency installers are retained but never executed",
+              "OpenClaw runtime gates and credential injection are not implemented",
+              "allowed-tools does not grant Potbot execution authority"
+            ]
+          },
+          "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+          "description": "Review document packages.",
+          "files": [
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "AGENTS.md",
+              "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+              "size": 45
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "SKILL.md",
+              "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+              "size": 306
+            },
+            {
+              "executable_hint": false,
+              "media_type": "application/octet-stream",
+              "path": "assets/empty.bin",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "references/guide.md",
+              "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+              "size": 76000
+            }
+          ],
+          "findings": [
+            {
+              "code": "context_files_are_resources",
+              "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+              "severity": "notice"
+            },
+            {
+              "code": "requirements_unverified",
+              "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+              "severity": "warning"
+            },
+            {
+              "code": "unsupported_behavior",
+              "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+              "severity": "warning"
+            }
+          ],
+          "metadata": {
+            "allowed-tools": "Read",
+            "description": "Review document packages.",
+            "license": "MIT",
+            "metadata": {
+              "openclaw": {
+                "install": [
+                  {
+                    "kind": "uv",
+                    "package": "declared-only"
+                  }
+                ],
+                "requires": {
+                  "bins": [
+                    "python"
+                  ],
+                  "env": [
+                    "OPTIONAL_PROVIDER_TOKEN"
+                  ]
+                }
+              },
+              "version": "1.0"
+            },
+            "name": "review-documents"
+          },
+          "name": "review-documents",
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python",
+              "status": "unverified"
+            },
+            {
+              "kind": "environment",
+              "name": "OPTIONAL_PROVIDER_TOKEN",
+              "status": "unverified"
+            },
+            {
+              "kind": "tool",
+              "name": "Read",
+              "status": "unverified"
+            }
+          ],
+          "schema": "potbot-skill-package/v1"
+        },
+        "name": "review-documents",
+        "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+        "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+        "source": {
+          "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2"
+      },
+      "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+      "previousReleaseSha256": null,
+      "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+      "removed": [],
+      "sha256": "e0d7fe845cad739141c103ea84ef8d6ed97e008ff2139b79d8fed4ecec0e35e7",
+      "skillId": "8ae72af2-bea3-5a92-95a2-1dbca29a0a43",
+      "sourceChanged": false,
+      "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+      "willDisable": true
+    },
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "schema": "potbot-skill-acquisition/v1",
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "previousHistory": {
+    "events": [
+      {
+        "action": "update",
+        "createdAt": "2026-11-17T22:25:48.494568+00:00",
+        "enabled": false,
+        "packageId": "a0e5675b-3014-49ea-96ce-9dba7ef53d20",
+        "releaseSha256": "a021dbf57aa583c0dcbad05c741fb29899fea4c9bd68ebe7ac264c19a4c23a8c",
+        "revision": 3,
+        "source": {
+          "archive_sha256": "d9ba5d8388c4deede1ae744bc56fe640814ba1bdfe1e88699fb2a65c7db45608",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "83b92d80418a7fc1ac1d1dd06c900e918e955f40c90b3b05d875773bd8f84fd1",
+        "state": "active"
+      },
+      {
+        "action": "activate",
+        "createdAt": "2026-11-17T22:25:48.352681+00:00",
+        "enabled": true,
+        "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+        "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+        "revision": 2,
+        "source": {
+          "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+        "state": "active"
+      }
+    ],
+    "nextCursor": "2",
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "releases": [
+      {
+        "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "createdAt": "2026-11-17T22:25:48.490533+00:00",
+        "current": false,
+        "manifest": {
+          "compatibility": {
+            "status": "review_required",
+            "unsupported": [
+              "OpenClaw dependency installers are retained but never executed",
+              "OpenClaw runtime gates and credential injection are not implemented",
+              "allowed-tools does not grant Potbot execution authority"
+            ]
+          },
+          "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+          "description": "Review document packages.",
+          "files": [
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "AGENTS.md",
+              "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+              "size": 45
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "SKILL.md",
+              "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+              "size": 306
+            },
+            {
+              "executable_hint": false,
+              "media_type": "application/octet-stream",
+              "path": "assets/empty.bin",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "references/guide.md",
+              "sha256": "b070a7b7bd448ff7d2308c7d337d742d857e0eb45ff42bb3d03e5831fad2cfee",
+              "size": 14
+            }
+          ],
+          "findings": [
+            {
+              "code": "context_files_are_resources",
+              "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+              "severity": "notice"
+            },
+            {
+              "code": "requirements_unverified",
+              "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+              "severity": "warning"
+            },
+            {
+              "code": "unsupported_behavior",
+              "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+              "severity": "warning"
+            }
+          ],
+          "metadata": {
+            "allowed-tools": "Read",
+            "description": "Review document packages.",
+            "license": "MIT",
+            "metadata": {
+              "openclaw": {
+                "install": [
+                  {
+                    "kind": "uv",
+                    "package": "declared-only"
+                  }
+                ],
+                "requires": {
+                  "bins": [
+                    "python"
+                  ],
+                  "env": [
+                    "OPTIONAL_PROVIDER_TOKEN"
+                  ]
+                }
+              },
+              "version": "1.0"
+            },
+            "name": "review-documents"
+          },
+          "name": "review-documents",
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python",
+              "status": "unverified"
+            },
+            {
+              "kind": "environment",
+              "name": "OPTIONAL_PROVIDER_TOKEN",
+              "status": "unverified"
+            },
+            {
+              "kind": "tool",
+              "name": "Read",
+              "status": "unverified"
+            }
+          ],
+          "schema": "potbot-skill-package/v1"
+        },
+        "packageId": "a0e5675b-3014-49ea-96ce-9dba7ef53d20",
+        "releaseSha256": "a021dbf57aa583c0dcbad05c741fb29899fea4c9bd68ebe7ac264c19a4c23a8c",
+        "revision": 2,
+        "source": {
+          "archive_sha256": "d9ba5d8388c4deede1ae744bc56fe640814ba1bdfe1e88699fb2a65c7db45608",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "83b92d80418a7fc1ac1d1dd06c900e918e955f40c90b3b05d875773bd8f84fd1"
+      },
+      {
+        "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "createdAt": "2026-11-17T22:25:48.307555+00:00",
+        "current": true,
+        "manifest": {
+          "compatibility": {
+            "status": "review_required",
+            "unsupported": [
+              "OpenClaw dependency installers are retained but never executed",
+              "OpenClaw runtime gates and credential injection are not implemented",
+              "allowed-tools does not grant Potbot execution authority"
+            ]
+          },
+          "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+          "description": "Review document packages.",
+          "files": [
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "AGENTS.md",
+              "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+              "size": 45
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "SKILL.md",
+              "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+              "size": 306
+            },
+            {
+              "executable_hint": false,
+              "media_type": "application/octet-stream",
+              "path": "assets/empty.bin",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size": 0
+            },
+            {
+              "executable_hint": false,
+              "media_type": "text/markdown",
+              "path": "references/guide.md",
+              "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+              "size": 76000
+            }
+          ],
+          "findings": [
+            {
+              "code": "context_files_are_resources",
+              "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+              "severity": "notice"
+            },
+            {
+              "code": "requirements_unverified",
+              "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+              "severity": "warning"
+            },
+            {
+              "code": "unsupported_behavior",
+              "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+              "severity": "warning"
+            }
+          ],
+          "metadata": {
+            "allowed-tools": "Read",
+            "description": "Review document packages.",
+            "license": "MIT",
+            "metadata": {
+              "openclaw": {
+                "install": [
+                  {
+                    "kind": "uv",
+                    "package": "declared-only"
+                  }
+                ],
+                "requires": {
+                  "bins": [
+                    "python"
+                  ],
+                  "env": [
+                    "OPTIONAL_PROVIDER_TOKEN"
+                  ]
+                }
+              },
+              "version": "1.0"
+            },
+            "name": "review-documents"
+          },
+          "name": "review-documents",
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python",
+              "status": "unverified"
+            },
+            {
+              "kind": "environment",
+              "name": "OPTIONAL_PROVIDER_TOKEN",
+              "status": "unverified"
+            },
+            {
+              "kind": "tool",
+              "name": "Read",
+              "status": "unverified"
+            }
+          ],
+          "schema": "potbot-skill-package/v1"
+        },
+        "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+        "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+        "revision": 1,
+        "source": {
+          "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+          "kind": "zip",
+          "path": "",
+          "verification": "content-integrity-only"
+        },
+        "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2"
+      }
+    ],
+    "schema": "potbot-skill-acquisition/v1",
+    "skill": {
+      "approvalValid": true,
+      "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+      "contextName": "imported-5d6d2bda6244478b96364e609749355b.review-documents",
+      "contextObjectId": "36751d07-eb5b-52f3-9abb-2c3ff13d94dd",
+      "createdAt": "2026-11-17T22:25:48.286179+00:00",
+      "enabled": true,
+      "id": "8ae72af2-bea3-5a92-95a2-1dbca29a0a43",
+      "manifest": {
+        "compatibility": {
+          "status": "review_required",
+          "unsupported": [
+            "OpenClaw dependency installers are retained but never executed",
+            "OpenClaw runtime gates and credential injection are not implemented",
+            "allowed-tools does not grant Potbot execution authority"
+          ]
+        },
+        "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "description": "Review document packages.",
+        "files": [
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "AGENTS.md",
+            "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+            "size": 45
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "SKILL.md",
+            "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+            "size": 306
+          },
+          {
+            "executable_hint": false,
+            "media_type": "application/octet-stream",
+            "path": "assets/empty.bin",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "references/guide.md",
+            "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+            "size": 76000
+          }
+        ],
+        "findings": [
+          {
+            "code": "context_files_are_resources",
+            "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+            "severity": "notice"
+          },
+          {
+            "code": "requirements_unverified",
+            "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+            "severity": "warning"
+          },
+          {
+            "code": "unsupported_behavior",
+            "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+            "severity": "warning"
+          }
+        ],
+        "metadata": {
+          "allowed-tools": "Read",
+          "description": "Review document packages.",
+          "license": "MIT",
+          "metadata": {
+            "openclaw": {
+              "install": [
+                {
+                  "kind": "uv",
+                  "package": "declared-only"
+                }
+              ],
+              "requires": {
+                "bins": [
+                  "python"
+                ],
+                "env": [
+                  "OPTIONAL_PROVIDER_TOKEN"
+                ]
+              }
+            },
+            "version": "1.0"
+          },
+          "name": "review-documents"
+        },
+        "name": "review-documents",
+        "requirements": [
+          {
+            "kind": "binary",
+            "name": "python",
+            "status": "unverified"
+          },
+          {
+            "kind": "environment",
+            "name": "OPTIONAL_PROVIDER_TOKEN",
+            "status": "unverified"
+          },
+          {
+            "kind": "tool",
+            "name": "Read",
+            "status": "unverified"
+          }
+        ],
+        "schema": "potbot-skill-package/v1"
+      },
+      "name": "review-documents",
+      "namespace": "imported-5d6d2bda6244478b96364e609749355b",
+      "origin": "acquired",
+      "owned": true,
+      "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+      "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+      "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+      "revision": 5,
+      "source": {
+        "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+        "kind": "zip",
+        "path": "",
+        "verification": "content-integrity-only"
+      },
+      "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+      "state": "active",
+      "updatedAt": "2026-11-17T22:25:48.576394+00:00"
+    },
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "resource": {
+    "dataBase64": "UmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcmVuY2UgY29udGVudC4KUmVmZXJlbmNlIGNvbnRlbnQuClJlZmVyZW5jZSBjb250ZW50LgpSZWZlcg==",
+    "nextOffset": 65536,
+    "offset": 0,
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "resource": {
+      "mediaType": "text/markdown",
+      "path": "references/guide.md",
+      "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+      "size": 76000
+    },
+    "schema": "potbot-skill-acquisition/v1",
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "revoked": {
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "schema": "potbot-skill-acquisition/v1",
+    "skill": {
+      "approvalValid": true,
+      "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+      "contextName": "imported-5d6d2bda6244478b96364e609749355b.review-documents",
+      "contextObjectId": "36751d07-eb5b-52f3-9abb-2c3ff13d94dd",
+      "createdAt": "2026-11-17T22:25:48.286179+00:00",
+      "enabled": false,
+      "id": "8ae72af2-bea3-5a92-95a2-1dbca29a0a43",
+      "manifest": {
+        "compatibility": {
+          "status": "review_required",
+          "unsupported": [
+            "OpenClaw dependency installers are retained but never executed",
+            "OpenClaw runtime gates and credential injection are not implemented",
+            "allowed-tools does not grant Potbot execution authority"
+          ]
+        },
+        "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "description": "Review document packages.",
+        "files": [
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "AGENTS.md",
+            "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+            "size": 45
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "SKILL.md",
+            "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+            "size": 306
+          },
+          {
+            "executable_hint": false,
+            "media_type": "application/octet-stream",
+            "path": "assets/empty.bin",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "references/guide.md",
+            "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+            "size": 76000
+          }
+        ],
+        "findings": [
+          {
+            "code": "context_files_are_resources",
+            "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+            "severity": "notice"
+          },
+          {
+            "code": "requirements_unverified",
+            "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+            "severity": "warning"
+          },
+          {
+            "code": "unsupported_behavior",
+            "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+            "severity": "warning"
+          }
+        ],
+        "metadata": {
+          "allowed-tools": "Read",
+          "description": "Review document packages.",
+          "license": "MIT",
+          "metadata": {
+            "openclaw": {
+              "install": [
+                {
+                  "kind": "uv",
+                  "package": "declared-only"
+                }
+              ],
+              "requires": {
+                "bins": [
+                  "python"
+                ],
+                "env": [
+                  "OPTIONAL_PROVIDER_TOKEN"
+                ]
+              }
+            },
+            "version": "1.0"
+          },
+          "name": "review-documents"
+        },
+        "name": "review-documents",
+        "requirements": [
+          {
+            "kind": "binary",
+            "name": "python",
+            "status": "unverified"
+          },
+          {
+            "kind": "environment",
+            "name": "OPTIONAL_PROVIDER_TOKEN",
+            "status": "unverified"
+          },
+          {
+            "kind": "tool",
+            "name": "Read",
+            "status": "unverified"
+          }
+        ],
+        "schema": "potbot-skill-package/v1"
+      },
+      "name": "review-documents",
+      "namespace": "imported-5d6d2bda6244478b96364e609749355b",
+      "origin": "acquired",
+      "owned": true,
+      "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+      "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+      "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+      "revision": 6,
+      "source": {
+        "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+        "kind": "zip",
+        "path": "",
+        "verification": "content-integrity-only"
+      },
+      "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+      "state": "revoked",
+      "updatedAt": "2026-11-17T22:25:48.645622+00:00"
+    },
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "rolledBack": {
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "schema": "potbot-skill-acquisition/v1",
+    "skill": {
+      "approvalValid": true,
+      "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+      "contextName": "imported-5d6d2bda6244478b96364e609749355b.review-documents",
+      "contextObjectId": "36751d07-eb5b-52f3-9abb-2c3ff13d94dd",
+      "createdAt": "2026-11-17T22:25:48.286179+00:00",
+      "enabled": false,
+      "id": "8ae72af2-bea3-5a92-95a2-1dbca29a0a43",
+      "manifest": {
+        "compatibility": {
+          "status": "review_required",
+          "unsupported": [
+            "OpenClaw dependency installers are retained but never executed",
+            "OpenClaw runtime gates and credential injection are not implemented",
+            "allowed-tools does not grant Potbot execution authority"
+          ]
+        },
+        "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "description": "Review document packages.",
+        "files": [
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "AGENTS.md",
+            "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+            "size": 45
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "SKILL.md",
+            "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+            "size": 306
+          },
+          {
+            "executable_hint": false,
+            "media_type": "application/octet-stream",
+            "path": "assets/empty.bin",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "references/guide.md",
+            "sha256": "7c774947d3e47a2e4759493f273de3a5f211960de08d2301c6b1575bf7a5c43d",
+            "size": 76000
+          }
+        ],
+        "findings": [
+          {
+            "code": "context_files_are_resources",
+            "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+            "severity": "notice"
+          },
+          {
+            "code": "requirements_unverified",
+            "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+            "severity": "warning"
+          },
+          {
+            "code": "unsupported_behavior",
+            "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+            "severity": "warning"
+          }
+        ],
+        "metadata": {
+          "allowed-tools": "Read",
+          "description": "Review document packages.",
+          "license": "MIT",
+          "metadata": {
+            "openclaw": {
+              "install": [
+                {
+                  "kind": "uv",
+                  "package": "declared-only"
+                }
+              ],
+              "requires": {
+                "bins": [
+                  "python"
+                ],
+                "env": [
+                  "OPTIONAL_PROVIDER_TOKEN"
+                ]
+              }
+            },
+            "version": "1.0"
+          },
+          "name": "review-documents"
+        },
+        "name": "review-documents",
+        "requirements": [
+          {
+            "kind": "binary",
+            "name": "python",
+            "status": "unverified"
+          },
+          {
+            "kind": "environment",
+            "name": "OPTIONAL_PROVIDER_TOKEN",
+            "status": "unverified"
+          },
+          {
+            "kind": "tool",
+            "name": "Read",
+            "status": "unverified"
+          }
+        ],
+        "schema": "potbot-skill-package/v1"
+      },
+      "name": "review-documents",
+      "namespace": "imported-5d6d2bda6244478b96364e609749355b",
+      "origin": "acquired",
+      "owned": true,
+      "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+      "packageId": "2366a721-c02f-4d8c-88be-1d4c7a3f404e",
+      "releaseSha256": "ff2dcd2ec0f77e231c18d2a0f88ecb7a6d41c45f27356e3bfe035f3975b4f63a",
+      "revision": 4,
+      "source": {
+        "archive_sha256": "7ec409a3f348dcd62d4154a14f2f309a63ad5b57d8669dbd83430582b8b296b5",
+        "kind": "zip",
+        "path": "",
+        "verification": "content-integrity-only"
+      },
+      "sourceSha256": "b253a722f61469f0f2e27c95fc78c7ab608e98dc9a07ac5875ae4e3ce7d3eec2",
+      "state": "active",
+      "updatedAt": "2026-11-17T22:25:48.545803+00:00"
+    },
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  },
+  "updated": {
+    "principalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+    "schema": "potbot-skill-acquisition/v1",
+    "skill": {
+      "approvalValid": true,
+      "contentSha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+      "contextName": "imported-5d6d2bda6244478b96364e609749355b.review-documents",
+      "contextObjectId": "36751d07-eb5b-52f3-9abb-2c3ff13d94dd",
+      "createdAt": "2026-11-17T22:25:48.286179+00:00",
+      "enabled": false,
+      "id": "8ae72af2-bea3-5a92-95a2-1dbca29a0a43",
+      "manifest": {
+        "compatibility": {
+          "status": "review_required",
+          "unsupported": [
+            "OpenClaw dependency installers are retained but never executed",
+            "OpenClaw runtime gates and credential injection are not implemented",
+            "allowed-tools does not grant Potbot execution authority"
+          ]
+        },
+        "content_sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+        "description": "Review document packages.",
+        "files": [
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "AGENTS.md",
+            "sha256": "58c637e77aec623c21f089a708bc21b80731800033a08a471fa8e2c0d7e09f74",
+            "size": 45
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "SKILL.md",
+            "sha256": "c7aba717f4259931807c6ef779fb3187391939b9546d34166becc873869c698e",
+            "size": 306
+          },
+          {
+            "executable_hint": false,
+            "media_type": "application/octet-stream",
+            "path": "assets/empty.bin",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0
+          },
+          {
+            "executable_hint": false,
+            "media_type": "text/markdown",
+            "path": "references/guide.md",
+            "sha256": "b070a7b7bd448ff7d2308c7d337d742d857e0eb45ff42bb3d03e5831fad2cfee",
+            "size": 14
+          }
+        ],
+        "findings": [
+          {
+            "code": "context_files_are_resources",
+            "message": "Package context files remain untrusted resources, separate from Potbot's live Context documents.",
+            "severity": "notice"
+          },
+          {
+            "code": "requirements_unverified",
+            "message": "Declared dependencies have not been checked in an execution sandbox. Installation does not establish readiness.",
+            "severity": "warning"
+          },
+          {
+            "code": "unsupported_behavior",
+            "message": "Vendor-specific behavior is retained for review and is not translated into Potbot permissions or runtime hooks.",
+            "severity": "warning"
+          }
+        ],
+        "metadata": {
+          "allowed-tools": "Read",
+          "description": "Review document packages.",
+          "license": "MIT",
+          "metadata": {
+            "openclaw": {
+              "install": [
+                {
+                  "kind": "uv",
+                  "package": "declared-only"
+                }
+              ],
+              "requires": {
+                "bins": [
+                  "python"
+                ],
+                "env": [
+                  "OPTIONAL_PROVIDER_TOKEN"
+                ]
+              }
+            },
+            "version": "1.0"
+          },
+          "name": "review-documents"
+        },
+        "name": "review-documents",
+        "requirements": [
+          {
+            "kind": "binary",
+            "name": "python",
+            "status": "unverified"
+          },
+          {
+            "kind": "environment",
+            "name": "OPTIONAL_PROVIDER_TOKEN",
+            "status": "unverified"
+          },
+          {
+            "kind": "tool",
+            "name": "Read",
+            "status": "unverified"
+          }
+        ],
+        "schema": "potbot-skill-package/v1"
+      },
+      "name": "review-documents",
+      "namespace": "imported-5d6d2bda6244478b96364e609749355b",
+      "origin": "acquired",
+      "owned": true,
+      "ownerPrincipalId": "5d6d2bda-6244-478b-9636-4e609749355b",
+      "packageId": "a0e5675b-3014-49ea-96ce-9dba7ef53d20",
+      "releaseSha256": "a021dbf57aa583c0dcbad05c741fb29899fea4c9bd68ebe7ac264c19a4c23a8c",
+      "revision": 3,
+      "source": {
+        "archive_sha256": "d9ba5d8388c4deede1ae744bc56fe640814ba1bdfe1e88699fb2a65c7db45608",
+        "kind": "zip",
+        "path": "",
+        "verification": "content-integrity-only"
+      },
+      "sourceSha256": "83b92d80418a7fc1ac1d1dd06c900e918e955f40c90b3b05d875773bd8f84fd1",
+      "state": "active",
+      "updatedAt": "2026-11-17T22:25:48.492454+00:00"
+    },
+    "workspaceId": "1af73dbb-bb10-4cdf-9f83-771ee53645ad"
+  }
+}

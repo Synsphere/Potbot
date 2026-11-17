@@ -2,6 +2,15 @@
 
 Strategy update: 23 October 2026. Baseline inspected: `e2f7b2e423ceb7360df76b18b076de09bf39936a`. This document extends the [universal tool plan](../potbot-tool-mcp-implementation-bundle/potbot-universal-tool-mcp-implementation-plan.md), especially T04.1–T04.4. It is proposed implementation and evaluation work, not a claim of a running discovery service or qualified automatic installation.
 
+**Implementation follow-on, 17 November 2026:**
+[U04-A](u04-a-portable-skill-acquisition.md) implements the complete bounded
+portable-skill data lifecycle through the existing Context registry: immutable
+ZIP/local-directory/pinned public GitHub acquisition, private full-package
+review, signed explicit installation and activation, resource reads, update,
+rollback, disable and revoke. This supplies a concrete acquisition/admission
+path for this package class. It does not close T04 registry search, task ranking,
+MCP discovery, executable dependency installation or sandbox/runtime qualification.
+
 Blogworthiness: FAIL for this strategy-only update: it documents future retrieval and qualification work without a new measured selection result. Reassess actual implementations and experiments independently.
 
 ## Purpose and authority

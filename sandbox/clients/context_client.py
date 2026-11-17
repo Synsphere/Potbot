@@ -6,6 +6,8 @@ network access or writable root files. Reserve stdout for protocol; log to stder
 
 from __future__ import annotations
 
+import base64
+import binascii
 import hashlib
 import json
 import struct
@@ -84,9 +86,35 @@ class ContextClient:
             raise ContextRPCError("invalid_response", request_id)
         if "content" in result and (
             not isinstance(result["content"], str)
-            or hashlib.sha256(result["content"].encode("utf-8")).hexdigest() != result.get("sha256")
+            or hashlib.sha256(result["content"].encode("utf-8")).hexdigest()
+            != result.get("content_sha256", result.get("sha256"))
         ):
             raise ContextRPCError("integrity_error", request_id)
+        if request["method"] in {"skills.load", "skills.read"}:
+            for field in ("skill_id", "release_sha256"):
+                if field in request and result.get(field) != request[field]:
+                    raise ContextRPCError("integrity_error", request_id)
+        if request["method"] == "skills.load" and "manifest" in result:
+            try:
+                manifest = result["manifest"]
+                manifest_raw = json.dumps(
+                    manifest,
+                    sort_keys=True,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                    allow_nan=False,
+                ).encode("utf-8")
+                if (
+                    not isinstance(manifest, dict)
+                    or manifest.get("schema") != "potbot-skill-package/v1"
+                    or manifest.get("content_sha256") != result.get("content_sha256")
+                    or hashlib.sha256(manifest_raw).hexdigest() != result["release_sha256"]
+                ):
+                    raise ValueError
+            except (KeyError, TypeError, ValueError, UnicodeError, RecursionError):
+                raise ContextRPCError("integrity_error", request_id) from None
+        if request["method"] == "skills.read":
+            self._verify_resource(request, result)
         if "context" in result:
             documents = result["context"]
             if not isinstance(documents, dict) or set(documents) != {
@@ -104,6 +132,41 @@ class ContextClient:
                 ):
                     raise ContextRPCError("integrity_error", request_id)
         return result
+
+    @staticmethod
+    def _verify_resource(request: dict[str, Any], result: dict[str, Any]) -> None:
+        """A range stays bound to its selected package, path and byte offset."""
+        try:
+            data = base64.b64decode(result["data"], validate=True)
+            size, offset, next_offset = result["size"], result["offset"], result["next_offset"]
+            digest = result["resource_sha256"]
+            if (
+                result["encoding"] != "base64"
+                or result["resource_path"] != request["resource_path"]
+                or type(size) is not int
+                or size < 0
+                or type(offset) is not int
+                or offset != request["offset"]
+                or not 0 <= offset <= size
+                or type(next_offset) is not int
+                or next_offset != offset + len(data)
+                or next_offset > size
+                or len(data) != min(request["max_bytes"], size - offset)
+                or type(result["eof"]) is not bool
+                or result["eof"] != (next_offset == size)
+                or not isinstance(digest, str)
+                or len(digest) != 64
+                or any(c not in "0123456789abcdef" for c in digest)
+                or hashlib.sha256(data).hexdigest() != result["range_sha256"]
+                or (
+                    offset == 0
+                    and next_offset == size
+                    and hashlib.sha256(data).hexdigest() != digest
+                )
+            ):
+                raise ValueError
+        except (KeyError, TypeError, ValueError, binascii.Error):
+            raise ContextRPCError("integrity_error", request["request_id"]) from None
 
     def read(
         self,
@@ -238,6 +301,29 @@ class ContextClient:
                 "method": "skills.load",
                 "skill_id": skill_id,
                 "release_sha256": release_sha256,
+            }
+        )
+
+    def read_skill_resource(
+        self,
+        skill_id: str,
+        release_sha256: str,
+        resource_path: str,
+        *,
+        offset: int = 0,
+        max_bytes: int = 65_536,
+    ) -> dict[str, Any]:
+        """Read one exact package resource as data; never execute package content."""
+        return self._exchange(
+            {
+                "schema": SCHEMA,
+                "request_id": str(uuid4()),
+                "method": "skills.read",
+                "skill_id": skill_id,
+                "release_sha256": release_sha256,
+                "resource_path": resource_path,
+                "offset": offset,
+                "max_bytes": max_bytes,
             }
         )
 

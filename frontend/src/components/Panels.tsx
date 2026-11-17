@@ -108,6 +108,7 @@ export function MenuPanel() {
     {isLive && <div className="menu-section">
       <h2>OPERATOR SETUP</h2>
       <a className="menu-item" href={`/tools?workspace=${encodeURIComponent(workspace.id)}`}><span>Operations and readiness</span><span aria-hidden="true">↗</span></a>
+      <a className="menu-item" href={`/skills?workspace=${encodeURIComponent(workspace.id)}`}><span>Skill import and release workshop</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href="/setup/apis"><span>Remote API credentials</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href="/setup/tools"><span>Tool testing and upgrades</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href="/setup/operator"><span>Operator health and release gates</span><span aria-hidden="true">↗</span></a>

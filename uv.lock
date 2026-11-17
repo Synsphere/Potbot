@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 resolution-markers = [
     "(python_full_version >= '3.15' and sys_platform == 'linux') or (python_full_version >= '3.15' and sys_platform == 'win32')",
@@ -1107,8 +1107,12 @@ security = [
 semantics = [
     { name = "jsonschema" },
 ]
+skills = [
+    { name = "pyyaml" },
+]
 web = [
     { name = "fastapi" },
+    { name = "pyyaml" },
     { name = "uvicorn" },
     { name = "websockets" },
 ]
@@ -1123,6 +1127,7 @@ dev = [
     { name = "mypy" },
     { name = "protobuf" },
     { name = "pytest" },
+    { name = "pyyaml" },
     { name = "ruff" },
     { name = "types-jsonschema" },
     { name = "types-protobuf" },
@@ -1142,13 +1147,15 @@ requires-dist = [
     { name = "keyring", marker = "extra == 'credentials'", specifier = "==25.7.0" },
     { name = "protobuf", marker = "extra == 'providers'", specifier = ">=5,<7" },
     { name = "psycopg", extras = ["binary"], marker = "extra == 'postgres'", specifier = ">=3.2,<4" },
+    { name = "pyyaml", marker = "extra == 'skills'", specifier = ">=6.0.3,<7" },
+    { name = "pyyaml", marker = "extra == 'web'", specifier = ">=6.0.3,<7" },
     { name = "torch", marker = "(sys_platform == 'linux' and extra == 'embeddings') or (sys_platform == 'win32' and extra == 'embeddings')", specifier = "==2.9.1", index = "https://download.pytorch.org/whl/cpu" },
     { name = "torch", marker = "sys_platform != 'linux' and sys_platform != 'win32' and extra == 'embeddings'", specifier = "==2.9.1" },
     { name = "transformers", marker = "extra == 'embeddings'", specifier = "==4.57.6" },
     { name = "uvicorn", marker = "extra == 'web'", specifier = ">=0.34,<1" },
     { name = "websockets", marker = "extra == 'web'", specifier = ">=15,<17" },
 ]
-provides-extras = ["postgres", "embeddings", "semantics", "credentials", "providers", "web", "security", "debugger"]
+provides-extras = ["postgres", "embeddings", "semantics", "credentials", "providers", "web", "skills", "security", "debugger"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -1160,6 +1167,7 @@ dev = [
     { name = "mypy", specifier = ">=1.15,<2" },
     { name = "protobuf", specifier = ">=5,<7" },
     { name = "pytest", specifier = ">=8.3,<10" },
+    { name = "pyyaml", specifier = ">=6.0.3,<7" },
     { name = "ruff", specifier = ">=0.11,<1" },
     { name = "types-jsonschema", specifier = ">=4.26.0.20261006" },
     { name = "types-protobuf", specifier = ">=7.35.1.20260906" },

@@ -406,7 +406,9 @@ def test_migration_backfills_only_unambiguous_owner_and_freezes_new_bindings(app
     from psycopg.types.json import Jsonb
 
     schema = "before_operation_workbench"
-    revisions = application_migrations()
+    # This is the populated 38 -> 39 backfill gate. Later additive migrations
+    # have their own upgrade tests and must not change this historical fixture.
+    revisions = application_migrations()[:39]
     assert revisions[-1].version == 39
     migrate(app_env.admin_dsn, schema, revisions[:38])
     with app_env.db.transaction(app_env.context) as conn:
@@ -440,8 +442,8 @@ def test_migration_backfills_only_unambiguous_owner_and_freezes_new_bindings(app
                 "VALUES(%s,%s,'submit_api_job',%s,%s,%s,%s)",
                 (workspace, uuid4(), key, "a" * 64, Jsonb({"id": str(identity)}), principal),
             )
-    assert migrate(app_env.admin_dsn, schema)[-1] == 39
-    assert migrate(app_env.admin_dsn, schema)[-1] == 39
+    assert migrate(app_env.admin_dsn, schema, revisions)[-1] == 39
+    assert migrate(app_env.admin_dsn, schema, revisions)[-1] == 39
     with admin_connection(app_env.admin_dsn, schema) as conn:
         owners = {
             row["id"]: row["owner_principal_id"]

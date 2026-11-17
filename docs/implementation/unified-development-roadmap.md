@@ -6,6 +6,17 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**17 November 2026, after the workbench merge:**
+[U04-A portable skill acquisition](u04-a-portable-skill-acquisition.md) completes
+the bounded package lifecycle on merged main
+`c10b9d24de033b8ee93785d2b37e703b9d5e6f75`: private ZIP/local-directory/pinned
+public GitHub acquisition, full-package review, explicit install and activation,
+Context resource reads, update, rollback, disable and revocation. Migration 40
+extends the existing skill registry with immutable package/provenance facts and
+signed operator controls while preserving genuine authored-session permissions.
+API, CLI and browser share that owner. Registry/executable breadth, per-agent
+runtime qualification and installed-host evidence retain independent gates.
+
 **17 November 2026, after the catalogue merge:**
 [U04-E controlled operation workbench](u04-e-operation-workbench.md) completes
 the supported operation lifecycle on merged main
@@ -211,6 +222,7 @@ These suffixes identify work within existing U packages. They do not renumber th
 | U04-R | U02/U04/U16 | Qualify the implemented S12 PostgreSQL postflight/release gate, installed-source/pin readback, held-tool admission and rollback on the actual operator host; S11 approval or S13 health is insufficient; RD14. |
 | U04-C | U04/U05/U11/U13 | The merged [operation/readiness/accounting catalogue](u04-c-operation-catalogue.md) now feeds U04-E; retain its conservative source observations and partial linked accounting. Acquisition lifecycle, concurrency and actual connector/KeywordMoves coverage remain open; RD12/RD18/RD19. |
 | U04-E | U04/U05/U07/U13/U16 | Complete the [controlled operation workbench](u04-e-operation-workbench.md): worker eligibility, explicit checked launch, owned monitoring/cancellation and verified results for existing native Cog/hosted routes. Qualify the installed host and chosen provider without promoting the wider U04/M4/T04 programme; RD18/RD23. |
+| U04-A | U04/U05/U13/U16 | Complete the [portable skill lifecycle](u04-a-portable-skill-acquisition.md): immutable package acquisition, review, operator-approved installation, Context resource reads, update/rollback/disable/revoke. Keep registry search, executable dependency admission, native skill interoperability and deployed-host qualification as independent remaining work. |
 | U07-Q | U02/U05/U07/U13/U16 | Native service/vault, provider and inbound API matrix, model downloads/cache paths and installed/runnable/qualified readiness; RD01–RD04. |
 | U08-T | U01/U04/U08/U14 | Existing fenced reasoning/accounting plus ensemble verification, temporal steering, atomic leaf scheduling and active research; RD05–RD09. |
 | U09-C | U06/U09/U11/U13 | Preserve data-only state/history and Stage 10D integration; close constructor/protocol, semantic-reconciliation and authored-skill gaps; RD26–RD29. |
