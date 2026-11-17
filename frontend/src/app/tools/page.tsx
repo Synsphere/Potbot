@@ -7,6 +7,7 @@ import {
   type Operation, type OperationDetail, type OperationKind, type OperationListing, type OperationState,
 } from "../../lib/operation-catalogue.ts";
 import styles from "./tools.module.css";
+import OperationWorkbench from "./OperationWorkbench.tsx";
 
 type Workspace = { id: string; name: string };
 const workspaceHeaders = (id: string): HeadersInit => ({ "X-Potbot-Workspace": id });
@@ -17,7 +18,7 @@ function Readiness({ state }: { state: OperationState }) {
   return <span className={`${styles.badge} ${styles[state]}`}>{READINESS_LABELS[state]}</span>;
 }
 
-function Detail({ item, workspaceId, snapshot }: { item: Operation; workspaceId: string; snapshot: string }) {
+function Detail({ item, workspaceId, principalId, snapshot }: { item: Operation; workspaceId: string; principalId: string; snapshot: string }) {
   const accounting = item.accounting;
   return <article className={styles.detail} aria-label={`Details for ${item.name}`}>
     <div className={styles.detailHeading}>
@@ -26,6 +27,7 @@ function Detail({ item, workspaceId, snapshot }: { item: Operation; workspaceId:
       <div className={styles.badges}><Readiness state={item.state} />
         {item.updateAvailable === true && <span className={styles.update}>Update available</span>}</div>
     </div>
+    <OperationWorkbench key={`${workspaceId}:${principalId}:${item.id}:${snapshot}`} workspaceId={workspaceId} principalId={principalId} operationId={item.id} />
     <section className={styles.detailSection} aria-labelledby="readiness-title">
       <h3 id="readiness-title">Readiness and holds</h3>
       {item.reasons.length ? <ul className={styles.reasons}>{orderedOperationReasons(item.reasons).map(reason => <li key={reason}>
@@ -216,8 +218,8 @@ export default function OperationCataloguePage() {
   return <main className={styles.shell}>
     <header className={styles.header}>
       <a className={styles.back} href="/">← Workspace</a>
-      <div className={styles.titleLine}><div><span className={styles.eyebrow}>POTBOT / OPERATIONS</span><h1>Know what is available.</h1></div><span className={styles.readOnly}>Read-only catalogue</span></div>
-      <p>Inspect tools, models and workflows together. See what is recorded, what is held, and which evidence supports each entry.</p>
+      <div className={styles.titleLine}><div><span className={styles.eyebrow}>POTBOT / OPERATIONS</span><h1>Inspect, check and run.</h1></div><span className={styles.readOnly}>Operation workbench</span></div>
+      <p>Explore tools, models and workflows together. Check an exact task request on its worker, explicitly launch supported operations, and follow their durable results.</p>
     </header>
     <section className={styles.controls} aria-label="Catalogue filters">
       <div className={styles.controlTop}>
@@ -262,7 +264,7 @@ export default function OperationCataloguePage() {
         </nav>
       </section>
       <aside className={styles.detailPanel} aria-label="Selected operation" aria-busy={detailBusy}>
-        {detail ? <Detail item={detail.item} workspaceId={workspaceId} snapshot={detail.snapshotSha256} /> : <div className={styles.empty}>
+        {detail ? <Detail item={detail.item} workspaceId={workspaceId} principalId={detail.principalId} snapshot={detail.snapshotSha256} /> : <div className={styles.empty}>
           <span className={styles.emptyMark} aria-hidden="true">↗</span>
           <h2>{detailBusy ? "Reading operation details…" : "Follow the evidence"}</h2>
           <p role="status">{detailNotice || "Select an operation to inspect readiness reasons, provenance, release records and recent linked accounting."}</p>

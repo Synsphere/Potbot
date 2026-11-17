@@ -262,21 +262,23 @@ def main(argv: Sequence[str] | None = None) -> int:
             # restricted application login's provisioned workspace authority.
             with database.transaction(context):
                 pass
+            worker_credentials = ServiceCredentials()
             logger = EventLogger(
                 log_path=Path(os.environ["POTBOT_LOG_FILE"])
                 if os.environ.get("POTBOT_LOG_FILE")
                 else None,
                 log_content=os.environ.get("POTBOT_LOG_CONTENT") == "1",
-                protected_values=protected_values(database, ServiceCredentials())
+                protected_values=protected_values(database, worker_credentials)
                 if os.environ.get("POTBOT_LOG_CONTENT") == "1"
                 else (),
             )
             with configured_native_cogs(database, context) as native_cogs:
                 runner = HostedJobRunner(
                     service,
-                    hosted_gateway(database, policy),
+                    hosted_gateway(database, policy, worker_credentials),
                     logger=logger,
                     native_cogs=native_cogs,
+                    operation_setup_token=lambda: worker_credentials.store.get("api.setup_token"),
                 )
                 if args.once:
                     job = runner.run_once(context, args.worker_id)

@@ -181,6 +181,38 @@ jobs:
           path: artifacts/operation-catalogue-u04-c.xml
           if-no-files-found: warn
           retention-days: 14
+      - name: Verify complete controlled operation workbench on PostgreSQL
+        env:
+          POTBOT_WORKBENCH_CONTRACT_FIXTURE: artifacts/operation-workbench-http-contract.json
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_operation_workbench.py
+          tests/unit/test_operation_checks.py
+          tests/unit/test_ui_operation_workbench.py
+          tests/unit/test_operation_workbench_cli.py
+          tests/unit/test_operation_result_download.py
+          tests/unit/test_operation_workbench_qualification.py
+          tests/integration/test_operation_workbench.py
+          tests/integration/test_operation_checks.py
+          tests/integration/test_operation_workbench_api.py
+          --junitxml=artifacts/operation-workbench-u04-e.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify actual operation HTTP responses against the frontend contract
+        env:
+          POTBOT_WORKBENCH_CONTRACT_FIXTURE: artifacts/operation-workbench-http-contract.json
+        run: node --experimental-strip-types --test frontend/tests/operation-workbench-contract.test.mjs
+      - name: Retain operation workbench acceptance
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: operation-workbench-u04-e
+          path: |
+            artifacts/operation-workbench-u04-e.xml
+            artifacts/operation-workbench-http-contract.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Qualify MODEL.md context, ACLs, recovery and refresh against PostgreSQL
         run: >-
           uv run --locked python -m pytest -q

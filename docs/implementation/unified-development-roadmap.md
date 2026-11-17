@@ -6,6 +6,16 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**17 November 2026, after the catalogue merge:**
+[U04-E controlled operation workbench](u04-e-operation-workbench.md) completes
+the supported operation lifecycle on merged main
+`df13593407a4818a2c709af65c9b78ad6b82535d`: worker eligibility, an explicitly
+authorized single launch, owned progress/output, verified result downloads and
+cancellation through API, CLI and UI. Native Cog and hosted model execution
+reuse the existing queue, grants and ledger. Migration 39 enforces principal
+ownership and immutable check/run bindings. Installed-host/provider evidence,
+acquisition breadth and connector qualification retain independent gates.
+
 **17 November 2026, after the S12 merge:** [U04-C operation catalogue](u04-c-operation-catalogue.md)
 adds a principal-scoped read-only projection over existing tool/Cog/model/skill
 records, release holds, recent invocations and ledger accounting, with API,
@@ -199,7 +209,8 @@ These suffixes identify work within existing U packages. They do not renumber th
 | U02-P | U01/U02/U06 | Mount/identity matrix; read-only ordinary shared-tool access with operator-unlocked scoped maintenance writes; enforced concurrency; and OS-native `/etc/ai` watcher loss/overflow fencing plus reconciliation; RD11–RD13/RD15. |
 | U02-L | U02/U03/U16 | Agent `/var/logs/ai` mount, creator-only writes, actual tool aliases/destinations and operator watch/archive/recovery; RD16, distinct from host Xpra S17. |
 | U04-R | U02/U04/U16 | Qualify the implemented S12 PostgreSQL postflight/release gate, installed-source/pin readback, held-tool admission and rollback on the actual operator host; S11 approval or S13 health is insufficient; RD14. |
-| U04-C | U04/U05/U11/U13 | Extend and qualify the [read-only operation/readiness/accounting catalogue](u04-c-operation-catalogue.md), then authorized live eligibility, acquisition lifecycle, concurrency and actual connector/KeywordMoves coverage; RD12/RD18/RD19. |
+| U04-C | U04/U05/U11/U13 | The merged [operation/readiness/accounting catalogue](u04-c-operation-catalogue.md) now feeds U04-E; retain its conservative source observations and partial linked accounting. Acquisition lifecycle, concurrency and actual connector/KeywordMoves coverage remain open; RD12/RD18/RD19. |
+| U04-E | U04/U05/U07/U13/U16 | Complete the [controlled operation workbench](u04-e-operation-workbench.md): worker eligibility, explicit checked launch, owned monitoring/cancellation and verified results for existing native Cog/hosted routes. Qualify the installed host and chosen provider without promoting the wider U04/M4/T04 programme; RD18/RD23. |
 | U07-Q | U02/U05/U07/U13/U16 | Native service/vault, provider and inbound API matrix, model downloads/cache paths and installed/runnable/qualified readiness; RD01–RD04. |
 | U08-T | U01/U04/U08/U14 | Existing fenced reasoning/accounting plus ensemble verification, temporal steering, atomic leaf scheduling and active research; RD05–RD09. |
 | U09-C | U06/U09/U11/U13 | Preserve data-only state/history and Stage 10D integration; close constructor/protocol, semantic-reconciliation and authored-skill gaps; RD26–RD29. |

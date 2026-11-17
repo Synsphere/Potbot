@@ -91,9 +91,14 @@ provides native grant/heartbeat integration; production dispatch also requires
 the independently qualified U03/U16 image, resource/audit and host gates.
 
 [U00-A is complete](docs/implementation/u00-a-closeout.md): the roadmap audit
-preserves source claims and qualification limits. The next implementation
-milestone is **U01-A, durable tool-effect crash recovery**, extending the existing
-PostgreSQL execution, lease, outbox, receipt and accounting owners.
+preserves source claims and qualification limits. Its first follow-on was U01-A,
+durable tool-effect crash recovery. The current
+[U04-E operation workbench](docs/implementation/u04-e-operation-workbench.md)
+extends the merged catalogue into a complete check, explicit launch, monitor,
+cancel and result workflow for installed native Cogs and hosted model jobs.
+It reuses the PostgreSQL queue, operator credentials, runtime grants and budget
+ledger. Migration 39 adds private ownership and immutable checked-run bindings;
+installed-host and live-provider qualification remain separate evidence gates.
 
 ## Install and check
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { releaseStatus, type UpgradeRecord } from "../../../lib/tool-upgrades.ts";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { releaseStatus, upgradeListing, type UpgradeRecord } from "../../../lib/tool-upgrades.ts";
 import styles from "../apis/setup.module.css";
 
 type Workspace = { id: string; name: string };
@@ -13,16 +13,22 @@ export default function ToolUpgradeSetup() {
   const [items, setItems] = useState<UpgradeRecord[]>([]);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("Loading approved workspaces…");
+  const generation = useRef(0), currentWorkspace = useRef("");
+  const readRequest = useRef<AbortController | null>(null), mutationRequest = useRef<AbortController | null>(null);
 
   const refresh = useCallback(async (workspace: string) => {
+    const request = new AbortController(), expected = ++generation.current;
+    readRequest.current?.abort(); readRequest.current = request;
     setItems([]); setNotice("Loading tool test results…");
     try {
-      const r = await fetch("/api/ui/tools/upgrades", { credentials: "same-origin", cache: "no-store", headers: headers(workspace) });
+      const r = await fetch("/api/ui/tools/upgrades", { credentials: "same-origin", cache: "no-store", headers: headers(workspace), signal: request.signal });
       if (!r.ok) throw new Error("unavailable");
-      const data = await r.json() as { workspaceId: string; items: UpgradeRecord[] };
-      if (data.workspaceId !== workspace || !Array.isArray(data.items)) throw new Error("invalid");
-      setItems(data.items); setNotice("");
-    } catch { setNotice("Tool upgrade records are unavailable. Check operator login and backend migrations."); }
+      const data = await r.json();
+      if (request.signal.aborted || expected !== generation.current || currentWorkspace.current !== workspace) return;
+      const parsed = upgradeListing(data, workspace);
+      if (data.workspaceId !== workspace || !parsed) throw new Error("invalid");
+      setItems(parsed.items); setNotice("");
+    } catch { if (!request.signal.aborted && expected === generation.current && currentWorkspace.current === workspace) setNotice("Tool upgrade records are unavailable. Check operator login and backend migrations."); }
   }, []);
 
   useEffect(() => {
@@ -34,29 +40,32 @@ export default function ToolUpgradeSetup() {
         const known = (data.workspaces as Workspace[]).filter(w => typeof w.id === "string" && typeof w.name === "string");
         setWorkspaces(known);
         const requested = new URLSearchParams(window.location.search).get("workspace");
-        const selected = known.find(workspace => workspace.id === requested) ?? known[0];
-        if (selected) { setWorkspaceId(selected.id); void refresh(selected.id); }
-        else setNotice("No authorized workspace configured.");
+        const selected = requested ? known.find(workspace => workspace.id === requested) : known[0];
+        if (selected) { currentWorkspace.current = selected.id; setWorkspaceId(selected.id); void refresh(selected.id); }
+        else setNotice(known.length ? "Select an authorized workspace to review tool upgrades." : "No authorized workspace configured.");
       }).catch(() => { if (active) setNotice("Sign in to the operator workspace to manage tool upgrades."); });
-    return () => { active = false; };
+    return () => { active = false; generation.current++; readRequest.current?.abort(); mutationRequest.current?.abort(); };
   }, [refresh]);
 
   async function decide(entry: UpgradeRecord, action: "approve" | "reject") {
-    if (busy || !workspaceId || entry.state !== "awaiting_approval") return;
+    if (busy || !workspaceId || entry.workspaceId !== workspaceId || entry.state !== "awaiting_approval") return;
     const verb = action === "approve" ? "approve activation of" : "reject";
     if (!window.confirm(`Do you want to ${verb} ${entry.slug} from ${entry.oldCommit.slice(0, 12)} to ${entry.newCommit.slice(0, 12)}?\n\nS9 verified ${entry.passedTests} tests. Tested evidence: ${entry.evidenceSha256}`)) return;
     setBusy(true); setNotice("Recording operator decision…");
+    const selectedWorkspace = workspaceId, request = new AbortController(); mutationRequest.current = request;
     try {
       const response = await fetch(`/api/ui/tools/upgrades/${entry.id}/${action}`, {
-        method: "POST", credentials: "same-origin",
+        method: "POST", credentials: "same-origin", signal: request.signal,
         headers: { ...headers(workspaceId), "Content-Type": "application/json", "Origin": window.location.origin },
         body: JSON.stringify({ revision: entry.revision, evidenceSha256: entry.evidenceSha256, confirm: true }),
       });
+      if (request.signal.aborted || currentWorkspace.current !== selectedWorkspace) return;
       if (!response.ok) throw new Error("cannot approve");
-      await refresh(workspaceId);
+      await refresh(selectedWorkspace);
+      if (request.signal.aborted || currentWorkspace.current !== selectedWorkspace) return;
       setNotice(action === "approve" ? "Upgrade approved. The host operator must verify the installed version and complete postflight before release." : "Upgrade rejected.");
-    } catch { setNotice("Approval failed or the evidence changed. Refresh and review before retrying."); }
-    finally { setBusy(false); }
+    } catch { if (!request.signal.aborted && currentWorkspace.current === selectedWorkspace) setNotice("Approval failed or the evidence changed. Refresh and review before retrying."); }
+    finally { if (!request.signal.aborted && currentWorkspace.current === selectedWorkspace) setBusy(false); }
   }
 
   return <main className={styles.shell}>
@@ -69,7 +78,11 @@ export default function ToolUpgradeSetup() {
     </header>
     <section className={styles.toolbar} aria-label="Authorized workspace">
       <label>Workspace
-        <select value={workspaceId} onChange={e => { setWorkspaceId(e.target.value); void refresh(e.target.value); }}>
+        <select value={workspaceId} disabled={busy} onChange={e => {
+          const selected = e.target.value; currentWorkspace.current = selected; setWorkspaceId(selected); void refresh(selected);
+          const url = new URL(window.location.href); url.searchParams.set("workspace", selected); window.history.replaceState(null, "", url);
+        }}>
+          {!workspaceId && <option value="">Choose a workspace</option>}
           {workspaces.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
         </select>
       </label>

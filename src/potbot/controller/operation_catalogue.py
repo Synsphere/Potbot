@@ -55,6 +55,7 @@ _SHA = re.compile(r"[a-f0-9]{64}\Z")
 _LABEL = re.compile(r"[a-z][a-z0-9_.-]{0,95}\Z")
 _MODEL = re.compile(r"[A-Za-z0-9][A-Za-z0-9_./:@+\-]{0,249}\Z")
 _SYN = re.compile(r"syn(?:ny)?://cog/[a-z0-9]+(?:[-_][a-z0-9]+)*\Z")
+_THING = re.compile(r"syn(?:ny)?://thing/[a-z0-9]+(?:[-_][a-z0-9]+)*\Z")
 _SHARED = re.compile(r"shared-tool:[a-z][a-z0-9-]{1,62}\Z")
 _UNIT = re.compile(r"[A-Za-z][A-Za-z0-9_.-]{0,95}\Z")
 _ORIGINS = {"measured", "synthetic", "provider_reported", "conservative_estimate"}
@@ -230,6 +231,7 @@ def _reference(value: Any, kind: str, record_id: str) -> tuple[str, str, bool]:
         and len(value) <= 512
         and (
             _SYN.fullmatch(value)
+            or _THING.fullmatch(value)
             or _SHARED.fullmatch(value)
             or _LABEL.fullmatch(value)
             or re.fullmatch(r"potbot\.[a-z0-9_.-]+/v[0-9]+", value)

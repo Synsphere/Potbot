@@ -353,8 +353,8 @@ def test_matching_operation_id_cannot_release_different_signed_content(release_r
 def test_migration_preserves_pre_s12_approval_without_inventing_release(app_env):
     schema = "before_s12"
     revisions = application_migrations()
-    assert revisions[-1].version == 38
-    migrate(app_env.admin_dsn, schema, revisions[:-1])
+    assert revisions[37].version == 38
+    migrate(app_env.admin_dsn, schema, revisions[:37])
     with app_env.db.transaction(app_env.context) as conn:
         role = conn.execute("SELECT session_user AS role").fetchone()["role"]
     workspace = provision_workspace(app_env.admin_dsn, schema, "before S12")

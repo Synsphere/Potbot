@@ -7,7 +7,7 @@ import hashlib
 import os
 import stat
 import threading
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager, nullcontext
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -15,17 +15,18 @@ from uuid import UUID
 
 from potbot.cogs.contracts import CogRunContext, TypedCogValue
 from potbot.context.installed_syn_route import installed_context_route
-from potbot.controller.cog_capability_policy import CogPolicyDenied, Denial
+from potbot.controller.cog_capability_policy import CogPolicyDenied, Denial, installation_hash
 from potbot.controller.cog_grant_store import current_cog_policy
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import (
+    CapabilityUnavailableError,
     IndeterminateExecutionError,
     OperationCancelledError,
     ScopeDeniedError,
     StateMismatchError,
 )
 from potbot.domain.jobs import CogJobInput, JobLease
-from potbot.domain.serialization import canonical_json
+from potbot.domain.serialization import canonical_json, content_hash
 from potbot.persistence.artifacts import ArtifactStore, LocalArtifactBackend
 from potbot.syn_release.contracts import DOCUMENT_LIMIT, document, fields
 from potbot.syn_release.mesh_endpoint import NativeMeshClient, root_path
@@ -98,9 +99,10 @@ class NativeCogDispatcher:
         self.agents, self.profile_hash = agents, profile_hash
         self.persistent_cog_grants = persistent_cog_grants
 
-    def run(
-        self, jobs: JobService, actor: WorkspaceContext, lease: JobLease, abort: threading.Event
-    ) -> dict[str, str]:
+    def _prepare(
+        self, jobs: JobService, actor: WorkspaceContext, lease: JobLease
+    ) -> tuple[CogJobInput, SandboxedCogOperation, TypedCogValue, CogRunContext]:
+        """Shared exact-input checks; this method grants and dispatches no work."""
         request = CogJobInput.parse(lease.input)
         operation = self.operations.get(request.operation_ref)
         if (
@@ -121,6 +123,187 @@ class NativeCogDispatcher:
         invocation = CogRunContext(
             self.profile_hash, lease.contract_revision_id, request.repository_state_id, lease.job_id
         )
+        return request, operation, value, invocation
+
+    def eligibility(
+        self,
+        jobs: JobService,
+        actor: WorkspaceContext,
+        lease: JobLease,
+        *,
+        check: Callable[[str, Callable[[], Any]], Any],
+    ) -> tuple[dict[str, Any], dict[str, int]]:
+        """Observe the configured worker without work dispatch, grant or reservation.
+
+        The caller controls report formatting and safe error classification. The
+        ordinary run path still revalidates its admission and one-use Syn grant.
+        """
+        request, operation, _value, invocation = check(
+            "native_profile", lambda: self._prepare(jobs, actor, lease)
+        )
+        bindings: dict[str, Any] = {
+            "profileSha256": self.profile_hash,
+            "installationSha256": installation_hash(operation),
+            "repositorySha256": operation.binding.policy.source_digest,
+        }
+
+        def task() -> None:
+            with jobs.database.transaction(actor) as connection:
+                row = connection.execute(
+                    "SELECT c.content FROM episodes e JOIN contract_revisions c "
+                    "ON c.workspace_id=e.workspace_id AND c.id=e.active_contract_id "
+                    "JOIN repository_states r ON r.workspace_id=e.workspace_id "
+                    "AND r.repository_id=e.repository_id WHERE e.workspace_id=%s "
+                    "AND e.id=%s AND e.status='running' AND c.id=%s AND r.id=%s",
+                    (
+                        actor.workspace_id,
+                        lease.episode_id,
+                        lease.contract_revision_id,
+                        request.repository_state_id,
+                    ),
+                ).fetchone()
+            if row is None or (
+                "cog.execute:" + operation.binding.operation_ref
+                not in row["content"]["capabilities"]
+            ):
+                raise ScopeDeniedError("The active task does not authorize this native Cog.")
+
+        check("native_task_capability", task)
+
+        def protocol() -> dict[str, Any]:
+            # The ordinary job dispatcher has no directed provider broker. Its
+            # admission must not promise a callback that run() never supplies.
+            if operation.directed_rest or operation.directed_graphql or operation.directed_grpc:
+                raise CapabilityUnavailableError(
+                    "This directed operation requires an independently installed broker."
+                )
+            binding = self.executor._context_binding
+            if binding is not None:
+                if binding.database is not jobs.database or binding.principal != actor:
+                    raise ScopeDeniedError("The Context controller belongs to another scope.")
+                binding.check(self.executor, actor)
+            identity: dict[str, Any] = {"protocol": operation.protocol}
+            if operation.protocol == "context-rpc/v1":
+                from potbot.context.syn_context_route import SynContextRoute
+
+                route = self.executor._syn_context_route
+                if (
+                    binding is None
+                    or not isinstance(route, SynContextRoute)
+                    or route.workspace_id != actor.workspace_id
+                ):
+                    raise ScopeDeniedError("The installed native Context route is unavailable.")
+                identity.update(
+                    workspace=str(route.workspace_id),
+                    operator_boot=route.operator_boot,
+                    caller_uid=route.caller_uid,
+                )
+            return identity
+
+        protocol_identity = check("native_protocol", protocol)
+
+        def runtime() -> None:
+            from potbot.tools.workspace_supervision import assert_shared_execution_allowed
+
+            selected = self.executor.runtime
+            home = self.executor.homes.lookup(actor.workspace_id, request.agent_id)
+            if (
+                home is None
+                or home.agent_id != request.agent_id
+                or home.workspace_id != actor.workspace_id
+            ):
+                raise ScopeDeniedError("Native Cog Agent home is unavailable.")
+            if selected.tool_maintenance_probe is not None:
+                raise ScopeDeniedError(
+                    "Normal operation checks cannot borrow maintenance authority."
+                )
+            assert_shared_execution_allowed(
+                runtime=selected,
+                ledger=self.executor.ledger,
+                workspace_id=actor.workspace_id,
+                candidate_path=str(selected.home / home.directory),
+            )
+            backend = self.executor.supervisor.backend
+            if (
+                not isinstance(backend, SharedWorkspaceBubblewrapBackend)
+                or backend.runtime != selected
+            ):
+                raise ScopeDeniedError("Native Cog supervisor differs from its installed runtime.")
+            attachment = backend.operator_attachment
+            if attachment is None:
+                raise CapabilityUnavailableError("A live operator attachment is required.")
+            attachment.require_healthy()
+            bindings["runtimeSha256"] = content_hash(
+                {
+                    "image": selected.image_digest,
+                    "qualification": selected.qualification_sha256,
+                    "home": str(selected.home.resolve(strict=True)),
+                    "rootfs": str(selected.rootfs.resolve(strict=True)),
+                    "uid": home.uid,
+                    "gid": home.gid,
+                    "entrypoints": selected.tool_entrypoints,
+                    "context": protocol_identity,
+                }
+            )
+
+        check("native_runtime", runtime)
+        check("native_executable", lambda: self.executor._executable(operation))
+
+        def release() -> None:
+            from potbot.tools.shared_tool_release_markers import blocked_directories, read_hold
+
+            selected = self.executor.runtime
+            blocked = blocked_directories(selected)
+            executable = operation.argv[0]
+            if executable.startswith("/usr/local/tools/"):
+                slug = executable.removeprefix("/usr/local/tools/").split("/", 1)[0]
+                if slug in blocked or selected.shared_tools is None:
+                    raise ScopeDeniedError("The installed tool remains held by its release gate.")
+                bindings["releaseSha256"] = content_hash(read_hold(selected.shared_tools, slug))
+
+        check("tool_release", release)
+
+        def syn() -> dict[str, Any]:
+            mesh = self.executor.syn_mesh
+            if not isinstance(mesh, ReleasedSynWorkerNodeMesh):
+                raise CapabilityUnavailableError("A released native Syn installation is required.")
+            mesh.probe(actor.workspace_id, request.agent_id, installation=True)
+            native = self.executor.syn_provenance(actor, request.agent_id)
+            if native is None:
+                raise CapabilityUnavailableError("Native installation provenance is unavailable.")
+            bindings["nativeSha256"] = content_hash(native)
+            return native
+
+        native = check("native_syn", syn)
+
+        def grants() -> None:
+            if not self.persistent_cog_grants:
+                raise CapabilityUnavailableError(
+                    "Task checks require persistent native Cog grants."
+                )
+            with jobs.database.transaction(actor) as connection:
+                current = current_cog_policy(connection, actor, request.agent_id)
+                if current is None:
+                    raise CogPolicyDenied(Denial.INSTALLATION)
+                selected = current.policy.select(
+                    actor, request.agent_id, native, operation, parent=None
+                )
+                current.policy.require_active_task(connection, invocation, selected)
+            bindings["grantGeneration"] = current.generation
+            bindings["grantSha256"] = current.policy.fingerprint
+            bindings["policySha256"] = current.policy.fingerprint
+
+        check("native_capability_policy", grants)
+        return bindings, {
+            "calls": 1,
+            "tool_ms": operation.binding.policy.max_wall_ms,
+            "concurrency": 1,
+        }
+
+    def run(
+        self, jobs: JobService, actor: WorkspaceContext, lease: JobLease, abort: threading.Event
+    ) -> dict[str, str]:
+        request, operation, value, invocation = self._prepare(jobs, actor, lease)
         if abort.is_set() or jobs.cancelled(actor, lease):
             raise OperationCancelledError("Native Cog was cancelled before admission.")
         native = (

@@ -1,0 +1,46 @@
+.workbench { border-bottom:1px solid #2d4c5c; background:linear-gradient(145deg,#102c35,#102130); padding:25px; color:#dceaf0; font-size:12px; }
+.heading>span { color:#91ccc5; font-size:10px; letter-spacing:.12em; }
+.heading h3 { font-size:20px; font-weight:550; margin:10px 0; }
+.heading p,.help { color:#a2bac9; font-size:11px; line-height:1.7; }
+.notice { background:#0c1d29; padding:12px 14px; border-left:2px solid #64aaa7; line-height:1.65; margin:18px 0; }
+.fields { border:0; margin:0; padding:0; display:flex; flex-direction:column; gap:13px; min-width:0; }
+.fields legend { padding:0 0 15px; font-weight:650; }
+.fields label { display:flex; flex-direction:column; gap:7px; color:#b5cfda; font-size:11px; min-width:0; }
+.fields input,.fields textarea,.fields select,.resume input { box-sizing:border-box; width:100%; border:1px solid #436172; background:#0b1c28; color:#e7f2f7; border-radius:6px; padding:10px; font:inherit; font-size:12px; min-height:39px; }
+.fields textarea { resize:vertical; line-height:1.6; min-height:100px; }
+.fields:disabled { opacity:.72; }
+.pair { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.model { margin:0; color:#8eb3c3; font-size:11px; overflow-wrap:anywhere; }
+.model code { color:#cbe8ee; display:block; margin-top:6px; }
+.actions { display:flex; gap:10px; flex-wrap:wrap; margin:16px 0; }
+.workbench button { cursor:pointer; font:inherit; font-size:11px; min-height:38px; border:1px solid #527584; background:#193848; color:#e8f3f5; border-radius:6px; padding:9px 12px; }
+.workbench button.launch { background:#1f5e57; border-color:#5a9d8f; }
+.workbench button:disabled { cursor:not-allowed; opacity:.45; }
+.workbench :is(button,input,textarea,select,a,summary):focus-visible { outline:2px solid #a0e2d8; outline-offset:3px; }
+.details { margin:16px 0 0; font-size:11px; color:#a7c6d4; }
+.details summary { cursor:pointer; padding:7px 0; }
+.workbench pre { background:#081722; border:1px solid #2b4559; padding:12px; border-radius:6px; font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace; color:#bcd6e1; overflow:auto; max-height:360px; white-space:pre-wrap; overflow-wrap:anywhere; }
+.workbench code { font:10px ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+.checkReport,.job,.unsupported { border-top:1px solid #365663; padding-top:18px; margin-top:20px; }
+.checkReport h4,.job h4,.unsupported h4 { font-size:13px; margin:0 0 12px; }
+.checkReport>p { color:#aacbcf; font-size:11px; }
+.checkReport ul { list-style:none; margin:15px 0; padding:0; }
+.checkReport li { display:flex; gap:12px; align-items:baseline; padding:7px 0; line-height:1.55; }
+.checkReport li>span { min-width:70px; text-transform:capitalize; font-size:10px; }
+.passed { color:#a3dbbf; }.blocked { color:#efc298; }.unsupported { color:#b7c8d8; }
+.unsupported a { display:inline-block; color:#a7dacf; padding:8px 0; }
+.uncertain { border:1px solid #946e3b; background:#322a20; border-radius:8px; margin:18px 0; padding:16px; color:#ecd3b1; line-height:1.6; }
+.uncertain code { display:block; margin:12px 0; }
+.jobHeading { display:flex; justify-content:space-between; gap:12px; align-items:baseline; }
+.jobHeading>span { font-size:10px; color:#c6dbe2; border:1px solid #55707e; border-radius:4px; padding:4px 7px; }
+.events { margin:10px 0; padding:0; list-style:none; max-height:350px; overflow:auto; }
+.events li { padding:9px 0; border-bottom:1px solid #294656; }
+.events time { display:inline-block; min-width:75px; color:#7d9fb3; font-size:10px; }
+.events span { font-size:11px; }
+.result { margin-top:20px; }
+.result dl { display:grid; grid-template-columns:90px minmax(0,1fr); gap:10px; font-size:11px; }
+.result dt { color:#91b4c1; }.result dd { margin:0; overflow-wrap:anywhere; }
+.resume { display:flex; gap:10px; align-items:center; }.resume input { flex:1; min-width:0; }
+.recent { list-style:none; margin:12px 0 0; padding:0; }
+.recent li { margin:7px 0; }.recent button { text-align:left; width:100%; }.recent code { display:block; margin-top:5px; }
+@media(max-width:720px) { .workbench { padding:20px; }.pair { grid-template-columns:1fr; }.actions button { flex:1; }.resume { flex-direction:column; align-items:stretch; } }

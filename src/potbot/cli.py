@@ -121,7 +121,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     commands.add_parser("worker", help="run recoverable fixture outbox jobs")
     commands.add_parser("serve", help="serve the authenticated REST API, dashboard and job streams")
     commands.add_parser("jobs", help="inspect the durable queue and run hosted-model workers")
-    commands.add_parser("operations", help="inspect operation readiness and recorded usage")
+    commands.add_parser("operations", help="inspect, check, run and monitor scoped operations")
     commands.add_parser("service", help="install/start/stop the persistent user service")
     commands.add_parser("embedding", help="set up, index, and query local Qwen embeddings")
     commands.add_parser(

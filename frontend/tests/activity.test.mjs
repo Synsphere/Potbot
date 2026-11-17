@@ -29,6 +29,14 @@ test('project ordered events and detect gaps without exposing payloads',()=>{
   assert.equal(activityView([],events).installTelemetry,false);
 });
 
+test('the original jobs monitor accepts owned workbench checks without exposing their authority',()=>{
+  const jobs=projectJobs(wrap({items:[{id,episode_id:taskId,job_type:'operation.check',state:'succeeded',
+    progress:{stage:'checked'},owner_principal_id:taskId,operation_check_id:null,
+    operation_authorization:{signature:'PRIVATE'},input:{request:{prompt:'PRIVATE'}},result:{operation_check:{private:'PRIVATE'}}}]}));
+  assert.equal(jobs[0].type,'operation.check');assert.equal(jobs[0].state,'succeeded');
+  assert.doesNotMatch(JSON.stringify(jobs),/PRIVATE|authorization|owner_principal_id|operation_check_id/);
+});
+
 test('model listing represents catalogue not installed or verified model files',()=>{
   const models=projectModels(wrap({local:[{canonical_model:'Qwen/Qwen3-0.6B',role:'reasoning',
     qualified:false,deployment_configured:false,tokenizer_credentials:'SECRET'},

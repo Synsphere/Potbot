@@ -172,3 +172,35 @@ def test_tampering_outside_the_requested_range_is_rejected_before_return(tmp_pat
     os.mkfifo(path)
     with pytest.raises(ArtifactIntegrityError, match="file type"):
         backend.read_range(actor, artifact, 0, 32)
+
+
+@pytest.mark.parametrize("maximum", [0, -1, True, 262145, "8192", None])
+def test_configured_range_limit_rejects_invalid_or_unbounded_values(tmp_path, maximum):
+    with pytest.raises(InvalidInputError, match="range limit"):
+        LocalArtifactBackend(tmp_path / "objects", max_range_bytes=maximum)
+
+
+@pytest.mark.skipif(
+    os.name != "posix", reason="Existing local artifact backend requires POSIX dir_fd/O_NOFOLLOW"
+)
+def test_operator_pages_are_explicit_and_default_native_range_limit_is_unchanged(tmp_path):
+    backend = LocalArtifactBackend(tmp_path / "objects")
+    actor = uuid4()
+    data = bytes(range(256)) * 2048
+    artifact = backend.publish(actor, data)
+    assert backend.max_range_bytes == MAX_RANGE_BYTES
+    with pytest.raises(InvalidInputError):
+        backend.read_range(actor, artifact, 0, MAX_RANGE_BYTES + 1)
+    operator = LocalArtifactBackend(backend.root, max_range_bytes=256 * 1024)
+    page = operator.read_range(actor, artifact, 32, 256 * 1024)
+    assert page.data == data[32 : 32 + 256 * 1024]
+    assert page.verified_byte_length == len(data)
+    assert page.read_calls == len(data) // READ_BLOCK_BYTES + 1
+    with pytest.raises(InvalidInputError):
+        operator.read_range(actor, artifact, 0, 256 * 1024 + 1)
+    path = backend.root / artifact.locator
+    with path.open("r+b") as stream:
+        stream.seek(len(data) - 1)
+        stream.write(b"x")
+    with pytest.raises(ArtifactIntegrityError, match="digest"):
+        operator.read_range(actor, artifact, 0, 256 * 1024)

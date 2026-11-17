@@ -5,6 +5,11 @@
 integration. This follows the merged S12 release gate. It does not complete
 U04, T04, M4, connector qualification or the wider acquisition programme.
 
+**Follow-on:** this document retains the merged catalogue's acceptance boundary.
+[U04-E](u04-e-operation-workbench.md) adds the complete authorized workbench,
+current-worker eligibility and principal-owned job/result lifecycle on migration
+39. Its execution routes are separate from the read-only catalogue GET routes.
+
 The catalogue answers three questions from existing records: which operations
 are visible to this workspace principal, what evidence or hold is recorded, and
 which recent invocations and ledger entries can be linked to that operation.
@@ -191,9 +196,10 @@ could not open a page because this environment denies its Unix-domain socket;
 no rendered acceptance pass for the new page is claimed. Final-commit CI and
 an actual operator-host UI check remain follow-up qualification.
 
-Remaining U04-C work includes authorized live installation/session adapters,
-dependency and credential eligibility, acquisition discovery/staging beyond
-the existing S9–S12 links, current-host qualification, broader invocation owner
-coverage, connector behavior and actual concurrency qualification. Continue
+The U04-E follow-on implements authorized native installation/grant checks,
+hosted policy/credential checks and owned job execution for the supported
+handlers. Remaining programme work includes acquisition discovery/staging beyond
+the existing S9–S12 links, current-host qualification, broader non-job invocation
+owner coverage, connector behavior and actual concurrency qualification. Continue
 through the existing gateway, context, grant and ledger owners. Do not promote
 the whole U04/M4/T04 programme from this catalogue increment.

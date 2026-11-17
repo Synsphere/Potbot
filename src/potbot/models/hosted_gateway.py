@@ -234,8 +234,10 @@ class HostedInferenceGateway:
             row = conn.execute(
                 "SELECT i.id,i.status,i.reservation_id,i.result,i.updated_at,r.job_id,r.episode_id,"
                 "r.ordinal,r.request_hash,r.policy_hash,r.request,r.policy FROM hosted_invocations i "
-                "JOIN hosted_requests r USING(workspace_id,id) WHERE i.workspace_id=%s AND i.id=%s",
-                (context.workspace_id, identity),
+                "JOIN hosted_requests r USING(workspace_id,id) WHERE i.workspace_id=%s AND i.id=%s "
+                "AND EXISTS (SELECT 1 FROM jobs j WHERE j.workspace_id=r.workspace_id "
+                "AND j.id=r.job_id AND j.owner_principal_id=%s)",
+                (context.workspace_id, identity, context.principal_id),
             ).fetchone()
             if row is None:
                 raise ScopeDeniedError("The hosted invocation is unavailable.")

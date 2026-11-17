@@ -159,6 +159,7 @@ def application(args: argparse.Namespace) -> FastAPI:
     )
     from potbot.api.ui_api_setup import register_api_setup_routes
     from potbot.api.ui_context import register_context_routes
+    from potbot.api.ui_operation_workbench import register_operation_workbench_routes
     from potbot.api.ui_operations import register_operation_routes
     from potbot.api.ui_operator_s13 import register_operator_routes
     from potbot.api.ui_resources import register_ui_routes
@@ -173,6 +174,7 @@ def application(args: argparse.Namespace) -> FastAPI:
     register_operation_routes(
         app, database, authenticate, settings.allowed_origins, context.workspace_id
     )
+    setup_authorizer = None
     # The separate setup-token capability is resolved at request time. Ordinary
     # workspace bearers can never mutate the host's credential vault alone.
     # The setup bridge is only enabled on an operator loopback listener.
@@ -188,13 +190,22 @@ def application(args: argparse.Namespace) -> FastAPI:
         from potbot.api.ui_api_setup import ApiSetupCredentials
         from potbot.api.ui_tool_upgrades import register_tool_upgrade_routes
 
+        setup_authorizer = ApiSetupCredentials(credentials).authorize_setup
         register_tool_upgrade_routes(
             app,
             database,
             authenticate,
             settings.allowed_origins,
-            ApiSetupCredentials(credentials).authorize_setup,
+            setup_authorizer,
         )
+    register_operation_workbench_routes(
+        app,
+        database,
+        authenticate,
+        settings.allowed_origins,
+        context.workspace_id,
+        setup_authorizer,
+    )
     return app
 
 

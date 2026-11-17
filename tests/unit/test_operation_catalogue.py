@@ -10,6 +10,7 @@ from uuid import uuid4
 import pytest
 
 from potbot.controller.operation_catalogue import OperationCatalogue, project_observations
+from potbot.controller.operation_workbench import OperationWorkbench
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import (
     CapabilityUnavailableError,
@@ -202,6 +203,20 @@ def test_missing_accounting_is_unavailable_and_private_reference_is_redacted():
     assert "private-secret-canary" not in json.dumps(item)
     assert item["accounting"]["totals"] == []
     assert "unsupported_reference" in item["reasons"]
+
+
+@pytest.mark.parametrize("kind", ["tool", "workflow", "connector", "model"])
+def test_installed_native_thing_reference_has_an_exact_route_without_qualification(kind):
+    actor, data = WorkspaceContext(uuid4(), uuid4()), observations()
+    data["runtime"] = [runtime("synny://thing/fixture-operation", kind)]
+    service = OperationWorkbench(ReadDatabase(data))
+    item = service.catalogue.list(actor)["items"][0]
+    assert item["kind"] == kind and item["reference"] == "syn://thing/fixture-operation"
+    assert item["state"] == "installed_unqualified"
+    contract = service.describe(actor, item["id"])
+    assert contract["supported"] and contract["jobType"] == "cog.execute"
+    assert contract["executionReference"] == item["reference"]
+    assert "worker_check_required" in contract["reasonCodes"]
 
 
 def test_published_skill_release_does_not_imply_installation_or_execute_text():

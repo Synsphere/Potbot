@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any
 from potbot.controller.jobs import JobService
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import DomainError, RevisionConflictError
-from potbot.domain.jobs import COG_JOB, JobLease
+from potbot.domain.jobs import CHECK_JOB, COG_JOB, JobLease
 from potbot.models.hosted_gateway import HostedAdmissionError, HostedInferenceGateway
 
 if TYPE_CHECKING:
@@ -26,9 +26,11 @@ class HostedJobRunner:
         logger: Any | None = None,
         *,
         native_cogs: NativeCogDispatcher | None = None,
+        operation_setup_token: Callable[[], str | None] | None = None,
     ) -> None:
         self.jobs, self.gateway, self.logger = jobs, gateway, logger
         self.native_cogs = native_cogs
+        self.operation_setup_token = operation_setup_token
 
     def _finish(
         self, context: WorkspaceContext, lease: JobLease, state: str, **kwargs: Any
@@ -42,12 +44,10 @@ class HostedJobRunner:
             return self.jobs.inspect(context, lease.job_id)
 
     def run_once(self, context: WorkspaceContext, worker_id: str) -> dict[str, Any] | None:
-        if self.native_cogs is None:
-            lease = self.jobs.claim(context, worker_id, lease_seconds=45)
-        else:
-            lease = self.jobs.claim(
-                context, worker_id, kinds=("model.generate", COG_JOB), lease_seconds=45
-            )
+        kinds: tuple[str, ...] = ("model.generate", CHECK_JOB)
+        if self.native_cogs is not None:
+            kinds += (COG_JOB,)
+        lease = self.jobs.claim(context, worker_id, kinds=kinds, lease_seconds=45)
         if lease is None:
             return None
         stopped, abort = threading.Event(), threading.Event()
@@ -73,6 +73,16 @@ class HostedJobRunner:
         monitor = threading.Thread(target=heartbeat, name="potbot-job-heartbeat", daemon=True)
         monitor.start()
         try:
+            from potbot.controller.operation_checks import runner_checks
+
+            if lease.job_type == CHECK_JOB:
+                report = runner_checks(self).evaluate(context, lease)
+                if abort.is_set() or self.jobs.cancelled(context, lease):
+                    from potbot.domain.errors import OperationCancelledError
+
+                    raise OperationCancelledError("Operation check cancelled before publication.")
+                return self._finish(context, lease, "succeeded", result={"operation_check": report})
+            runner_checks(self).revalidate(context, lease)
             if lease.job_type == COG_JOB and self.native_cogs is not None:
                 result = self.native_cogs.run(self.jobs, context, lease, abort)
                 return self._finish(context, lease, "succeeded", result=result)

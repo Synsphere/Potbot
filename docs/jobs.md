@@ -9,6 +9,21 @@ worker lease. Revising a task does not silently update already queued prompts.
 The provider gateway checks that frozen revision against the current task both
 when reserving resources and immediately before allowing dispatch.
 
+Application migration 39 also binds every submitted job to its authenticated
+`owner_principal_id`. Job reads, events, queue counts, claims, cancellation and
+hosted invocation inspection require that principal, including for two members
+of the same workspace. Run each worker under the principal whose jobs it serves.
+Existing jobs are backfilled only from an unambiguous immutable submission
+receipt; legacy rows with unknown ownership remain inaccessible to application
+principals. The migration does not guess a default owner.
+
+The [controlled operation workbench](implementation/u04-e-operation-workbench.md)
+adds `operation.check` on this same queue. A successful check records eligibility
+observations and has no dispatch marker or usage charge. An explicit checked run
+retains its `operation_check_id` and uses the existing `cog.execute` or
+`model.generate` handler. An eligible report is short lived; it cannot authorize
+a different request or replace normal dispatch admission.
+
 ## Submission and selection
 
 The versioned API submission payload has exactly four fields:
@@ -38,7 +53,7 @@ The input is retained privately for the worker. Job records, queue snapshots and
 state events expose explicit metadata fields only: task/job identity, selected
 models, state, progress, counters, classified errors and timestamps. They do not
 return the input, connection strings, credential material or exception text.
-Model-generated output can be streamed to the authenticated workspace after the
+Model-generated output can be streamed to the authenticated job owner after the
 worker redacts secrets. The initial worker executes selected models sequentially;
 these jobs do not claim automatic construction of a complete reasoning graph.
 
@@ -81,7 +96,7 @@ used to replay external inference calls.
 
 ## Replay and reconnect
 
-`job_events` is append-only and covered by workspace row-level security. Each
+`job_events` is append-only and covered by workspace and job-owner row-level security. Each
 event has a workspace-wide integer `sequence`, immutable event and job IDs,
 `event_type`, `data`, `recorded_at`, and `schema_version: 1`.
 

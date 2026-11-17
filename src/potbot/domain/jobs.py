@@ -37,7 +37,8 @@ TERMINAL_JOB_STATES = frozenset(
 )
 ACTIVE_JOB_STATES = frozenset({JobState.RUNNING, JobState.CANCELLING})
 COG_JOB = "cog.execute"
-JOB_TYPES = frozenset({"model.generate", COG_JOB})
+CHECK_JOB = "operation.check"
+JOB_TYPES = frozenset({"model.generate", COG_JOB, CHECK_JOB})
 
 
 def identifier(value: object, name: str) -> str:
@@ -98,7 +99,7 @@ def selected_models(value: object) -> list[dict[str, str]]:
 
 
 def job_models(kind: str, value: object) -> list[dict[str, str]]:
-    if kind == COG_JOB:
+    if kind in {COG_JOB, CHECK_JOB}:
         if value != []:
             raise InvalidInputError("A native Cog job cannot select hosted models.")
         return []
@@ -135,6 +136,12 @@ class JobSpec:
         payload = _json_object(value["input"], maximum=MAX_JOB_INPUT_BYTES)
         if value["job_type"] == COG_JOB:
             CogJobInput.parse(payload)
+        elif value["job_type"] == CHECK_JOB:
+            from potbot.domain.operation_workbench import parse_check_input
+
+            _, request = parse_check_input(payload)
+            if request.episode_id != episode_id:
+                raise InvalidInputError("Operation check must bind the requested task")
         return cls(
             value["job_type"],
             episode_id,
@@ -163,6 +170,9 @@ class JobLease:
     input: dict[str, Any] = field(repr=False)
     selected_models: list[dict[str, str]]
     contract_revision_id: UUID
+    owner_principal_id: UUID | None = None
+    operation_check_id: UUID | None = None
+    operation_authorization: dict[str, Any] | None = field(default=None, repr=False)
 
 
 @dataclass(frozen=True, slots=True)
@@ -227,9 +237,16 @@ def result_metadata(value: object) -> dict[str, Any]:
         "finish_reason",
         "accounting",
         "completed_models",
+        "operation_check",
     }
     if not set(result).issubset(allowed):
         raise InvalidInputError("Job results accept only declared public metadata.")
+    if "operation_check" in result:
+        from potbot.domain.operation_workbench import parse_check_report
+
+        if set(result) != {"operation_check"}:
+            raise InvalidInputError("Operation checks cannot include execution output")
+        result["operation_check"] = parse_check_report(result["operation_check"])
     for name in {"artifact_id", "invocation_id", "operation_id"} & result.keys():
         try:
             if not isinstance(result[name], str) or str(UUID(result[name])) != result[name]:

@@ -68,11 +68,23 @@ class LocalArtifactBackend:
     supports_range_reads = os.name == "posix"
     supports_chunk_uploads = os.name == "posix"
 
-    def __init__(self, root: Path, *, max_bytes: int = 64 * 1024 * 1024) -> None:
+    def __init__(
+        self,
+        root: Path,
+        *,
+        max_bytes: int = 64 * 1024 * 1024,
+        max_range_bytes: int = 8 * 1024,
+    ) -> None:
         if type(max_bytes) is not int or max_bytes < 1:
             raise InvalidInputError("Artifact size limit must be a positive integer.")
+        if type(max_range_bytes) is not int or not 1 <= max_range_bytes <= 256 * 1024:
+            raise InvalidInputError("Artifact range limit must be between 1 and 262144 bytes.")
         self.root = Path(root).absolute()
         self.max_bytes = max_bytes
+        # Native artifact Cog schemas retain their independent 8 KiB admission
+        # cap. The operator workbench explicitly opts into larger bounded pages
+        # using the same whole-object verifier, with one scan per returned page.
+        self.max_range_bytes = max_range_bytes
         self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
         if self.root.is_symlink() or not self.root.is_dir():
             raise ArtifactIntegrityError("Artifact root must be a real directory.")
@@ -180,7 +192,6 @@ class LocalArtifactBackend:
         """
         from potbot.tools.artifact_ranges import (
             MAX_ARTIFACT_BYTES,
-            MAX_RANGE_BYTES,
             READ_BLOCK_BYTES,
         )
 
@@ -197,7 +208,7 @@ class LocalArtifactBackend:
             or type(offset) is not int
             or not 0 <= offset <= artifact.byte_length
             or type(length) is not int
-            or not 1 <= length <= MAX_RANGE_BYTES
+            or not 1 <= length <= self.max_range_bytes
         ):
             raise InvalidInputError("Artifact range or pinned revision is invalid.")
         captured = bytearray()

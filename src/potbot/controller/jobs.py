@@ -27,6 +27,7 @@ from potbot.domain.errors import (
 )
 from potbot.domain.jobs import (
     ACTIVE_JOB_STATES,
+    CHECK_JOB,
     COG_JOB,
     JOB_TYPES,
     MAX_JOB_OUTPUT_BYTES,
@@ -76,6 +77,14 @@ _ERROR_CODES = frozenset(code.value for code in ErrorCode) | {
 
 def _public(row: dict[str, Any]) -> dict[str, Any]:
     result: dict[str, Any] = json_record({key: row[key] for key in _PUBLIC_FIELDS})
+    result.update(
+        json_record(
+            {
+                "owner_principal_id": row.get("owner_principal_id"),
+                "operation_check_id": row.get("operation_check_id"),
+            }
+        )
+    )
     result.update(schema_version=1, job_id=result["id"], task_id=result["episode_id"])
     return result
 
@@ -87,8 +96,9 @@ def _read(
         raise InvalidInputError("Job identity must be a UUID.")
     row = conn.execute(
         "SELECT *,lease_until>clock_timestamp() AS valid_lease FROM jobs "
-        "WHERE workspace_id=%s AND id=%s" + (" FOR UPDATE" if lock else ""),
-        (context.workspace_id, job_id),
+        "WHERE workspace_id=%s AND id=%s AND owner_principal_id=%s"
+        + (" FOR UPDATE" if lock else ""),
+        (context.workspace_id, job_id, context.principal_id),
     ).fetchone()
     if row is None:
         raise ScopeDeniedError("The job is unavailable in this workspace.")
@@ -139,7 +149,16 @@ def _snapshot_cursor(conn: Any, context: WorkspaceContext) -> int:
         "SELECT last_sequence FROM job_event_cursors WHERE workspace_id=%s FOR SHARE",
         (context.workspace_id,),
     ).fetchone()
-    return 0 if row is None else int(row["last_sequence"])
+    if row is None:
+        return 0
+    return int(
+        conn.execute(
+            "SELECT COALESCE(max(e.sequence),0) AS sequence FROM job_events e JOIN jobs j "
+            "ON j.workspace_id=e.workspace_id AND j.id=e.job_id "
+            "WHERE j.workspace_id=%s AND j.owner_principal_id=%s",
+            (context.workspace_id, context.principal_id),
+        ).fetchone()["sequence"]
+    )
 
 
 def _update_leased(
@@ -154,9 +173,17 @@ def _update_leased(
     # locks or validating metadata after the initial lease read.
     row = conn.execute(
         "UPDATE jobs SET " + assignments + " WHERE workspace_id=%s AND id=%s "
+        "AND owner_principal_id=%s "
         "AND generation=%s AND lease_owner=%s AND state IN ('running','cancelling') "
         "AND lease_until>clock_timestamp() RETURNING *",
-        (*parameters, context.workspace_id, lease.job_id, lease.generation, lease.worker_id),
+        (
+            *parameters,
+            context.workspace_id,
+            lease.job_id,
+            context.principal_id,
+            lease.generation,
+            lease.worker_id,
+        ),
     ).fetchone()
     if row is None:
         raise RevisionConflictError("The worker lease is no longer current.")
@@ -190,10 +217,31 @@ class JobService:
     def __init__(self, database: Database) -> None:
         self.database = database
 
-    def submit(self, context: WorkspaceContext, payload: object, key: str) -> dict[str, Any]:
+    def submit(
+        self,
+        context: WorkspaceContext,
+        payload: object,
+        key: str,
+        *,
+        trusted_operation: bool = False,
+        operation_check_id: UUID | None = None,
+        operation_authorization: dict[str, Any] | None = None,
+        create_guard: Callable[[Any, dict[str, Any]], None] | None = None,
+    ) -> dict[str, Any]:
         from psycopg.types.json import Jsonb
 
         spec = JobSpec.from_dict(payload)
+        if (
+            spec.job_type == CHECK_JOB
+            or operation_check_id is not None
+            or operation_authorization is not None
+            or create_guard is not None
+        ) and not trusted_operation:
+            raise ScopeDeniedError("Operation jobs require the operator workbench")
+        if (operation_check_id is None) != (operation_authorization is None):
+            raise InvalidInputError("Operation launches require their check and authorization")
+        if spec.job_type == CHECK_JOB and operation_check_id is not None:
+            raise InvalidInputError("A check cannot itself be a checked execution")
         with self.database.transaction(context) as conn:
 
             def create() -> dict[str, Any]:
@@ -214,10 +262,13 @@ class JobService:
                     "failed",
                 }:
                     raise StateMismatchError("Terminal tasks cannot accept new jobs.")
+                if create_guard is not None:
+                    create_guard(conn, dict(episode))
                 job_id = uuid4()
                 row = conn.execute(
                     "INSERT INTO jobs(workspace_id,id,episode_id,contract_revision_id,"
-                    "job_type,input,selected_models) VALUES(%s,%s,%s,%s,%s,%s,%s) RETURNING *",
+                    "job_type,input,selected_models,owner_principal_id,operation_check_id,"
+                    "operation_authorization) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING *",
                     (
                         context.workspace_id,
                         job_id,
@@ -226,13 +277,33 @@ class JobService:
                         spec.job_type,
                         Jsonb(spec.input),
                         Jsonb(spec.selected_models),
+                        context.principal_id,
+                        operation_check_id,
+                        Jsonb(operation_authorization) if operation_authorization else None,
                     ),
                 ).fetchone()
                 public = _public(dict(row))
                 _event(conn, context, job_id, "job.queued", {"job": public})
                 return public
 
-            return idempotent_command(conn, context, "submit_api_job", key, spec.to_dict(), create)
+            # Authorization timestamps/MACs are private capabilities, not retry
+            # identity. A committed same-key submission remains replayable after
+            # expiry, while changing the checked request or check conflicts.
+            request = spec.to_dict()
+            if spec.job_type == CHECK_JOB:
+                request = {
+                    **request,
+                    "input": {
+                        key: value for key, value in spec.input.items() if key != "authorization"
+                    },
+                }
+            if operation_check_id is not None:
+                request = {"request": request, "operation_check_id": str(operation_check_id)}
+            result = idempotent_command(conn, context, "submit_api_job", key, request, create)
+            # Existing command keys are workspace-scoped. Never let a matching
+            # key return another principal's committed private result.
+            _read(conn, context, UUID(result["id"]))
+            return result
 
     def inspect(self, context: WorkspaceContext, job_id: UUID) -> dict[str, Any]:
         with self.database.transaction(context) as conn:
@@ -256,8 +327,8 @@ class JobService:
         ):
             raise InvalidInputError("The job state filter is invalid.")
         cursor = _parse_cursor(after)
-        predicates = ["workspace_id=%s"]
-        parameters: list[Any] = [context.workspace_id]
+        predicates = ["workspace_id=%s", "owner_principal_id=%s"]
+        parameters: list[Any] = [context.workspace_id, context.principal_id]
         if state is not None:
             predicates.append("state=%s")
             parameters.append(state)
@@ -287,8 +358,8 @@ class JobService:
             event_cursor = _snapshot_cursor(conn, context)
             rows = conn.execute(
                 "SELECT state,count(*) AS count,min(created_at) AS oldest_created_at "
-                "FROM jobs WHERE workspace_id=%s GROUP BY state",
-                (context.workspace_id,),
+                "FROM jobs WHERE workspace_id=%s AND owner_principal_id=%s GROUP BY state",
+                (context.workspace_id, context.principal_id),
             ).fetchall()
             counts = {state.value: 0 for state in JobState}
             oldest = None
@@ -297,9 +368,9 @@ class JobService:
                 if row["state"] == "queued":
                     oldest = json_record(row["oldest_created_at"])
             stale = conn.execute(
-                "SELECT count(*) AS count FROM jobs WHERE workspace_id=%s "
+                "SELECT count(*) AS count FROM jobs WHERE workspace_id=%s AND owner_principal_id=%s "
                 "AND state IN ('running','cancelling') AND lease_until<=clock_timestamp()",
-                (context.workspace_id,),
+                (context.workspace_id, context.principal_id),
             ).fetchone()["count"]
             return {
                 "schema_version": 1,
@@ -328,8 +399,10 @@ class JobService:
         with self.database.transaction(context) as conn:
             if job_id is not None:
                 _read(conn, context, job_id)
-            where = "workspace_id=%s AND sequence>%s"
-            parameters: list[Any] = [context.workspace_id, after]
+            where = "workspace_id=%s AND sequence>%s AND EXISTS (SELECT 1 FROM jobs j "
+            where += "WHERE j.workspace_id=job_events.workspace_id AND j.id=job_events.job_id "
+            where += "AND j.owner_principal_id=%s)"
+            parameters: list[Any] = [context.workspace_id, after, context.principal_id]
             if job_id is not None:
                 where += " AND job_id=%s"
                 parameters.append(job_id)
@@ -347,6 +420,7 @@ class JobService:
 
     def cancel(self, context: WorkspaceContext, job_id: UUID, key: str) -> dict[str, Any]:
         with self.database.transaction(context) as conn:
+            _read(conn, context, job_id)
 
             def change() -> dict[str, Any]:
                 old = _read(conn, context, job_id, lock=True)
@@ -366,9 +440,13 @@ class JobService:
                 _event(conn, context, job_id, "job." + state.value, {"job": public})
                 return public
 
-            return idempotent_command(
+            result = idempotent_command(
                 conn, context, "cancel_api_job", key, {"job_id": str(job_id)}, change
             )
+            if result.get("id") != str(job_id):
+                raise ScopeDeniedError("The cancellation result belongs to another job")
+            _read(conn, context, job_id)
+            return result
 
     @staticmethod
     def _lease_row(conn: Any, context: WorkspaceContext, lease: JobLease) -> dict[str, Any]:
@@ -380,9 +458,35 @@ class JobService:
             or row["generation"] != lease.generation
             or row["lease_owner"] != lease.worker_id
             or not row["valid_lease"]
+            or row["operation_check_id"] != lease.operation_check_id
+            or row["operation_authorization"] != lease.operation_authorization
+            or (
+                lease.owner_principal_id is not None
+                and lease.owner_principal_id != context.principal_id
+            )
         ):
             raise RevisionConflictError("The worker lease is no longer current.")
         return row
+
+    def operation_check(self, context: WorkspaceContext, lease: JobLease) -> dict[str, Any] | None:
+        """Return the owned private check only to a current linked worker lease.
+
+        This internal record includes the signed input and must never be returned
+        by an HTTP/CLI adapter. Public views use :meth:`inspect` instead.
+        """
+        if lease.operation_check_id is None:
+            return None
+        with self.database.transaction(context) as conn:
+            self._lease_row(conn, context, lease)
+            check = _read(conn, context, lease.operation_check_id)
+            if (
+                check["job_type"] != CHECK_JOB
+                or check["state"] != JobState.SUCCEEDED
+                or check["episode_id"] != lease.episode_id
+                or check["contract_revision_id"] != lease.contract_revision_id
+            ):
+                raise ScopeDeniedError("The operation check is no longer applicable")
+            return check
 
     def expire(self, context: WorkspaceContext, *, limit: int = 200) -> int:
         if type(limit) is not int or not 1 <= limit <= 1000:
@@ -390,9 +494,10 @@ class JobService:
         with self.database.transaction(context) as conn:
             rows = conn.execute(
                 "SELECT id,job_type,episode_id,dispatched_at FROM jobs WHERE workspace_id=%s "
+                "AND owner_principal_id=%s "
                 "AND state IN ('running','cancelling') AND lease_until<=clock_timestamp() "
                 "ORDER BY lease_until,id FOR UPDATE SKIP LOCKED LIMIT %s",
-                (context.workspace_id, limit),
+                (context.workspace_id, context.principal_id, limit),
             ).fetchall()
             for old in rows:
                 self._settle_cog(conn, context, old, JobState.INDETERMINATE)
@@ -426,9 +531,9 @@ class JobService:
         self.expire(context)
         with self.database.transaction(context) as conn:
             old = conn.execute(
-                "SELECT id FROM jobs WHERE workspace_id=%s AND state='queued' "
+                "SELECT id FROM jobs WHERE workspace_id=%s AND owner_principal_id=%s AND state='queued' "
                 "AND job_type=ANY(%s) ORDER BY created_at,id FOR UPDATE SKIP LOCKED LIMIT 1",
-                (context.workspace_id, list(kinds)),
+                (context.workspace_id, context.principal_id, list(kinds)),
             ).fetchone()
             if old is None:
                 return None
@@ -453,6 +558,9 @@ class JobService:
                 dict(row["input"]),
                 list(row["selected_models"]),
                 row["contract_revision_id"],
+                row["owner_principal_id"],
+                row["operation_check_id"],
+                dict(row["operation_authorization"]) if row["operation_authorization"] else None,
             )
 
     def renew(
@@ -490,6 +598,8 @@ class JobService:
             old = self._lease_row(conn, context, lease)
             if old["cancellation_requested"]:
                 raise OperationCancelledError("Job cancellation preceded external dispatch.")
+            if old["job_type"] == CHECK_JOB:
+                raise ScopeDeniedError("Operation checks cannot dispatch effects")
             if old["dispatched_at"] is not None:
                 if old["job_type"] == COG_JOB:
                     raise StateMismatchError("A native Cog dispatch cannot be repeated.")
@@ -708,8 +818,27 @@ class JobService:
         metadata = None if result is None else result_metadata(result)
         with self.database.transaction(context) as conn:
             old = self._lease_row(conn, context, lease)
-            if state == JobState.SUCCEEDED and old["dispatched_at"] is None:
+            if (
+                state == JobState.SUCCEEDED
+                and old["dispatched_at"] is None
+                and old["job_type"] != CHECK_JOB
+            ):
                 raise StateMismatchError("Successful work requires a recorded dispatch.")
+            if old["job_type"] == CHECK_JOB and state == JobState.SUCCEEDED:
+                if metadata is None or set(metadata) != {"operation_check"}:
+                    raise StateMismatchError("Successful checks require their bounded report")
+                from potbot.domain.operation_workbench import parse_check_input, request_digest
+
+                identity, checked = parse_check_input(old["input"])
+                report = metadata["operation_check"]
+                if (
+                    report["operationId"] != identity
+                    or report["bindings"]["requestSha256"] != request_digest(checked.to_dict())
+                    or report["bindings"]["contractRevisionId"] != str(old["contract_revision_id"])
+                ):
+                    raise StateMismatchError("Operation check report does not match its request")
+            elif metadata is not None and "operation_check" in metadata:
+                raise StateMismatchError("Only operation checks may publish a check report")
             if state == JobState.CANCELLED and not old["cancellation_requested"]:
                 raise StateMismatchError("Cancellation completion needs a cancellation request.")
             self._settle_cog(conn, context, old, state)
