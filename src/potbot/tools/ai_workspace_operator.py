@@ -370,24 +370,35 @@ class AiWorkspaceOperator:
             "supervisor": self.supervisor,
         }
 
+    def bind_tool_release_authority(self, authority: Any) -> None:
+        """Bind a host PostgreSQL reader for subsequent launches, never auto-release."""
+        from potbot.tools.tool_release_gate_s12 import ToolReleaseAuthority
+
+        self._require_live()
+        if not isinstance(authority, ToolReleaseAuthority) or (
+            authority.context.workspace_id != self.workspace_id
+            or authority.manager.store.ledger is not self.ledger
+            or authority.manager.runtime != self.runtime
+        ):
+            raise ScopeDeniedError("S12 authority differs from this operator runtime")
+        with self.supervisor.pause_context():
+            runtime = replace(self.runtime, tool_release_authority=authority)
+            self.runtime = runtime
+            backend = self.supervisor.backend
+            assert isinstance(backend, SharedWorkspaceBubblewrapBackend)
+            backend.runtime = runtime
+            authority.manager.runtime = runtime
+
     def status(self) -> dict[str, object]:
         monitor = self._monitor
         worker = self._supervisor
-        # Read the S12 host-only gate ledger. Unknown schema is reported as
-        # unknown, never as a clean or released workspace.
-        with self.ledger._connect() as db:
-            exists = db.execute(
-                "SELECT 1 FROM sqlite_master WHERE type='table' "
-                "AND name='trusted_tool_release_gates'"
-            ).fetchone()
-            pending: int | None = None
-            if exists is not None:
-                record = db.execute(
-                    "SELECT COUNT(*) AS n FROM trusted_tool_release_gates "
-                    "WHERE workspace_id=? AND state NOT IN ('released','rolled_back')",
-                    (str(self.workspace_id),),
-                ).fetchone()
-                pending = int(record["n"])
+        from potbot.tools.shared_tool_release_markers import blocked_directories
+
+        pending: int | None = None
+        try:
+            pending = sum(not name.startswith(".") for name in blocked_directories(self.runtime))
+        except Exception:
+            pass  # Unknown/unavailable admission evidence never means released.
         return {
             "schema": "potbot-ai-workspace-operator/v1",
             "workspace_id": str(self.workspace_id),

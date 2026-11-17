@@ -204,7 +204,9 @@ class BoundedInput(io.BytesIO):
     ],
 )
 def test_serve_rejects_ambiguous_json_before_dispatch(monkeypatch, message):
-    worker = SimpleNamespace(start=AsyncMock(), close=AsyncMock(), execute=AsyncMock())
+    worker = SimpleNamespace(
+        start=AsyncMock(), close=AsyncMock(), execute=AsyncMock(), capture_fenced=False
+    )
     source = BoundedInput(message + b"\n")
     output = io.StringIO()
     monkeypatch.setattr(module, "BrowserWorker", lambda *_: worker)

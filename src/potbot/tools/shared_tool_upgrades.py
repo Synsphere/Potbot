@@ -16,7 +16,7 @@ import re
 import stat
 import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
 from uuid import UUID
@@ -28,6 +28,12 @@ from potbot.domain.errors import (
     StateMismatchError,
 )
 from potbot.tools.agent_homes import AgentHomeRegistry
+from potbot.tools.shared_tool_release_markers import (
+    ToolMaintenanceProbe,
+    canonical,
+    read_hold,
+    write_hold,
+)
 from potbot.tools.shared_tool_store import SharedToolDefinition, SharedToolStore
 from potbot.tools.shared_workspace_isolation import (
     SharedWorkspaceBubblewrapBackend,
@@ -365,6 +371,12 @@ class SharedToolUpgradeManager:
                 updated_ns INTEGER NOT NULL,
                 UNIQUE(workspace_id,stage_name)
             )""")
+            # Host swap/denial projection only; PostgreSQL owns release decisions.
+            db.execute("""CREATE TABLE IF NOT EXISTS trusted_tool_release_projections (
+                operation_id TEXT PRIMARY KEY REFERENCES trusted_tool_upgrades(operation_id),
+                before_hold_json TEXT, activation_hold_json TEXT NOT NULL,
+                rollback_hold_json TEXT
+            )""")
 
     def _actor(self, workspace_id: UUID, agent_id: UUID) -> str:
         if not isinstance(workspace_id, UUID) or not isinstance(agent_id, UUID):
@@ -386,7 +398,10 @@ class SharedToolUpgradeManager:
                 operation,
                 key,
                 "write",
-                (AccessResource("shared_tool", slug, "write"),),
+                (
+                    AccessResource("shared_tool", slug, "write"),
+                    AccessResource("shared_tool", "*", "read"),
+                ),
                 image,
             ),
         )
@@ -396,11 +411,130 @@ class SharedToolUpgradeManager:
     def _location(self, slug: str, operation_id: UUID) -> Path:
         return self.store.root / stage_name(slug, operation_id)
 
+    def _hold(
+        self, row: dict[str, Any], definition: SharedToolDefinition, location: Path, direction: str
+    ) -> dict[str, Any]:
+        """Bind the denial projection to actual bytes before their atomic swap."""
+        from potbot.domain.serialization import content_hash
+
+        identity = self._verify_at(location, definition)
+        pins = {
+            f"/usr/local/tools/{definition.slug}/{relative}": digest
+            for relative, digest in definition.reusable_artifacts
+            if relative.startswith(("static/", "environment/"))
+            and (location / relative).stat().st_mode & 0o111
+        }
+        return {
+            "schema": "potbot-tool-release-hold/1",
+            "slug": definition.slug,
+            "workspace_id": row["workspace_id"],
+            "agent_id": row["agent_id"],
+            "operation_id": row["operation_id"],
+            "direction": direction,
+            "definition_sha256": content_hash(definition.to_dict()),
+            "commit": definition.commit,
+            "identity_sha256": content_hash(identity),
+            "image_digest": self.runtime.image_digest,
+            "qualification_sha256": self.runtime.qualification_sha256,
+            "test_evidence_sha256": row["evidence_sha256"],
+            "suite_sha256": row["suite_sha256"],
+            "entrypoints": pins,
+        }
+
+    def _retain_hold(self, row: dict[str, Any], hold: dict[str, Any]) -> None:
+        """Atomically retain denial recovery data and begin the physical transition.
+
+        A crash may occur before the marker rename, but can never leave a ready
+        operation with an orphaned projection that cannot be reconciled.
+        """
+        from potbot.tools.shared_tool_release_markers import validate_hold
+
+        validate_hold(hold, row["slug"])
+        before = read_hold(self.store.root, row["slug"])
+        with self.store.ledger._connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            existing = db.execute(
+                "SELECT * FROM trusted_tool_release_projections WHERE operation_id=?",
+                (row["operation_id"],),
+            ).fetchone()
+            if hold["direction"] == "activate":
+                if existing is not None:
+                    raise StateMismatchError(
+                        "S12 activation projection already exists; reconcile it"
+                    )
+                db.execute(
+                    "INSERT INTO trusted_tool_release_projections VALUES(?,?,?,NULL)",
+                    (row["operation_id"], canonical(before) if before else None, canonical(hold)),
+                )
+            else:
+                if existing is None:
+                    current = self._hold(
+                        row,
+                        SharedToolDefinition.from_dict(json.loads(row["new_definition"])),
+                        self.store.root / row["slug"],
+                        "activate",
+                    )
+                    db.execute(
+                        "INSERT INTO trusted_tool_release_projections VALUES(?,NULL,?,?)",
+                        (row["operation_id"], canonical(current), canonical(hold)),
+                    )
+                elif existing["rollback_hold_json"] not in (None, canonical(hold)):
+                    raise StateMismatchError("S12 rollback projection already exists; reconcile it")
+                else:
+                    db.execute(
+                        "UPDATE trusted_tool_release_projections SET rollback_hold_json=? WHERE operation_id=?",
+                        (canonical(hold), row["operation_id"]),
+                    )
+            activating = hold["direction"] == "activate"
+            changed = db.execute(
+                "UPDATE trusted_tool_upgrades SET state=?,updated_ns=? "
+                "WHERE operation_id=? AND state=?",
+                (
+                    "switching" if activating else "rolling_back",
+                    time.time_ns(),
+                    row["operation_id"],
+                    "ready" if activating else "active",
+                ),
+            )
+            if changed.rowcount != 1:
+                raise StateMismatchError("S12 denial projection lost its physical transition")
+
+    def _restore_hold(self, row: dict[str, Any], *, aborted: bool) -> None:
+        with self.store.ledger._connect() as db:
+            projected = db.execute(
+                "SELECT * FROM trusted_tool_release_projections WHERE operation_id=?",
+                (row["operation_id"],),
+            ).fetchone()
+        current = read_hold(self.store.root, row["slug"])
+        if projected is None:
+            # Historical S9 transitions predate S12. Their explicit physical
+            # recovery may preserve the legacy absence of a marker, but must
+            # never erase a marker introduced by a later S12 operation.
+            if current is None:
+                return
+            raise StateMismatchError("S12 recovery is missing its retained denial projection")
+        retained = {
+            projected["before_hold_json"],
+            projected["activation_hold_json"],
+            projected["rollback_hold_json"],
+        }
+        if current is not None and canonical(current) not in retained:
+            raise StateMismatchError("S12 recovery cannot overwrite a later release hold")
+        saved = projected["before_hold_json" if aborted else "activation_hold_json"]
+        write_hold(self.store.root, row["slug"], json.loads(saved) if saved else None)
+
     def _verify_at(self, parent: Path, definition: SharedToolDefinition) -> dict[str, object]:
         root = self.store.root
         if parent.parent != root or not parent.name or parent.is_symlink():
             raise ScopeDeniedError("S9 installation must be directly beneath the tool root")
         _no_link(parent)
+        if {path.name for path in parent.iterdir()} != {
+            "checkout",
+            "environment",
+            "static",
+            "downloads",
+        }:
+            raise StateMismatchError("S9 installation contains undeclared root content")
         for part in ("checkout", "environment", "static", "downloads"):
             _no_link(parent / part)
         checkout = parent / "checkout"
@@ -548,11 +682,20 @@ class SharedToolUpgradeManager:
             agent_dir = self.runtime.home / agent.directory
             _no_link(agent_dir)
             results: list[dict[str, object]] = []
+            executor = self.executor
+            if isinstance(executor, SandboxedToolTestExecutor):
+                executor = SandboxedToolTestExecutor(
+                    replace(
+                        self.runtime, tool_maintenance_probe=ToolMaintenanceProbe(guard, stage.name)
+                    ),
+                    monitor=self.ai_monitor,
+                    supervisor_factory=executor.supervisor_factory,
+                )
             for case in suite.cases:
                 guard.ensure_live()
                 argv = case.render(slug=slug, stage=stage.name, agent=agent.directory)
                 uncertain = True
-                result = self.executor.run(
+                result = executor.run(
                     case=case,
                     argv=argv,
                     workspace_id=workspace_id,
@@ -774,8 +917,10 @@ class SharedToolUpgradeManager:
             if current != json.loads(row["evidence_json"])["candidate_identity"]:
                 raise StateMismatchError("S9 stage changed since tested evidence")
             guard.ensure_live()
-            self._state(operation_id, "switching", expect="ready")
+            hold = self._hold(row, new, self._location(slug, operation_id), "activate")
             uncertain = True
+            self._retain_hold(row, hold)
+            write_hold(self.store.root, slug, hold)
             _exchange(self.store.root, slug, row["stage_name"])
             self._verify_at(self.store.root / slug, new)
             self._verify_at(self._location(slug, operation_id), old)
@@ -833,8 +978,10 @@ class SharedToolUpgradeManager:
             self._verify_at(self.store.root / slug, new)
             self._verify_at(self._location(slug, operation_id), old)
             guard.ensure_live()
-            self._state(operation_id, "rolling_back", expect="active")
+            hold = self._hold(row, old, self._location(slug, operation_id), "rollback")
             uncertain = True
+            self._retain_hold(row, hold)
+            write_hold(self.store.root, slug, hold)
             _exchange(self.store.root, slug, row["stage_name"])
             self._verify_at(self.store.root / slug, old)
             self._verify_at(self._location(slug, operation_id), new)
@@ -918,18 +1065,21 @@ class SharedToolUpgradeManager:
                     new_staged = True
             if row["state"] == "switching":
                 if old_active and new_staged:  # Swap never took place.
+                    self._restore_hold(row, aborted=True)
                     self._state(operation_id, "aborted", expect="switching")
                     final = "aborted"
                 elif new_active and old_staged:  # Undo a completed physical exchange.
                     _exchange(self.store.root, slug, row["stage_name"])
                     self._verify_at(active, old)
                     self._verify_at(staged, new)
+                    self._restore_hold(row, aborted=True)
                     self._state(operation_id, "aborted", expect="switching")
                     final = "aborted"
                 else:
                     raise StateMismatchError("S9 activation requires manual filesystem recovery")
             else:
                 if new_active and old_staged:  # Rollback did not exchange.
+                    self._restore_hold(row, aborted=False)
                     self._state(operation_id, "active", expect="rolling_back")
                     final = "active"
                 elif old_active and new_staged:  # Exchange occurred, DB commit did not.
@@ -971,13 +1121,18 @@ class SharedToolUpgradeManager:
             row = self._row(db, operation_id)
         if row["workspace_id"] != str(workspace_id) or row["agent_id"] != str(agent_id):
             raise ScopeDeniedError("S9 runtime pin plan unavailable")
-        if row["state"] not in {"ready", "active"}:
+        if row["state"] not in {"ready", "active", "rolled_back"}:
             raise StateMismatchError("S9 executable pins require a tested candidate")
-        definition = SharedToolDefinition.from_dict(json.loads(row["new_definition"]))
+        definition = SharedToolDefinition.from_dict(
+            json.loads(
+                row["old_definition"] if row["state"] == "rolled_back" else row["new_definition"]
+            )
+        )
         expected = dict(definition.reusable_artifacts)
         # Candidate remains at the stage location until activation; afterward
-        # it resides at the active path. This method is only a *proposal*;
-        # the host operator must reload the runtime with these hashes.
+        # it resides at the active path. A completed rollback proposes the
+        # verified restored definition. This method is only a *proposal*; the
+        # host operator must reload the runtime with these hashes.
         stage = (
             self._location(definition.slug, operation_id)
             if row["state"] == "ready"

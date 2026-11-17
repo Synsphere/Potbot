@@ -93,8 +93,10 @@ class AccessResource:
                 raise InvalidInputError("GitHub file must be a canonical repository path")
             object.__setattr__(self, "name", identity + ":" + path)
         elif self.kind == "shared_tool":
-            # All processes using the same installed tool share a named lease;
-            # disjoint tool installations may be used concurrently.
+            # A guest that can read the complete mounted tools tree must
+            # declare that footprint. Wildcard writes are never issued.
+            if self.name == "*" and self.mode == "read":
+                return
             if not isinstance(self.name, str) or not re.fullmatch(
                 r"[a-z][a-z0-9-]{1,62}", self.name
             ):
@@ -115,13 +117,13 @@ class AccessResource:
 
 
 def conflict(a: AccessResource, b: AccessResource, *, same_workspace: bool = True) -> bool:
-    """Parallel reads are safe. GitHub and external resources are global across workspaces."""
+    """Parallel reads are safe. Host-shared tools and remote effects are global."""
     if a.mode == b.mode == "read":
         return False
     if not same_workspace:
         if a.kind != b.kind and {a.kind, b.kind} != {"github", "github_file"}:
             return False
-        if a.kind not in {"github", "github_file", "external"}:
+        if a.kind not in {"github", "github_file", "external", "shared_tool"}:
             return False
     if "workspace" in {a.kind, b.kind}:
         return True
@@ -143,7 +145,7 @@ def conflict(a: AccessResource, b: AccessResource, *, same_workspace: bool = Tru
     if a.kind != b.kind:
         return False
     if a.kind == "shared_tool":
-        return a.name == b.name
+        return a.name == b.name or "*" in {a.name, b.name}
     if a.kind == "home":
         return (
             a.name == b.name or a.name.startswith(b.name + "/") or b.name.startswith(a.name + "/")

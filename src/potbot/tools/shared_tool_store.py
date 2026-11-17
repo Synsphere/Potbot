@@ -1,8 +1,9 @@
 """Host-owned lifecycle for shared tool checkouts and per-agent edit clones.
 
 The trusted operator supplies the checkout; agents never obtain direct ledger
-credentials. A read lease covers normal use of one tool; maintenance/cleanup and
-cloning require a write lease for that tool. These are cooperative leases, NOT
+credentials. Normal use retains its selected-tool read lease and the read
+footprint of the whole mounted tools tree; maintenance/cleanup and cloning
+require a write lease for that tool. These are cooperative leases, NOT
 protection against an unbrokered Bash process writing the shared checkout.
 
 Downloaded packages, built binaries and shared environments live OUTSIDE the
@@ -464,7 +465,10 @@ class SharedToolStore:
                 "tool.use",
                 idempotency_key,
                 "read",
-                (AccessResource("shared_tool", slug, "read"),),
+                (
+                    AccessResource("shared_tool", slug, "read"),
+                    AccessResource("shared_tool", "*", "read"),
+                ),
                 image,
             ),
         )

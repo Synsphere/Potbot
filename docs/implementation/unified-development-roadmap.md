@@ -6,6 +6,14 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**17 November 2026:** [S12 release enforcement and execution qualification](s12-tool-release-and-execution-qualification.md)
+adds the PostgreSQL postflight/release decision, held-tool admission, operator
+projection and migration 38. It also hardens T01.4 report freshness, fences browser
+workers after uncertain captures, and supplies an installed-profiler qualification
+runner. The source baseline is `413494517bd359dd908fcfd9571a22789b24ebb3`.
+Real installed-host/browser evidence and all-producer T01.3 adoption remain open;
+historical U00 CI records do not qualify these new changes.
+
 **4 November 2026:** U03-Q starts with [worker audit completion evidence](38-operator-worker-qualification.md#u03-q-completion-evidence).
 This gate requires terminal task traces and confirmed cgroup release before an audit can report success.
 The remaining U02 and U03 deployment and route qualification gates still apply.
@@ -147,10 +155,14 @@ stable effect IDs and can resolve lost acknowledgements with a receipt or a
 cancellation. The existing PostgreSQL budget ledger settles each resolved
 dispatch in the same transaction as its outcome.
 
-The controlled queue provides the U01-A reference transport. Additional
-producers and open PR13's factories need equivalent target evidence and
-qualification against released-Syn grants. Live native worker qualification
-remains under the existing host gates.
+The controlled queue provides the U01-A reference transport. The
+[producer coverage matrix](s12-tool-release-and-execution-qualification.md#producer-coverage-and-next-acceptance-work)
+identifies existing queue, MCP, browser, artifact and profiler owners and their
+remaining evidence gates. Extend these owners with equivalent target evidence
+and qualification against released-Syn grants. Preserve historical PR13 review
+as checkpoint evidence; current source and installed runtime must be assessed
+at the final implementation revision. Live native worker qualification remains
+under the existing host gates.
 
 The monitoring and recent-development reconciliations remain historical mapping
 inputs. Their U03/U06/U13/U16 gates survive audit closure. The old requested
@@ -178,7 +190,7 @@ These suffixes identify work within existing U packages. They do not renumber th
 | --- | --- | --- |
 | U02-P | U01/U02/U06 | Mount/identity matrix; read-only ordinary shared-tool access with operator-unlocked scoped maintenance writes; enforced concurrency; and OS-native `/etc/ai` watcher loss/overflow fencing plus reconciliation; RD11–RD13/RD15. |
 | U02-L | U02/U03/U16 | Agent `/var/logs/ai` mount, creator-only writes, actual tool aliases/destinations and operator watch/archive/recovery; RD16, distinct from host Xpra S17. |
-| U04-R | U02/U04/U16 | Locate or implement and qualify S12 post-activation repin/release enforcement; S11 approval or S13 health is insufficient; RD14. |
+| U04-R | U02/U04/U16 | Qualify the implemented S12 PostgreSQL postflight/release gate, installed-source/pin readback, held-tool admission and rollback on the actual operator host; S11 approval or S13 health is insufficient; RD14. |
 | U04-C | U04/U05/U11/U13 | Aggregate operation/readiness/accounting catalogue, acquisition lifecycle, concurrency and actual connector/KeywordMoves coverage; RD12/RD18/RD19. |
 | U07-Q | U02/U05/U07/U13/U16 | Native service/vault, provider and inbound API matrix, model downloads/cache paths and installed/runnable/qualified readiness; RD01–RD04. |
 | U08-T | U01/U04/U08/U14 | Existing fenced reasoning/accounting plus ensemble verification, temporal steering, atomic leaf scheduling and active research; RD05–RD09. |

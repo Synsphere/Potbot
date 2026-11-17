@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { UpgradeRecord } from "../../../lib/tool-upgrades.ts";
+import { releaseStatus, type UpgradeRecord } from "../../../lib/tool-upgrades.ts";
 import styles from "../apis/setup.module.css";
 
 type Workspace = { id: string; name: string };
@@ -52,7 +52,7 @@ export default function ToolUpgradeSetup() {
       });
       if (!response.ok) throw new Error("cannot approve");
       await refresh(workspaceId);
-      setNotice(action === "approve" ? "Upgrade approved. The host operator must execute it and repin verified binaries." : "Upgrade rejected.");
+      setNotice(action === "approve" ? "Upgrade approved. The host operator must verify the installed version and complete postflight before release." : "Upgrade rejected.");
     } catch { setNotice("Approval failed or the evidence changed. Refresh and review before retrying."); }
     finally { setBusy(false); }
   }
@@ -85,7 +85,10 @@ export default function ToolUpgradeSetup() {
           <button type="button" disabled={busy} onClick={() => void decide(item, "approve")}>Approve upgrade</button>
           <button type="button" disabled={busy} onClick={() => void decide(item, "reject")}>Reject</button>
         </div>}
-        {item.state === "awaiting_repin" && <p className={styles.subtle}>Activation completed; awaiting host-reviewed runtime executable pins.</p>}
+        {item.state === "awaiting_repin" && (!item.releaseState || item.releaseState === "none") && <p className={styles.subtle}>Activation completed; awaiting host-reviewed runtime executable pins.</p>}
+        <p role={releaseStatus(item).attention ? "alert" : undefined} className={styles.subtle}>
+          <strong>{releaseStatus(item).label}.</strong> {releaseStatus(item).detail}
+        </p>
         {item.state === "indeterminate" && <p role="alert">Operator reconciliation required. No automatic retry will occur.</p>}
       </article>)}
       {!items.length && !notice && <p>No tested upgrades have been published for this workspace.</p>}

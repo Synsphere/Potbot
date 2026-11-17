@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from potbot.api.ui_tool_upgrades import ToolApprovalClaim, UiToolUpgradeStore
     from potbot.domain.auth import WorkspaceContext
     from potbot.tools.shared_tool_upgrades import SharedToolUpgradeManager
+    from potbot.tools.tool_release_gate_s12 import ToolReleaseAuthority
 
 
 class ToolApprovalWorker:
@@ -171,31 +172,18 @@ class ToolApprovalWorker:
         return {"id": str(operation), "state": "awaiting_repin"}
 
     def confirm_repin(self, *, operation: UUID, agent_id: UUID) -> dict[str, object]:
-        """Host-only after operator reloads pinned executable hashes and image."""
-        data = self.approvals.inspect(self.context, operation)
-        digest = data.get("evidenceSha256")
-        if not isinstance(digest, str) or data["state"] != "awaiting_repin":
-            raise StateMismatchError("S11 operation does not await runtime pins")
-        inspected = self.manager.inspect(
-            workspace_id=self.context.workspace_id, agent_id=agent_id, operation_id=operation
+        """Host-only readback; S12 postflight is still required before release."""
+        if agent_id != self.agent_id:
+            raise ScopeDeniedError("S12 repin belongs to another registered Agent")
+        return self.release_authority().record_repin(operation=operation)
+
+    def release_authority(self) -> ToolReleaseAuthority:
+        from potbot.tools.tool_release_gate_s12 import ToolReleaseAuthority
+
+        return ToolReleaseAuthority(
+            approvals=self.approvals,
+            manager=self.manager,
+            context=self.context,
+            agent_id=self.agent_id,
+            setup_token=self.setup_token,
         )
-        if inspected["state"] != "active" or inspected["test_evidence_sha256"] != digest:
-            raise StateMismatchError("S11 operator reloaded a different tool revision")
-        proposal = self.manager.runtime_entrypoint_updates(
-            workspace_id=self.context.workspace_id,
-            agent_id=agent_id,
-            operation_id=operation,
-        )
-        live = dict(self.manager.runtime.tool_entrypoints)
-        required = proposal["pins"]
-        retired = proposal["remove_prior_pins"]
-        if (
-            not isinstance(required, dict)
-            or not isinstance(retired, list)
-            or any(live.get(path) != digest for path, digest in required.items())
-            or any(path in live for path in retired)
-        ):
-            raise StateMismatchError(
-                "S11 live runtime executable pins differ from approved release"
-            )
-        return self.approvals.confirm_repin(self.context, operation=operation, tested_sha256=digest)

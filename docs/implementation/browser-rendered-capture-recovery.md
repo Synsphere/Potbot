@@ -1,7 +1,40 @@
-# Browser rendered capture recovery — 1 November 2026
+# Browser rendered capture recovery
+
+## Current follow-through — 17 November 2026
+
+At source baseline `413494517bd359dd908fcfd9571a22789b24ebb3`, the
+[rendered-worker matrix](https://github.com/kieransimkin/potbot/actions/runs/43501963299)
+failed only in the `playwright-stealth` profile. The accessibility/action case
+timed out at the initial `Page.captureScreenshot` surface read after about six
+seconds, before the semantic action. The other three profiles passed. This is
+different from the completed native capture error described in the historical
+note below.
+
+The current patch retains the existing six-second capture deadline and permits
+the view fallback only after the precise completed native error. A timeout or
+cancellation now permanently fences the **worker instance**, including later
+capture and mutation requests. Direct concurrent captures have one owner. The
+worker flushes one bounded failure with `session_fenced: true`, then closes its
+private pipe/browser. The host validates this failure-only marker and retires
+the channel immediately, even while process cleanup continues. A fenced worker
+cannot restart itself or replay an action; replacement belongs to the operator.
+Ordinary completed read rejection leaves a healthy channel usable.
+
+Regression tests cover timeout/cancellation followed by later requests,
+concurrent capture ownership, shutdown response, invalid fence markers and host
+channel retirement. The new failure cases were also checked against the original
+source, where they failed. These tests establish the recovery behavior, not a
+remedy for Chromium's underlying compositor stall.
+
+The graphical matrix and actual Xpra/operator host still need rerunning at the
+final patch commit. This implementation environment denied AF_UNIX sockets and
+could not supply the private display/native endpoint setup. No browser profile
+was relabelled as qualified and no timeout was increased to hide the failure.
+
+## Historical repair — 1 November 2026
 
 Baseline: `main` at `4c52d8b4402fec12ee1a8eb4e6f6795805f62ccd`.
-Status: source patch prepared; **not merged or live-host qualified**.
+Status at that historical checkpoint: source patch prepared; **not merged or live-host qualified**.
 
 ## Confirmed failure and bounded repair
 

@@ -83,7 +83,7 @@ def test_enrollment_pin_migration_preserves_existing_grant_fingerprint(app_env):
                 ),
             ),
         )
-    assert migrate(app_env.admin_dsn, schema)[-1] == 37
+    assert migrate(app_env.admin_dsn, schema)[-1] == application_migrations()[-1].version
     with Database(app_env.db.dsn, schema).transaction(actor) as connection:
         published = current_cog_policy(connection, actor, agent)
         assert published is not None

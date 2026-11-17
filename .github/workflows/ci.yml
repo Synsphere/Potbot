@@ -151,6 +151,20 @@ jobs:
         run: >-
           uv run --locked python -m pytest -q
           tests/integration/test_sandbox_transport_recovery.py tests/integration/test_python_profile_cog.py
+      - name: Verify shared-tool release migration, RLS and recovery on PostgreSQL
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/integration/test_shared_tool_release_s12.py
+          tests/integration/test_cog_grant_administration.py
+          --junitxml=artifacts/shared-tool-release-s12.xml
+      - name: Retain shared-tool release acceptance
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: shared-tool-release-s12
+          path: artifacts/shared-tool-release-s12.xml
+          if-no-files-found: warn
+          retention-days: 14
       - name: Qualify MODEL.md context, ACLs, recovery and refresh against PostgreSQL
         run: >-
           uv run --locked python -m pytest -q

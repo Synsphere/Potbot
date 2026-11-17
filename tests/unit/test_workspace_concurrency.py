@@ -24,6 +24,21 @@ COMMIT = "c" * 40
 
 
 class SharedWorkspaceTests(unittest.TestCase):
+    def test_shared_tool_tree_read_covers_other_tools_and_workspaces(self) -> None:
+        tree = AccessResource("shared_tool", "*", "read")
+        writer = AccessResource("shared_tool", "another", "write")
+        self.assertTrue(conflict(tree, writer))
+        self.assertTrue(conflict(tree, writer, same_workspace=False))
+        self.assertFalse(conflict(tree, AccessResource("shared_tool", "another", "read")))
+        self.assertFalse(
+            conflict(
+                AccessResource("shared_tool", "stemlab", "read"),
+                AccessResource("shared_tool", "another", "write"),
+            )
+        )
+        with self.assertRaises(InvalidInputError):
+            AccessResource("shared_tool", "*", "write")
+
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

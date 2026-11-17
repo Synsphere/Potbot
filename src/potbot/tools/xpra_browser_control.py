@@ -62,7 +62,20 @@ class BrowserControlChannel:
                             or type(data.get("ok")) is not bool
                         ):
                             raise ValueError("unexpected browser worker response")
+                        if "session_fenced" in data and (
+                            type(data["session_fenced"]) is not bool or data["ok"]
+                        ):
+                            raise ValueError("invalid browser session-fence marker")
                         if not data["ok"]:
+                            if data.get("session_fenced") is True:
+                                # A failed observation can leave a native CDP
+                                # request unresolved even though it cannot have
+                                # mutated the page. Retire the channel before
+                                # another caller can write while cleanup runs.
+                                self._fenced = True
+                                raise StateMismatchError(
+                                    "controlled browser requires operator replacement"
+                                )
                             # Older rootfs workers may not report an
                             # indeterminate flag. Mutation is STILL uncertain.
                             if (

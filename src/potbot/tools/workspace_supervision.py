@@ -93,7 +93,10 @@ class WorkspaceLeaseGuard:
             operation,
             idempotency_key,
             "unknown",
-            (AccessResource("workspace", "*", "write"),),
+            (
+                AccessResource("workspace", "*", "write"),
+                AccessResource("shared_tool", "*", "read"),
+            ),
             identity.image_digest,
         )
         return cls(ledger, request, ttl_seconds=ttl_seconds, interval_seconds=interval_seconds)

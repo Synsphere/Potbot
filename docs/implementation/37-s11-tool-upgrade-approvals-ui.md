@@ -2,6 +2,12 @@
 
 **Baseline:** S9 + S10; registered, operator-owned native credential vault from S8 and S7 `/etc/ai` history watch. Migration **28** is additive: two workspace-RLS tables (`ui_tool_upgrade_approvals`, `ui_tool_upgrade_audit`), a single active approval, CAS revisions, state fencing, and append-only audit evidence. Original migration checksums are unchanged.
 
+**17 November 2026 follow-through:** migration **38** adds the
+[S12 postflight/release gate](s12-tool-release-and-execution-qualification.md).
+The original approval workflow remains, but `confirm-pins` now records a held
+`repinned` phase. Only successful independent postflight releases changed bits.
+The public page displays release state and evidence hashes alongside S11 state.
+
 ## Non-secret public workflow
 
 | State | Trigger | Effect |
@@ -10,7 +16,8 @@
 | approved / rejected | Operator frontend `/setup/tools` via Next BFF, workspace bearer + **separate setup capability**, exact Origin + revision/evidence CAS | A confirmed human decision only; **no physical activation** |
 | executing | Separate host `run-once` worker claims one agent-owned approved operation (PostgreSQL `FOR UPDATE SKIP LOCKED`) | Produces a worker-private token and fences concurrent claims |
 | awaiting_repin | Worker revalidates S9 journal against signed approval, then S9 atomically exchanges the tested installation | Prior binaries are no longer admitted until independent new executable SHA-256 pins are installed |
-| active | Host `confirm-pins` independently verifies the S9 active record and exact pins from an operator-reloaded manifest | Safe to expose the new executable under the existing dispatcher contracts |
+| awaiting_repin + releaseState=repinned | Host `confirm-pins` independently verifies the S9 active record and exact pins from an operator-reloaded manifest | Held until the original approved suite passes installed postflight |
+| active + releaseState=released | S12 host `postflight` verifies the exact binding and retains its passing evidence in PostgreSQL | Eligible under the existing dispatcher/grant contracts |
 | indeterminate | Process crash, failed/unknown outcome, evidence mismatch or missing postflight | Never automatically retried or promoted; manual host reconciliation required |
 
 A malicious workspace SQL client cannot simply set `state='approved'` and get code executed. The backend creates a versioned **HMAC-SHA-256 approval MAC** keyed by the existing native-vault `api.setup_token`, bound to workspace, operation, agent, slug, old/new commits, test evidence, suite, approver and revision. The host worker verifies that MAC using its **own native-vault readback**, not any value from PostgreSQL or the browser. Token rotation intentionally invalidates outstanding approvals until the operator reauthorizes them.
@@ -27,6 +34,10 @@ A malicious workspace SQL client cannot simply set `state='approved'` and get co
 ### Operator use (maintenance mode)
 
 Run migration 28 with Potbot's ordinary admin migration tooling first. Use the same `POTBOT_CREDENTIAL_PROFILE` for the API process and host worker. Only the **operator** has the manifest/ledger and can publish a tested record or execute approved operations.
+
+For current code, apply all pending migrations through **38** and follow the
+linked S12 sequence through `postflight`; the historical commands below stop at
+pin confirmation and are no longer sufficient to release an installation.
 
 ```bash
 PYTHONPATH=src python scripts/tool_approval_s11.py \

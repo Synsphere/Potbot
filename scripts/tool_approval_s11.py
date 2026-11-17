@@ -27,7 +27,21 @@ def main() -> int:
     parser.add_argument("--operation-id", type=UUID)
     parser.add_argument("--schema", default="potbot")
     parser.add_argument("--proposal-dir", type=Path, required=True)
-    parser.add_argument("action", choices=("publish", "run-once", "confirm-pins"))
+    parser.add_argument(
+        "--plan", type=Path, help="The original independently approved S9 test plan"
+    )
+    parser.add_argument("--confirm-reconciled", action="store_true")
+    parser.add_argument(
+        "action",
+        choices=(
+            "publish",
+            "run-once",
+            "confirm-pins",
+            "postflight",
+            "status",
+            "reconcile-activation",
+        ),
+    )
     args = parser.parse_args()
     try:
         from potbot.api.ui_tool_upgrades import UiToolUpgradeStore
@@ -59,7 +73,9 @@ def main() -> int:
             )
 
         store = SharedToolStore(ledger=ledger, shared_root=paths.shared_tools, authorize=authorized)
-        if args.action == "publish":
+        if args.action == "status":
+            result = approvals.inspect(context, args.operation_id)
+        elif args.action == "publish":
             manager = SharedToolUpgradeManager(
                 store=store, runtime=paths.runtime(), homes=homes, authorize=authorized
             )
@@ -90,11 +106,27 @@ def main() -> int:
                     agent_id=args.agent_id,
                     setup_token=CredentialStore().get("api.setup_token"),
                 )
-                result = (
-                    worker.run_once()
-                    if args.action == "run-once"
-                    else worker.confirm_repin(operation=args.operation_id, agent_id=args.agent_id)
-                )
+                if args.action == "run-once":
+                    result = worker.run_once()
+                elif args.action == "confirm-pins":
+                    result = worker.confirm_repin(
+                        operation=args.operation_id, agent_id=args.agent_id
+                    )
+                elif args.action == "reconcile-activation":
+                    result = worker.release_authority().reconcile_activation(
+                        operation=args.operation_id, confirm=args.confirm_reconciled
+                    )
+                else:
+                    if args.plan is None:
+                        raise InvalidInputError(
+                            "Postflight requires the original approved test plan"
+                        )
+                    from tool_upgrade_s9 import _plan
+
+                    _, suite, _ = _plan(args.plan)
+                    authority = worker.release_authority()
+                    operator.bind_tool_release_authority(authority)
+                    result = authority.postflight(operation=args.operation_id, suite=suite)
         print(json.dumps({"schema": "potbot-s11-worker/v1", "result": result}, sort_keys=True))
         return 0
     except Exception as exc:

@@ -69,7 +69,11 @@ class ToolWriteGrant:
         if (
             request.operation not in {"tool.install", "tool.upgrade"}
             or request.effect != "write"
-            or request.resources != (AccessResource("shared_tool", self.slug, "write"),)
+            or request.resources
+            != (
+                AccessResource("shared_tool", self.slug, "write"),
+                AccessResource("shared_tool", "*", "read"),
+            )
             or request.workspace_id != self.agent.workspace_id
             or request.actor_id != self.agent.agent_id
             or request.image_digest != runtime.image_digest

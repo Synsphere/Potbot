@@ -302,6 +302,9 @@ def configured_native_cogs(
     homes = AgentHomeRegistry(ledger, workspace_name=profile["workspace_name"])
     if any(homes.lookup(actor.workspace_id, agent) is None for agent in agents):
         raise ScopeDeniedError("Native Cog cohort has an unregistered Agent workspace home.")
+    from potbot.tools.tool_release_gate_s12 import bind_installed_tool_releases
+
+    runtime = bind_installed_tool_releases(db, actor, runtime, ledger, homes)
     backend = SharedWorkspaceBubblewrapBackend(runtime)
     if backend.operator_attachment is None:
         raise StateMismatchError("Native Cog jobs require a live installed operator.")

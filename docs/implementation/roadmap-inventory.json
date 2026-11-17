@@ -219,12 +219,12 @@
     },
     {
       "path": "docs/implementation/01-phase1-implementation.md",
-      "sha256": "b039ce5aa79389769f1629bab5cc44e446d612d20ed4aa99a6c35321ed4333ff",
-      "bytes": 7730,
+      "sha256": "52c768833a0eb7d0b22bb2c68237e5b64331a22edd24491cc6fe68878bddcca4",
+      "bytes": 8566,
       "kind": "narrative_text",
-      "text_sha256": "b039ce5aa79389769f1629bab5cc44e446d612d20ed4aa99a6c35321ed4333ff",
-      "characters": 7726,
-      "lines": 81,
+      "text_sha256": "52c768833a0eb7d0b22bb2c68237e5b64331a22edd24491cc6fe68878bddcca4",
+      "characters": 8562,
+      "lines": 90,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -619,12 +619,12 @@
     },
     {
       "path": "docs/implementation/37-s11-tool-upgrade-approvals-ui.md",
-      "sha256": "712b5d7233da46aa10c6acfff954729f7c46318fa549cf8685dacf7fdff0d5e1",
-      "bytes": 6038,
+      "sha256": "813b314c2ccfa11b32568f633f7f667e2a358af1abe647efb12490ca3a6a6cc5",
+      "bytes": 6867,
       "kind": "narrative_text",
-      "text_sha256": "712b5d7233da46aa10c6acfff954729f7c46318fa549cf8685dacf7fdff0d5e1",
-      "characters": 6032,
-      "lines": 66,
+      "text_sha256": "813b314c2ccfa11b32568f633f7f667e2a358af1abe647efb12490ca3a6a6cc5",
+      "characters": 6861,
+      "lines": 77,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -989,12 +989,12 @@
     },
     {
       "path": "docs/implementation/browser-rendered-capture-recovery.md",
-      "sha256": "e4611e6b56447a21b3e05c8c5b075adf06915079f14488425ad50157ca7030a7",
-      "bytes": 2768,
+      "sha256": "40b128775ee4b03805e17825215fa85d86c590c4d88ba327ad87fcfcb788bf3c",
+      "bytes": 4728,
       "kind": "narrative_text",
-      "text_sha256": "e4611e6b56447a21b3e05c8c5b075adf06915079f14488425ad50157ca7030a7",
-      "characters": 2766,
-      "lines": 51,
+      "text_sha256": "40b128775ee4b03805e17825215fa85d86c590c4d88ba327ad87fcfcb788bf3c",
+      "characters": 4724,
+      "lines": 84,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1254,6 +1254,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/implementation/python-profiler-installed-qualification.md",
+      "sha256": "cb7acc791d4c9513787a4b2f3e6f16294c5b79b3cff0e4a10d3b65c2c21b63fd",
+      "bytes": 19482,
+      "kind": "narrative_text",
+      "text_sha256": "cb7acc791d4c9513787a4b2f3e6f16294c5b79b3cff0e4a10d3b65c2c21b63fd",
+      "characters": 19482,
+      "lines": 196,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": "docs/implementation/recent-potbot-development-reconciliation.md",
       "sha256": "7cbec6c43ccb253ca428f91d9db3a49e321f34c2f8afe516c85928ec981e13d0",
       "bytes": 54699,
@@ -1271,6 +1281,16 @@
       "text_sha256": "f74a7edef4f4e83855709487fd1a13f1751f1a2de33a08e44471ff551443af8d",
       "characters": 69702,
       "lines": 4020,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "sha256": "481676f1e638c5ff921ddfd521dd5bae6d0c9c25105ea83a86bee736f04e7bbd",
+      "bytes": 15529,
+      "kind": "narrative_text",
+      "text_sha256": "481676f1e638c5ff921ddfd521dd5bae6d0c9c25105ea83a86bee736f04e7bbd",
+      "characters": 15529,
+      "lines": 256,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1395,12 +1415,12 @@
     },
     {
       "path": "docs/implementation/unified-development-roadmap.md",
-      "sha256": "118038ed94626b0f26f48bacbb07cae3d5951712305ae491f168d47ee1995b15",
-      "bytes": 30844,
+      "sha256": "58d18392038ac4b90e44e80c431b438a11ad1b48fe0315c960446508e164fb9e",
+      "bytes": 31861,
       "kind": "narrative_text",
-      "text_sha256": "118038ed94626b0f26f48bacbb07cae3d5951712305ae491f168d47ee1995b15",
-      "characters": 30688,
-      "lines": 224,
+      "text_sha256": "58d18392038ac4b90e44e80c431b438a11ad1b48fe0315c960446508e164fb9e",
+      "characters": 31705,
+      "lines": 236,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -28442,10 +28462,10 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement or recover S12 post-activation postflight/release enforcement and rollback",
-        "Qualify immutable tools, per-tool maintenance writer and clean checkouts on the real host"
+        "Qualify power-loss persistence, native credential rotation/recovery and hostile concurrent maintenance on the supported filesystem/host.",
+        "Run complete activation, repin, real postflight, native operator restart and rollback on the signed-image qualified host."
       ],
-      "next_action": "For RD13 (All agents can use shared `/usr/local/tools`, with the requested agent-home `Tools` symlink (implemented as `/home/<agent>/Tools`); reusable assets remain shared, while mutations are operator-controlled. [Original installation design][tools29], [write fencing][tools30].): Close RD14/U04-R with a real gate state machine and denial before independent repin/postflight; preserve S11 foundations.",
+      "next_action": "For RD13 (All agents can use shared `/usr/local/tools`, with the requested agent-home `Tools` symlink (implemented as `/home/<agent>/Tools`); reusable assets remain shared, while mutations are operator-controlled. [Original installation design][tools29], [write fencing][tools30].): Run the S12 installed-host acceptance at the final commit; require exact original approval, installed pins, durable lease completion and retained passing postflight before release.",
       "review_families": [
         "tool-upgrade"
       ],
@@ -28454,7 +28474,7 @@
         "U04",
         "U16"
       ],
-      "assessment": "Requirement: All agents can use shared `/usr/local/tools`, with the requested agent-home `Tools` symlink (implemented as `/home/<agent>/Tools`); reusable assets remain shared, while mutations are operator-controlled. [Original installation design][tools29], [write fencing][tools30].. S9-S11 contain build/test/activation, independent runtime-pin proposals and confirm_repin checks. S12 is not established: current code only reads trusted_tool_release_gates in status and supplies no complete release-gate writer/enforcer."
+      "assessment": "Requirement: All agents can use shared `/usr/local/tools`, with the requested agent-home `Tools` symlink (implemented as `/home/<agent>/Tools`); reusable assets remain shared, while mutations are operator-controlled. [Original installation design][tools29], [write fencing][tools30].. S9-S11 retain staged build/test, signed operator approval and fenced activation. S12 now implements migration-38 PostgreSQL postflight/release, durable host denial projections, exact installed readback, independent repin, one-attempt postflight and controlled rollback. Normal and installed native launch admission fail closed for held or altered tools; interpreter and writable-mount bypasses are covered. This source implementation does not establish native-host qualification."
     },
     {
       "key": "recent-development:RD14",
@@ -28482,10 +28502,10 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement or recover S12 post-activation postflight/release enforcement and rollback",
-        "Qualify immutable tools, per-tool maintenance writer and clean checkouts on the real host"
+        "Qualify power-loss persistence, native credential rotation/recovery and hostile concurrent maintenance on the supported filesystem/host.",
+        "Run complete activation, repin, real postflight, native operator restart and rollback on the signed-image qualified host."
       ],
-      "next_action": "For RD14 (Qualified tool upgrade and release: stage/build/test/clean/review/activate, independent executable repin, postflight/release and rollback. [S9][upgrade35], [S10][upgrade36], [S11][upgrade37], [S13][operator39].): Close RD14/U04-R with a real gate state machine and denial before independent repin/postflight; preserve S11 foundations.",
+      "next_action": "For RD14 (Qualified tool upgrade and release: stage/build/test/clean/review/activate, independent executable repin, postflight/release and rollback. [S9][upgrade35], [S10][upgrade36], [S11][upgrade37], [S13][operator39].): Run the S12 installed-host acceptance at the final commit; require exact original approval, installed pins, durable lease completion and retained passing postflight before release.",
       "review_families": [
         "tool-upgrade"
       ],
@@ -28494,7 +28514,7 @@
         "U04",
         "U16"
       ],
-      "assessment": "Requirement: Qualified tool upgrade and release: stage/build/test/clean/review/activate, independent executable repin, postflight/release and rollback. [S9][upgrade35], [S10][upgrade36], [S11][upgrade37], [S13][operator39].. S9-S11 contain build/test/activation, independent runtime-pin proposals and confirm_repin checks. S12 is not established: current code only reads trusted_tool_release_gates in status and supplies no complete release-gate writer/enforcer."
+      "assessment": "Requirement: Qualified tool upgrade and release: stage/build/test/clean/review/activate, independent executable repin, postflight/release and rollback. [S9][upgrade35], [S10][upgrade36], [S11][upgrade37], [S13][operator39].. S9-S11 retain staged build/test, signed operator approval and fenced activation. S12 now implements migration-38 PostgreSQL postflight/release, durable host denial projections, exact installed readback, independent repin, one-attempt postflight and controlled rollback. Normal and installed native launch admission fail closed for held or altered tools; interpreter and writable-mount bypasses are covered. This source implementation does not establish native-host qualification."
     },
     {
       "key": "recent-development:RD15",
@@ -28607,7 +28627,7 @@
         "Qualify watcher loss/overflow, rollback, restart ownership, protected /etc/ai-past and indeterminate lease retention",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "For RD17 (Operator lifetime, Xpra controller ownership, real GUI integrity/recovery and durable-state policy. [S13][operator39], [S14][xpra41], [S15][gui15], [S16][gui46], [S17][hostlogs47].): Extend existing operator journal with real host fault acceptance; never release work on unknown watcher state. Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms. Write an explicit authority and migration contract under U01/U06, preserving retained identities and immutable application migration history.",
+      "next_action": "For RD17 (Operator lifetime, Xpra controller ownership, real GUI integrity/recovery and durable-state policy. [S13][operator39], [S14][xpra41], [S15][gui15], [S16][gui46], [S17][hostlogs47].): Extend existing operator journal with real host fault acceptance; never release work on unknown watcher state. Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery. Write an explicit authority and migration contract under U01/U06, preserving retained identities and immutable application migration history.",
       "review_families": [
         "configuration",
         "browser",
@@ -28623,7 +28643,7 @@
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Operator lifetime, Xpra controller ownership, real GUI integrity/recovery and durable-state policy. [S13][operator39], [S14][xpra41], [S15][gui15], [S16][gui46], [S17][hostlogs47].. Writable /etc/ai and protected reverse history have operator monitoring/lifetime contracts. Complete every-write coverage depends on the qualified native watcher, overflow/loss handling and recovery. Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates. Historical local SQLite enrollment/operator journals coexist with PostgreSQL application authority. Source presence is not an approved migration or permission to maintain two authoritative writers."
+      "assessment": "Requirement: Operator lifetime, Xpra controller ownership, real GUI integrity/recovery and durable-state policy. [S13][operator39], [S14][xpra41], [S15][gui15], [S16][gui46], [S17][hostlogs47].. Writable /etc/ai and protected reverse history have operator monitoring/lifetime contracts. Complete every-write coverage depends on the qualified native watcher, overflow/loss handling and recovery. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main. Historical local SQLite enrollment/operator journals coexist with PostgreSQL application authority. Source presence is not an approved migration or permission to maintain two authoritative writers."
     },
     {
       "key": "recent-development:RD18",
@@ -28738,7 +28758,7 @@
         "Qualify real multi-agent Xpra, child-worker context/provenance, admitted egress and lifecycle recovery",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "For RD20 (Same visible Chromium controlled by Xpra, Playwright/Patchright, direct mouse/keyboard/CDP, accessibility and DevTools; rendered output sampling. [Browser design][browserui], [S37][browser37], [S42][browser42], [rendered acceptance][rendered].): Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms.",
+      "next_action": "For RD20 (Same visible Chromium controlled by Xpra, Playwright/Patchright, direct mouse/keyboard/CDP, accessibility and DevTools; rendered output sampling. [Browser design][browserui], [S37][browser37], [S42][browser42], [rendered acceptance][rendered].): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery.",
       "review_families": [
         "browser"
       ],
@@ -28750,7 +28770,7 @@
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Same visible Chromium controlled by Xpra, Playwright/Patchright, direct mouse/keyboard/CDP, accessibility and DevTools; rendered output sampling. [Browser design][browserui], [S37][browser37], [S42][browser42], [rendered acceptance][rendered].. Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates."
+      "assessment": "Requirement: Same visible Chromium controlled by Xpra, Playwright/Patchright, direct mouse/keyboard/CDP, accessibility and DevTools; rendered output sampling. [Browser design][browserui], [S37][browser37], [S42][browser42], [rendered acceptance][rendered].. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main."
     },
     {
       "key": "recent-development:RD21",
@@ -28783,7 +28803,7 @@
         "Require denied-authority, version drift, browser identity and unsupported-feature cases",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "For RD21 (Browser networking sufficient for admitted real workflows and ecosystem compatibility. [S39 egress/input][egress40], [C00\u2013C09][compat].): Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms. Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service.",
+      "next_action": "For RD21 (Browser networking sufficient for admitted real workflows and ecosystem compatibility. [S39 egress/input][egress40], [C00\u2013C09][compat].): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery. Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service.",
       "review_families": [
         "browser",
         "compatibility"
@@ -28800,7 +28820,7 @@
         "U15",
         "U16"
       ],
-      "assessment": "Requirement: Browser networking sufficient for admitted real workflows and ecosystem compatibility. [S39 egress/input][egress40], [C00\u2013C09][compat].. Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility."
+      "assessment": "Requirement: Browser networking sufficient for admitted real workflows and ecosystem compatibility. [S39 egress/input][egress40], [C00\u2013C09][compat].. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility."
     },
     {
       "key": "recent-development:RD22",
@@ -28827,7 +28847,7 @@
         "Qualify real multi-agent Xpra, child-worker context/provenance, admitted egress and lifecycle recovery",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "For RD22 (Practical browser session navigation and inspectable original source. [Browser design][browserui], [rendered acceptance][rendered].): Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms.",
+      "next_action": "For RD22 (Practical browser session navigation and inspectable original source. [Browser design][browserui], [rendered acceptance][rendered].): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery.",
       "review_families": [
         "browser"
       ],
@@ -28839,7 +28859,7 @@
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Practical browser session navigation and inspectable original source. [Browser design][browserui], [rendered acceptance][rendered].. Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates."
+      "assessment": "Requirement: Practical browser session navigation and inspectable original source. [Browser design][browserui], [rendered acceptance][rendered].. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main."
     },
     {
       "key": "recent-development:RD23",
@@ -30899,10 +30919,11 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport",
-        "Profile comparable workloads with source/build identity and declared overhead"
+        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport.",
+        "Obtain installed profiler evidence on the published signed worker image and actual native Syn host; fresh-controller reconstruction is not a service restart.",
+        "Qualify service/native-node restart and lost-reply faults; retain source/build identity and declared profiling overhead for comparable workloads."
       ],
-      "next_action": "For G03 (Remote development and compute targets): Keep specialist profiles disabled until their actual target and separate conformance evidence exist.",
+      "next_action": "For G03 (Remote development and compute targets): Run scripts/qualify_python_profile_cog.py on the already provisioned qualified host at the committed source revision; retain the report and separately qualify service/native-node restart, lost replies and each other backend.",
       "review_families": [
         "devices"
       ],
@@ -31240,10 +31261,11 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport",
-        "Profile comparable workloads with source/build identity and declared overhead"
+        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport.",
+        "Obtain installed profiler evidence on the published signed worker image and actual native Syn host; fresh-controller reconstruction is not a service restart.",
+        "Qualify service/native-node restart and lost-reply faults; retain source/build identity and declared profiling overhead for comparable workloads."
       ],
-      "next_action": "For G12 (Debugger completeness and postmortem inspection): Keep specialist profiles disabled until their actual target and separate conformance evidence exist.",
+      "next_action": "For G12 (Debugger completeness and postmortem inspection): Run scripts/qualify_python_profile_cog.py on the already provisioned qualified host at the committed source revision; retain the report and separately qualify service/native-node restart, lost replies and each other backend.",
       "review_families": [
         "devices"
       ],
@@ -31278,11 +31300,12 @@
       "evidence_state": "reviewed_partial",
       "blockers": [
         "Complete real loss-aware syscall/task-exit accounting for every executable Cog route",
-        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport",
+        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport.",
         "Keep 60 BPM, 180-second weighted glow, separate 2-second flash and every-agent coverage; top-eight busy-CPU shares are partial",
-        "Profile comparable workloads with source/build identity and declared overhead"
+        "Obtain installed profiler evidence on the published signed worker image and actual native Syn host; fresh-controller reconstruction is not a service restart.",
+        "Qualify service/native-node restart and lost-reply faults; retain source/build identity and declared profiling overhead for comparable workloads."
       ],
-      "next_action": "For G13 (Distributed traces and comparable profiling): Complete U03 before the joint Syn/sandbox live deployment gate; use registered-worker qualifiers and preserve exact metric denominators. Keep specialist profiles disabled until their actual target and separate conformance evidence exist.",
+      "next_action": "For G13 (Distributed traces and comparable profiling): Complete U03 before the joint Syn/sandbox live deployment gate; use registered-worker qualifiers and preserve exact metric denominators. Run scripts/qualify_python_profile_cog.py on the already provisioned qualified host at the committed source revision; retain the report and separately qualify service/native-node restart, lost replies and each other backend.",
       "review_families": [
         "accounting",
         "devices"
@@ -31319,10 +31342,10 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Implement or recover S12 post-activation postflight/release enforcement and rollback",
-        "Qualify immutable tools, per-tool maintenance writer and clean checkouts on the real host"
+        "Qualify power-loss persistence, native credential rotation/recovery and hostile concurrent maintenance on the supported filesystem/host.",
+        "Run complete activation, repin, real postflight, native operator restart and rollback on the signed-image qualified host."
       ],
-      "next_action": "For G14 (Reproducible environments and dependency updates): Close RD14/U04-R with a real gate state machine and denial before independent repin/postflight; preserve S11 foundations.",
+      "next_action": "For G14 (Reproducible environments and dependency updates): Run the S12 installed-host acceptance at the final commit; require exact original approval, installed pins, durable lease completion and retained passing postflight before release.",
       "review_families": [
         "tool-upgrade"
       ],
@@ -31331,7 +31354,7 @@
         "U04",
         "U16"
       ],
-      "assessment": "Requirement: Reproducible environments and dependency updates. S9-S11 contain build/test/activation, independent runtime-pin proposals and confirm_repin checks. S12 is not established: current code only reads trusted_tool_release_gates in status and supplies no complete release-gate writer/enforcer."
+      "assessment": "Requirement: Reproducible environments and dependency updates. S9-S11 retain staged build/test, signed operator approval and fenced activation. S12 now implements migration-38 PostgreSQL postflight/release, durable host denial projections, exact installed readback, independent repin, one-attempt postflight and controlled rollback. Normal and installed native launch admission fail closed for held or altered tools; interpreter and writable-mount bypasses are covered. This source implementation does not establish native-host qualification."
     },
     {
       "key": "tool-gaps:G15",
@@ -31672,14 +31695,17 @@
         "Preserve C01-C07 and direct trigger/emitter monitoring for nested and pure Cogs",
         "Qualify fan-in, loss, retention and complete replay without fabricating terminal measurements",
         "Reconcile all selected IBM/DanceFlow/WordPress capabilities and concurrency footprints",
-        "Renew this audit when source, requirement, implementation evidence or GitHub scope changes"
+        "Renew this audit when source, requirement, implementation evidence or GitHub scope changes",
+        "Retain independent signed-image/native-runtime and specialist qualification reports.",
+        "Run the full application qualified gate at the final commit on its required PostgreSQL/sandbox host."
       ],
-      "next_action": "For T01.4 (Build matrix and stage acceptance harness): Extend the existing capability/installation registry and operator UI; do not create a second tool registry. Extend the current registered runtime; reject raw adapter dispatch and model-supplied authority. Route each producer through the existing journal and verify its real root/child receipts and cursor recovery. Run source/review drift checks in every change; reopen affected dispositions explicitly.",
+      "next_action": "Use the fresh source-bound report and inspect its explicit qualification_scope; run installed-host gates independently.",
       "review_families": [
         "catalogue",
         "tool-schema",
         "events",
-        "audit"
+        "audit",
+        "stage-acceptance"
       ],
       "reviewed_unified_owners": [
         "U00",
@@ -31691,7 +31717,7 @@
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Build matrix and stage acceptance harness. T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool. Typed installed Cogs, sealed ports, controller-only grants and distinct transformation/dispatch/verification receipts are implemented for selected core operations. Every adapter and specialist still needs its own admitted binding. The canonical execution journal and read/replay APIs exist, with core Cog provenance acceptance. Universal producer and causal-tree adoption remains a requirement, not a consequence of having an event endpoint. Separate retained source claims, reviewed obligations and executed acceptance. Preserve 21 ID namespaces and both P plan versions; audit closure does not close product work."
+      "assessment": "Build matrix and stage acceptance harness: T01.4 now invalidates stale reports before execution, retains unique run directories and actual source manifests, and checks source stability plus real nonempty unskipped PostgreSQL/sandbox JUnit cases. Fully-qualified is explicitly limited to application PostgreSQL and sandbox tests; production_runtime_qualified stays false. The broader canonical stage remains partial until its required acceptance is retained."
     },
     {
       "key": "tools:T02.1",
@@ -32379,7 +32405,7 @@
         "Qualify real multi-agent Xpra, child-worker context/provenance, admitted egress and lifecycle recovery",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "For T06.1 (Playwright controlled browser service): Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms.",
+      "next_action": "For T06.1 (Playwright controlled browser service): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery.",
       "review_families": [
         "browser"
       ],
@@ -32391,7 +32417,7 @@
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Playwright controlled browser service. Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates."
+      "assessment": "Requirement: Playwright controlled browser service. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main."
     },
     {
       "key": "tools:T06.2",
@@ -32419,7 +32445,7 @@
         "Qualify real multi-agent Xpra, child-worker context/provenance, admitted egress and lifecycle recovery",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "For T06.2 (Chrome DevTools and network debugger): Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms.",
+      "next_action": "For T06.2 (Chrome DevTools and network debugger): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery.",
       "review_families": [
         "browser"
       ],
@@ -32431,7 +32457,7 @@
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Chrome DevTools and network debugger. Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates."
+      "assessment": "Requirement: Chrome DevTools and network debugger. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main."
     },
     {
       "key": "tools:T06.3",
@@ -32459,7 +32485,7 @@
         "Qualify real multi-agent Xpra, child-worker context/provenance, admitted egress and lifecycle recovery",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "For T06.3 (Visual regression, accessibility and desktop fallback): Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms.",
+      "next_action": "For T06.3 (Visual regression, accessibility and desktop fallback): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery.",
       "review_families": [
         "browser"
       ],
@@ -32471,7 +32497,7 @@
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Visual regression, accessibility and desktop fallback. Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates."
+      "assessment": "Requirement: Visual regression, accessibility and desktop fallback. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main."
     },
     {
       "key": "tools:T06.4",
@@ -32499,7 +32525,7 @@
         "Qualify real multi-agent Xpra, child-worker context/provenance, admitted egress and lifecycle recovery",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "For T06.4 (Browser reliability benchmark and test fixtures): Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms.",
+      "next_action": "For T06.4 (Browser reliability benchmark and test fixtures): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery.",
       "review_families": [
         "browser"
       ],
@@ -32511,7 +32537,7 @@
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Browser reliability benchmark and test fixtures. Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates."
+      "assessment": "Requirement: Browser reliability benchmark and test fixtures. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main."
     },
     {
       "key": "tools:T07.1",
@@ -32892,10 +32918,11 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport",
-        "Profile comparable workloads with source/build identity and declared overhead"
+        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport.",
+        "Obtain installed profiler evidence on the published signed worker image and actual native Syn host; fresh-controller reconstruction is not a service restart.",
+        "Qualify service/native-node restart and lost-reply faults; retain source/build identity and declared profiling overhead for comparable workloads."
       ],
-      "next_action": "For T09.1 (Python, statistics and symbolic computation): Keep specialist profiles disabled until their actual target and separate conformance evidence exist.",
+      "next_action": "For T09.1 (Python, statistics and symbolic computation): Run scripts/qualify_python_profile_cog.py on the already provisioned qualified host at the committed source revision; retain the report and separately qualify service/native-node restart, lost replies and each other backend.",
       "review_families": [
         "devices"
       ],
@@ -32929,10 +32956,11 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport",
-        "Profile comparable workloads with source/build identity and declared overhead"
+        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport.",
+        "Obtain installed profiler evidence on the published signed worker image and actual native Syn host; fresh-controller reconstruction is not a service restart.",
+        "Qualify service/native-node restart and lost-reply faults; retain source/build identity and declared profiling overhead for comparable workloads."
       ],
-      "next_action": "For T09.2 (SMT, optimization and counterexamples): Keep specialist profiles disabled until their actual target and separate conformance evidence exist.",
+      "next_action": "For T09.2 (SMT, optimization and counterexamples): Run scripts/qualify_python_profile_cog.py on the already provisioned qualified host at the committed source revision; retain the report and separately qualify service/native-node restart, lost replies and each other backend.",
       "review_families": [
         "devices"
       ],
@@ -32966,10 +32994,11 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport",
-        "Profile comparable workloads with source/build identity and declared overhead"
+        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport.",
+        "Obtain installed profiler evidence on the published signed worker image and actual native Syn host; fresh-controller reconstruction is not a service restart.",
+        "Qualify service/native-node restart and lost-reply faults; retain source/build identity and declared profiling overhead for comparable workloads."
       ],
-      "next_action": "For T09.3 (Wolfram, domain mathematics and simulation): Keep specialist profiles disabled until their actual target and separate conformance evidence exist.",
+      "next_action": "For T09.3 (Wolfram, domain mathematics and simulation): Run scripts/qualify_python_profile_cog.py on the already provisioned qualified host at the committed source revision; retain the report and separately qualify service/native-node restart, lost replies and each other backend.",
       "review_families": [
         "devices"
       ],
@@ -33003,10 +33032,11 @@
       ],
       "evidence_state": "reviewed_partial",
       "blockers": [
-        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport",
-        "Profile comparable workloads with source/build identity and declared overhead"
+        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport.",
+        "Obtain installed profiler evidence on the published signed worker image and actual native Syn host; fresh-controller reconstruction is not a service restart.",
+        "Qualify service/native-node restart and lost-reply faults; retain source/build identity and declared profiling overhead for comparable workloads."
       ],
-      "next_action": "For T09.4 (Formal proof and model checking): Keep specialist profiles disabled until their actual target and separate conformance evidence exist.",
+      "next_action": "For T09.4 (Formal proof and model checking): Run scripts/qualify_python_profile_cog.py on the already provisioned qualified host at the committed source revision; retain the report and separately qualify service/native-node restart, lost replies and each other backend.",
       "review_families": [
         "devices"
       ],
@@ -33531,7 +33561,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U00",
       "title": "Repository audit and roadmap reconciliation",
-      "locator": "line:67",
+      "locator": "line:75",
       "source_claim": "requirements_only",
       "requirement_sha256": "8e02c7ec68153a9ea09c732dec24853b9d7a65b2a370e9a8f4738bfa9147c8a3",
       "unified_owners": [
@@ -33563,7 +33593,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U01",
       "title": "Durable execution and provenance",
-      "locator": "line:68",
+      "locator": "line:76",
       "source_claim": "requirements_only",
       "requirement_sha256": "9acdee3308aa30755f1fe04ec78556f755c8fdaea9f3650d1e91888677f1e70d",
       "unified_owners": [
@@ -33602,7 +33632,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U02",
       "title": "Sandbox and shared filesystem",
-      "locator": "line:69",
+      "locator": "line:77",
       "source_claim": "requirements_only",
       "requirement_sha256": "f27fdf68725090cd51f00f3e8e157e472beffda2bec5975494fa151feccd2fcb",
       "unified_owners": [
@@ -33636,7 +33666,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U03",
       "title": "Worker/Cog resource supervision",
-      "locator": "line:70",
+      "locator": "line:78",
       "source_claim": "requirements_only",
       "requirement_sha256": "6fd056f50d44fd62e2b1400ccaef0bd8fa3533bf3359fc38f87327b70ac49e54",
       "unified_owners": [
@@ -33670,7 +33700,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U04",
       "title": "Semantic tool platform",
-      "locator": "line:71",
+      "locator": "line:79",
       "source_claim": "requirements_only",
       "requirement_sha256": "7f1a1e829ccf1f5ddca50253821fed65731cd7210251bfe4e3ca4a1cf0c1f083",
       "unified_owners": [
@@ -33703,7 +33733,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U05",
       "title": "Artifact transfer and GitHub concurrency",
-      "locator": "line:72",
+      "locator": "line:80",
       "source_claim": "requirements_only",
       "requirement_sha256": "ed7818d7731f55710e5596d2c7140fe8019d9f7aea09798f7beb98c9325bcd3d",
       "unified_owners": [
@@ -33738,7 +33768,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U06",
       "title": "Syn identity and security",
-      "locator": "line:73",
+      "locator": "line:81",
       "source_claim": "requirements_only",
       "requirement_sha256": "b1c9ad84bd4653b301fc1c4018085bbe1682203c76101ec7699a150a61575e86",
       "unified_owners": [
@@ -33772,7 +33802,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U07",
       "title": "Models, providers and credentials",
-      "locator": "line:74",
+      "locator": "line:82",
       "source_claim": "requirements_only",
       "requirement_sha256": "fb5a6e3ca91f5eb19db215baa1ad991f2c8dfbaef5a49235b6078a3656f438aa",
       "unified_owners": [
@@ -33807,7 +33837,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U08",
       "title": "Reasoning graph and steering",
-      "locator": "line:75",
+      "locator": "line:83",
       "source_claim": "requirements_only",
       "requirement_sha256": "acd521ce50bb19d6a89620dbd8c6b7d22c0b5fdfbfc12473defc60181486ae9b",
       "unified_owners": [
@@ -33842,7 +33872,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U09",
       "title": "Prompt/context and MODEL.md",
-      "locator": "line:76",
+      "locator": "line:84",
       "source_claim": "requirements_only",
       "requirement_sha256": "bf7f84edb02e60ef8572c505c67b36685ed81f02f76d975b7579d467aec1c647",
       "unified_owners": [
@@ -33879,7 +33909,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U10",
       "title": "Memory and embeddings",
-      "locator": "line:77",
+      "locator": "line:85",
       "source_claim": "requirements_only",
       "requirement_sha256": "b6213afccf90e68ccc7c32c0570bfb65875adfcee9e8d122c302949b726b8a53",
       "unified_owners": [
@@ -33918,7 +33948,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U11",
       "title": "Plugin and skills ecosystem",
-      "locator": "line:78",
+      "locator": "line:86",
       "source_claim": "requirements_only",
       "requirement_sha256": "322a12f1c3178717f393a21212982f61c81d989ac76dfb3750bc2aa78fb7daf7",
       "unified_owners": [
@@ -33953,7 +33983,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U12",
       "title": "Browser automation",
-      "locator": "line:79",
+      "locator": "line:87",
       "source_claim": "requirements_only",
       "requirement_sha256": "aa5729d418f9e0fe07f81549990e6b9f43eec398d40b8162c1b9b3e989e51e9f",
       "unified_owners": [
@@ -33970,7 +34000,7 @@
         "Qualify real multi-agent Xpra, child-worker context/provenance, admitted egress and lifecycle recovery",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "For U12 (Browser automation): Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms.",
+      "next_action": "For U12 (Browser automation): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery.",
       "review_families": [
         "browser"
       ],
@@ -33982,7 +34012,7 @@
         "U13",
         "U16"
       ],
-      "assessment": "Requirement: Browser automation. Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates."
+      "assessment": "Requirement: Browser automation. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main."
     },
     {
       "key": "unified:U13",
@@ -33990,7 +34020,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U13",
       "title": "Next.js operator frontend",
-      "locator": "line:80",
+      "locator": "line:88",
       "source_claim": "requirements_only",
       "requirement_sha256": "61130383fd5028063cb79292776e3db7c15abb9d82b934f4fc4ccaff5e813962",
       "unified_owners": [
@@ -34025,7 +34055,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U14",
       "title": "Evaluation and adaptation",
-      "locator": "line:81",
+      "locator": "line:89",
       "source_claim": "requirements_only",
       "requirement_sha256": "ece56c3dd0f7832182cab7633829be39bed5d475573ed31c82e1a8e61ecd69a3",
       "unified_owners": [
@@ -34061,7 +34091,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U15",
       "title": "Automation and interoperability",
-      "locator": "line:82",
+      "locator": "line:90",
       "source_claim": "requirements_only",
       "requirement_sha256": "4d287b3521c0deaa365e86a77a852cab18577f972d57b0eeb333c4133c8051f1",
       "unified_owners": [
@@ -34094,9 +34124,9 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U16",
       "title": "CI, release and deployment qualification",
-      "locator": "line:83",
+      "locator": "line:91",
       "source_claim": "requirements_only",
-      "requirement_sha256": "1efa3f555eda945390798b6b2e583143ef7df832a5c29fdbe649faf374701cf5",
+      "requirement_sha256": "19916645c4b3202fbc609f873843a52b8d9849dca0de4f1920e198ff9af84538",
       "unified_owners": [
         "U16"
       ],
@@ -34121,7 +34151,7 @@
         "U06",
         "U16"
       ],
-      "assessment": "Requirement: CI, release and deployment qualification. Current launch, migration and package CI foundations are present; source previews are not the qualified operational baseline. Full backup/deletion-journal restore, outages, capacity and upgrade qualification remain required."
+      "assessment": "Requirement: CI, release and deployment qualification. Current launch, migration and package CI foundations are present; source previews are not the qualified operational baseline. Full backup/deletion-journal restore, outages, capacity and upgrade qualification remain required. November17 S12, T01.4 and installed-profiler workflow source changes retain the same independent full-CI and production-host qualification boundary."
     },
     {
       "key": "worker-gates:G1",
@@ -35313,10 +35343,10 @@
   "candidate_integration_files": [
     {
       "path": "frontend/package.json",
-      "sha256": "8334e79400eebccc78d3f3bc8cc272b83a0925941830d4958002d89ce51ea093",
+      "sha256": "f9354feed5d900e203609900458692a9a1f45b2a1c409a7f5db21fafbe0ca1a9",
       "bytes": 1017,
       "kind": "structured_text",
-      "text_sha256": "8334e79400eebccc78d3f3bc8cc272b83a0925941830d4958002d89ce51ea093",
+      "text_sha256": "f9354feed5d900e203609900458692a9a1f45b2a1c409a7f5db21fafbe0ca1a9",
       "characters": 1017,
       "lines": 34,
       "interpretation": "source_content_not_runtime_evidence"
@@ -35453,12 +35483,12 @@
     },
     {
       "path": "src/potbot/tools/shared_workspace_isolation.py",
-      "sha256": "5901e0babd7b0830452cdfa86ab103f457ccc70b52a5546f1327e58f2cf29624",
-      "bytes": 33172,
+      "sha256": "87659655f2b6cf5a281db1e39bdf185c83d812c16a41a995af6a5d5d85a25e21",
+      "bytes": 34275,
       "kind": "narrative_text",
-      "text_sha256": "5901e0babd7b0830452cdfa86ab103f457ccc70b52a5546f1327e58f2cf29624",
-      "characters": 33172,
-      "lines": 721,
+      "text_sha256": "87659655f2b6cf5a281db1e39bdf185c83d812c16a41a995af6a5d5d85a25e21",
+      "characters": 34275,
+      "lines": 741,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -35473,12 +35503,12 @@
     },
     {
       "path": "src/potbot/tools/xpra_browser_control.py",
-      "sha256": "af3451e0d7c3aaccbf5846d90203d41985af870d43f3631a1fe1f72c119aa04e",
-      "bytes": 5151,
+      "sha256": "54711c94aee12c0d60ca3b671512950b42768bbf750979427c0ed184bfc8bbf9",
+      "bytes": 6017,
       "kind": "narrative_text",
-      "text_sha256": "af3451e0d7c3aaccbf5846d90203d41985af870d43f3631a1fe1f72c119aa04e",
-      "characters": 5151,
-      "lines": 115,
+      "text_sha256": "54711c94aee12c0d60ca3b671512950b42768bbf750979427c0ed184bfc8bbf9",
+      "characters": 6017,
+      "lines": 128,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -35613,12 +35643,12 @@
     },
     {
       "path": "tests/unit/test_xpra_browser_control.py",
-      "sha256": "702d6ee99a15fabc73854136e00f8c62e51b763c42bb348363f6e8cd601a311f",
-      "bytes": 4758,
+      "sha256": "7ef70d660cfbba1fa813f80c25ee1ddae22247d2f8ebcbed624a8a2ab87c97ab",
+      "bytes": 7141,
       "kind": "narrative_text",
-      "text_sha256": "702d6ee99a15fabc73854136e00f8c62e51b763c42bb348363f6e8cd601a311f",
-      "characters": 4758,
-      "lines": 123,
+      "text_sha256": "7ef70d660cfbba1fa813f80c25ee1ddae22247d2f8ebcbed624a8a2ab87c97ab",
+      "characters": 7141,
+      "lines": 187,
       "interpretation": "source_content_not_runtime_evidence"
     }
   ],
@@ -35725,12 +35755,12 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "sha256": "0f3db807fe457b9de27fb8493336dc27263c4b878f2d3746b7f2583a5abb9c83",
-      "bytes": 13659,
+      "sha256": "367bb79b02619a4ed064fb6b02d8222bfc7d26361a9bc59abfbf26d88dfd4c29",
+      "bytes": 14307,
       "kind": "narrative_text",
-      "text_sha256": "0f3db807fe457b9de27fb8493336dc27263c4b878f2d3746b7f2583a5abb9c83",
-      "characters": 13657,
-      "lines": 266,
+      "text_sha256": "367bb79b02619a4ed064fb6b02d8222bfc7d26361a9bc59abfbf26d88dfd4c29",
+      "characters": 14305,
+      "lines": 280,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -35814,6 +35844,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": ".github/workflows/python-profile-native-qualification.yml",
+      "sha256": "a7bb560d114dec8abd686a2d0a7bd285e609dd92a09c26739fc91cdd441d7e32",
+      "bytes": 4203,
+      "kind": "narrative_text",
+      "text_sha256": "a7bb560d114dec8abd686a2d0a7bd285e609dd92a09c26739fc91cdd441d7e32",
+      "characters": 4203,
+      "lines": 103,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": ".github/workflows/release.yml",
       "sha256": "f1ce8f100941a35233c3036d040dadad4da542295f8c630324534d9698932f63",
       "bytes": 3210,
@@ -35855,12 +35895,12 @@
     },
     {
       "path": ".github/workflows/shared-tool-s10-s11.yml",
-      "sha256": "5a80ba684bd5e8910a4c437e217b53e18ccc99ff1b24a5b45c2e0030ec8ffe60",
-      "bytes": 2463,
+      "sha256": "da22317f6b04c8ac3edd54eaccb58f8763fa4a2dff84449025fac82bafdcbc18",
+      "bytes": 4010,
       "kind": "narrative_text",
-      "text_sha256": "5a80ba684bd5e8910a4c437e217b53e18ccc99ff1b24a5b45c2e0030ec8ffe60",
-      "characters": 2463,
-      "lines": 58,
+      "text_sha256": "da22317f6b04c8ac3edd54eaccb58f8763fa4a2dff84449025fac82bafdcbc18",
+      "characters": 4010,
+      "lines": 90,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36034,7 +36074,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "b210726d469c28a3b6c758b9e47cbcf4cafe1f384eee9c7371f174d62c033aa8",
+  "review_sha256": "9cc1792b12c766decdb3ae58ac71531390a89246cc08a2f51bb819de57d8d054",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -110013,17 +110053,18 @@
     },
     {
       "source": "docs/implementation/01-phase1-implementation.md",
-      "locator": "line:1-8",
-      "sha256": "2c81925e933b38b1f1764db204b6ba1de15e2ad1f4eb5ec04dcbd3729177ffb2",
+      "locator": "line:1-17",
+      "sha256": "5f94d421025230b40bf891ac7504b39c414ac37e5835585c7d3b89b86ead2508",
       "excerpt": "# Universal Tool Platform \u2014 T01 implementation increment\n\n**Target repository:** [`kieransimkin/potbot`](https://github.com/kieransimkin/potbot)\n**Inspected `ma",
       "review_families": [
         "tool-schema",
-        "catalogue"
+        "catalogue",
+        "stage-acceptance"
       ]
     },
     {
       "source": "docs/implementation/01-phase1-implementation.md",
-      "locator": "line:9-14",
+      "locator": "line:18-23",
       "sha256": "22c6d0efc28932db176e7e02263341810d06e932361acd387b230a7f531da799",
       "excerpt": "## Existing integration points, not new competing systems\n\nThe reviewed repository contains controller-owned `ToolDefinition`, `ToolRegistry`, `ActionProposal` ",
       "review_families": [
@@ -110033,7 +110074,7 @@
     },
     {
       "source": "docs/implementation/01-phase1-implementation.md",
-      "locator": "line:15-28",
+      "locator": "line:24-37",
       "sha256": "aacfc714060e3aa09bc66d10216e4f5f0741bacb757b75b0cfc6439b829c5f03",
       "excerpt": "## Files delivered\n\n| Stage | File | Implementation |\n|---|---|---|\n| T01.1 | `scripts/tool_platform_inventory.py` | Deterministic, read-only source-anchor scan",
       "review_families": [
@@ -110043,7 +110084,7 @@
     },
     {
       "source": "docs/implementation/01-phase1-implementation.md",
-      "locator": "line:29-39",
+      "locator": "line:38-48",
       "sha256": "30f27fddce8a03fbf9e7d3a064d9743b46baa552537c0326fb9f51f0cd69462d",
       "excerpt": "## Security and semantic constraints\n\n- Existing `syn://`/`synny://` parsing and selected hierarchy are the only semantic authority. This increment does not for",
       "review_families": [
@@ -110053,27 +110094,29 @@
     },
     {
       "source": "docs/implementation/01-phase1-implementation.md",
-      "locator": "line:40-61",
-      "sha256": "ca70408c5a0e13619f2487dc15b178c547f964725117c3acc0b4d4407537912a",
+      "locator": "line:49-70",
+      "sha256": "ea31f5259971516b7d0c63cc4f6543e26b4592d3d223dc50659cd2fcdbbef83a",
       "excerpt": "## Local demonstration after applying the patch\n\nRun from the Potbot repository root with its locked environment already installed:\n\n```bash\nuv run --locked pyt",
       "review_families": [
         "tool-schema",
-        "catalogue"
+        "catalogue",
+        "stage-acceptance"
       ]
     },
     {
       "source": "docs/implementation/01-phase1-implementation.md",
-      "locator": "line:62-71",
-      "sha256": "2f1f7a5a60a738346df02c95feaf55ab940d6f5896cb52c31a0d434d4213b282",
-      "excerpt": "## Existing HEAD blocker: README removed\n\nThe `fcede56c` tool-plan commit deletes the project-root `README.md`, while `pyproject.toml` still declares `readme = ",
+      "locator": "line:71-80",
+      "sha256": "4543c496818d30bdb2d6777901d19f44a700253f20dd87510f27317d0fb3b5cd",
+      "excerpt": "## Historical October blocker: README removed\n\nThe `fcede56c` tool-plan commit deletes the project-root `README.md`, while `pyproject.toml` still declares `read",
       "review_families": [
         "tool-schema",
-        "catalogue"
+        "catalogue",
+        "stage-acceptance"
       ]
     },
     {
       "source": "docs/implementation/01-phase1-implementation.md",
-      "locator": "line:72-81",
+      "locator": "line:81-90",
       "sha256": "3097fae998ffa23253de325078b833aa135aa9085b57d8415abd496c19dc1745",
       "excerpt": "## Remaining work before declaring T01 complete\n\n1. Apply the patch on the latest checkout. If `main` moved after the recorded SHA, re-run the source inventory ",
       "review_families": [
@@ -112595,25 +112638,27 @@
     },
     {
       "source": "docs/implementation/37-s11-tool-upgrade-approvals-ui.md",
-      "locator": "line:1-4",
-      "sha256": "d475f3b06c2b7063ed081e8432d12c6e1119631ddf3aaef8822752c1631862b7",
+      "locator": "line:1-10",
+      "sha256": "455f832e953f6a765496cdec0fe11f53d86af982dd93cfc309733855a58d01d9",
       "excerpt": "# S11 \u2014 Durable tested-tool approval UI, host worker and runtime repin\n\n**Baseline:** S9 + S10; registered, operator-owned native credential vault from S8 and S",
       "review_families": [
-        "tool-upgrade"
+        "tool-upgrade",
+        "frontend"
       ]
     },
     {
       "source": "docs/implementation/37-s11-tool-upgrade-approvals-ui.md",
-      "locator": "line:5-17",
-      "sha256": "0eb451ecd815dbb3d844605e4c810407a2b3eabfff2b7e52d5751d8d0abfe1b9",
+      "locator": "line:11-24",
+      "sha256": "6a89b499d0207a116e8e41947357ea178509132a6e731e6cc3afc9a6cad3f1a3",
       "excerpt": "## Non-secret public workflow\n\n| State | Trigger | Effect |\n| --- | --- | --- |\n| awaiting_approval | `scripts/tool_approval_s11.py publish` reads real S9 `insp",
       "review_families": [
-        "tool-upgrade"
+        "tool-upgrade",
+        "frontend"
       ]
     },
     {
       "source": "docs/implementation/37-s11-tool-upgrade-approvals-ui.md",
-      "locator": "line:18-26",
+      "locator": "line:25-33",
       "sha256": "fe8fe36ddb35534919221af4ee86c3bf6f6df2e877991793f1ae3970ddf84a88",
       "excerpt": "### API / frontend\n\n- `GET /v1/ui/tools/upgrades` and `GET /v1/ui/tools/upgrades/{uuid}` \u2014 workspace-scoped safe projections, requiring the ordinary workspace b",
       "review_families": [
@@ -112622,16 +112667,17 @@
     },
     {
       "source": "docs/implementation/37-s11-tool-upgrade-approvals-ui.md",
-      "locator": "line:27-54",
-      "sha256": "6246db0c55d18d3122ebba5640709d75b1b4f523bd6d7012dcaadc1560728819",
+      "locator": "line:34-65",
+      "sha256": "ee1f3c6f721cead1d0fe8b9e36ac2ebf32bc7d76d57cc7d4cd28970c2f529614",
       "excerpt": "### Operator use (maintenance mode)\n\nRun migration 28 with Potbot's ordinary admin migration tooling first. Use the same `POTBOT_CREDENTIAL_PROFILE` for the API",
       "review_families": [
-        "tool-upgrade"
+        "tool-upgrade",
+        "frontend"
       ]
     },
     {
       "source": "docs/implementation/37-s11-tool-upgrade-approvals-ui.md",
-      "locator": "line:55-66",
+      "locator": "line:66-77",
       "sha256": "678454ba3d6c8be1fe8e552b9c5fe5479a7e7c4d4bbc0dfff12fd296602f524c",
       "excerpt": "## Qualification\n\n- Offline: real SQLite SQL-shape fixture for state/CAS transitions and MAC verification, FastAPI admission/auth tests, host worker receipt and",
       "review_families": [
@@ -114881,16 +114927,34 @@
     },
     {
       "source": "docs/implementation/browser-rendered-capture-recovery.md",
-      "locator": "line:1-5",
-      "sha256": "c6b8f4f9193a939a36aa62ba176f1a05a485bce921fb98071b8b0d39e7e216ac",
-      "excerpt": "# Browser rendered capture recovery \u2014 1 November 2026\n\nBaseline: `main` at `4c52d8b4402fec12ee1a8eb4e6f6795805f62ccd`.\nStatus: source patch prepared; **not merg",
+      "locator": "line:1-2",
+      "sha256": "dc57096ba4ede704c15f1bbbca27f3a51fe36b8f3cd4f1208fc6f0bce9b73419",
+      "excerpt": "# Browser rendered capture recovery",
       "review_families": [
         "browser"
       ]
     },
     {
       "source": "docs/implementation/browser-rendered-capture-recovery.md",
-      "locator": "line:6-21",
+      "locator": "line:3-33",
+      "sha256": "efa92c1b753b54b4def3b30f7cdba639d4fa6449a7752794fcbe824a528eccf6",
+      "excerpt": "## Current follow-through \u2014 17 November 2026\n\nAt source baseline `413494517bd359dd908fcfd9571a22789b24ebb3`, the\n[rendered-worker matrix](https://github.com/kie",
+      "review_families": [
+        "browser"
+      ]
+    },
+    {
+      "source": "docs/implementation/browser-rendered-capture-recovery.md",
+      "locator": "line:34-38",
+      "sha256": "cbc508cf6691534f70b5b4fb5a00c03e13a1f387553a112f128d5e7ed367708c",
+      "excerpt": "## Historical repair \u2014 1 November 2026\n\nBaseline: `main` at `4c52d8b4402fec12ee1a8eb4e6f6795805f62ccd`.\nStatus at that historical checkpoint: source patch prepa",
+      "review_families": [
+        "browser"
+      ]
+    },
+    {
+      "source": "docs/implementation/browser-rendered-capture-recovery.md",
+      "locator": "line:39-54",
       "sha256": "8dc798bd4a01e6a10c00dd815cf08d9ce6badb1e71eb41886aff6f8784982f89",
       "excerpt": "## Confirmed failure and bounded repair\n\nIn the GitHub Actions rendered-worker matrix run `41301571455`, Patchright,\nPlaywright+Stealth and Patchright+Stealth p",
       "review_families": [
@@ -114899,7 +114963,7 @@
     },
     {
       "source": "docs/implementation/browser-rendered-capture-recovery.md",
-      "locator": "line:22-51",
+      "locator": "line:55-84",
       "sha256": "b4d03c5e130d134fc2ecea3aa7408f3231df73f1586f7c4165ecc5501c42f7e9",
       "excerpt": "## Requalification\n\nRun the added mock-based regression tests, then the existing four-profile\nrendered acceptance workflow against a clean checkout on its real ",
       "review_families": [
@@ -115666,6 +115730,97 @@
       ]
     },
     {
+      "source": "docs/implementation/python-profiler-installed-qualification.md",
+      "locator": "line:1-8",
+      "sha256": "1910625a070102638967b3f7ff6a7a16d15bae38431331a58078ac70de4238d1",
+      "excerpt": "# Installed Python profiler qualification\n\nThis gate runs the sealed Python profiling Cog through an already installed worker image, the native Syn cohort, the ",
+      "review_families": [
+        "devices",
+        "sandbox",
+        "accounting",
+        "syn-release",
+        "tool-schema"
+      ]
+    },
+    {
+      "source": "docs/implementation/python-profiler-installed-qualification.md",
+      "locator": "line:9-43",
+      "sha256": "325e2f877f71683ada67c8e124fece31748c2ed932d0effcb91ee4232a4527f8",
+      "excerpt": "## 1. Provision the qualification scope first\n\nUse the existing operator provisioning and authorization procedures for the host. The runner expects the followin",
+      "review_families": [
+        "devices",
+        "sandbox",
+        "accounting",
+        "syn-release",
+        "tool-schema"
+      ]
+    },
+    {
+      "source": "docs/implementation/python-profiler-installed-qualification.md",
+      "locator": "line:44-100",
+      "sha256": "1dd5b849b25abbc30bad897fe1783cf8798674e8b7b96bfc6764e88fb1a85aa5",
+      "excerpt": "## 2. Prepare the private policy\n\nCreate an operator-private policy file with mode `0600`, owned by the unprivileged worker service account. Use canonical absol",
+      "review_families": [
+        "devices",
+        "sandbox",
+        "accounting",
+        "syn-release",
+        "tool-schema"
+      ]
+    },
+    {
+      "source": "docs/implementation/python-profiler-installed-qualification.md",
+      "locator": "line:101-133",
+      "sha256": "407045e8dbabc24a8ec78c9e9fc1d160cff905b114c82b07d373605d0c9928c1",
+      "excerpt": "## 3. Run on the installed worker host\n\nRun from the committed checkout with the installed unprivileged worker's environment. Retain the service's existing oper",
+      "review_families": [
+        "devices",
+        "sandbox",
+        "accounting",
+        "syn-release",
+        "tool-schema"
+      ]
+    },
+    {
+      "source": "docs/implementation/python-profiler-installed-qualification.md",
+      "locator": "line:134-147",
+      "sha256": "49b025bfaec968849cefdce88701edf2af31e165ca0e2257a6def87ecb045645",
+      "excerpt": "## 4. What the acceptance run checks\n\nThe successful path performs the following checks in the ordinary controller and worker execution path:\n\n1. Verify committ",
+      "review_families": [
+        "devices",
+        "sandbox",
+        "accounting",
+        "syn-release",
+        "tool-schema"
+      ]
+    },
+    {
+      "source": "docs/implementation/python-profiler-installed-qualification.md",
+      "locator": "line:148-177",
+      "sha256": "93b1b2deb9dda228d33101830a97267f21bcebacbcab751cf1399e71a3c1fdc9",
+      "excerpt": "## 5. Interpret and retain the result\n\nOn success, the command exits `0`, emits a short success summary, and creates the new mode-`0600` report. Its schema is `",
+      "review_families": [
+        "devices",
+        "sandbox",
+        "accounting",
+        "syn-release",
+        "tool-schema"
+      ]
+    },
+    {
+      "source": "docs/implementation/python-profiler-installed-qualification.md",
+      "locator": "line:178-196",
+      "sha256": "06f53b24c1535cc57ee37d2ffb373b00599891943b31fbec292c4d78b835a36b",
+      "excerpt": "## 6. GitHub Actions: contracts and installed acceptance\n\nThe workflow is [python-profile-native-qualification.yml](../../.github/workflows/python-profile-nativ",
+      "review_families": [
+        "devices",
+        "sandbox",
+        "accounting",
+        "syn-release",
+        "tool-schema"
+      ]
+    },
+    {
       "source": "docs/implementation/recent-potbot-development-reconciliation.md",
       "locator": "line:1-14",
       "sha256": "89924394f3dbaac8e30f4e41cddcb3276ad41637303bb596648260787484be6a",
@@ -115948,6 +116103,132 @@
       "excerpt": "{\n  \"schema\": \"potbot.roadmap-inventory-policy/1\",\n  \"reviewed_base\": \"95610037311c80cdf7163372998b08e1b8958926\",\n  \"programmes\": [\n    {\n      \"namespace\": \"pl",
       "review_families": [
         "audit"
+      ]
+    },
+    {
+      "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "locator": "line:1-11",
+      "sha256": "c67c3506d7e6ca5ae6f33e9aaaeb660dc852d65811eec21428797ff940ceb924",
+      "excerpt": "# S12 release enforcement and execution qualification\n\n**Patch baseline:** `413494517bd359dd908fcfd9571a22789b24ebb3`, reviewed 17 November 2026.\n**Scope:** U04",
+      "review_families": [
+        "tool-upgrade",
+        "stage-acceptance",
+        "transport-recovery",
+        "browser",
+        "devices",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "locator": "line:12-53",
+      "sha256": "5f7cacc208e0b467cd6c3d03860c83af1d836b81ead44d99e9d938684004e288",
+      "excerpt": "## Release ownership and enforcement\n\nApplication migration **38** extends `ui_tool_upgrade_approvals` and its existing\nappend-only audit. PostgreSQL retains th",
+      "review_families": [
+        "tool-upgrade",
+        "stage-acceptance",
+        "transport-recovery",
+        "browser",
+        "devices",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "locator": "line:54-82",
+      "sha256": "fa77d25d18be7526c06d6f02ca0da146d0194ffd7a5366e30104087f7a604b64",
+      "excerpt": "## State model\n\nThe public S11 `state` remains compatible. Four added public fields expose only\n`releaseState`, `releaseGeneration`, `releaseBindingSha256`, and",
+      "review_families": [
+        "tool-upgrade",
+        "stage-acceptance",
+        "transport-recovery",
+        "browser",
+        "devices",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "locator": "line:83-128",
+      "sha256": "b48aacd42bec5936eba415236dc4558ae3bc3378085319b4b02a6f6ab0315b25",
+      "excerpt": "## Operator sequence\n\nUse the existing admin connection to apply pending application migrations:\n\n```sh\nuv run --locked potbot admin --schema potbot migrate\n```",
+      "review_families": [
+        "tool-upgrade",
+        "stage-acceptance",
+        "transport-recovery",
+        "browser",
+        "devices",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "locator": "line:129-170",
+      "sha256": "526c24872be5f1040ff4869ca63b07a4c7ad6a52ac6d0f40d5c158f3d5a82f8a",
+      "excerpt": "### Interrupted activation and rollback\n\nFirst inspect the local S9 state and establish the actual process/filesystem\noutcome with the existing operator. S9 `re",
+      "review_families": [
+        "tool-upgrade",
+        "stage-acceptance",
+        "transport-recovery",
+        "browser",
+        "devices",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "locator": "line:171-190",
+      "sha256": "986dce7626a6e7eefb4018b0e8b2c9122a0fb003f3c9ccd4a963a93275122303",
+      "excerpt": "## T01.4 acceptance reports\n\n`scripts/tool_phase1_gate.py` retains its `offline` and `qualified` modes. Each\ninvocation now has a unique run directory, source m",
+      "review_families": [
+        "tool-upgrade",
+        "stage-acceptance",
+        "transport-recovery",
+        "browser",
+        "devices",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "locator": "line:191-216",
+      "sha256": "e438edd26729eae74906356cb7ec49aa4ba85f9472dd41f1a152f575d476738d",
+      "excerpt": "## Producer coverage and next acceptance work\n\nThis matrix records existing integration owners and the next evidence needed.\nIt is a review aid, not another run",
+      "review_families": [
+        "tool-upgrade",
+        "stage-acceptance",
+        "transport-recovery",
+        "browser",
+        "devices",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "locator": "line:217-233",
+      "sha256": "a1c55552d2b0c22d054051285e8a462d44e3ae2a6f30a30c28100bbe65ee057e",
+      "excerpt": "## Verification boundary\n\nRegression coverage includes real Git installation exchanges, held-directory\nadmission, existing S9/S10/S11 compatibility, browser tim",
+      "review_families": [
+        "tool-upgrade",
+        "stage-acceptance",
+        "transport-recovery",
+        "browser",
+        "devices",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/s12-tool-release-and-execution-qualification.md",
+      "locator": "line:234-256",
+      "sha256": "ffa1ce44ae4b2210ad41e70c5b1fd676d1e59579e20f5a27dded37e09bd3b2b1",
+      "excerpt": "### Local patch verification, 17 November 2026\n\n| Check | Observed result |\n| --- | --- |\n| Related Python contracts and regressions | 359 passed, plus 8 subtes",
+      "review_families": [
+        "tool-upgrade",
+        "stage-acceptance",
+        "transport-recovery",
+        "browser",
+        "devices",
+        "frontend"
       ]
     },
     {
@@ -116666,8 +116947,8 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:1-20",
-      "sha256": "a417d90dbdd3be4463833d628eeef716257ba42db5dd8cd04fd3133ed57e5cf1",
+      "locator": "line:1-28",
+      "sha256": "3fda5267f1107832b3c3e9fed0d97137bad77c1e190cc8d1226a76e3ab8177ac",
       "excerpt": "# Potbot unified development roadmap\n\n**U00-A completed, 2 November 2026:** the [closeout](u00-a-closeout.md) reconciles\nthe pinned main `95610037311c80cdf71633",
       "review_families": [
         "audit",
@@ -116676,7 +116957,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:21-28",
+      "locator": "line:29-36",
       "sha256": "076016b54fff41fb78ff8fdcc90229d963fc5d746b89b7706eeebb49f54312c8",
       "excerpt": "## Baseline and source-of-truth rules\n\nOlder README phase summaries (`0.5.0.dev8`/`dev9`) are historical; the reviewed main reports `0.5.0.dev11`. They are not ",
       "review_families": [
@@ -116723,7 +117004,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:29-62",
+      "locator": "line:37-70",
       "sha256": "4c193a4a608fa975564b4f8db4bfe008307a41cf3d1b25c33882bcb783543194",
       "excerpt": "## Existing plans to reconcile\n\n| Source | Scope |\n|---|---|\n| `docs/implementation/09-tool-plan-gap-audit.md` | 18 additional requirement groups and independen",
       "review_families": [
@@ -116770,7 +117051,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:63-84",
+      "locator": "line:71-92",
       "sha256": "3a83e4a3a3332d3ef4289fcfc3504ed4ab122ebf1cf45fdf94886f89bda19cce",
       "excerpt": "## Unified work packages\n\n| ID | Workstream | Remaining / qualification scope | Modernization | Dependencies |\n|---|---|---|---|---|\n| U00 | Repository audit an",
       "review_families": [
@@ -116795,7 +117076,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:85-86",
+      "locator": "line:93-94",
       "sha256": "730dc617da00361212299c3f3bf7caa292eeb8375c4645a26f895fe255a9c69d",
       "excerpt": "## Delivery waves and gates",
       "review_families": [
@@ -116804,7 +117085,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:87-92",
+      "locator": "line:95-100",
       "sha256": "092663dafe878c1956a3843788aa7a58148603391dc7efc03a2ab4bf50b05224",
       "excerpt": "### Wave 0 \u2014 Inventory, reconcile and pin (U00)\n\nPin current main SHA. Enumerate every `docs/` plan, issue, PR, stage-status document and CI acceptance job. Bui",
       "review_families": [
@@ -116813,7 +117094,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:93-98",
+      "locator": "line:101-106",
       "sha256": "382e3775074d6d89fbfe589167a208ad320459466fe816e1e619c4a2326bceab",
       "excerpt": "### Wave 1 \u2014 Secure durable foundation (U01\u2013U03, U06)\n\nExtend existing PostgreSQL/Syn execution rather than introducing a second job engine. Add fenced leases, ",
       "review_families": [
@@ -116826,7 +117107,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:99-102",
+      "locator": "line:107-110",
       "sha256": "ee0b5d377f44b86a968882f762dcddf5486951504484fae6f57bbdc4b5d897cf",
       "excerpt": "### Wave 2 \u2014 Tools, plugins, transport and browser (U04\u2013U05, U11\u2013U12)\n\nComplete existing T01\u2013T04 milestones, typed Cog contracts, debugger, discovery, concurren",
       "review_families": [
@@ -116841,7 +117122,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:103-106",
+      "locator": "line:111-114",
       "sha256": "9b8568dc87a1fd913d2775e2cea463e8cc54271de5fdbd471a3846c47413462e",
       "excerpt": "### Wave 3 \u2014 Intelligence and memory (U07\u2013U10)\n\nQualify actual local/hosted models and inference costs. Integrate live multi-model reasoning graphs, scheduling,",
       "review_families": [
@@ -116856,7 +117137,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:107-112",
+      "locator": "line:115-120",
       "sha256": "9a38ce04ac2df10970d4c69ae459dab6757ed121e4c0135233670ccf0927cca1",
       "excerpt": "### Wave 4 \u2014 Frontend and empirical optimization (U13\u2013U14)\n\nFinish real backend streaming, workspace controls, monitoring sprite, graph checkpoint timeline, pro",
       "review_families": [
@@ -116866,7 +117147,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:113-118",
+      "locator": "line:121-126",
       "sha256": "80b60f56644c374154018b6472010f50693d60ee0bd0831560224d401b134c72",
       "excerpt": "### Wave 5 \u2014 Automation and release (U15\u2013U16)\n\nAdd durable event subscriptions, schedules, A2A and channels under the same operator policy. Qualify all supporte",
       "review_families": [
@@ -116876,7 +117157,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:119-128",
+      "locator": "line:127-136",
       "sha256": "4b39689d3f86890624016437f1019a9f443b42259c348acd3976344d39f5cb18",
       "excerpt": "## Critical engineering invariants\n\n1. Do not create parallel authoritative PostgreSQL stores, schedulers, plugin registries or Syn event logs.\n2. Preserve the ",
       "review_families": [
@@ -116888,7 +117169,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:129-136",
+      "locator": "line:137-144",
       "sha256": "b003d17be8b130279262508d8ce74d558262ad1760056625d2ba42e2b0ce17c5",
       "excerpt": "### Syn transport for application RPC\n\nUse the [Syn RPC implementation sequence](syn-release-dependency-and-node-deployment.md#route-application-rpc-through-syn",
       "review_families": [
@@ -116898,18 +117179,17 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:137-160",
-      "sha256": "32b7eab97e7389ba15ce03552db8085933b764e7be0e88f1509f38049e1895a6",
+      "locator": "line:145-172",
+      "sha256": "cbc4b785f9baeac0b04d3321ea4a8fed61bf8a1816999c534cb2eb9667797027",
       "excerpt": "## First next milestone\n\n**U01-A: durable side-effect and crash recovery gap closure.** U00-A's\n[reviewed closeout](u00-a-closeout.md) is complete. Preserve the",
       "review_families": [
-        "durable",
-        "mcp",
+        "audit",
         "transport-recovery"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:161-174",
+      "locator": "line:173-186",
       "sha256": "fad8ad3bc0f5c2f2834281f8aaa52d60a6cf39c7bbfccd4fae9aee0a7b60f130",
       "excerpt": "## Required follow-through from the monitoring chat\n\n| Work item | Existing U owner | Deliverable and gate |\n|---|---|---|\n| U03-Q | U03, U02, U16 | Qualify eve",
       "review_families": [
@@ -116924,22 +117204,17 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:175-193",
-      "sha256": "e8813cbdbc07b73b8e614df41c1dea7330abebc0152b5bcefd0603bf0353e4e7",
+      "locator": "line:187-205",
+      "sha256": "1b06f39aefe5beb3ec4fe7bc9a0730108651dbc9dffc638f4bd0326ded4b9754",
       "excerpt": "## Required follow-through from the other recent development conversations\n\n| Work item | Existing U owner | Deliverable and gate in the recent-development reco",
       "review_families": [
-        "accounting",
-        "identity",
-        "journal",
-        "tool-upgrade",
-        "guest-logs",
-        "context",
-        "frontend"
+        "audit",
+        "transport-recovery"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:194-205",
+      "locator": "line:206-217",
       "sha256": "8fd9aa45ac7a56661637b71fa0a5607b1b2b45780bdea5c35f0434b61d7925a3",
       "excerpt": "## References\n\n- `docs/implementation/agent-runtime-modernization.md`\n- `docs/implementation/09-tool-plan-gap-audit.md`\n- `docs/implementation/plugin-discovery-",
       "review_families": [
@@ -116948,7 +117223,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:206-210",
+      "locator": "line:218-222",
       "sha256": "c6f1c77f80e48b91c4a197f815afa2760f516f5eff7fc07b87bbbe7ffc5b2197",
       "excerpt": "## Cross-agent ecosystem compatibility (C00\u2013C09)\n\nAdd the companion [cross-agent compatibility plan](cross-agent-compatibility.md) as a required cross-cutting w",
       "review_families": [
@@ -116957,7 +117232,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:211-219",
+      "locator": "line:223-231",
       "sha256": "a3a63964c24da210b3a841a4fa93e2529b30a3e255e67e78853aea0f4d0192ad",
       "excerpt": "## External skill ecosystem discovery and native execution (S00\u2013S10)\n\nThe cross-agent C00\u2013C09 programme is extended by [external skill ecosystem integration](po",
       "review_families": [
@@ -116967,7 +117242,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:220-224",
+      "locator": "line:232-236",
       "sha256": "28dfd2784d97841df10d40c27bf4c7f21bc278c11ace17b0339a9ee74ece1daa",
       "excerpt": "## Agent benchmarking and testing (B00\u2013B10)\n\nAdd [Potbot agent benchmarking and testing](potbot-agent-benchmarking-plan.md) as the qualification specification f",
       "review_families": [
@@ -121716,8 +121991,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "121b50412859393cc01baa408bcb2e70d1970a2954afd5410dc8df85d7f1bb5a",
-          "basis": "U01-A queue transport source or test definition. Exact-revision execution evidence is tracked in CI."
+          "sha256": "2aa5929690fdc44601a8a6a78c836f2066bd242c70871963c686697e2c1328ce",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         }
       ],
       "tests": [
@@ -121855,8 +122130,8 @@
         {
           "path": "src/potbot/tools/shared_workspace_isolation.py",
           "symbol": "SharedWorkspaceRuntime",
-          "sha256": "5901e0babd7b0830452cdfa86ab103f457ccc70b52a5546f1327e58f2cf29624",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "87659655f2b6cf5a281db1e39bdf185c83d812c16a41a995af6a5d5d85a25e21",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
           "path": "src/potbot/tools/sandbox_cog_worker.py",
@@ -122166,8 +122441,8 @@
         {
           "path": "src/potbot/tools/ai_workspace_operator.py",
           "symbol": "AiManagedProcessSupervisor",
-          "sha256": "0c43825a56bf9d345ec42ff4b7e8d97712cfd205eba1b97c0047015d1bd37d6a",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "f07a2c63d99307c71abee14eca385f3d4908eafe5c6e2f08d9a94283af70268b",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         }
       ],
       "tests": [
@@ -122618,6 +122893,12 @@
           "symbol": "main",
           "sha256": "4ea362778ce9ae8aad84d528737d8e7322053ef50a0414aaf62ac370baf44df0",
           "basis": "Sealed profile and managed WSL worker fixture with durable receipt readback"
+        },
+        {
+          "path": "scripts/qualify_python_profile_cog.py",
+          "symbol": "committed_sources",
+          "sha256": "05ff86e9413af7b3d71bfe4f7cf5d8e855ebe75a33cb91ff13bb73f5ef1f4e11",
+          "basis": "Reviewed committed package and loaded-module binding plus end-of-run recheck; no live qualification claimed."
         }
       ],
       "tests": [
@@ -122656,15 +122937,22 @@
           "symbol": "test_sealed_python_profile_through_sandbox_worker",
           "sha256": "1e3ea1d6ea42dcea2ea222aa18bbeb3b7a56c29c1be614ed38faa496695370e8",
           "basis": "Sealed profile and managed WSL worker fixture with durable receipt readback"
+        },
+        {
+          "path": "tests/unit/test_python_profile_qualification.py",
+          "symbol": "test_consumer_changed_during_live_run_cannot_emit_success",
+          "sha256": "25df0a9e6b50caf499950432d598119f7e2b029b720ed712304e1c409fa0d1ef",
+          "basis": "Contract fixture rejects source drift before success; source fixture is not native execution evidence."
         }
       ],
-      "assessment": "Python debugging and bounded CPU profiling have real Linux fixture evidence, including a sealed script Cog and PostgreSQL receipt on WSL. Broader profiles and production image qualification remain open.",
+      "assessment": "Python debugging and bounded CPU profiling retain their existing Linux fixture and sealed-Cog PostgreSQL evidence. A new installed-profiler runner verifies committed consumer/package/import identities, official signed image, native Syn, persistent grants, workload identity, accounting, receipt readback and refusal of repeat dispatch through a reconstructed controller. Its contract tests do not supply an actual installed-host pass.",
       "support_scope": "Python debugger tests and language-neutral representation; no inference of device availability from Types.",
       "remaining": [
-        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport",
-        "Profile comparable workloads with source/build identity and declared overhead"
+        "Obtain installed profiler evidence on the published signed worker image and actual native Syn host; fresh-controller reconstruction is not a service restart.",
+        "Identify each real target/probe and qualify stop/step/stack/variables, process identity and protected transport.",
+        "Qualify service/native-node restart and lost-reply faults; retain source/build identity and declared profiling overhead for comparable workloads."
       ],
-      "next_action": "Keep specialist profiles disabled until their actual target and separate conformance evidence exist."
+      "next_action": "Run scripts/qualify_python_profile_cog.py on the already provisioned qualified host at the committed source revision; retain the report and separately qualify service/native-node restart, lost replies and each other backend."
     },
     {
       "id": "artifacts",
@@ -122723,14 +123011,26 @@
         {
           "path": "src/potbot/tools/shared_tool_upgrades.py",
           "symbol": "ToolTestCase",
-          "sha256": "cf7ff2aa24e6ab5f295f9ef45bb91e368a21830826d0fa19f79d4a02208bda32",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "af5cc2a9159bddd526493837929886479d996c3fd3e7facd92653a647d5fd2dd",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
           "path": "src/potbot/tools/tool_approval_worker_s11.py",
           "symbol": "ToolApprovalWorker",
-          "sha256": "0fea40f6ccdbba595b931112e8e2d8861d185cd0ac0b2dc2a45ed36a16d9388a",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "8a3a5e8addca790bb8e57273434d18696bb9d773c678c1039235587ba0005a62",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
+        },
+        {
+          "path": "src/potbot/tools/tool_release_gate_s12.py",
+          "symbol": "ToolReleaseAuthority",
+          "sha256": "55556fe0857309e1a50436e9aa8c8069d9bdb0be191fc6e4c3a29949adcc7208",
+          "basis": "Reviewed release owner and installed reader; exact source evidence, not a live-host certificate."
+        },
+        {
+          "path": "src/potbot/tools/shared_tool_release_markers.py",
+          "symbol": "blocked_directories",
+          "sha256": "557573adb93087809db1652c83d1e51950e79ce168e88e0d70e51e3edbeb6000",
+          "basis": "Reviewed private denial projection, maintenance probe and interpreter masking."
         }
       ],
       "tests": [
@@ -122745,15 +123045,33 @@
           "symbol": "test_success_still_requires_runtime_repin",
           "sha256": "9632289cb8253047b4b6e1faf9b58b602ddd8da96eb9a4415540927008fe52b0",
           "basis": "source inspection; test definition is not an individual executed result"
+        },
+        {
+          "path": "tests/unit/test_shared_tool_release_s12.py",
+          "symbol": "test_direct_activation_and_rollback_cannot_release_changed_tools",
+          "sha256": "aa93cbaf9fcd8d532bf1524b78ab4563c49f3b5a8da584c26ae4500d55f23bc6",
+          "basis": "Real Git/lease fixture with explicit test executor; native process qualification remains separate."
+        },
+        {
+          "path": "tests/integration/test_shared_tool_release_s12.py",
+          "symbol": "test_postflight_is_required_and_replay_reads_signed_pg_receipt",
+          "sha256": "e9f1b8b5bf8bb15ae8cfa13310c746d0252d3f94eef08b8956a72a92df2d15bc",
+          "basis": "Real PostgreSQL/RLS and release readback test; injected postflight process receipts are explicitly fixtures."
+        },
+        {
+          "path": "tests/integration/test_shared_tool_release_s12.py",
+          "symbol": "test_postflight_cannot_release_before_durable_host_lease_completion",
+          "sha256": "e9f1b8b5bf8bb15ae8cfa13310c746d0252d3f94eef08b8956a72a92df2d15bc",
+          "basis": "Failure-injection check rejects PostgreSQL release when host lease completion fails."
         }
       ],
-      "assessment": "S9-S11 contain build/test/activation, independent runtime-pin proposals and confirm_repin checks. S12 is not established: current code only reads trusted_tool_release_gates in status and supplies no complete release-gate writer/enforcer.",
-      "support_scope": "Existing independently tested activation and repin subset; S13 health cannot replace postflight/release.",
+      "assessment": "S9-S11 retain staged build/test, signed operator approval and fenced activation. S12 now implements migration-38 PostgreSQL postflight/release, durable host denial projections, exact installed readback, independent repin, one-attempt postflight and controlled rollback. Normal and installed native launch admission fail closed for held or altered tools; interpreter and writable-mount bypasses are covered. This source implementation does not establish native-host qualification.",
+      "support_scope": "Reviewed S9-S12 source plus real Git/lease and PostgreSQL migration, RLS, MAC, release/restart and failure tests. PostgreSQL tests inject explicit process receipts; native execution is an independent gate.",
       "remaining": [
-        "Implement or recover S12 post-activation postflight/release enforcement and rollback",
-        "Qualify immutable tools, per-tool maintenance writer and clean checkouts on the real host"
+        "Run complete activation, repin, real postflight, native operator restart and rollback on the signed-image qualified host.",
+        "Qualify power-loss persistence, native credential rotation/recovery and hostile concurrent maintenance on the supported filesystem/host."
       ],
-      "next_action": "Close RD14/U04-R with a real gate state machine and denial before independent repin/postflight; preserve S11 foundations."
+      "next_action": "Run the S12 installed-host acceptance at the final commit; require exact original approval, installed pins, durable lease completion and retained passing postflight before release."
     },
     {
       "id": "guest-logs",
@@ -122779,8 +123097,8 @@
         {
           "path": "src/potbot/tools/shared_workspace_isolation.py",
           "symbol": "_prepare_cog_logs",
-          "sha256": "5901e0babd7b0830452cdfa86ab103f457ccc70b52a5546f1327e58f2cf29624",
-          "basis": "Reviewed shared Cog log source. Live acceptance requires a separate execution record."
+          "sha256": "87659655f2b6cf5a281db1e39bdf185c83d812c16a41a995af6a5d5d85a25e21",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
           "path": "src/potbot/tools/sandbox_cog_worker.py",
@@ -122847,8 +123165,8 @@
         {
           "path": "src/potbot/tools/ai_workspace_operator.py",
           "symbol": "AiManagedProcessSupervisor",
-          "sha256": "0c43825a56bf9d345ec42ff4b7e8d97712cfd205eba1b97c0047015d1bd37d6a",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "f07a2c63d99307c71abee14eca385f3d4908eafe5c6e2f08d9a94283af70268b",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         }
       ],
       "tests": [
@@ -123431,14 +123749,14 @@
         {
           "path": "src/potbot/tools/xpra_browser_control.py",
           "symbol": "BrowserControlChannel",
-          "sha256": "af3451e0d7c3aaccbf5846d90203d41985af870d43f3631a1fe1f72c119aa04e",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "54711c94aee12c0d60ca3b671512950b42768bbf750979427c0ed184bfc8bbf9",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
           "path": "src/potbot/tools/xpra_browser_worker.py",
           "symbol": "BrowserWorker",
-          "sha256": "bd7a4a9b920106085bc803c8ebd0aeb6cee2792d721748ea4c511373ad59d1f0",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "4f0a1d611fb256b513685bf7021ddf3d8b960d146705017b31c15f8ddb0630fe",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
           "path": "src/potbot/tools/syn_browser_route.py",
@@ -123451,29 +123769,35 @@
         {
           "path": "tests/unit/test_xpra_browser_control.py",
           "symbol": "test_unsafe_commands_denied",
-          "sha256": "702d6ee99a15fabc73854136e00f8c62e51b763c42bb348363f6e8cd601a311f",
-          "basis": "source inspection; test definition is not an individual executed result"
+          "sha256": "7ef70d660cfbba1fa813f80c25ee1ddae22247d2f8ebcbed624a8a2ab87c97ab",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
           "path": "tests/unit/test_browser_worker_hardening.py",
           "symbol": "test_pointer_and_cdp_reject_nonfinite_or_non_numeric_wheel_deltas",
-          "sha256": "d82df3467f643fed76dacda7e6e31bdd60b1c8adc1204afb077a1269924ca038",
-          "basis": "source inspection; test definition is not an individual executed result"
+          "sha256": "43bde01b07d537193aba36957724a25a2d7473472d3292d4c93e476d6d257c84",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
           "path": "tests/unit/test_syn_browser_route.py",
           "symbol": "test_browser_executes_only_after_signed_delivery_and_never_retries",
           "sha256": "55479d0c768ad608fb61b0d76d7242a6fc2055bc83704cfb07752d0eceb9df1b",
           "basis": "Regression verifies lost acknowledgement prevents execution and lost result does not retry."
+        },
+        {
+          "path": "tests/unit/test_browser_capture_recovery.py",
+          "symbol": "test_capture_timeout_fences_subsequent_requests",
+          "sha256": "47d31a0487a6b6d5df1c891cf6614253d83842b116f449263439fd951e6477ec",
+          "basis": "New failure regression also checked against the original worker; rendered/native qualification remains open."
         }
       ],
-      "assessment": "Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates.",
+      "assessment": "Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main.",
       "support_scope": "Same-session identity, no-replay capture/action and controlled input/network contracts; no fabricated screenshots or live external workflow.",
       "remaining": [
         "Qualify real multi-agent Xpra, child-worker context/provenance, admitted egress and lifecycle recovery",
         "Retain S39 read-only limits, exact tab/window refs, DOM mutation invalidation and source-map identity"
       ],
-      "next_action": "Use current browser worker/controller and real four-profile rendered checks; preserve qualified host gates for all supported platforms."
+      "next_action": "Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery."
     },
     {
       "id": "frontend",
@@ -123582,8 +123906,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "121b50412859393cc01baa408bcb2e70d1970a2954afd5410dc8df85d7f1bb5a",
-          "basis": "U01-A queue transport source or test definition. Exact-revision execution evidence is tracked in CI."
+          "sha256": "2aa5929690fdc44601a8a6a78c836f2066bd242c70871963c686697e2c1328ce",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
           "path": "src/potbot/service.py",
@@ -123687,6 +124011,43 @@
         "Give any additional transport provider an equivalent receipt or cancellation contract before admission."
       ],
       "next_action": "Qualify the supported native host configuration before live deployment and keep additional transport producers gated on provider evidence."
+    },
+    {
+      "id": "stage-acceptance",
+      "owners": [
+        "U04",
+        "U16"
+      ],
+      "status": "implemented_unqualified",
+      "code": [
+        {
+          "path": "scripts/tool_phase1_gate.py",
+          "symbol": "run_gate",
+          "sha256": "64a168320c473f2ada34330d7b5ade1dd94772d22ea9928a28ff1a4c32761c19",
+          "basis": "Reviewed source/report identity and required JUnit acceptance path."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/unit/test_tool_phase1_gate.py",
+          "symbol": "test_previous_green_reports_cannot_qualify_another_run",
+          "sha256": "ba5b13a46ec39e2f4e6ea9f35ad00a31a8f82df7d2c702cbb58f08b2aa4d9efc",
+          "basis": "Regression for prior-report reuse; mocked check execution does not establish runtime qualification."
+        },
+        {
+          "path": "tests/unit/test_tool_phase1_gate.py",
+          "symbol": "test_inconsistent_junit_counters_never_establish_a_pass",
+          "sha256": "ba5b13a46ec39e2f4e6ea9f35ad00a31a8f82df7d2c702cbb58f08b2aa4d9efc",
+          "basis": "Actual testcase/counter reconciliation rejects malformed acceptance evidence."
+        }
+      ],
+      "assessment": "T01.4 now invalidates stale reports before execution, retains unique run directories and actual source manifests, and checks source stability plus real nonempty unskipped PostgreSQL/sandbox JUnit cases. Fully-qualified is explicitly limited to application PostgreSQL and sandbox tests; production_runtime_qualified stays false.",
+      "support_scope": "Acceptance-report contract tests and offline gate; no implicit native, image, custody, provider or specialist qualification.",
+      "remaining": [
+        "Run the full application qualified gate at the final commit on its required PostgreSQL/sandbox host.",
+        "Retain independent signed-image/native-runtime and specialist qualification reports."
+      ],
+      "next_action": "Use the fresh source-bound report and inspect its explicit qualification_scope; run installed-host gates independently."
     }
   ]
 }

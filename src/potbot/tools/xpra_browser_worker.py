@@ -300,8 +300,12 @@ class BrowserWorker:
         self._scripts: dict[str, dict[str, Any]] = {}
         self._scripts_enabled = False
         self._picker = False
+        self._capture_active = False
+        self.capture_fenced = False
 
     async def start(self) -> None:
+        if self.capture_fenced:
+            raise RuntimeError("an unresolved capture requires a new operator-managed worker")
         egress = require_egress_config()
         # Never leak the short-lived CONNECT capability to the Chromium/Node subprocess.
         os.environ.pop("POTBOT_BROWSER_CONNECT_TOKEN_FILE", None)
@@ -522,37 +526,54 @@ class BrowserWorker:
 
         Direct CDP surface capture avoids Page.screenshot's font-readiness
         helper and the headful view capture path. A completed native capture
-        failure may use the view path once. A timeout leaves Chromium's request
-        pending, so never overlap it with another capture. Both paths remain
+        failure may use the view path once. A timeout or cancellation cannot
+        prove that Chromium stopped its request, so fence the worker across
+        later calls and let its owner tear down the session. Both paths remain
         private reads; neither broadens public CDP authority or retries actions.
         """
+        if self.capture_fenced:
+            raise RuntimeError("browser capture is unresolved")
+        if self._capture_active:
+            raise RuntimeError("browser capture is already in progress")
+        # Claim the native request before the first await. Direct callers must
+        # obey the same single-capture rule as the sequential wire protocol.
+        self._capture_active = True
         # Let Chromium synchronize its own capture. Page JavaScript (including
         # requestAnimationFrame) can be replaced or suspended by the document;
         # it must not gate this private observation of the compositor.
         # One deadline covers both paths. Do not cancel a cold surface read
         # early merely to reserve time for a fallback that only a completed
         # native error may authorize.
-        async with asyncio.timeout(6.0):
-            for from_surface in (True, False):
-                try:
-                    reply = await self.cdp.send(
-                        "Page.captureScreenshot",
-                        {
-                            "format": "jpeg",
-                            "quality": 48,
-                            "fromSurface": from_surface,
-                            "captureBeyondViewport": False,
-                        },
-                    )
-                    break
-                except Exception as error:
-                    capture_unavailable = type(
-                        error
-                    ).__module__ == f"{self.engine}._impl._errors" and str(error).endswith(
-                        "Protocol error (Page.captureScreenshot): Unable to capture screenshot"
-                    )
-                    if not from_surface or not capture_unavailable:
-                        raise
+        try:
+            async with asyncio.timeout(6.0):
+                for from_surface in (True, False):
+                    try:
+                        reply = await self.cdp.send(
+                            "Page.captureScreenshot",
+                            {
+                                "format": "jpeg",
+                                "quality": 48,
+                                "fromSurface": from_surface,
+                                "captureBeyondViewport": False,
+                            },
+                        )
+                        break
+                    except Exception as error:
+                        capture_unavailable = type(
+                            error
+                        ).__module__ == f"{self.engine}._impl._errors" and str(error).endswith(
+                            "Protocol error (Page.captureScreenshot): Unable to capture screenshot"
+                        )
+                        if not from_surface or not capture_unavailable:
+                            raise
+        except (TimeoutError, asyncio.CancelledError):
+            # Cancelling CDPSession.send only cancels our wait, not the native
+            # compositor request. Never issue a replacement in this session,
+            # even if a caller retries after the original Python task ended.
+            self.capture_fenced = True
+            raise
+        finally:
+            self._capture_active = False
         encoded = reply.get("data") if isinstance(reply, dict) else None
         if not isinstance(encoded, str) or not 0 < len(encoded) <= 800_000:
             raise ValueError("render sample is absent or exceeds bound")
@@ -570,6 +591,8 @@ class BrowserWorker:
 
     async def execute(self, data: dict[str, Any]) -> dict[str, Any]:
         data = validate_command(data)
+        if self.capture_fenced:
+            raise RuntimeError("browser capture is unresolved")
         op = data["op"]
         if op == "state":
             return {
@@ -732,6 +755,8 @@ async def serve(engine: str, stealth: bool) -> None:
                     "error": "browser command was rejected or failed",
                     "indeterminate": browser_operation_may_mutate(command),
                 }
+                if worker.capture_fenced:
+                    response["session_fenced"] = True
             encoded = json.dumps(response, separators=(",", ":"), ensure_ascii=True)
             if len(encoded) > 1_500_000:
                 encoded = json.dumps(
@@ -744,6 +769,11 @@ async def serve(engine: str, stealth: bool) -> None:
                 )
             sys.stdout.write(encoded + "\n")
             sys.stdout.flush()
+            if worker.capture_fenced:
+                # Report the failed observation once, then close the private
+                # pipe and browser in finally. The operator owns replacement;
+                # this process never reopens a browser or replays an action.
+                return
     finally:
         await worker.close()
 

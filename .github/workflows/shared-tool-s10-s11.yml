@@ -1,11 +1,19 @@
-name: S10 S11 shared tools offline contracts
+name: S10 S11 S12 shared tools offline contracts
 on:
   push:
     paths:
       - 'src/potbot/tools/tool_stage_s10.py'
       - 'src/potbot/tools/tool_approval_worker_s11.py'
+      - 'src/potbot/tools/tool_release_gate_s12.py'
+      - 'src/potbot/tools/shared_tool*.py'
+      - 'src/potbot/tools/shared_workspace_isolation.py'
+      - 'src/potbot/tools/workspace_concurrency.py'
+      - 'src/potbot/tools/workspace_supervision.py'
+      - 'src/potbot/tools/ai_workspace_operator.py'
+      - 'src/potbot/controller/native_cog_dispatch.py'
       - 'src/potbot/api/ui_tool_upgrades.py'
       - 'src/potbot/persistence/tool_upgrade_approval_schema.py'
+      - 'src/potbot/persistence/tool_release_gate_schema.py'
       - 'src/potbot/persistence/schema.py'
       - 'src/potbot/api/server_cli.py'
       - 'scripts/tool_pipeline_s10.py'
@@ -14,6 +22,16 @@ on:
       - 'tests/unit/test_ui_tool_upgrades_s11.py'
       - 'tests/unit/test_tool_upgrade_approval_store_s11.py'
       - 'tests/unit/test_tool_approval_worker_s11.py'
+      - 'tests/unit/test_shared_tool_release_s12.py'
+      - 'tests/unit/test_shared_tool_upgrades_s9.py'
+      - 'tests/unit/test_shared_tool_store.py'
+      - 'tests/unit/test_workspace_concurrency.py'
+      - 'tests/unit/test_shared_tool_mounts_s5.py'
+      - 'tests/unit/test_shared_tool_install_gate.py'
+      - 'tests/unit/test_shared_workspace_isolation.py'
+      - 'tests/unit/test_shared_execution_s2.py'
+      - '.github/workflows/shared-tool-s10-s11.yml'
+      - 'frontend/package.json'
       - 'frontend/src/lib/tool-upgrades.ts'
       - 'frontend/src/app/api/ui/tools/**'
       - 'frontend/src/app/setup/tools/**'
@@ -35,15 +53,29 @@ jobs:
           version: '0.12.23'
       - name: Install source-locked Python environment
         run: uv sync --locked --extra web --dev
-      - name: Offline S10 and S11 unit acceptance
+      - name: Offline S9 through S12 unit acceptance
         run: >-
           uv run --locked python -m pytest -q
           tests/unit/test_tool_stage_s10.py
           tests/unit/test_ui_tool_upgrades_s11.py
           tests/unit/test_tool_upgrade_approval_store_s11.py
           tests/unit/test_tool_approval_worker_s11.py
+          tests/unit/test_shared_tool_upgrades_s9.py
+          tests/unit/test_shared_tool_release_s12.py
+          tests/unit/test_shared_tool_store.py
+          tests/unit/test_workspace_concurrency.py
+          tests/unit/test_shared_tool_mounts_s5.py
+          tests/unit/test_shared_tool_install_gate.py
+          tests/unit/test_shared_workspace_isolation.py
+          tests/unit/test_shared_execution_s2.py
       - name: Check syntax and source style
-        run: uv run --locked ruff check src/potbot/tools/tool_stage_s10.py src/potbot/tools/tool_approval_worker_s11.py src/potbot/api/ui_tool_upgrades.py src/potbot/persistence/tool_upgrade_approval_schema.py scripts/tool_pipeline_s10.py scripts/tool_approval_s11.py
+        run: >-
+          uv run --locked ruff check src/potbot/tools/tool_stage_s10.py
+          src/potbot/tools/tool_approval_worker_s11.py src/potbot/tools/tool_release_gate_s12.py
+          src/potbot/tools/shared_tool_release_markers.py src/potbot/api/ui_tool_upgrades.py
+          src/potbot/persistence/tool_upgrade_approval_schema.py
+          src/potbot/persistence/tool_release_gate_schema.py
+          scripts/tool_pipeline_s10.py scripts/tool_approval_s11.py
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

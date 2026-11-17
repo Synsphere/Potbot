@@ -185,8 +185,11 @@ def test_successful_activation_is_not_fully_active_before_repin(context_store):
     assert status["state"] == "awaiting_repin"
     with pytest.raises(StateMismatchError):
         store.confirm_repin(context, operation=UUID(t["id"]), tested_sha256="0" * 64)
-    status = store.confirm_repin(context, operation=UUID(t["id"]), tested_sha256="d" * 64)
-    assert status["state"] == "active"
+    # A matching S11 pin is no longer a release decision. S12 must independently
+    # retain postflight evidence before the installed tool can become active.
+    with pytest.raises(StateMismatchError, match="postflight"):
+        store.confirm_repin(context, operation=UUID(t["id"]), tested_sha256="d" * 64)
+    assert store.inspect(context, UUID(t["id"]))["state"] == "awaiting_repin"
 
 
 def test_agent_scoped_host_claim_does_not_consume_peer_approval(context_store):

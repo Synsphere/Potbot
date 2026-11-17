@@ -118,7 +118,9 @@ class SharedToolInstallExecutor:
             raise StateMismatchError("installer agent home is unavailable")
         operation = "tool.upgrade" if upgrade else "tool.install"
         # AccessResource validates slug before starting the lease. Every
-        # installation is excluded from readers/writers of the *same* tool.
+        # installation excludes readers/writers of the selected tool; the
+        # whole-tree read footprint also prevents another tool's swap becoming
+        # visible through this installer's read-only parent tools mount.
         resource = AccessResource("shared_tool", slug, "write")
         guard = WorkspaceLeaseGuard(
             self.ledger,
@@ -128,7 +130,7 @@ class SharedToolInstallExecutor:
                 operation,
                 idempotency_key,
                 "write",
-                (resource,),
+                (resource, AccessResource("shared_tool", "*", "read")),
                 self.runtime.image_digest,
             ),
         )

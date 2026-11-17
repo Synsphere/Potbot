@@ -95,6 +95,70 @@ def test_disconnect_fences_session_and_never_replays():
         proc.wait(timeout=4)
 
 
+@pytest.mark.parametrize(
+    ("ok", "marker"), [(False, True), (False, 1), (False, "true"), (False, None), (True, True)]
+)
+def test_worker_fence_or_invalid_marker_retires_live_channel_without_another_write(ok, marker):
+    # Keep the worker alive after its first reply. The host must retire the
+    # channel immediately, not wait for process exit or dispatch another call.
+    reply = {"id": 1, "ok": ok, "session_fenced": marker, "result": {}}
+    script = f"""import sys,json
+count=0
+for line in sys.stdin:
+ count+=1
+ request=json.loads(line)
+ if count==1:
+  print(json.dumps({reply!r}),flush=True)
+ else:
+  print(json.dumps({{'id':request['id'],'ok':True,'result':{{}}}}),flush=True)
+print('received='+str(count),flush=True)
+"""
+    proc = subprocess.Popen(
+        [sys.executable, "-u", "-c", script], stdin=subprocess.PIPE, stdout=subprocess.PIPE
+    )
+    try:
+        channel = BrowserControlChannel(proc)
+        with pytest.raises(StateMismatchError):
+            channel.call({"op": "sample"}, timeout=2)
+        assert proc.poll() is None
+        with pytest.raises(StateMismatchError):
+            channel.call({"op": "role.click", "role": "button", "name": "Submit"}, timeout=2)
+        proc.stdin.close()
+        proc.wait(timeout=4)
+        assert proc.stdout.read() == b"received=1\n"
+        channel.close()
+    finally:
+        if proc.poll() is None:
+            proc.terminate()
+        proc.wait(timeout=4)
+
+
+@pytest.mark.parametrize("extra", [{}, {"session_fenced": False}])
+def test_ordinary_read_rejection_keeps_healthy_worker_usable(extra):
+    reply = {"id": 1, "ok": False, "indeterminate": False, **extra}
+    script = f"""import sys,json
+for index,line in enumerate(sys.stdin):
+ request=json.loads(line)
+ if index==0:
+  print(json.dumps({reply!r}),flush=True)
+ else:
+  print(json.dumps({{'id':request['id'],'ok':True,'result':{{'usable':True}}}}),flush=True)
+"""
+    proc = subprocess.Popen(
+        [sys.executable, "-u", "-c", script], stdin=subprocess.PIPE, stdout=subprocess.PIPE
+    )
+    try:
+        channel = BrowserControlChannel(proc)
+        with pytest.raises(InvalidInputError):
+            channel.call({"op": "sample"}, timeout=2)
+        assert channel.call({"op": "state"}, timeout=2) == {"usable": True}
+        channel.close()
+    finally:
+        if proc.poll() is None:
+            proc.terminate()
+        proc.wait(timeout=4)
+
+
 class FakeBrowserApps:
     def browser_command(self, identifier, command):
         if identifier != "a" * 32:

@@ -5,6 +5,8 @@ from __future__ import annotations
 import asyncio
 import base64
 import hashlib
+import io
+import json
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
@@ -106,6 +108,146 @@ def test_capture_timeout_never_overlaps_a_still_pending_native_capture():
     worker.page.screenshot.assert_not_awaited()
 
 
+@pytest.mark.parametrize(
+    "later_command",
+    [
+        {"op": "sample", "image": True},
+        {"op": "sample", "image": False},
+        {"op": "navigate", "url": "about:blank"},
+        {"op": "input.keyboard", "action": "type", "text": "must not replay"},
+    ],
+)
+def test_capture_timeout_fences_subsequent_requests(later_command):
+    worker = browser()
+    worker.cdp.send.side_effect = [TimeoutError(), {"data": base64.b64encode(JPEG).decode()}]
+    worker.page.goto = AsyncMock()
+    worker.page.title = AsyncMock(return_value="Synthetic fixture")
+    worker.page.keyboard = SimpleNamespace(insert_text=AsyncMock())
+    with pytest.raises(TimeoutError):
+        sample(worker)
+    with pytest.raises(RuntimeError, match="capture is unresolved"):
+        asyncio.run(worker.execute(later_command))
+    worker.cdp.send.assert_awaited_once_with("Page.captureScreenshot", PARAMS)
+    worker.page.goto.assert_not_awaited()
+    worker.page.keyboard.insert_text.assert_not_awaited()
+
+
+def test_direct_concurrent_captures_have_one_native_owner():
+    async def scenario():
+        worker = browser()
+        entered = asyncio.Event()
+        release = asyncio.Event()
+
+        async def capture(method, params):
+            entered.set()
+            await release.wait()
+            return {"data": base64.b64encode(JPEG).decode()}
+
+        worker.cdp.send.side_effect = capture
+        first = asyncio.create_task(worker.execute({"op": "sample"}))
+        await entered.wait()
+        try:
+            with pytest.raises(RuntimeError, match="capture is already in progress"):
+                await worker.execute({"op": "sample"})
+            worker.cdp.send.assert_awaited_once_with("Page.captureScreenshot", PARAMS)
+        finally:
+            release.set()
+            await first
+        # A completed response releases ownership; refusing a competing call
+        # must not poison an otherwise healthy session.
+        assert (await worker.execute({"op": "sample"}))["frame"]["bytes"] == len(JPEG)
+        assert worker.cdp.send.await_count == 2
+
+    asyncio.run(scenario())
+
+
+def test_cancellation_fences_even_after_the_native_request_later_completes():
+    async def scenario():
+        worker = browser()
+        entered = asyncio.Event()
+        native_done = asyncio.Event()
+        native = None
+
+        async def native_capture():
+            entered.set()
+            await native_done.wait()
+            return {"data": base64.b64encode(JPEG).decode()}
+
+        async def send(method, params):
+            nonlocal native
+            native = asyncio.create_task(native_capture())
+            # Model the actual boundary: cancelling the Python wait does not
+            # cancel Chromium's independent compositor request.
+            return await asyncio.shield(native)
+
+        worker.cdp.send.side_effect = send
+        request = asyncio.create_task(worker.execute({"op": "sample"}))
+        await entered.wait()
+        try:
+            request.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await request
+            assert native is not None and not native.done()
+            with pytest.raises(RuntimeError, match="capture is unresolved"):
+                await worker.execute({"op": "sample"})
+        finally:
+            native_done.set()
+            if native is not None:
+                await native
+        # A late native result is not evidence for a fresh request and cannot
+        # silently reopen a fenced session.
+        with pytest.raises(RuntimeError, match="capture is unresolved"):
+            await worker.execute({"op": "sample"})
+        worker.cdp.send.assert_awaited_once_with("Page.captureScreenshot", PARAMS)
+        await worker.close()
+        with pytest.raises(RuntimeError, match="new operator-managed worker"):
+            await worker.start()
+
+    asyncio.run(scenario())
+
+
+def test_completed_protocol_error_does_not_fence_the_next_observation():
+    worker = browser()
+    worker.cdp.send.side_effect = [
+        RuntimeError("completed fixture protocol error"),
+        {"data": base64.b64encode(JPEG).decode()},
+    ]
+    with pytest.raises(RuntimeError, match="completed fixture"):
+        sample(worker)
+    assert sample(worker)["frame"]["bytes"] == len(JPEG)
+    assert worker.cdp.send.await_count == 2
+
+
+def test_fenced_wire_worker_reports_once_then_awaits_teardown(monkeypatch):
+    from potbot.tools import xpra_browser_worker as module
+
+    worker = browser(error=TimeoutError())
+    worker.start = AsyncMock()
+    worker.close = AsyncMock()
+    requests = [
+        {"id": 1, "command": {"op": "sample"}},
+        {"id": 2, "command": {"op": "sample"}},
+    ]
+    source = io.BytesIO(b"".join(json.dumps(item).encode() + b"\n" for item in requests))
+    output = io.StringIO()
+    monkeypatch.setattr(module, "BrowserWorker", lambda *_: worker)
+    monkeypatch.setattr(module.sys, "stdin", SimpleNamespace(buffer=source))
+    monkeypatch.setattr(module.sys, "stdout", output)
+    asyncio.run(module.serve("playwright", False))
+    assert [json.loads(line) for line in output.getvalue().splitlines()] == [
+        {
+            "id": 1,
+            "ok": False,
+            "error": "browser command was rejected or failed",
+            "indeterminate": False,
+            "session_fenced": True,
+        }
+    ]
+    assert json.loads(source.readline())["id"] == 2
+    worker.cdp.send.assert_awaited_once_with("Page.captureScreenshot", PARAMS)
+    worker.close.assert_awaited_once()
+
+
 @pytest.mark.parametrize("fallback", [False, True])
 def test_real_timeout_is_one_shared_budget_and_cancels_pending_capture(monkeypatch, fallback):
     from potbot.tools import xpra_browser_worker as module
@@ -136,6 +278,9 @@ def test_real_timeout_is_one_shared_budget_and_cancels_pending_capture(monkeypat
         sample(worker)
     assert budgets == [6.0]
     assert cancelled == [not fallback]
+    assert worker.cdp.send.await_count == 1 + int(fallback)
+    with pytest.raises(RuntimeError, match="capture is unresolved"):
+        sample(worker)
     assert worker.cdp.send.await_count == 1 + int(fallback)
 
 

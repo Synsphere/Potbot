@@ -52,7 +52,10 @@ def admission(tmp_path: Path):
         "tool.install",
         "install-a",
         "write",
-        (AccessResource("shared_tool", "stemlab", "write"),),
+        (
+            AccessResource("shared_tool", "stemlab", "write"),
+            AccessResource("shared_tool", "*", "read"),
+        ),
         image_digest,
     )
     guard = WorkspaceLeaseGuard(ledger, request)

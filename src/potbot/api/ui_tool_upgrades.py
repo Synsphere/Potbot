@@ -23,6 +23,7 @@ from potbot.domain.errors import (
     ScopeDeniedError,
     StateMismatchError,
 )
+from potbot.domain.serialization import content_hash
 
 if TYPE_CHECKING:
     from fastapi import FastAPI
@@ -130,6 +131,14 @@ def _public(row: Any) -> dict[str, object]:
         "revision": row["revision"],
         "state": row["state"],
         "updatedAt": row["updated_at"].isoformat(),
+        "releaseState": row.get("release_phase", "none"),
+        "releaseGeneration": row.get("release_generation") or None,
+        "releaseBindingSha256": content_hash(row["release_binding"])
+        if row.get("release_binding")
+        else None,
+        "releaseEvidenceSha256": content_hash(row["release_evidence"])
+        if row.get("release_evidence")
+        else None,
     }
 
 
@@ -438,7 +447,7 @@ class UiToolUpgradeStore:
     def confirm_repin(
         self, context: WorkspaceContext, *, operation: UUID, tested_sha256: str
     ) -> dict[str, object]:
-        """Host-only completion after operator verifies current runtime hashes."""
+        """Legacy readback only; S12 is the sole writer of a released decision."""
         _digest(tested_sha256)
         with self.database.transaction(context) as conn:
             record = conn.execute(
@@ -447,29 +456,12 @@ class UiToolUpgradeStore:
             ).fetchone()
             if (
                 record is None
-                or record["state"] != "awaiting_repin"
+                or record["state"] not in {"active", "rolled_back"}
+                or record["release_phase"] != "released"
                 or (record["evidence_sha256"] != tested_sha256)
             ):
-                raise StateMismatchError("Operator runtime repin not ready")
-            updated = conn.execute(
-                "UPDATE ui_tool_upgrade_approvals SET state='active',"
-                "revision=revision+1,updated_at=clock_timestamp() "
-                "WHERE workspace_id=%s AND id=%s AND state='awaiting_repin' RETURNING *",
-                (context.workspace_id, operation),
-            ).fetchone()
-            if updated is None:
-                raise StateMismatchError("Operator repin state changed")
-            self._audit(
-                conn,
-                context,
-                operation,
-                "reconciled",
-                "awaiting_repin",
-                "active",
-                updated["revision"],
-                tested_sha256,
-            )
-            return _public(updated)
+                raise StateMismatchError("Independent S12 postflight release is required")
+            return _public(record)
 
 
 def register_tool_upgrade_routes(

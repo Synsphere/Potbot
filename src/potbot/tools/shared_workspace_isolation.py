@@ -15,6 +15,7 @@ import shutil
 import stat
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from potbot.context.model import ROLES
@@ -27,6 +28,10 @@ from potbot.tools.model_cache_routes import model_environment
 from potbot.tools.operator_attachment_s13 import runtime_attachment
 from potbot.tools.scoped_launcher import WSL_DRIVER_SHARE
 from potbot.tools.shared_tool_mounts import ToolWriteGrant
+
+if TYPE_CHECKING:
+    from potbot.tools.shared_tool_release_markers import ToolMaintenanceProbe
+    from potbot.tools.tool_release_gate_s12 import ToolReleaseAuthority
 
 _COG_LOG_MOUNT = "/var/logs/ai"
 
@@ -157,6 +162,8 @@ class SharedWorkspaceRuntime:
     context_projection: ContextProjection | None = None
     shared_skills: Path | None = None
     agent_context_projections: tuple[AgentContextProjection, ...] = ()
+    tool_release_authority: ToolReleaseAuthority | None = None
+    tool_maintenance_probe: ToolMaintenanceProbe | None = None
 
     def __post_init__(self) -> None:
         import re
@@ -470,6 +477,9 @@ class SharedWorkspaceBubblewrapBackend(BubblewrapBackend):
                     )
                 )
         # Guest executable must be present inside immutable image; no host executable bind.
+        from potbot.tools.shared_tool_release_markers import blocked_directories
+
+        held_tools = blocked_directories(self.runtime)
         if not argv or not argv[0].startswith("/"):
             raise InvalidInputError("guest command must use an absolute path")
         guest = argv[0]
@@ -486,6 +496,8 @@ class SharedWorkspaceBubblewrapBackend(BubblewrapBackend):
                 raise InvalidInputError("shared tool entrypoint hash is invalid")
             relative = guest.removeprefix("/usr/local/tools/")
             pieces = relative.split("/")
+            if pieces[0] in held_tools:
+                raise ScopeDeniedError("shared tool is held pending independent postflight release")
             if (
                 len(pieces) < 3
                 or pieces[1] not in {"environment", "static"}
@@ -529,6 +541,10 @@ class SharedWorkspaceBubblewrapBackend(BubblewrapBackend):
             # admit() has verified the active lease before granting this mount.
             assert write_grant.guard.lease is not None
             writable_slug = write_grant.slug
+            if writable_slug in held_tools:
+                raise ScopeDeniedError(
+                    "shared tool write grant cannot bypass its postflight release hold"
+                )
             write_lease_id = write_grant.guard.lease.lease_id
         # --clearenv removes caller-supplied variables. Use the operator's
         # dedicated cache policy for installation, per-agent state for use.
@@ -601,6 +617,9 @@ class SharedWorkspaceBubblewrapBackend(BubblewrapBackend):
                 "--ro-bind",
                 str(tools),
                 "/usr/local/tools",
+                # Hide held source and environments from image interpreters too.
+                # A per-tool maintenance probe is the only pre-release exception.
+                *[arg for name in held_tools for arg in ("--tmpfs", "/usr/local/tools/" + name)],
                 *(
                     (
                         "--bind",
@@ -707,6 +726,7 @@ class SharedWorkspaceBubblewrapBackend(BubblewrapBackend):
                     "writable_tool": writable_slug,
                     "tool_write_lease": write_lease_id,
                     "tool_entrypoints": sorted(self.runtime.tool_entrypoints),
+                    "held_tools": held_tools,
                     "guest_uid": guest_uid,
                     "guest_gid": guest_gid,
                     "kernel_agent_dac_qualified": False,

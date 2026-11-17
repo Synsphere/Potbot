@@ -6,6 +6,15 @@
 **Delivery:** additive `git apply` patch, rebased in documentation against the latest tool-plan commit. No existing source is removed or overwritten.
 **Qualification:** new offline tests passed in a minimal local compatibility harness; full repository CI, PostgreSQL, native custody and production sandbox are **not qualified by that result**.
 
+**Current reconciliation, 17 November 2026:** the baseline and delivery notes
+above describe the original October increment. Current main already contains
+the README, durable gateway/queue/MCP paths and signed Cog execution/receipts.
+Do not perform the historical README restoration below on current main.
+T01.3 remains open for complete producer adoption. The
+[S12/execution qualification increment](s12-tool-release-and-execution-qualification.md)
+adds unique T01.4 run/source identities, stale-report invalidation, actual JUnit
+verification and an explicit application-only qualification scope.
+
 ## Existing integration points, not new competing systems
 
 The reviewed repository contains controller-owned `ToolDefinition`, `ToolRegistry`, `ActionProposal` and `ToolGateway` in `domain/execution.py` and `tools/gateway.py`. It also has durable controller jobs, WebSocket/REST APIs, per-workspace sandbox roots, Linux Bubblewrap/seccomp isolation, immutable receipts, an authenticated credential broker, inherited SYN Ember contracts, installed single-input/single-output Cogs, semantic hierarchy types for `tool-definition` and `mcp-tool-definition`, and preliminary Phase 6/7 investigation and benchmarking.
@@ -57,9 +66,9 @@ For full phase qualification **on a host with real PostgreSQL and qualified Linu
 uv run --locked python scripts/tool_phase1_gate.py --mode qualified
 ```
 
-The full gate invokes Potbot's `scripts/check.py --with-postgres --with-sandbox`, including Ruff, formatting, mypy, existing unit/integration suites and wheel-install checks. It writes `artifacts/tool-platform-phase1/phase1-gate.json` with `fully_qualified=false` unless all required full checks pass. A returned offline exit code 0 is never interpreted as production qualification.
+The full gate invokes Potbot's `scripts/check.py --with-postgres --with-sandbox`, including Ruff, formatting, mypy, existing unit/integration suites and wheel-install checks. It writes `artifacts/tool-platform-phase1/phase1-gate.json` and retains evidence under a unique `runs/<run_id>/` directory. `fully_qualified` remains false unless all required full checks and their non-empty, unskipped JUnit cases pass without source drift. Its scope is `application_postgres_and_sandbox_tests`; `production_runtime_qualified` remains false. A returned offline exit code 0 is never interpreted as production qualification.
 
-## Existing HEAD blocker: README removed
+## Historical October blocker: README removed
 
 The `fcede56c` tool-plan commit deletes the project-root `README.md`, while `pyproject.toml` still declares `readme = "README.md"`. This is a pre-existing build blocker, not part of this patch's new subsystem. **Restore the previous README from version control before running the clean wheel gate:**
 

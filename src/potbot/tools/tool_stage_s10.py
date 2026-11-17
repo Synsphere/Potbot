@@ -420,7 +420,10 @@ def build_and_stage(
             "tool.stage_s10",
             "s10-" + plan.operation_id.hex,
             "write",
-            (AccessResource("shared_tool", plan.slug, "write"),),
+            (
+                AccessResource("shared_tool", plan.slug, "write"),
+                AccessResource("shared_tool", "*", "read"),
+            ),
             runtime.image_digest,
         ),
     )
