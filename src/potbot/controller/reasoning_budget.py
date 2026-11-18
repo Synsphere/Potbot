@@ -14,6 +14,7 @@ from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid5
 
 from potbot.controller.budgets import BudgetLedger
+from potbot.controller.reasoning_runtime import ReasoningDispatchInterrupted
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import InvalidInputError, ScopeDeniedError, StateMismatchError
 from potbot.models.hosted_policy import HostedPolicy
@@ -146,6 +147,13 @@ class ReasoningBudgetJournal:
     ) -> None:
         """Commit the possible-dispatch marker and lease/task check atomically."""
         with self.database.transaction(context) as conn:
+            run = conn.execute(
+                "SELECT interrupt_requested FROM reasoning_runtime_runs "
+                "WHERE workspace_id=%s AND id=%s FOR UPDATE",
+                (context.workspace_id, UUID(hex=ticket.run_id)),
+            ).fetchone()
+            if run is not None and run["interrupt_requested"]:
+                raise ReasoningDispatchInterrupted("user interrupt fenced budgeted dispatch")
             row = conn.execute(
                 "UPDATE reasoning_budget_invocations i SET status='dispatched',"
                 "updated_at=clock_timestamp() WHERE i.workspace_id=%s AND i.id=%s "

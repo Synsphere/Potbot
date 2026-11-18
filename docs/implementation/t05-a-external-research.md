@@ -284,9 +284,10 @@ their own acceptance evidence. The full G07 document/OCR/archive roundtrip
 gates and T05.3 scientific/archival connectors remain open, so the canonical
 T05 statuses and global runtime qualification are unchanged.
 
-The next coherent implementation batch is **T05.3 specialist retrieval** using
-the same admitted research lifecycle: exact query contracts, DOI and author/
-title matching, correction/retraction metadata, independent source lineage and
-explicit unsupported endpoint behavior. Qualification of the configured live
-provider and isolated PDF profiles remains a deployment gate alongside that
-implementation work.
+The subsequent [T05-B specialist retrieval](t05-b-specialist-research.md)
+implements T05.3 through this same admitted lifecycle: exact query contracts,
+DOI and author/title matching, correction/retraction metadata, independent source
+lineage and explicit unavailable endpoints. Qualification of configured live
+providers and installed PDF profiles remains a deployment gate. The active
+roadmap now proceeds with R7 agentic improvements while new Syn integration is
+deferred until a release.

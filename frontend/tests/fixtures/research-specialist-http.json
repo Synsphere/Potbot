@@ -1,0 +1,982 @@
+{
+  "description": "Actual PostgreSQL/HTTP owners with synthetic provider responses; no live qualification.",
+  "workspaceId": "3ef6547e-6550-40fe-add2-c93495295ca3",
+  "principalId": "6f25de30-00bb-46cb-a32d-fa33af14d0f9",
+  "episodeId": "59ac4c09-b453-468a-965c-a1f103a4db47",
+  "repositoryStateId": "09ac668a-d580-51a4-ae7b-d4767266fec0",
+  "needId": "8cfb7631-9c5c-459a-a7ce-734605856ed9",
+  "runId": "141652f2-b62b-4bed-acb8-de5a0b842942",
+  "context": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "3ef6547e-6550-40fe-add2-c93495295ca3",
+      "principalId": "6f25de30-00bb-46cb-a32d-fa33af14d0f9"
+    },
+    "task": {
+      "episodeId": "59ac4c09-b453-468a-965c-a1f103a4db47",
+      "contractRevisionId": "4a7c03be-4e5d-4613-b426-3b313b290b78",
+      "repositoryStateId": "09ac668a-d580-51a4-ae7b-d4767266fec0",
+      "semanticReleaseSha256": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1",
+      "status": "running"
+    },
+    "needs": [
+      {
+        "id": "8cfb7631-9c5c-459a-a7ce-734605856ed9",
+        "revisionId": "fe618320-fca0-42d4-86aa-f4960a2c7c93",
+        "contentSha256": "432fcd2f48d2dbd0dff5fc5850af8424acad206eb941863961df9819c15d97ba",
+        "status": "open",
+        "question": "Which source file is relevant?"
+      }
+    ],
+    "need": {
+      "id": "8cfb7631-9c5c-459a-a7ce-734605856ed9",
+      "revisionId": "fe618320-fca0-42d4-86aa-f4960a2c7c93",
+      "contentSha256": "432fcd2f48d2dbd0dff5fc5850af8424acad206eb941863961df9819c15d97ba",
+      "status": "open",
+      "spec": {
+        "schema_version": 1,
+        "question": "Which source file is relevant?",
+        "pending_decision": "Select a bounded implementation",
+        "alternatives": [
+          "inspect",
+          "stop"
+        ],
+        "required_evidence": [
+          "exact repository source bytes"
+        ],
+        "resolution_criteria": [
+          "inspected source excerpt"
+        ],
+        "scope": "pinned repository state",
+        "known_evidence": [],
+        "priority": 50,
+        "budget": {},
+        "query_profiles": []
+      }
+    },
+    "policy": {
+      "sha256": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+      "content": {
+        "schema": "potbot-external-research-policy/v1",
+        "allow_query_disclosure": true,
+        "providers": [
+          {
+            "provider": "crossref",
+            "cost_microunits_per_call": 2,
+            "minimum_interval_ms": 0
+          },
+          {
+            "provider": "openalex",
+            "cost_microunits_per_call": 2,
+            "minimum_interval_ms": 0
+          },
+          {
+            "provider": "pubmed",
+            "cost_microunits_per_call": 2,
+            "minimum_interval_ms": 0
+          }
+        ],
+        "fetch_hosts": [
+          {
+            "host": "docs.example.com",
+            "terms_approved": true,
+            "minimum_interval_ms": 0
+          }
+        ],
+        "fallback_statuses": [
+          "rate_limited",
+          "quota_exhausted",
+          "unavailable"
+        ],
+        "max_results": 3,
+        "max_documents": 0,
+        "max_requests": 8,
+        "max_source_bytes": 16384,
+        "timeout_seconds": 1
+      }
+    },
+    "providerDescriptors": [
+      {
+        "id": "crossref",
+        "method": "POST",
+        "endpoint": "https://api.crossref.org/works",
+        "adapterRevision": 1,
+        "mode": "specialist_retrieval",
+        "scope": "explicit_query_disclosure"
+      },
+      {
+        "id": "openalex",
+        "method": "POST",
+        "endpoint": "https://api.openalex.org/works",
+        "adapterRevision": 1,
+        "mode": "specialist_retrieval",
+        "scope": "explicit_query_disclosure"
+      },
+      {
+        "id": "pubmed",
+        "method": "POST",
+        "endpoint": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
+        "adapterRevision": 1,
+        "mode": "specialist_retrieval",
+        "scope": "explicit_query_disclosure"
+      }
+    ],
+    "contextSha256": "6690efdb62b5d1453f77c6b105d3e5a7fea03378a0a16666a4e96ff0754bc21b",
+    "queryTemplate": {
+      "category": "documentation",
+      "operation": "query_source",
+      "locator": "external-research",
+      "search_text": "Which source file is relevant?",
+      "required_identifiers": [],
+      "expected_observation": "exact repository source bytes",
+      "decision_effect": "Select a bounded implementation",
+      "evidence_requirement": "exact repository source bytes",
+      "stopping_condition": "inspected source excerpt",
+      "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+      "target_version": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+      "freshness_seconds": 0,
+      "max_results": 3,
+      "max_source_bytes": 16384
+    },
+    "current": true,
+    "reasonCodes": [],
+    "visibility": "workspace"
+  },
+  "result": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "3ef6547e-6550-40fe-add2-c93495295ca3",
+      "principalId": "6f25de30-00bb-46cb-a32d-fa33af14d0f9"
+    },
+    "execution": {
+      "schema": "potbot-external-research-run/v1",
+      "scope": {
+        "workspaceId": "3ef6547e-6550-40fe-add2-c93495295ca3",
+        "principalId": "6f25de30-00bb-46cb-a32d-fa33af14d0f9"
+      },
+      "run": {
+        "id": "141652f2-b62b-4bed-acb8-de5a0b842942",
+        "actionId": "32223123-f5b4-486f-8d21-089d5af71256",
+        "episodeId": "59ac4c09-b453-468a-965c-a1f103a4db47",
+        "needId": "8cfb7631-9c5c-459a-a7ce-734605856ed9",
+        "needRevisionId": "fe618320-fca0-42d4-86aa-f4960a2c7c93",
+        "state": "succeeded",
+        "revision": 11,
+        "createdAt": "2026-11-18T06:39:16.324212Z",
+        "startedAt": "2026-11-18T06:39:16.363442Z",
+        "finishedAt": "2026-11-18T06:39:17.255002Z",
+        "errorCode": null,
+        "cancelRequested": false,
+        "authorizationSha256": "44e7873216b9a6bf6790caa3d7112c184004adb059a6dcbcbaefca10e753677f",
+        "policySha256": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+        "consumerSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56",
+        "disclosureDecisionId": "7974a2ed-543e-4f6d-8f6f-e1cb48ea5401",
+        "reservationId": "77791044-2df7-430c-89b5-7b238cc35a88",
+        "resultArtifactId": "8df95517-7ccf-5655-bf43-721eff54ac23",
+        "resultSha256": "5f40e2e53bac1f199a234dfbce68469199c9c760364a6b39980bbf5ae84ed515",
+        "receiptSha256": "44ba155b4f4dbbd43973426eb8b8974e46ca3583365a53d45d80c0bf58f94b03",
+        "requestCount": 4,
+        "usageOrigin": "synthetic",
+        "visibility": "workspace",
+        "recordIntegrityValid": true
+      },
+      "action": {
+        "schema_version": 1,
+        "primary_type_ref": "synny://type/potbot-research-action",
+        "action_id": "32223123-f5b4-486f-8d21-089d5af71256",
+        "scope": {
+          "workspace_id": "3ef6547e-6550-40fe-add2-c93495295ca3",
+          "task_id": "59ac4c09-b453-468a-965c-a1f103a4db47",
+          "contract_revision_id": "4a7c03be-4e5d-4613-b426-3b313b290b78",
+          "need_id": "8cfb7631-9c5c-459a-a7ce-734605856ed9",
+          "need_revision_id": "fe618320-fca0-42d4-86aa-f4960a2c7c93",
+          "repository_state_id": "09ac668a-d580-51a4-ae7b-d4767266fec0",
+          "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1"
+        },
+        "query": {
+          "category": "documentation",
+          "operation": "query_source",
+          "locator": "external-research",
+          "search_text": "bounded source evidence",
+          "required_identifiers": [],
+          "expected_observation": "Read the real calculator implementation",
+          "decision_effect": "Choose an implementation",
+          "evidence_requirement": "Source bytes with a digest",
+          "stopping_condition": "Inspected source or an explicit miss",
+          "fallback": "Leave need open",
+          "target_version": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+          "freshness_seconds": 0,
+          "max_results": 3,
+          "max_source_bytes": 16384
+        },
+        "predecessor_id": null,
+        "identity": "9c3ddd54da19c45933f8a79006d10670d61136c4b91054f8c04511f20a7ff083"
+      },
+      "authorization": {
+        "schema": "potbot-external-research-authorization/v1",
+        "workspaceId": "3ef6547e-6550-40fe-add2-c93495295ca3",
+        "runId": "141652f2-b62b-4bed-acb8-de5a0b842942",
+        "actionId": "32223123-f5b4-486f-8d21-089d5af71256",
+        "actionIdentity": "9c3ddd54da19c45933f8a79006d10670d61136c4b91054f8c04511f20a7ff083",
+        "actorPrincipalId": "6f25de30-00bb-46cb-a32d-fa33af14d0f9",
+        "policy": {
+          "schema": "potbot-external-research-policy/v1",
+          "providers": [
+            {
+              "provider": "crossref",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 2
+            },
+            {
+              "provider": "openalex",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 2
+            },
+            {
+              "provider": "pubmed",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 2
+            }
+          ],
+          "fetch_hosts": [
+            {
+              "host": "docs.example.com",
+              "terms_approved": true,
+              "minimum_interval_ms": 0
+            }
+          ],
+          "max_results": 3,
+          "max_requests": 8,
+          "max_documents": 0,
+          "timeout_seconds": 1,
+          "max_source_bytes": 16384,
+          "fallback_statuses": [
+            "rate_limited",
+            "quota_exhausted",
+            "unavailable"
+          ],
+          "allow_query_disclosure": true
+        },
+        "policySha256": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+        "consumerSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56",
+        "pdfProfileSha256": null,
+        "disclosureDecisionId": "7974a2ed-543e-4f6d-8f6f-e1cb48ea5401",
+        "disclosureSha256": "937a500067e3b79de8cd50a7e1ca0efe4794bf7a05e95e0cb58316ff6db1a39f",
+        "reservationId": "77791044-2df7-430c-89b5-7b238cc35a88",
+        "limits": {
+          "calls": 8,
+          "tool_ms": 16000,
+          "bytes_read": 131072,
+          "concurrency": 1,
+          "money_microunits": 16
+        },
+        "sourceArtifactId": "476c625c-cb0c-560a-8597-ebb8f9142381",
+        "sourceRevision": "0f93c78bafcff7d1ce4d41f2b6e755fe98514f7949082210b1493ccb77367b64",
+        "issuedAt": "2026-11-18T06:39:16.319129Z",
+        "visibility": "workspace",
+        "sha256": "44e7873216b9a6bf6790caa3d7112c184004adb059a6dcbcbaefca10e753677f"
+      },
+      "receipt": {
+        "schema": "potbot-external-research-receipt/v1",
+        "runId": "141652f2-b62b-4bed-acb8-de5a0b842942",
+        "actionId": "32223123-f5b4-486f-8d21-089d5af71256",
+        "actionIdentity": "9c3ddd54da19c45933f8a79006d10670d61136c4b91054f8c04511f20a7ff083",
+        "authorizationSha256": "44e7873216b9a6bf6790caa3d7112c184004adb059a6dcbcbaefca10e753677f",
+        "policySha256": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+        "consumerSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56",
+        "outputArtifactId": "8df95517-7ccf-5655-bf43-721eff54ac23",
+        "outputSha256": "5f40e2e53bac1f199a234dfbce68469199c9c760364a6b39980bbf5ae84ed515",
+        "requestIds": [
+          "10c1b832-0154-4772-a3bd-7a3b8f3cbe17",
+          "a4054245-dda0-4510-9f79-3b752f6dc512",
+          "153aac5a-f7fa-431d-8510-b007ecd68fc5",
+          "2da2810c-5bd4-403f-bf17-eac90992e926"
+        ],
+        "requestSha256s": [
+          "5fa886e6b0284ddd2e4c3a228ca0406d4fe3b59a9f309f6c7286caabc754dd53",
+          "6d0672ea6679de55df895ab49596377ba03c44dcd070ebd7f20d08c6b3376e9d",
+          "d30dc52fb600e6c0aa28837d7b6e3f75a9ff983def29f72ed68845160af684d4",
+          "bffaf6a7e581f7492e7bc79089d8f6773f83e232a4106b8557e2a66b0efb82ea"
+        ],
+        "responseSha256s": [
+          "ee9650a45b399ffba8f1ddd13c06361479caaf7d1736c0769890bfabcc889df2",
+          "bc07401e8bdad887d57f0ba1b54635876ce2421d1c82291618c79e67e0779951",
+          "4d98ea2995d1d1c82ef93dfe877e815ac92d7950318eefeeb03766acdd2422ad",
+          "fa8d2282d4a80a06ddd5469d5c3e968830ed6001dc19e88193d8e7ee06024872"
+        ],
+        "usage": {
+          "calls": 4,
+          "tool_ms": 0,
+          "bytes_read": 823,
+          "money_microunits": 8
+        },
+        "usageOrigin": "synthetic",
+        "typedTransformation": {
+          "receipt": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "input_hash": "368c004c58ac8057169ad7b5c596a6e5e3b85e74f6343bf3a45c3fd3e8f12e9a",
+            "scope_hash": "25a8802b6222f643fa4a8987736488f75377107d0756d4e878a11bc93802ae2a",
+            "output_hash": "bff3e241525af92b35eeac08e364b25ad058194ea7abe0e342c1d39576b7376d",
+            "binding_hash": "17616d4d75a380cc0d87441db66562df88b844b0d6104325282ba4b1866858f7",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "invocation_id": "141652f2-b62b-4bed-acb8-de5a0b842942",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "task_revision_id": "4a7c03be-4e5d-4613-b426-3b313b290b78",
+            "cog_snapshot_hash": "a7f070b4f4fb0f1c023aeba4877f5a4bb6b56a9f988b5229a8a9aeeb9159d1de",
+            "input_artifact_id": null,
+            "repository_state_id": "09ac668a-d580-51a4-ae7b-d4767266fec0",
+            "upstream_receipt_hash": "44e7873216b9a6bf6790caa3d7112c184004adb059a6dcbcbaefca10e753677f"
+          },
+          "signature": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "handler_ref": "potbot.cogs.external_research",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "implementation_revision": 1,
+            "requires_controller_scope": true
+          },
+          "receiptSha256": "a11d9cc82cd454fd3b012cdbd8b0caf40378c4360220a606e76639499d2a2ebb",
+          "synActivation": "not_qualified",
+          "implementationSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56"
+        },
+        "needResolved": false,
+        "grantsTaskCompletion": false
+      }
+    },
+    "batch": {
+      "actionId": "32223123-f5b4-486f-8d21-089d5af71256",
+      "actionIdentity": "9c3ddd54da19c45933f8a79006d10670d61136c4b91054f8c04511f20a7ff083",
+      "authorizationSha256": "44e7873216b9a6bf6790caa3d7112c184004adb059a6dcbcbaefca10e753677f",
+      "complete": true,
+      "consumerSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56",
+      "documents": [],
+      "mergedResults": [
+        {
+          "canonicalUrl": "https://doi.org/10.1234/example",
+          "id": "aae565662322908ba26c617100c011dcd43339936dc62c23eadd083ec00fa992",
+          "lineage": [
+            {
+              "canonicalUrl": "https://doi.org/10.1234/example",
+              "provider": "crossref",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T06:39:16.425873Z",
+              "snippet": "",
+              "specialist": {
+                "authors": [
+                  "Ada Lovelace"
+                ],
+                "doi": "10.1234/example",
+                "eventDate": {
+                  "precision": "day",
+                  "provenance": "crossref:event.start",
+                  "value": "2019-12-01"
+                },
+                "publicationDate": {
+                  "precision": "month",
+                  "provenance": "crossref:published",
+                  "value": "2020-02"
+                },
+                "recordId": "10.1234/example",
+                "recordKind": "publisher_registry",
+                "retraction": {
+                  "notices": [
+                    {
+                      "date": null,
+                      "kind": "correction",
+                      "relation": "updated_by",
+                      "targetDoi": "10.1234/correction"
+                    }
+                  ],
+                  "state": "unknown"
+                },
+                "schema": "potbot-specialist-metadata/v1",
+                "sourceRole": "primary",
+                "updatedDate": null
+              },
+              "title": "A retained scientific paper"
+            },
+            {
+              "canonicalUrl": "https://openalex.org/W12345",
+              "provider": "openalex",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T06:39:16.516478Z",
+              "snippet": "",
+              "specialist": {
+                "authors": [
+                  "Ada Lovelace"
+                ],
+                "doi": "10.1234/example",
+                "eventDate": null,
+                "publicationDate": {
+                  "precision": "day",
+                  "provenance": "openalex:publication_date",
+                  "value": "2020-02-01"
+                },
+                "recordId": "https://openalex.org/W12345",
+                "recordKind": "bibliographic_index",
+                "retraction": {
+                  "notices": [
+                    {
+                      "date": null,
+                      "kind": "retraction",
+                      "relation": "record_flag",
+                      "targetDoi": "10.1234/example"
+                    }
+                  ],
+                  "state": "reported_retracted"
+                },
+                "schema": "potbot-specialist-metadata/v1",
+                "sourceRole": "secondary",
+                "updatedDate": null
+              },
+              "title": "A retained scientific paper"
+            },
+            {
+              "canonicalUrl": "https://pubmed.ncbi.nlm.nih.gov/12345/",
+              "provider": "pubmed",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T06:39:17.141082Z",
+              "snippet": "",
+              "specialist": {
+                "authors": [
+                  "Lovelace A"
+                ],
+                "doi": "10.1234/example",
+                "eventDate": null,
+                "publicationDate": {
+                  "precision": "reported",
+                  "provenance": "pubmed:pubdate",
+                  "value": "2020 Feb"
+                },
+                "recordId": "12345",
+                "recordKind": "bibliographic_index",
+                "retraction": {
+                  "notices": [],
+                  "state": "unknown"
+                },
+                "schema": "potbot-specialist-metadata/v1",
+                "sourceRole": "secondary",
+                "updatedDate": null
+              },
+              "title": "A retained scientific paper"
+            }
+          ],
+          "snippet": "",
+          "title": "A retained scientific paper"
+        }
+      ],
+      "policySha256": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+      "reasonCodes": [],
+      "requests": [
+        {
+          "id": "10c1b832-0154-4772-a3bd-7a3b8f3cbe17",
+          "ordinal": 1,
+          "rawArtifactId": "9ea0f9d2-83c9-5045-9569-5f2941f310cc",
+          "request": {
+            "bodySha256": "0fa376bc1fe42538d6bc0ab3258db0bd5bc6a9da832357cd464cfd3770996f85",
+            "kind": "search",
+            "maxBytes": 16384,
+            "method": "POST",
+            "provider": "crossref",
+            "schema": "potbot-external-research-request/v1",
+            "timeoutSeconds": 1,
+            "url": "https://api.crossref.org/works"
+          },
+          "requestSha256": "5fa886e6b0284ddd2e4c3a228ca0406d4fe3b59a9f309f6c7286caabc754dd53",
+          "response": {
+            "elapsedMs": 0,
+            "httpStatus": 200,
+            "mediaType": "application/json",
+            "reasonCodes": [
+              "complete_response"
+            ],
+            "receivedBytes": 312,
+            "requestSent": true,
+            "requestSha256": "5fa886e6b0284ddd2e4c3a228ca0406d4fe3b59a9f309f6c7286caabc754dd53",
+            "retrievedAt": "2026-11-18T06:39:16.425873Z",
+            "schema": "potbot-external-research-response/v1",
+            "sourceSha256": "3f418792d22a5dea65b6905fc45963ab514523c1ed9acaaa37d726d0eb09b938",
+            "status": "fetched"
+          },
+          "responseSha256": "ee9650a45b399ffba8f1ddd13c06361479caaf7d1736c0769890bfabcc889df2",
+          "usageOrigin": "synthetic"
+        },
+        {
+          "id": "a4054245-dda0-4510-9f79-3b752f6dc512",
+          "ordinal": 2,
+          "rawArtifactId": "49fba2a6-0f91-5a1e-83af-1476cf1e57bc",
+          "request": {
+            "bodySha256": "bb6e3ba506858f952061682a91e694a7a93a37599acd7ac35731567f7f2965e6",
+            "kind": "search",
+            "maxBytes": 16384,
+            "method": "POST",
+            "provider": "openalex",
+            "schema": "potbot-external-research-request/v1",
+            "timeoutSeconds": 1,
+            "url": "https://api.openalex.org/works"
+          },
+          "requestSha256": "6d0672ea6679de55df895ab49596377ba03c44dcd070ebd7f20d08c6b3376e9d",
+          "response": {
+            "elapsedMs": 0,
+            "httpStatus": 200,
+            "mediaType": "application/json",
+            "reasonCodes": [
+              "complete_response"
+            ],
+            "receivedBytes": 239,
+            "requestSent": true,
+            "requestSha256": "6d0672ea6679de55df895ab49596377ba03c44dcd070ebd7f20d08c6b3376e9d",
+            "retrievedAt": "2026-11-18T06:39:16.516478Z",
+            "schema": "potbot-external-research-response/v1",
+            "sourceSha256": "abde288c0c97a852487f7347183f54d5ebf205595a0c003f44704b4879f5753c",
+            "status": "fetched"
+          },
+          "responseSha256": "bc07401e8bdad887d57f0ba1b54635876ce2421d1c82291618c79e67e0779951",
+          "usageOrigin": "synthetic"
+        },
+        {
+          "id": "153aac5a-f7fa-431d-8510-b007ecd68fc5",
+          "ordinal": 3,
+          "rawArtifactId": "0fef4e6f-a79f-5c29-a787-8a843e9a5aa0",
+          "request": {
+            "bodySha256": "a665868fbba7223dfd95d72f0164cf2f5cbd778903919783e6f37311a02e5192",
+            "kind": "search",
+            "maxBytes": 16384,
+            "method": "POST",
+            "provider": "pubmed",
+            "schema": "potbot-external-research-request/v1",
+            "timeoutSeconds": 1,
+            "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+          },
+          "requestSha256": "d30dc52fb600e6c0aa28837d7b6e3f75a9ff983def29f72ed68845160af684d4",
+          "response": {
+            "elapsedMs": 0,
+            "httpStatus": 200,
+            "mediaType": "application/json",
+            "reasonCodes": [
+              "complete_response"
+            ],
+            "receivedBytes": 38,
+            "requestSent": true,
+            "requestSha256": "d30dc52fb600e6c0aa28837d7b6e3f75a9ff983def29f72ed68845160af684d4",
+            "retrievedAt": "2026-11-18T06:39:16.587728Z",
+            "schema": "potbot-external-research-response/v1",
+            "sourceSha256": "589de8ac1b47d1c73f559ea46debfd692079acee0a3b73abcf7e194a9e424313",
+            "status": "fetched"
+          },
+          "responseSha256": "4d98ea2995d1d1c82ef93dfe877e815ac92d7950318eefeeb03766acdd2422ad",
+          "usageOrigin": "synthetic"
+        },
+        {
+          "id": "2da2810c-5bd4-403f-bf17-eac90992e926",
+          "ordinal": 4,
+          "rawArtifactId": "c3358724-90d6-59c2-81b3-6fbc4f805eb3",
+          "request": {
+            "bodySha256": "40410369fee6c2e1a9b53e4a659a594eb936d894b81b258e0b00afbd94697abf",
+            "kind": "metadata",
+            "maxBytes": 16384,
+            "method": "POST",
+            "provider": "pubmed",
+            "schema": "potbot-external-research-request/v1",
+            "timeoutSeconds": 1,
+            "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+          },
+          "requestSha256": "bffaf6a7e581f7492e7bc79089d8f6773f83e232a4106b8557e2a66b0efb82ea",
+          "response": {
+            "elapsedMs": 0,
+            "httpStatus": 200,
+            "mediaType": "application/json",
+            "reasonCodes": [
+              "complete_response"
+            ],
+            "receivedBytes": 234,
+            "requestSent": true,
+            "requestSha256": "bffaf6a7e581f7492e7bc79089d8f6773f83e232a4106b8557e2a66b0efb82ea",
+            "retrievedAt": "2026-11-18T06:39:17.141082Z",
+            "schema": "potbot-external-research-response/v1",
+            "sourceSha256": "261567abafbd0bfe4a1935b34c29b0c5c66df8e9db71627d9f1aa5666cb501f2",
+            "status": "fetched"
+          },
+          "responseSha256": "fa8d2282d4a80a06ddd5469d5c3e968830ed6001dc19e88193d8e7ee06024872",
+          "usageOrigin": "synthetic"
+        }
+      ],
+      "runId": "141652f2-b62b-4bed-acb8-de5a0b842942",
+      "schema": "potbot-external-research-batch/v1",
+      "searchResults": [
+        {
+          "items": [
+            {
+              "canonicalUrl": "https://doi.org/10.1234/example",
+              "provider": "crossref",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T06:39:16.425873Z",
+              "snippet": "",
+              "specialist": {
+                "authors": [
+                  "Ada Lovelace"
+                ],
+                "doi": "10.1234/example",
+                "eventDate": {
+                  "precision": "day",
+                  "provenance": "crossref:event.start",
+                  "value": "2019-12-01"
+                },
+                "publicationDate": {
+                  "precision": "month",
+                  "provenance": "crossref:published",
+                  "value": "2020-02"
+                },
+                "recordId": "10.1234/example",
+                "recordKind": "publisher_registry",
+                "retraction": {
+                  "notices": [
+                    {
+                      "date": null,
+                      "kind": "correction",
+                      "relation": "updated_by",
+                      "targetDoi": "10.1234/correction"
+                    }
+                  ],
+                  "state": "unknown"
+                },
+                "schema": "potbot-specialist-metadata/v1",
+                "sourceRole": "primary",
+                "updatedDate": null
+              },
+              "title": "A retained scientific paper"
+            }
+          ],
+          "provider": "crossref",
+          "rejected": [],
+          "retrievedAt": "2026-11-18T06:39:16.425873Z"
+        },
+        {
+          "items": [
+            {
+              "canonicalUrl": "https://openalex.org/W12345",
+              "provider": "openalex",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T06:39:16.516478Z",
+              "snippet": "",
+              "specialist": {
+                "authors": [
+                  "Ada Lovelace"
+                ],
+                "doi": "10.1234/example",
+                "eventDate": null,
+                "publicationDate": {
+                  "precision": "day",
+                  "provenance": "openalex:publication_date",
+                  "value": "2020-02-01"
+                },
+                "recordId": "https://openalex.org/W12345",
+                "recordKind": "bibliographic_index",
+                "retraction": {
+                  "notices": [
+                    {
+                      "date": null,
+                      "kind": "retraction",
+                      "relation": "record_flag",
+                      "targetDoi": "10.1234/example"
+                    }
+                  ],
+                  "state": "reported_retracted"
+                },
+                "schema": "potbot-specialist-metadata/v1",
+                "sourceRole": "secondary",
+                "updatedDate": null
+              },
+              "title": "A retained scientific paper"
+            }
+          ],
+          "provider": "openalex",
+          "rejected": [],
+          "retrievedAt": "2026-11-18T06:39:16.516478Z"
+        },
+        {
+          "items": [
+            {
+              "canonicalUrl": "https://pubmed.ncbi.nlm.nih.gov/12345/",
+              "provider": "pubmed",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T06:39:17.141082Z",
+              "snippet": "",
+              "specialist": {
+                "authors": [
+                  "Lovelace A"
+                ],
+                "doi": "10.1234/example",
+                "eventDate": null,
+                "publicationDate": {
+                  "precision": "reported",
+                  "provenance": "pubmed:pubdate",
+                  "value": "2020 Feb"
+                },
+                "recordId": "12345",
+                "recordKind": "bibliographic_index",
+                "retraction": {
+                  "notices": [],
+                  "state": "unknown"
+                },
+                "schema": "potbot-specialist-metadata/v1",
+                "sourceRole": "secondary",
+                "updatedDate": null
+              },
+              "title": "A retained scientific paper"
+            }
+          ],
+          "provider": "pubmed",
+          "rejected": [],
+          "retrievedAt": "2026-11-18T06:39:17.141082Z"
+        }
+      ],
+      "typedTransformation": {
+        "implementationSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56",
+        "signature": {
+          "cog_ref": "syn://cog/potbot-research-external",
+          "cog_type_ref": "synny://type/potbot-research-external-cog",
+          "handler_ref": "potbot.cogs.external_research",
+          "implementation_revision": 1,
+          "input_type_ref": "synny://type/potbot-research-action",
+          "output_type_ref": "synny://type/potbot-research-external-batch",
+          "requires_controller_scope": true,
+          "schema_version": 1
+        },
+        "synActivation": "not_qualified"
+      },
+      "usage": {
+        "bytes_read": 823,
+        "calls": 4,
+        "money_microunits": 8,
+        "origin": "synthetic",
+        "tool_ms": 0
+      },
+      "visibility": "workspace"
+    },
+    "verification": "verified",
+    "reasonCodes": []
+  },
+  "execution": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "3ef6547e-6550-40fe-add2-c93495295ca3",
+      "principalId": "6f25de30-00bb-46cb-a32d-fa33af14d0f9"
+    },
+    "execution": {
+      "schema": "potbot-external-research-run/v1",
+      "scope": {
+        "workspaceId": "3ef6547e-6550-40fe-add2-c93495295ca3",
+        "principalId": "6f25de30-00bb-46cb-a32d-fa33af14d0f9"
+      },
+      "run": {
+        "id": "141652f2-b62b-4bed-acb8-de5a0b842942",
+        "actionId": "32223123-f5b4-486f-8d21-089d5af71256",
+        "episodeId": "59ac4c09-b453-468a-965c-a1f103a4db47",
+        "needId": "8cfb7631-9c5c-459a-a7ce-734605856ed9",
+        "needRevisionId": "fe618320-fca0-42d4-86aa-f4960a2c7c93",
+        "state": "succeeded",
+        "revision": 11,
+        "createdAt": "2026-11-18T06:39:16.324212Z",
+        "startedAt": "2026-11-18T06:39:16.363442Z",
+        "finishedAt": "2026-11-18T06:39:17.255002Z",
+        "errorCode": null,
+        "cancelRequested": false,
+        "authorizationSha256": "44e7873216b9a6bf6790caa3d7112c184004adb059a6dcbcbaefca10e753677f",
+        "policySha256": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+        "consumerSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56",
+        "disclosureDecisionId": "7974a2ed-543e-4f6d-8f6f-e1cb48ea5401",
+        "reservationId": "77791044-2df7-430c-89b5-7b238cc35a88",
+        "resultArtifactId": "8df95517-7ccf-5655-bf43-721eff54ac23",
+        "resultSha256": "5f40e2e53bac1f199a234dfbce68469199c9c760364a6b39980bbf5ae84ed515",
+        "receiptSha256": "44ba155b4f4dbbd43973426eb8b8974e46ca3583365a53d45d80c0bf58f94b03",
+        "requestCount": 4,
+        "usageOrigin": "synthetic",
+        "visibility": "workspace",
+        "recordIntegrityValid": true
+      },
+      "action": {
+        "schema_version": 1,
+        "primary_type_ref": "synny://type/potbot-research-action",
+        "action_id": "32223123-f5b4-486f-8d21-089d5af71256",
+        "scope": {
+          "workspace_id": "3ef6547e-6550-40fe-add2-c93495295ca3",
+          "task_id": "59ac4c09-b453-468a-965c-a1f103a4db47",
+          "contract_revision_id": "4a7c03be-4e5d-4613-b426-3b313b290b78",
+          "need_id": "8cfb7631-9c5c-459a-a7ce-734605856ed9",
+          "need_revision_id": "fe618320-fca0-42d4-86aa-f4960a2c7c93",
+          "repository_state_id": "09ac668a-d580-51a4-ae7b-d4767266fec0",
+          "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1"
+        },
+        "query": {
+          "category": "documentation",
+          "operation": "query_source",
+          "locator": "external-research",
+          "search_text": "bounded source evidence",
+          "required_identifiers": [],
+          "expected_observation": "Read the real calculator implementation",
+          "decision_effect": "Choose an implementation",
+          "evidence_requirement": "Source bytes with a digest",
+          "stopping_condition": "Inspected source or an explicit miss",
+          "fallback": "Leave need open",
+          "target_version": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+          "freshness_seconds": 0,
+          "max_results": 3,
+          "max_source_bytes": 16384
+        },
+        "predecessor_id": null,
+        "identity": "9c3ddd54da19c45933f8a79006d10670d61136c4b91054f8c04511f20a7ff083"
+      },
+      "authorization": {
+        "schema": "potbot-external-research-authorization/v1",
+        "workspaceId": "3ef6547e-6550-40fe-add2-c93495295ca3",
+        "runId": "141652f2-b62b-4bed-acb8-de5a0b842942",
+        "actionId": "32223123-f5b4-486f-8d21-089d5af71256",
+        "actionIdentity": "9c3ddd54da19c45933f8a79006d10670d61136c4b91054f8c04511f20a7ff083",
+        "actorPrincipalId": "6f25de30-00bb-46cb-a32d-fa33af14d0f9",
+        "policy": {
+          "schema": "potbot-external-research-policy/v1",
+          "providers": [
+            {
+              "provider": "crossref",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 2
+            },
+            {
+              "provider": "openalex",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 2
+            },
+            {
+              "provider": "pubmed",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 2
+            }
+          ],
+          "fetch_hosts": [
+            {
+              "host": "docs.example.com",
+              "terms_approved": true,
+              "minimum_interval_ms": 0
+            }
+          ],
+          "max_results": 3,
+          "max_requests": 8,
+          "max_documents": 0,
+          "timeout_seconds": 1,
+          "max_source_bytes": 16384,
+          "fallback_statuses": [
+            "rate_limited",
+            "quota_exhausted",
+            "unavailable"
+          ],
+          "allow_query_disclosure": true
+        },
+        "policySha256": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+        "consumerSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56",
+        "pdfProfileSha256": null,
+        "disclosureDecisionId": "7974a2ed-543e-4f6d-8f6f-e1cb48ea5401",
+        "disclosureSha256": "937a500067e3b79de8cd50a7e1ca0efe4794bf7a05e95e0cb58316ff6db1a39f",
+        "reservationId": "77791044-2df7-430c-89b5-7b238cc35a88",
+        "limits": {
+          "calls": 8,
+          "tool_ms": 16000,
+          "bytes_read": 131072,
+          "concurrency": 1,
+          "money_microunits": 16
+        },
+        "sourceArtifactId": "476c625c-cb0c-560a-8597-ebb8f9142381",
+        "sourceRevision": "0f93c78bafcff7d1ce4d41f2b6e755fe98514f7949082210b1493ccb77367b64",
+        "issuedAt": "2026-11-18T06:39:16.319129Z",
+        "visibility": "workspace",
+        "sha256": "44e7873216b9a6bf6790caa3d7112c184004adb059a6dcbcbaefca10e753677f"
+      },
+      "receipt": {
+        "schema": "potbot-external-research-receipt/v1",
+        "runId": "141652f2-b62b-4bed-acb8-de5a0b842942",
+        "actionId": "32223123-f5b4-486f-8d21-089d5af71256",
+        "actionIdentity": "9c3ddd54da19c45933f8a79006d10670d61136c4b91054f8c04511f20a7ff083",
+        "authorizationSha256": "44e7873216b9a6bf6790caa3d7112c184004adb059a6dcbcbaefca10e753677f",
+        "policySha256": "e3d6103b7e7bc06b5841f110cb27def68fa845c60dd6e94c756cac5f39f7c079",
+        "consumerSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56",
+        "outputArtifactId": "8df95517-7ccf-5655-bf43-721eff54ac23",
+        "outputSha256": "5f40e2e53bac1f199a234dfbce68469199c9c760364a6b39980bbf5ae84ed515",
+        "requestIds": [
+          "10c1b832-0154-4772-a3bd-7a3b8f3cbe17",
+          "a4054245-dda0-4510-9f79-3b752f6dc512",
+          "153aac5a-f7fa-431d-8510-b007ecd68fc5",
+          "2da2810c-5bd4-403f-bf17-eac90992e926"
+        ],
+        "requestSha256s": [
+          "5fa886e6b0284ddd2e4c3a228ca0406d4fe3b59a9f309f6c7286caabc754dd53",
+          "6d0672ea6679de55df895ab49596377ba03c44dcd070ebd7f20d08c6b3376e9d",
+          "d30dc52fb600e6c0aa28837d7b6e3f75a9ff983def29f72ed68845160af684d4",
+          "bffaf6a7e581f7492e7bc79089d8f6773f83e232a4106b8557e2a66b0efb82ea"
+        ],
+        "responseSha256s": [
+          "ee9650a45b399ffba8f1ddd13c06361479caaf7d1736c0769890bfabcc889df2",
+          "bc07401e8bdad887d57f0ba1b54635876ce2421d1c82291618c79e67e0779951",
+          "4d98ea2995d1d1c82ef93dfe877e815ac92d7950318eefeeb03766acdd2422ad",
+          "fa8d2282d4a80a06ddd5469d5c3e968830ed6001dc19e88193d8e7ee06024872"
+        ],
+        "usage": {
+          "calls": 4,
+          "tool_ms": 0,
+          "bytes_read": 823,
+          "money_microunits": 8
+        },
+        "usageOrigin": "synthetic",
+        "typedTransformation": {
+          "receipt": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "input_hash": "368c004c58ac8057169ad7b5c596a6e5e3b85e74f6343bf3a45c3fd3e8f12e9a",
+            "scope_hash": "25a8802b6222f643fa4a8987736488f75377107d0756d4e878a11bc93802ae2a",
+            "output_hash": "bff3e241525af92b35eeac08e364b25ad058194ea7abe0e342c1d39576b7376d",
+            "binding_hash": "17616d4d75a380cc0d87441db66562df88b844b0d6104325282ba4b1866858f7",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "invocation_id": "141652f2-b62b-4bed-acb8-de5a0b842942",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "task_revision_id": "4a7c03be-4e5d-4613-b426-3b313b290b78",
+            "cog_snapshot_hash": "a7f070b4f4fb0f1c023aeba4877f5a4bb6b56a9f988b5229a8a9aeeb9159d1de",
+            "input_artifact_id": null,
+            "repository_state_id": "09ac668a-d580-51a4-ae7b-d4767266fec0",
+            "upstream_receipt_hash": "44e7873216b9a6bf6790caa3d7112c184004adb059a6dcbcbaefca10e753677f"
+          },
+          "signature": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "handler_ref": "potbot.cogs.external_research",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "implementation_revision": 1,
+            "requires_controller_scope": true
+          },
+          "receiptSha256": "a11d9cc82cd454fd3b012cdbd8b0caf40378c4360220a606e76639499d2a2ebb",
+          "synActivation": "not_qualified",
+          "implementationSha256": "a3a415bc2ed52974f1f869d33c6aca9f5f63b94c8dd904ee5018ccdb7e0e2e56"
+        },
+        "needResolved": false,
+        "grantsTaskCompletion": false
+      }
+    }
+  }
+}

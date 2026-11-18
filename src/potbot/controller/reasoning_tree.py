@@ -70,6 +70,8 @@ class ReasoningTree:
         self.nodes: dict[str, ReasoningNode] = {}
         self.steering: list[dict[str, Any]] = []
         self.events: list[dict[str, Any]] = []
+        self.context_epoch = 0
+        self.context_revisions: list[dict[str, Any]] = []
 
     @classmethod
     def load(cls, path: Path) -> ReasoningTree:
@@ -86,6 +88,8 @@ class ReasoningTree:
         tree.nodes = {n["id"]: ReasoningNode(**n) for n in data["nodes"]}
         tree.steering = data["steering"]
         tree.events = data["events"]
+        tree.context_epoch = data.get("context_epoch", 0)
+        tree.context_revisions = data.get("context_revisions", [])
         for node in tree.nodes.values():
             if node.state == "running":
                 node.state = "indeterminate"
@@ -117,6 +121,8 @@ class ReasoningTree:
             "nodes": [asdict(n) for n in self.nodes.values()],
             "steering": self.steering,
             "events": self.events,
+            "context_epoch": self.context_epoch,
+            "context_revisions": self.context_revisions,
         }
         fd, temporary = allocate_file(self.path.parent, prefix=".reasoning-")
         try:
@@ -179,6 +185,8 @@ class ReasoningTree:
         return node
 
     def claim(self, node_id: str | None = None) -> ReasoningNode | None:
+        if self.run_status != "running":
+            return None
         # Reserve the full allowance; avoid overcommitting concurrent nodes.
         reserved = sum(n.max_tokens for n in self.nodes.values() if n.state == "running")
         for node in self.nodes.values():
@@ -242,12 +250,89 @@ class ReasoningTree:
         self._event("branch.pruned", node_id)
         self.save()
 
-    def close(self, status: Literal["completed", "failed"]) -> None:
-        if status not in {"completed", "failed"} or self.run_status != "running":
+    def close(self, status: Literal["completed", "failed", "interrupted"]) -> None:
+        if status not in {"completed", "failed", "interrupted"} or self.run_status != "running":
             raise InvalidInputError("invalid reasoning completion")
+        cursor = len(self.events)
         self.run_status = status
         self._event("reasoning.run." + status, status)
+        try:
+            self.save()
+        except Exception:
+            self.run_status = "running"
+            del self.events[cursor:]
+            raise
+
+    def record_context(self, component: dict[str, Any]) -> bool:
+        """Retain a source-linked user fact without inventing a hypothesis.
+
+        Identical text still retains the additional source, but only a changed
+        material fact requests a new task-understanding revision.
+        """
+        for previous in self.context_revisions:
+            if previous["component_id"] == component["id"]:
+                if previous["text_sha256"] != component["text_sha256"]:
+                    raise InvalidInputError("background context source changed")
+                return False
+        if len(self.context_revisions) >= 128:
+            raise InvalidInputError("background context capacity exhausted")
+        duplicate = any(
+            c["text_sha256"] == component["text_sha256"] for c in self.context_revisions
+        )
+        material = bool(component["classification"]["requires_evaluation"]) and not duplicate
+        previous_revision, previous_epoch = self.revision, self.context_epoch
+        event_cursor = len(self.events)
+        if material:
+            self.revision += 1
+        self.context_epoch = max(self.context_epoch, component["context_epoch"])
+        self.context_revisions.append(
+            {
+                "component_id": component["id"],
+                "request_id": component["source_request_id"],
+                "principal_id": component["source_principal_id"],
+                "text": component["text"],
+                "text_sha256": component["text_sha256"],
+                "start_byte": component["start_byte"],
+                "end_byte": component["end_byte"],
+                "context_epoch": component["context_epoch"],
+                "revision": self.revision,
+                "material": material,
+                "duplicate": duplicate,
+                "trust": "user_context_not_verified_evidence",
+            }
+        )
+        self._event("reasoning.context.recorded", component["id"])
+        try:
+            self.save()
+        except Exception:
+            self.revision, self.context_epoch = previous_revision, previous_epoch
+            self.context_revisions.pop()
+            del self.events[event_cursor:]
+            raise
+        return material
+
+    def confirm_not_started(self, node_id: str, reason: str) -> None:
+        """Release a local claim only when its external dispatch never began."""
+        node = self.nodes[node_id]
+        if node.state != "running":
+            raise InvalidInputError("reasoning node is not claimed")
+        node.state = "rejected"
+        node.claim_token = None
+        node.rejection_reason = reason
+        self._event("node.not_started", node_id)
         self.save()
+
+    def interrupt(self) -> None:
+        """Fence pending work; never claim an unknown in-flight call stopped."""
+        for node in self.nodes.values():
+            if node.state == "running":
+                node.state = "indeterminate"
+                self._event("node.indeterminate", node.id)
+            elif node.state == "pending":
+                node.state = "rejected"
+                node.rejection_reason = "user interrupt before dispatch"
+                self._event("node.not_started", node.id)
+        self.close("interrupted")
 
     def steer(
         self,

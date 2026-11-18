@@ -40,14 +40,20 @@ def test_reasoning_run_and_steering_survive_independent_transactions(app_env: An
         inbox.submit(app_env.context, run_id, request_id="change-1", prompt="Use GPUs")
     pending = inbox.pending(app_env.context, run_id)
     assert len(pending) == 1 and pending[0]["prompt"] == "Try ARM"
-    decision = inbox.resolve(
+    decision = inbox.resolve_component(
         app_env.context,
         run_id,
+        token,
         first,
-        {"decision": "spawn_hypothesis", "explanation": "ARM now matters"},
+        first["components"][0]["id"],
+        {
+            "status": "recorded",
+            "decision": "no_change",
+            "explanation": "ARM is retained as user context",
+        },
     )
     assert decision["status"] == "decided"
-    assert inbox.get(app_env.context, run_id, "change-1")["decision"] == "spawn_hypothesis"
+    assert inbox.get(app_env.context, run_id, "change-1")["decision"] == "no_change"
     assert not inbox.pending(app_env.context, run_id)
 
     inbox.seal(app_env.context, run_id)

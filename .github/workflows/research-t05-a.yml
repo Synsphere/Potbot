@@ -1,4 +1,4 @@
-name: T05-A external research and cited evidence
+name: T05 external and specialist research
 on:
   push:
     paths:
@@ -34,7 +34,7 @@ on:
       - 'frontend/src/lib/server/potbot.ts'
       - 'frontend/src/lib/skill-workshop-client.ts'
       - 'frontend/tests/research*'
-      - 'frontend/tests/fixtures/research-http.json'
+      - 'frontend/tests/fixtures/research*.json'
       - 'tests/unit/test_research*.py'
       - 'tests/unit/test_ui_research.py'
       - 'tests/unit/test_phase7_research*.py'
@@ -60,6 +60,7 @@ jobs:
       # Disposable database and explicitly synthetic search/fetch transport.
       POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
       POTBOT_RESEARCH_HTTP_FIXTURE: artifacts/research-http.json
+      POTBOT_SPECIALIST_HTTP_FIXTURE: artifacts/research-specialist-http.json
       COMPOSE_PROJECT_NAME: potbot-research-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -100,6 +101,7 @@ jobs:
           tests/unit/test_phase7_research*.py
           tests/integration/test_research_external.py
           tests/integration/test_research_evidence.py
+          tests/integration/test_research_specialist.py
           tests/integration/test_phase7_research*.py
           --junitxml=artifacts/research-t05-a.xml
       - uses: actions/setup-node@v4
@@ -126,6 +128,7 @@ jobs:
             artifacts/research-isolation.xml
             artifacts/research-t05-a.xml
             artifacts/research-http.json
+            artifacts/research-specialist-http.json
           if-no-files-found: error
           retention-days: 14
       - name: Stop only this disposable database

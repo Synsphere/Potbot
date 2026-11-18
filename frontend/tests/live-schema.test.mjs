@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { projectReasoningState, summarizeEventPage, validChatInput, parseWorkspaceList } from '../src/lib/live-schema.ts';
 
 test('reasoning projection only returns safe typed node/edge fields', () => {
-  const tree={state:'running',snapshot:{revision:5,nodes:[
+  const tree={state:'interrupted',interrupt_requested:true,active_dispatch_id:'PRIVATE-DISPATCH',snapshot:{revision:5,
+    context_epoch:3,context_revisions:[{text:'PRIVATE-CONTEXT',principal_id:'PRIVATE-PRINCIPAL'}],nodes:[
     {id:'a',parent_id:null,hypothesis:'Pick an approach',state:'running',role:'hypothesis_generator',claim_token:'SECRET',result:'PRIVATE'},
     {id:'b',parent_id:'a',hypothesis:'Evidence review',state:'completed',role:'investigator',prompt_hash:'SECRET'},
     {id:'c',parent_id:'missing',hypothesis:'Pruned',state:'pruned'}
@@ -13,6 +14,7 @@ test('reasoning projection only returns safe typed node/edge fields', () => {
   assert.equal(result.revision,5);
   assert.equal(result.nodes[2].state,'rejected');
   assert.equal(JSON.stringify(result).includes('SECRET'),false);
+  assert.equal(JSON.stringify(result).includes('PRIVATE'),false);
   assert.equal(projectReasoningState({state:'running'}),null);
 });
 

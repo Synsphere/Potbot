@@ -254,7 +254,7 @@ class ResearchWorkbench:
                 reasons.append("query_disclosure_disabled")
             if not configured.providers:
                 reasons.append("research_providers_unavailable")
-            elif configured.max_requests < len(configured.providers):
+            elif configured.max_requests < configured.provider_request_allowance:
                 reasons.append("research_request_limit_insufficient")
         except (DomainError, OSError, ValueError):
             reasons.append("research_policy_unavailable")

@@ -11,7 +11,7 @@ preferences or download/installation telemetry contracts exist yet.
 Node 22+ is recommended. From the repository's `frontend/` directory:
 
 ```bash
-npm install  # generates package-lock.json; commit it after validating the build
+npm ci
 npm run dev
 ```
 
@@ -19,10 +19,8 @@ Open `http://127.0.0.1:3100/?demo=1` for an **explicitly synthetic** four-worksp
 preview. The root route `/` never invents backend resources: until UI-backend
 integration is configured it displays a setup notice.
 
-The first build environment used for this patch has no external npm registry
-access, so neither `npm install`, `npm run build`, nor an interactive browser E2E
-run could be completed here. The pure layout/orbit/graph tests run without npm
-packages on Node 22:
+The committed `package-lock.json` pins the dependency graph for local and CI
+installs. The pure layout/orbit/graph tests run without npm packages on Node 22:
 
 ```bash
 npm test
@@ -105,7 +103,7 @@ available exclusively at `/?demo=1` on a development build.
    `POTBOT_UI_WORKSPACE_ID` must be its actual workspace. The existing backend
    does not provide an identity-introspection endpoint, so configuration must
    be checked by the operator. Never put this token into `NEXT_PUBLIC_*`.
-5. Start Potbot's service and then `npm install && npm run dev` in `frontend/`.
+5. Start Potbot's service and then `npm ci && npm run dev` in `frontend/`.
    Open `/`, authenticate with the operator password, and submit a message.
 
 The browser calls authenticated same-origin Next.js `/api/ui/*` routes, never
@@ -185,7 +183,7 @@ No made-up transfer progress or installation status is displayed.
 ```bash
 npm test
 npm run benchmark:graph
-npm install --no-audit --no-fund
+npm ci --no-audit --no-fund
 npm run typecheck
 npm run build
 ```
@@ -193,7 +191,7 @@ npm run build
 The UI-4 patch also removes the `tabAnimation` Dockview prop, which was rejected
 by the pinned `dockview-react` TypeScript contract in the preceding CI run.
 The full dependency typecheck, Next production build, and a real-browser WebGL
-benchmark still require npm installation in the target/CI environment.
+benchmark require dependencies installed with `npm ci` in the target/CI environment.
 
 ## Native Xpra-only application windows (UI-5)
 

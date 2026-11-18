@@ -81,7 +81,7 @@ class ResearchRateWait(StateMismatchError):
 
 def _limits(policy: ExternalResearchPolicy) -> dict[str, int]:
     interval = max(
-        [rule.minimum_interval_ms for rule in policy.providers]
+        [policy.provider_interval_ms(rule.provider) for rule in policy.providers]
         + [rule.minimum_interval_ms for rule in policy.fetch_hosts]
         + [0]
     )
@@ -255,6 +255,8 @@ def queue_external(
 ) -> dict[str, Any]:
     from psycopg.types.json import Jsonb
 
+    from potbot.research.providers import search_request
+
     bounded_key(key)
     if not isinstance(action_id, UUID) or not isinstance(policy, ExternalResearchPolicy):
         raise InvalidInputError("External research requires an admitted action and trusted policy")
@@ -264,7 +266,7 @@ def queue_external(
         or not policy.providers
     ):
         raise ScopeDeniedError("External research requires explicit query disclosure approval")
-    if policy.max_requests < len(policy.providers):
+    if policy.max_requests < policy.provider_request_allowance:
         raise InvalidInputError("Research request allowance cannot cover the configured providers")
     request = {
         "actionId": str(action_id),
@@ -305,6 +307,11 @@ def queue_external(
                     )
                 _authorization(store, conn, context, dict(prior), policy=policy)
                 return _view(store, conn, context, dict(prior))
+            # Validate every derived wire route before any provider can consume
+            # this run's disclosure or budget. A query fitting an early provider
+            # may exceed a later provider's percent-encoded route limit.
+            for rule in policy.providers:
+                search_request(policy, rule.provider, action.query.search_text)
             run_id = uuid4()
             reservation = BudgetLedger(store.database).reserve_in_transaction(
                 conn, context, action.scope.task_id, _limits(policy), f"research.external:{run_id}"
@@ -623,18 +630,40 @@ def _search_results(
     receipts: list[dict[str, Any]],
     policy: ExternalResearchPolicy,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    from potbot.research.providers import merge_search_results, normalize_search_results
+    from potbot.research.providers import (
+        merge_search_results,
+        metadata_request,
+        normalize_search_results,
+    )
+    from potbot.research.specialist import verify_pubmed_summary
 
     batches = []
     for item in receipts:
         descriptor, response = item["request"]["request"], item["response"]
         if (
-            descriptor["kind"] != "search"
+            descriptor["kind"] not in {"search", "metadata"}
             or response is None
             or response["response"]["status"] != "fetched"
         ):
             continue
         raw = _raw(store, conn, context, item)
+        if descriptor["provider"] == "pubmed":
+            if descriptor["kind"] == "search" and metadata_request(policy, raw) is not None:
+                # ESearch has identifiers only. Only the independently admitted
+                # ESummary response may supply titles/authors/DOIs.
+                continue
+            if descriptor["kind"] == "metadata":
+                searches = [
+                    entry
+                    for entry in receipts
+                    if entry["request"]["request"]["provider"] == "pubmed"
+                    and entry["request"]["request"]["kind"] == "search"
+                ]
+                if len(searches) != 1:
+                    raise StateMismatchError("PubMed metadata lacks its exact identifier source")
+                verify_pubmed_summary(
+                    raw, _raw(store, conn, context, searches[0]), policy.max_results
+                )
         normalized = normalize_search_results(
             descriptor["provider"],
             raw,
@@ -645,6 +674,56 @@ def _search_results(
         )
         batches.append(normalized)
     return batches, merge_search_results(batches)
+
+
+def _next_provider_request(
+    store: ResearchRunStore,
+    conn: Any,
+    context: WorkspaceContext,
+    receipts: list[dict[str, Any]],
+    action: ResearchAction,
+    policy: ExternalResearchPolicy,
+) -> ExternalRequest | None:
+    """Reconstruct the exact search/child sequence from retained evidence.
+
+    PubMed's child can only contain the complete IDs returned by the separately
+    admitted ESearch. The same function gates dispatch and independent final
+    audit, so a worker cannot skip it, substitute IDs, or hide an extra request.
+    """
+    from potbot.research.providers import metadata_request, search_request
+
+    providers = [
+        item for item in receipts if item["request"]["request"]["kind"] in {"search", "metadata"}
+    ]
+    if receipts[: len(providers)] != providers:
+        raise StateMismatchError("Provider research must precede document retrieval")
+    index = 0
+
+    def consume(expected: ExternalRequest) -> dict[str, Any] | None:
+        nonlocal index
+        if index == len(providers):
+            return None
+        item = providers[index]
+        if item["request_sha256"] != expected.fingerprint or item["response"] is None:
+            raise ScopeDeniedError("Research provider sequence differs from its admitted query")
+        status = item["response"]["response"]["status"]
+        if status != "fetched" and status not in policy.fallback_statuses:
+            raise ScopeDeniedError("Research policy does not permit this provider continuation")
+        index += 1
+        return item
+
+    for rule in policy.providers:
+        expected = search_request(policy, rule.provider, action.query.search_text)
+        item = consume(expected)
+        if item is None:
+            return expected
+        if rule.provider == "pubmed" and item["response"]["response"]["status"] == "fetched":
+            child = metadata_request(policy, _raw(store, conn, context, item))
+            if child is not None and consume(child) is None:
+                return child
+    if index != len(providers):
+        raise ScopeDeniedError("Research contains an unapproved provider request")
+    return None
 
 
 def _prepared_request(
@@ -662,7 +741,6 @@ def _prepared_request(
         robots_interval_ms,
         robots_permits,
         robots_request,
-        search_request,
     )
 
     if not isinstance(request, ExternalRequest):
@@ -671,29 +749,18 @@ def _prepared_request(
         raise StateMismatchError("An earlier external send has an unresolved outcome")
     if any(item["request_sha256"] == request.fingerprint for item in receipts):
         raise StateMismatchError("External research never retries an admitted send")
-    searches = [item for item in receipts if item["request"]["request"]["kind"] == "search"]
-    providers = [rule.provider for rule in policy.providers]
-    for index, item in enumerate(searches):
-        if index >= len(providers) or item["request"]["request"]["provider"] != providers[index]:
-            raise StateMismatchError("Research provider order changed")
-        response = item["response"]["response"]
-        if response["status"] != "fetched" and response["status"] not in policy.fallback_statuses:
-            raise ScopeDeniedError(
-                "The research policy does not permit continuation after this provider outcome"
-            )
-    if request.kind == "search":
-        if (
-            len(searches) != len(receipts)
-            or len(searches) >= len(providers)
-            or request.provider != providers[len(searches)]
+    next_provider = _next_provider_request(store, conn, context, receipts, action, policy)
+    if request.kind in {"search", "metadata"}:
+        if next_provider is None or any(
+            item["request"]["request"]["kind"] not in {"search", "metadata"} for item in receipts
         ):
-            raise ScopeDeniedError("Research search is not the next separately disclosed provider")
-        prepared = search_request(policy, request.provider, action.query.search_text)
-        rule = policy.require_provider(request.provider)
-        interval = rule.minimum_interval_ms
+            raise ScopeDeniedError("Research request is not the next disclosed provider operation")
+        prepared = next_provider
+        assert request.provider is not None
+        interval = policy.provider_interval_ms(request.provider)
         rate_key = f"provider:{request.provider}"
     else:
-        if len(searches) != len(providers):
+        if next_provider is not None:
             raise ScopeDeniedError(
                 "Research document retrieval requires completed provider comparison"
             )
@@ -920,17 +987,15 @@ def _build_batch(
         raise StateMismatchError("Uncertain research sends cannot publish a verified result")
     batches, merged = _search_results(store, conn, context, receipts, policy)
     provider_receipts = [
-        item for item in receipts if item["request"]["request"]["kind"] == "search"
+        item for item in receipts if item["request"]["request"]["kind"] in {"search", "metadata"}
     ]
-    if len(provider_receipts) != len(policy.providers):
+    if _next_provider_request(store, conn, context, receipts, action, policy) is not None:
         raise StateMismatchError(
             "Research completion requires every separately scheduled provider outcome"
         )
     reasons = []
-    for rule, item in zip(policy.providers, provider_receipts, strict=True):
+    for item in provider_receipts:
         status = item["response"]["response"]["status"]
-        if item["request"]["request"]["provider"] != rule.provider:
-            raise StateMismatchError("Research completion provider order changed")
         if status != "fetched":
             if status not in policy.fallback_statuses:
                 raise StateMismatchError(

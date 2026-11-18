@@ -30,6 +30,8 @@ from potbot.tools.secrets import CaptureRedactor
 _CREDENTIALS = {
     "brave": ("research.brave", "POTBOT_BRAVE_SEARCH_API_KEY"),
     "tavily": ("research.tavily", "POTBOT_TAVILY_API_KEY"),
+    "openalex": ("research.openalex", "POTBOT_OPENALEX_API_KEY"),
+    "semantic_scholar": ("research.semantic_scholar", "POTBOT_SEMANTIC_SCHOLAR_API_KEY"),
 }
 
 
@@ -40,7 +42,9 @@ class ResearchCredentials(Protocol):
 TransportFactory = Callable[[ExternalRequest, bool], httpx.AsyncBaseTransport]
 
 
-def _credential(provider: str, credentials: ResearchCredentials | None) -> str:
+def _credential(
+    provider: str, credentials: ResearchCredentials | None, *, optional: bool = False
+) -> str | None:
     name, environment = _CREDENTIALS[provider]
     if credentials is not None:
         secret = credentials.get(name)
@@ -49,6 +53,8 @@ def _credential(provider: str, credentials: ResearchCredentials | None) -> str:
         if secret is None:
             secret = CredentialStore(credential_profile()).get(name)
     if secret is None:
+        if optional:
+            return None
         raise CapabilityUnavailableError("The selected research provider credential is unavailable")
     if (
         not isinstance(secret, str)
@@ -106,22 +112,37 @@ async def perform_external_request(
         "User-Agent": RESEARCH_USER_AGENT,
     }
     secret: str | None = None
-    if request.provider is not None:
+    from potbot.research.specialist import SPECIALIST_ENDPOINTS, specialist_wire_request
+
+    wire_method, wire_url, wire_body = request.method, request.url, request.body
+    if request.provider in SPECIALIST_ENDPOINTS:
+        if request.provider in _CREDENTIALS:
+            secret = _credential(request.provider, credentials, optional=True)
+        wire_method, wire_url, wire_body, provider_headers = specialist_wire_request(
+            request.provider,
+            request.body,
+            credential=secret,
+        )
+        headers.update(provider_headers)
+    elif request.provider is not None:
         secret = _credential(request.provider, credentials)
+        assert secret is not None
         if request.provider == "brave":
             headers["X-Subscription-Token"] = secret
         else:
             headers["Authorization"] = "Bearer " + secret
         headers["Content-Type"] = "application/json"
+    # PinnedHttpsTransport's flag binds the Authorization header specifically;
+    # provider-specific API-key headers are independently fixed above.
     authenticated = "Authorization" in headers
     transport = (
         transport_factory(request, authenticated)
         if transport_factory is not None
         else PinnedHttpsTransport(
-            request.method,
-            request.url,
+            wire_method,
+            wire_url,
             authenticated=authenticated,
-            allow_query=request.kind == "fetch",
+            allow_query=request.kind == "fetch" or request.provider in SPECIALIST_ENDPOINTS,
         )
     )
     async with httpx.AsyncClient(
@@ -137,9 +158,9 @@ async def perform_external_request(
             async with asyncio.timeout(request.timeout_seconds):
                 sent = True
                 async with client.stream(
-                    request.method,
-                    request.url,
-                    content=request.body,
+                    wire_method,
+                    wire_url,
+                    content=wire_body,
                     follow_redirects=False,
                 ) as response:
                     status_code = response.status_code

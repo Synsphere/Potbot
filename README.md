@@ -8,6 +8,16 @@ and [U00-A source inventory](docs/implementation/u00-roadmap-inventory.md).
 The retained Plan 1.1 contains 204 steps; historical phase summaries below are
 scoped implementation records, not a complete current qualification inventory.
 
+The current increment adds [specialist scientific/archival research](docs/implementation/t05-b-specialist-research.md)
+and [durable temporal steering](docs/implementation/r7-1-temporal-steering.md).
+Research now includes Crossref, OpenAlex, arXiv, PubMed, Semantic Scholar,
+Wikidata and Internet Archive through the existing admitted research workflow.
+Urgent instructions fence new reasoning dispatch, deferred instructions retain
+their predecessor dependency, and background information has source-linked
+context revisions. Apply application migration **48** for the steering extension.
+The next agentic milestone is R7.2 atomic scheduling; new Syn integration work
+is deferred until Syn is ready for a release.
+
 **Implemented: Phases 1–4, the Phase 5 model foundation, and hosted jobs/API (`0.5.0.dev13`).** Tasks, contracts,
 evidence, artifacts, worker jobs, budgets, configuration, environment identities, and
 model invocation records are durable. Potbot can capture a local Git repository,

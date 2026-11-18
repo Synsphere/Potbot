@@ -38,6 +38,10 @@ MAX_NORMALIZED_SEARCH_BYTES = 100000
 def provider_descriptor(provider: str) -> dict[str, Any]:
     if not isinstance(provider, str) or provider not in PROVIDER_ENDPOINTS:
         raise InvalidInputError("Research provider is unsupported")
+    from potbot.research.specialist import SPECIALIST_ENDPOINTS, specialist_descriptor
+
+    if provider in SPECIALIST_ENDPOINTS:
+        return specialist_descriptor(provider)
     return {
         "id": provider,
         "method": "POST",
@@ -63,6 +67,18 @@ def search_request(policy: ExternalResearchPolicy, provider: str, query: str) ->
         or any(ord(char) < 32 or ord(char) == 127 for char in query)
     ):
         raise InvalidInputError("Search query must contain at most 600 characters and 75 words")
+    from potbot.research.specialist import SPECIALIST_ENDPOINTS, specialist_search_body
+
+    if provider in SPECIALIST_ENDPOINTS:
+        return ExternalRequest(
+            "search",
+            provider,
+            "POST",
+            PROVIDER_ENDPOINTS[provider],
+            specialist_search_body(provider, query, policy.max_results),
+            policy.max_source_bytes,
+            policy.timeout_seconds,
+        )
     if provider == "brave":
         body: dict[str, Any] = {
             "q": query,
@@ -90,6 +106,25 @@ def search_request(policy: ExternalResearchPolicy, provider: str, query: str) ->
         "POST",
         PROVIDER_ENDPOINTS[provider],
         canonical_json(body).encode("utf-8"),
+        policy.max_source_bytes,
+        policy.timeout_seconds,
+    )
+
+
+def metadata_request(policy: ExternalResearchPolicy, search_raw: bytes) -> ExternalRequest | None:
+    """Derive one exact PubMed metadata request from a retained ESearch response."""
+    from potbot.research.specialist import pubmed_summary_body
+
+    policy.require_provider("pubmed")
+    body = pubmed_summary_body(search_raw, policy.max_results)
+    if body is None:
+        return None
+    return ExternalRequest(
+        "metadata",
+        "pubmed",
+        "POST",
+        PROVIDER_ENDPOINTS["pubmed"],
+        body,
         policy.max_source_bytes,
         policy.timeout_seconds,
     )
@@ -339,6 +374,15 @@ def normalize_search_results(
     retrieved_at: datetime,
     max_results: int,
 ) -> dict[str, Any]:
+    from potbot.research.specialist import SPECIALIST_ENDPOINTS, normalize_specialist_results
+
+    if provider in SPECIALIST_ENDPOINTS:
+        return normalize_specialist_results(
+            provider,
+            raw,
+            retrieved_at=retrieved_at,
+            max_results=max_results,
+        )
     provider_descriptor(provider)
     retrieved = utc_text(retrieved_at)
     if type(raw) is not bytes or len(raw) > MAX_RESPONSE_BYTES:
@@ -426,8 +470,17 @@ def normalize_search_results(
 
 def merge_search_results(batches: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Deduplicate exact canonical URLs while preserving each provider/rank record."""
-    if not isinstance(batches, list) or len(batches) > 2:
-        raise InvalidInputError("Search comparison requires at most two supported provider batches")
+    from potbot.research.specialist import SPECIALIST_ENDPOINTS, merge_specialist_results
+
+    if not isinstance(batches, list) or len(batches) > 9:
+        raise InvalidInputError(
+            "Search comparison requires at most nine supported provider batches"
+        )
+    if any(
+        isinstance(batch, dict) and batch.get("provider") in SPECIALIST_ENDPOINTS
+        for batch in batches
+    ):
+        return merge_specialist_results(batches)
     merged: dict[str, dict[str, Any]] = {}
     seen: set[str] = set()
     for batch in batches:

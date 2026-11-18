@@ -6,6 +6,35 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+## Current delivery order — 18 November 2026
+
+The current batch finishes the remaining supported T05 implementation with
+[T05-B specialist research](t05-b-specialist-research.md), then implements
+[R7.1 durable temporal steering](r7-1-temporal-steering.md). Seven scientific and
+archival adapters share the existing research queue, policy, budget, immutable
+source and receipt owners. Temporal steering extends the existing PostgreSQL
+reasoning inbox and run checkpoint with urgent dispatch fences, predecessor
+dependencies and source-linked background context.
+
+**Syn-dependent work is deferred at the user's request until Syn is ready for
+a release.** Keep U06 identity/enrollment/custody, new Syn transport cutovers,
+independent agent Syn installations and deployed Syn activation behind their
+existing release gates. Resume that work by pinning and qualifying a released
+Syn package. Existing authority, signing, custody and sandbox checks remain in
+force; this sequencing decision creates no substitute Syn runtime.
+
+The next implementation milestone is **R7.2 admitted atomic task scheduling**:
+connect typed decompositions and independent eligible leaves to the existing
+operation discovery, selected execution, graph and budget owners. Continue
+R7.3–R7.6 agentic evaluation and routing in their documented order. Syn release
+availability does not block these application-level improvements.
+
+Current implementation does not promote global runtime qualification. Live
+provider/account quality, cross-installation rate coordination, native PDF/host
+deployment and broader G07 format coverage remain separately evidenced gates.
+The historical U00 baseline, canonical 48 tool stages and 32 memory stages retain
+their identities and previous qualification dispositions.
+
 **18 November 2026, after the selected task execution merge:**
 [T05-A external research and cited evidence](t05-a-external-research.md) adds the
 complete configured search-to-citation operator workflow on merged main
@@ -17,8 +46,8 @@ freshness without resolving needs or claiming publisher truth. Optional authored
 PDF extraction requires a separately qualified isolated native profile; the
 development host's real PDF test failed closed. Live providers, deployed SYN
 activation, full G07 formats and canonical T05 status remain separate gates.
-The next implementation batch is T05.3 scientific/archival retrieval, alongside
-deployment qualification of the configured provider and PDF profiles.
+That next implementation batch is delivered by T05-B above; configured provider
+and PDF deployment qualification retains its separate acceptance requirements.
 
 **18 November 2026, after the task discovery merge:**
 [U04-T selected task execution](u04-t-selected-task-execution.md) connects an exact
@@ -251,6 +280,9 @@ Across these waves, follow the existing MG dependency cut rather than waiting fo
 
 ### Syn transport for application RPC
 
+**Deferred pending a Syn release, 18 November 2026.** The following sequence is
+retained for resumption; the active delivery order above continues agentic work.
+
 Use the [Syn RPC implementation sequence](syn-release-dependency-and-node-deployment.md#route-application-rpc-through-syn)
 across the tools, runtime and service workstreams. Qualify Context RPC
 first with a signed upstream release, then migrate the remaining direct
@@ -314,7 +346,7 @@ These suffixes identify work within existing U packages. They do not renumber th
 | U04-M | U04/U11/U13/U16 | Complete [live MCP reconciliation](u04-m-live-mcp-reconciliation.md): complete interface snapshots, signed native lifetime/claims, current exact references, gateway enforcement and operator recovery. Qualify installed hosts and exact vendor/task profiles next; metadata and controlled fixtures grant no production authority. |
 | U04-Q | U04/U11/U13/U16 | Complete the [installed MCP task qualification workflow](u04-q-installed-mcp-qualification.md): private reviewed suites, independent result assertions, existing gateway evidence, original runtime pins and receipt-only recovery with CLI/API/UI review. Collect and review actual selected host/vendor/task reports next; broader semantic retrieval and interoperability remain open. |
 | U07-Q | U02/U05/U07/U13/U16 | Native service/vault, provider and inbound API matrix, model downloads/cache paths and installed/runnable/qualified readiness; RD01–RD04. |
-| U08-T | U01/U04/U08/U14 | Existing fenced reasoning/accounting plus ensemble verification, temporal steering, atomic leaf scheduling and active research; RD05–RD09. |
+| U08-T | U01/U04/U08/U14 | R7.1 now connects temporal steering to the existing fenced reasoning/accounting owner. Continue R7.2 admitted atomic leaf scheduling, then ensemble verification/evaluation and active research; RD05–RD09. Syn-dependent rollout stays deferred until a release. |
 | U09-C | U06/U09/U11/U13 | Preserve data-only state/history and Stage 10D integration; close constructor/protocol, semantic-reconciliation and authored-skill gaps; RD26–RD29. |
 | U10-G | U01/U04/U06/U09/U10/U14/U16 | Preserve MG01.1–MG08.4, exact inventory, seven retrieval profiles, embedding addendum, applicability and deletion-safe recovery; RD30–RD35. |
 | U12-C | U04/U12/U13/U16 | Same-session browser control, explicitly admitted network capabilities, tab/window selection and source-map provenance; RD20–RD22. |

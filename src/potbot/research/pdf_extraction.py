@@ -12,7 +12,6 @@ import hashlib
 import json
 import os
 import re
-import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -22,6 +21,7 @@ from potbot.domain.errors import CapabilityUnavailableError, InvalidInputError
 from potbot.domain.serialization import content_hash
 from potbot.persistence.database import Database
 from potbot.tools.supervisor import ProcessRequest, ProcessSupervisor
+from potbot.tools.temporary import TemporaryDirectory
 from potbot.workspace_sandbox import WorkspaceSandbox, load_workspace_sandbox
 
 MAX_PDF_PAGES = 64
@@ -148,7 +148,7 @@ class IsolatedPdfExtractor:
         try:
             executable = self.profile.verify_executable()
             parent = self.sandbox.confine(self.sandbox.path("tmp"), area="tmp", must_exist=True)
-            with tempfile.TemporaryDirectory(prefix="research-pdf-", dir=parent) as temporary:
+            with TemporaryDirectory(prefix="research-pdf-", dir=parent) as temporary:
                 workspace = Path(temporary)
                 # Execute the exact bytes already hashed, eliminating a path
                 # replacement between source verification and process launch.

@@ -1,0 +1,61 @@
+name: R7.1 durable temporal steering
+on:
+  push:
+    paths:
+      - 'src/potbot/controller/reasoning*.py'
+      - 'src/potbot/controller/steering_triage.py'
+      - 'src/potbot/controller/budgets.py'
+      - 'src/potbot/api/server.py'
+      - 'src/potbot/models/prompt_compiler.py'
+      - 'src/potbot/persistence/*reasoning*.py'
+      - 'src/potbot/persistence/schema.py'
+      - 'tests/unit/test_reasoning*.py'
+      - 'tests/unit/test_steering_triage.py'
+      - 'tests/unit/test_atomic_steering_benchmark.py'
+      - 'tests/integration/test_reasoning*.py'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'compose.yaml'
+      - '.github/workflows/reasoning-r7-1.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  temporal-steering:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_PYTHON: '3.12'
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+      COMPOSE_PROJECT_NAME: potbot-temporal-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.23'
+      - name: Install locked dependencies
+        run: uv sync --locked --extra postgres --extra credentials --extra web --dev
+      - name: Start repository PostgreSQL and pgvector fixture
+        run: docker compose up --detach --wait --wait-timeout 90
+      - name: Verify temporal classification, owner fences and budget recovery
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_reasoning*.py
+          tests/unit/test_steering_triage.py
+          tests/unit/test_atomic_steering_benchmark.py
+          tests/integration/test_reasoning*.py
+          --junitxml=artifacts/reasoning-r7-1.xml
+      - name: Retain exact-run acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: reasoning-r7-1
+          path: artifacts/reasoning-r7-1.xml
+          if-no-files-found: error
+          retention-days: 14
+      - name: Stop only this disposable database
+        if: always()
+        run: docker compose down --volumes --remove-orphans --timeout 10

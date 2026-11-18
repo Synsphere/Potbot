@@ -26,6 +26,8 @@ def research_consumer_sha256() -> str:
         "research/contracts.py",
         "research/source_policy.py",
         "research/providers.py",
+        "research/specialist.py",
+        "research/specialist_records.py",
         "research/extraction.py",
         "research/pdf_extraction.py",
         "research/external_transport.py",

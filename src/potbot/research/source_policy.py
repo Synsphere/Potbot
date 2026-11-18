@@ -256,7 +256,13 @@ class ResearchProviderRule:
     minimum_interval_ms: int = 1000
 
     def __post_init__(self) -> None:
-        if not isinstance(self.provider, str) or self.provider not in {"brave", "tavily"}:
+        from potbot.research.specialist import SPECIALIST_ENDPOINTS
+
+        if not isinstance(self.provider, str) or self.provider not in {
+            "brave",
+            "tavily",
+            *SPECIALIST_ENDPOINTS,
+        }:
             raise InvalidInputError("Research provider is unsupported")
         _bounded_int(self.cost_microunits_per_call, "per-call cost ceiling", 0, 10**12)
         _bounded_int(self.minimum_interval_ms, "provider interval", 0, 3600000)
@@ -337,7 +343,7 @@ class ExternalResearchPolicy:
             raise InvalidInputError("Research query disclosure permission must be explicit")
         if (
             type(self.providers) is not tuple
-            or len(self.providers) > 2
+            or len(self.providers) > 9
             or any(type(item) is not ResearchProviderRule for item in self.providers)
             or len({item.provider for item in self.providers}) != len(self.providers)
             or type(self.fetch_hosts) is not tuple
@@ -396,7 +402,7 @@ class ExternalResearchPolicy:
             }
             or value["schema"] != "potbot-external-research-policy/v1"
             or not isinstance(value["providers"], list)
-            or len(value["providers"]) > 2
+            or len(value["providers"]) > 9
             or not isinstance(value["fetch_hosts"], list)
             or len(value["fetch_hosts"]) > 32
             or not isinstance(value["fallback_statuses"], list)
@@ -438,6 +444,17 @@ class ExternalResearchPolicy:
         if not self.allow_query_disclosure or rule is None:
             raise ScopeDeniedError("Research query disclosure to this provider is not enabled")
         return rule
+
+    @property
+    def provider_request_allowance(self) -> int:
+        """Reserve the ESearch and result-derived ESummary calls separately."""
+        return sum(2 if rule.provider == "pubmed" else 1 for rule in self.providers)
+
+    def provider_interval_ms(self, provider: str) -> int:
+        from potbot.research.specialist import SPECIALIST_MIN_INTERVAL_MS
+
+        rule = self.require_provider(provider)
+        return max(rule.minimum_interval_ms, SPECIALIST_MIN_INTERVAL_MS.get(provider, 0))
 
     def require_fetch_url(self, url: str) -> ResearchFetchHostRule:
         # Local repository/static-source declarations do not require the

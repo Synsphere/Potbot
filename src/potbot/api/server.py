@@ -580,10 +580,17 @@ def create_app(
     # The public OpenAI routes do not use Potbot's v1 command envelope. Preserve
     # the native catalogue at /v1/potbot/models for the dashboard and older tools.
     def openai_error(error: Exception) -> JSONResponse:
+        from potbot.controller.reasoning_runtime import ReasoningDispatchInterrupted
         from potbot.models.providers.contracts import ProviderAPIError
 
         if isinstance(error, CompatibilityError):
             failure = error
+        elif isinstance(error, ReasoningDispatchInterrupted):
+            failure = CompatibilityError(
+                "Reasoning was interrupted; further dispatch is fenced. Inspect retained invocation receipts for in-flight outcomes.",
+                status=409,
+                code="reasoning_interrupted",
+            )
         elif isinstance(error, ProviderAPIError):
             status = 429 if error.status_code == 429 else 502
             failure = CompatibilityError(
@@ -926,8 +933,14 @@ def create_app(
                             yield sse("[DONE]")
                             break
                         elif kind == "error":
+                            from potbot.controller.reasoning_runtime import (
+                                ReasoningDispatchInterrupted,
+                            )
+
                             yield sse(
-                                error_document(
+                                json.loads(bytes(openai_error(value).body))
+                                if isinstance(value, ReasoningDispatchInterrupted)
+                                else error_document(
                                     CompatibilityError(
                                         "Inference failed.", status=502, code="provider_error"
                                     )

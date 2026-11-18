@@ -1,7 +1,8 @@
 /** Retained research run, transport, extraction and causal evidence projections. */
-import { RESEARCH_ENDPOINTS, researchObject as object, researchKeys as keys, researchId as id, researchSha as sha, researchInteger as integer, researchText as text, researchBytes as bytes, researchCodes as codes, researchTime as time, researchURL as url, researchCursor, sameTaskValue, projectResearchEnvelope, projectResearchAction, projectResearchPolicy, projectResearchAmounts, projectResearchSegment, type ResearchEnvelope, type ResearchScope, type ResearchAction, type ResearchPolicy, type ResearchExtraction } from "./research.ts";
+import { RESEARCH_ENDPOINTS, RESEARCH_PROVIDER_IDS, researchProviderId, researchSpecialistProvider, type ResearchProviderId, researchObject as object, researchKeys as keys, researchId as id, researchSha as sha, researchInteger as integer, researchText as text, researchBytes as bytes, researchCodes as codes, researchTime as time, researchURL as url, researchCursor, sameTaskValue, projectResearchEnvelope, projectResearchAction, projectResearchPolicy, projectResearchAmounts, projectResearchSegment, type ResearchEnvelope, type ResearchScope, type ResearchAction, type ResearchPolicy, type ResearchExtraction } from "./research.ts";
 import { boundedTaskLiteral } from "./task-execution.ts";
 import { researchUTF8, researchQuote } from "./research-text.ts";
+import { projectResearchSpecialistMetadata, type ResearchSpecialistMetadata } from "./research-specialist.ts";
 export type ResearchRunState = "queued" | "running" | "succeeded" | "blocked" | "indeterminate";
 export type ResearchUsageOrigin = "measured" | "synthetic" | "conservative_estimate";
 export type ResearchRun = { id: string; actionId: string; episodeId: string; needId: string | null; needRevisionId: string | null; state: ResearchRunState; revision: number; createdAt: string; startedAt: string | null; finishedAt: string | null; errorCode: string | null; cancelRequested: boolean; authorizationSha256: string | null; policySha256: string | null; consumerSha256: string | null; disclosureDecisionId: string; reservationId: string; resultArtifactId: string | null; resultSha256: string | null; receiptSha256: string | null; requestCount: number; usageOrigin: ResearchUsageOrigin | null; visibility: "workspace"; recordIntegrityValid: boolean };
@@ -11,11 +12,11 @@ export type ResearchReceipt = { schema: "potbot-external-research-receipt/v1"; r
 export type ResearchExecution = { schema: "potbot-external-research-run/v1"; scope: ResearchScope; run: ResearchRun; action: ResearchAction | null; authorization: ResearchAuthorization | null; receipt: ResearchReceipt | null };
 export type ResearchRunEnvelope = ResearchEnvelope & { execution: ResearchExecution };
 export type ResearchRuns = ResearchEnvelope & { items: ResearchExecution[]; nextCursor: string | null };
-export type ResearchRequest = { schema: "potbot-external-research-request/v1"; kind: "search" | "robots" | "fetch"; provider: "brave" | "tavily" | null; method: "POST" | "GET"; url: string; bodySha256: string; maxBytes: number; timeoutSeconds: number };
+export type ResearchRequest = { schema: "potbot-external-research-request/v1"; kind: "search" | "metadata" | "robots" | "fetch"; provider: ResearchProviderId | null; method: "POST" | "GET"; url: string; bodySha256: string; maxBytes: number; timeoutSeconds: number };
 export type ResearchResponse = { schema: "potbot-external-research-response/v1"; requestSha256: string; status: "fetched" | "rate_limited" | "quota_exhausted" | "redirect_denied" | "over_limit" | "unavailable" | "timed_out" | "indeterminate"; httpStatus: number | null; sourceSha256: string | null; mediaType: string | null; retrievedAt: string; receivedBytes: number; elapsedMs: number; requestSent: boolean; reasonCodes: string[] };
 export type ResearchRequestReceipt = { id: string; ordinal: number; requestSha256: string; request: ResearchRequest; responseSha256: string; response: ResearchResponse; rawArtifactId: string | null; usageOrigin: "measured" | "synthetic" };
-export type ResearchSearchItem = { canonicalUrl: string; title: string; snippet: string; provider: "brave" | "tavily"; rank: number; retrievedAt: string; publishedAt: string | null; publicationProvenance: "provider_reported_published_or_modified" | "provider_reported" | null };
-export type ResearchSearchBatch = { provider: "brave" | "tavily"; retrievedAt: string; items: ResearchSearchItem[]; rejected: { rank: number; reasonCode: "result_limit" | "normalized_result_limit" | "invalid_result" }[] };
+export type ResearchSearchItem = { canonicalUrl: string; title: string; snippet: string; provider: ResearchProviderId; rank: number; retrievedAt: string; publishedAt: string | null; publicationProvenance: string | null; specialist?: ResearchSpecialistMetadata };
+export type ResearchSearchBatch = { provider: ResearchProviderId; retrievedAt: string; items: ResearchSearchItem[]; rejected: { rank: number; reasonCode: "result_limit" | "normalized_result_limit" | "invalid_result" }[] };
 export type ResearchMergedResult = { id: string; canonicalUrl: string; title: string; snippet: string; lineage: ResearchSearchItem[] };
 export type ResearchSource = { runId: string; requestedUrl: string; resolvedUrl: string; retrievedAt: string | null; rawArtifactId: string | null; rawSha256: string | null; extractionArtifactId: string | null; extractionSha256: string | null; status: "not_fetched" | ResearchExtraction["status"]; reasonCodes: string[]; sourceId: string; id: string };
 export type ResearchBatch = { schema: "potbot-external-research-batch/v1"; runId: string; actionId: string; actionIdentity: string; authorizationSha256: string; policySha256: string; consumerSha256: string; requests: ResearchRequestReceipt[]; searchResults: ResearchSearchBatch[]; mergedResults: ResearchMergedResult[]; documents: ResearchSource[]; usage: Record<string, number | ResearchUsageOrigin> & { origin: ResearchUsageOrigin }; complete: boolean; reasonCodes: string[]; visibility: "workspace"; typedTransformation: ResearchTransformation };
@@ -74,8 +75,8 @@ export function projectResearchRuns(value: unknown, workspace: string, episode?:
 }
 export function projectResearchRequest(value: unknown): ResearchRequest | null {
   const row = object(value);
-  if (!row || !keys(row, ["schema", "kind", "provider", "method", "url", "bodySha256", "maxBytes", "timeoutSeconds"]) || row.schema !== "potbot-external-research-request/v1" || !["search", "robots", "fetch"].includes(String(row.kind)) || !url(row.url) || !sha(row.bodySha256) || !integer(row.maxBytes, 1, 262144) || !integer(row.timeoutSeconds, 1, 30)) return null;
-  if (row.kind === "search" ? (row.provider !== "brave" && row.provider !== "tavily") || row.method !== "POST" || row.url !== RESEARCH_ENDPOINTS[row.provider] : row.provider !== null || row.method !== "GET" || row.kind === "robots" && new URL(row.url).pathname !== "/robots.txt") return null;
+  if (!row || !keys(row, ["schema", "kind", "provider", "method", "url", "bodySha256", "maxBytes", "timeoutSeconds"]) || row.schema !== "potbot-external-research-request/v1" || !["search", "metadata", "robots", "fetch"].includes(String(row.kind)) || !url(row.url) || !sha(row.bodySha256) || !integer(row.maxBytes, 1, 262144) || !integer(row.timeoutSeconds, 1, 30)) return null;
+  if (row.kind === "search" || row.kind === "metadata" ? !researchProviderId(row.provider) || row.kind === "metadata" && row.provider !== "pubmed" || row.method !== "POST" || row.url !== RESEARCH_ENDPOINTS[row.provider] : row.provider !== null || row.method !== "GET" || row.kind === "robots" && new URL(row.url).pathname !== "/robots.txt") return null;
   return { ...row } as ResearchRequest;
 }
 export function projectResearchResponse(value: unknown, request: ResearchRequest, requestSha256: string): ResearchResponse | null {
@@ -90,19 +91,37 @@ function requestReceipt(value: unknown, ordinal: number): ResearchRequestReceipt
   const response = projectResearchResponse(row.response, request, row.requestSha256);
   return response && (response.status === "fetched" ? id(row.rawArtifactId) : row.rawArtifactId === null) ? { ...structuredClone(row), request, response } as ResearchRequestReceipt : null;
 }
-function searchItem(value: unknown): ResearchSearchItem | null {
-  const row = object(value);
-  if (!row || !keys(row, ["canonicalUrl", "title", "snippet", "provider", "rank", "retrievedAt", "publishedAt", "publicationProvenance"]) || !url(row.canonicalUrl) || !bytes(row.title, 2048, false) || !bytes(row.snippet, 16384, false) || !["brave", "tavily"].includes(String(row.provider)) || !integer(row.rank, 1, 100) || !time(row.retrievedAt)) return null;
-  if (row.publishedAt === null ? row.publicationProvenance !== null : !time(row.publishedAt) || row.publicationProvenance !== (row.provider === "brave" ? "provider_reported_published_or_modified" : "provider_reported")) return null;
-  return { ...row } as ResearchSearchItem;
+export function projectResearchSearchItem(value: unknown): ResearchSearchItem | null {
+  const row = object(value), specialistProvider = researchSpecialistProvider(row?.provider);
+  if (!row || !keys(row, ["canonicalUrl", "title", "snippet", "provider", "rank", "retrievedAt", "publishedAt", "publicationProvenance", ...(specialistProvider ? ["specialist"] : [])]) || !url(row.canonicalUrl) || !bytes(row.title, 2048, false) || !bytes(row.snippet, 16384, false) || !researchProviderId(row.provider) || !integer(row.rank, 1, 100) || !time(row.retrievedAt)) return null;
+  const specialist = specialistProvider ? projectResearchSpecialistMetadata(row.specialist) : null;
+  if (specialistProvider && !specialist) return null;
+  if (specialist) {
+    const publication = specialist.publicationDate;
+    if (publication?.precision === "instant" ? row.publishedAt !== publication.value || row.publicationProvenance !== publication.provenance : row.publishedAt !== null || row.publicationProvenance !== null) return null;
+  } else if (row.publishedAt === null ? row.publicationProvenance !== null : !time(row.publishedAt) || row.publicationProvenance !== (row.provider === "brave" ? "provider_reported_published_or_modified" : "provider_reported")) return null;
+  return { ...structuredClone(row), ...(specialist ? { specialist } : {}) } as ResearchSearchItem;
+}
+const normalizeWorkText = (value: string): string => value.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+/** Recheck conservative grouping; shared indexes do not prove source independence. */
+export function sameResearchWork(left: ResearchSearchItem, right: ResearchSearchItem): boolean {
+  if (left.canonicalUrl === right.canonicalUrl) return true;
+  if (!left.specialist || !right.specialist) return false;
+  const first = left.specialist, second = right.specialist;
+  if (first.doi !== null && second.doi !== null) return first.doi === second.doi;
+  const title = normalizeWorkText(left.title);
+  if (Array.from(title).length < 12 || title !== normalizeWorkText(right.title)) return false;
+  const authors = (item: ResearchSpecialistMetadata) => [...new Set(item.authors.map(normalizeWorkText))].sort();
+  const firstAuthors = authors(first), secondAuthors = authors(second);
+  return firstAuthors.length > 0 && !firstAuthors.includes("") && sameTaskValue(firstAuthors, secondAuthors);
 }
 function searchBatch(value: unknown): ResearchSearchBatch | null {
   const row = object(value);
-  if (!row || !keys(row, ["provider", "retrievedAt", "items", "rejected"]) || !["brave", "tavily"].includes(String(row.provider)) || !time(row.retrievedAt) || !Array.isArray(row.items) || row.items.length > 20 || !Array.isArray(row.rejected) || row.rejected.length > 100) return null;
-  const items = row.items.map(searchItem);
+  if (!row || !keys(row, ["provider", "retrievedAt", "items", "rejected"]) || !researchProviderId(row.provider) || !time(row.retrievedAt) || !Array.isArray(row.items) || row.items.length > 20 || !Array.isArray(row.rejected) || row.rejected.length > 100) return null;
+  const items = row.items.map(projectResearchSearchItem);
   if (items.some(item => !item || item.provider !== row.provider || item.retrievedAt !== row.retrievedAt) || !distinct(items.map(item => item?.rank))) return null;
   for (const raw of row.rejected) { const item = object(raw); if (!item || !keys(item, ["rank", "reasonCode"]) || !integer(item.rank, 1, 100) || !["result_limit", "normalized_result_limit", "invalid_result"].includes(String(item.reasonCode))) return null; }
-  return new TextEncoder().encode(JSON.stringify(row)).length <= 100000 ? { ...structuredClone(row), items } as ResearchSearchBatch : null;
+  return new TextEncoder().encode(JSON.stringify(row)).length <= (researchSpecialistProvider(row.provider) ? 40000 : 100000) ? { ...structuredClone(row), items } as ResearchSearchBatch : null;
 }
 export function projectResearchSourceRecord(value: unknown, runId: string, sourceId?: string): ResearchSource | null {
   const row = object(value);
@@ -112,17 +131,21 @@ export function projectResearchSourceRecord(value: unknown, runId: string, sourc
 }
 export function projectResearchBatch(value: unknown, execution: ResearchExecution): ResearchBatch | null {
   const row = object(value), { run, action, authorization: auth, receipt: settled } = execution;
-  if (!row || !action || !auth || !settled || !run.recordIntegrityValid || run.state !== "succeeded" || !keys(row, ["schema", "runId", "actionId", "actionIdentity", "authorizationSha256", "policySha256", "consumerSha256", "requests", "searchResults", "mergedResults", "documents", "usage", "complete", "reasonCodes", "visibility", "typedTransformation"]) || row.schema !== "potbot-external-research-batch/v1" || row.runId !== run.id || row.actionId !== action.action_id || row.actionIdentity !== action.identity || row.authorizationSha256 !== auth.sha256 || row.policySha256 !== auth.policySha256 || row.consumerSha256 !== auth.consumerSha256 || !Array.isArray(row.requests) || row.requests.length > 32 || row.requests.length !== run.requestCount || !Array.isArray(row.searchResults) || row.searchResults.length > 2 || !Array.isArray(row.mergedResults) || row.mergedResults.length > 40 || !Array.isArray(row.documents) || row.documents.length > auth.policy.max_documents || typeof row.complete !== "boolean" || !codes(row.reasonCodes) || row.visibility !== "workspace") return null;
+  if (!row || !action || !auth || !settled || !run.recordIntegrityValid || run.state !== "succeeded" || !keys(row, ["schema", "runId", "actionId", "actionIdentity", "authorizationSha256", "policySha256", "consumerSha256", "requests", "searchResults", "mergedResults", "documents", "usage", "complete", "reasonCodes", "visibility", "typedTransformation"]) || row.schema !== "potbot-external-research-batch/v1" || row.runId !== run.id || row.actionId !== action.action_id || row.actionIdentity !== action.identity || row.authorizationSha256 !== auth.sha256 || row.policySha256 !== auth.policySha256 || row.consumerSha256 !== auth.consumerSha256 || !Array.isArray(row.requests) || row.requests.length > 32 || row.requests.length !== run.requestCount || !Array.isArray(row.searchResults) || row.searchResults.length > RESEARCH_PROVIDER_IDS.length || !Array.isArray(row.mergedResults) || row.mergedResults.length > RESEARCH_PROVIDER_IDS.length * 20 || !Array.isArray(row.documents) || row.documents.length > auth.policy.max_documents || typeof row.complete !== "boolean" || !codes(row.reasonCodes) || row.visibility !== "workspace") return null;
   const requests = row.requests.map((item, index) => requestReceipt(item, index + 1)), searchResults = row.searchResults.map(searchBatch), documents = row.documents.map(item => projectResearchSourceRecord(item, run.id)), usage = object(row.usage), typedTransformation = transformation(row.typedTransformation, auth.consumerSha256, false);
   if (requests.some(item => !item) || searchResults.some(item => !item) || documents.some(item => !item) || !distinct(requests.map(item => item?.id)) || !distinct(requests.map(item => item?.requestSha256)) || !distinct(searchResults.map(item => item?.provider)) || !distinct(documents.map(item => item?.id)) || !usage || usage.origin !== settled.usageOrigin || !sameTaskValue(Object.fromEntries(Object.entries(usage).filter(([key]) => key !== "origin")), settled.usage) || !typedTransformation || !sameTaskValue(requests.map(item => item?.id), settled.requestIds) || !sameTaskValue(requests.map(item => item?.requestSha256), settled.requestSha256s) || !sameTaskValue(requests.map(item => item?.responseSha256), settled.responseSha256s)) return null;
-  const mergedResults: ResearchMergedResult[] = [], searches = searchResults as ResearchSearchBatch[];
+  const checkedRequests = requests as ResearchRequestReceipt[], searches = searchResults as ResearchSearchBatch[];
+  if (!sameTaskValue(checkedRequests.filter(item => item.request.kind === "search").map(item => item.request.provider), auth.policy.providers.map(item => item.provider)) || searches.some(batch => !auth.policy.providers.some(item => item.provider === batch.provider) || !checkedRequests.some(item => ["search", "metadata"].includes(item.request.kind) && item.request.provider === batch.provider && item.response.status === "fetched"))) return null;
+  const metadataRequests = checkedRequests.filter(item => item.request.kind === "metadata");
+  if (metadataRequests.length > 1 || metadataRequests.some(item => !checkedRequests.some(prior => prior.ordinal < item.ordinal && prior.request.kind === "search" && prior.request.provider === "pubmed" && prior.response.status === "fetched"))) return null;
+  const mergedResults: ResearchMergedResult[] = [];
   for (const raw of row.mergedResults) {
-    const item = object(raw); if (!item || !keys(item, ["id", "canonicalUrl", "title", "snippet", "lineage"]) || !sha(item.id) || !url(item.canonicalUrl) || !bytes(item.title, 2048, false) || !bytes(item.snippet, 16384, false) || !Array.isArray(item.lineage) || item.lineage.length < 1 || item.lineage.length > 40 || mergedResults.some(prior => prior.id === item.id || prior.canonicalUrl === item.canonicalUrl)) return null;
-    const lineage = item.lineage.map(searchItem);
-    if (lineage.some(source => !source || source.canonicalUrl !== item.canonicalUrl || !searches.some(batch => batch.items.some(prior => sameTaskValue(prior, source))))) return null;
+    const item = object(raw); if (!item || !keys(item, ["id", "canonicalUrl", "title", "snippet", "lineage"]) || !sha(item.id) || !url(item.canonicalUrl) || !bytes(item.title, 2048, false) || !bytes(item.snippet, 16384, false) || !Array.isArray(item.lineage) || item.lineage.length < 1 || item.lineage.length > RESEARCH_PROVIDER_IDS.length * 20 || mergedResults.some(prior => prior.id === item.id || prior.canonicalUrl === item.canonicalUrl)) return null;
+    const lineage = item.lineage.map(projectResearchSearchItem);
+    if (lineage.some(source => !source || !searches.some(batch => batch.items.some(prior => sameTaskValue(prior, source)))) || lineage[0]?.canonicalUrl !== item.canonicalUrl || lineage[0]?.title !== item.title || lineage[0]?.snippet !== item.snippet || lineage.some(source => lineage.some(other => !source || !other || !sameResearchWork(source, other)))) return null;
     mergedResults.push({ id: item.id, canonicalUrl: item.canonicalUrl, title: item.title, snippet: item.snippet, lineage: lineage as ResearchSearchItem[] });
   }
-  if ((documents as ResearchSource[]).some(source => !mergedResults.some(item => item.canonicalUrl === source.requestedUrl))) return null;
+  if ((documents as ResearchSource[]).some(source => !mergedResults.some(item => item.canonicalUrl === source.requestedUrl)) || searches.some(batch => batch.items.some(source => mergedResults.flatMap(item => item.lineage).filter(item => sameTaskValue(item, source)).length !== 1))) return null;
   return { ...structuredClone(row), requests, searchResults, mergedResults, documents, typedTransformation } as ResearchBatch;
 }
 export function projectResearchResult(value: unknown, workspace: string, runId: string, principal?: string): ResearchResult | null {

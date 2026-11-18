@@ -15,13 +15,19 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal, Protocol
+from typing import Any, Literal, Protocol, cast
 from uuid import UUID
 
 from potbot.controller.reasoning_budget import ReasoningBudgetJournal
 from potbot.controller.reasoning_evaluation import parse_critiques, rank_branches
-from potbot.controller.reasoning_runtime import PostgresReasoningStore
+from potbot.controller.reasoning_runtime import (
+    PostgresReasoningStore,
+    PostgresSteeringInbox,
+    ReasoningContextChanged,
+    ReasoningDispatchInterrupted,
+)
 from potbot.controller.reasoning_steering import SteeringInbox
+from potbot.controller.reasoning_temporal import TemporalSteeringController
 from potbot.controller.reasoning_tree import ReasoningTree
 from potbot.domain.errors import InvalidInputError
 from potbot.domain.serialization import content_hash
@@ -425,9 +431,26 @@ class ReasoningInvestigator:
             checkpoint=checkpoint,
         )
         tree.save()  # Make the run discoverable by the steering API immediately.
+        temporal = (
+            TemporalSteeringController(
+                state_store,
+                cast(PostgresSteeringInbox, self.steering_inbox),
+                context,
+                run_id,
+                lease_token,
+                tree,
+                emit,
+            )
+            if state_store is not None
+            and lease_token is not None
+            and getattr(self.steering_inbox, "supports_temporal", False)
+            else None
+        )
         usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
         invocations = 0
         hypotheses: list[tuple[Hypothesis, str]] = []
+        hypothesis_revisions: dict[str, int] = {}
+        last_model_revision = 0
         seen: set[str] = set()
         # Distinct providers first, deterministic model fallback if only one exists.
         preferred: list[dict[str, Any]] = []
@@ -440,8 +463,16 @@ class ReasoningInvestigator:
         generators = (preferred * 2)[:2]
 
         def stopped() -> None:
+            if temporal is not None:
+                temporal.check_interrupt()
             if cancelled is not None and cancelled():
                 raise CapabilityUnavailableError("reasoning run cancelled before dispatch")
+
+        def cancellation_requested() -> bool:
+            return bool(
+                (cancelled is not None and cancelled())
+                or (temporal is not None and temporal.interrupted())
+            )
 
         def model_call(
             model: dict[str, Any],
@@ -450,109 +481,154 @@ class ReasoningInvestigator:
             parent: str | None,
             final: bool = False,
         ) -> str:
-            nonlocal invocations
-            stopped()
-            packet = compile_reasoning_prompt(
-                model=f"{model['provider']}/{model['model']}",
-                role=role,
-                task=task,
-                constraints=tuple(system[i : i + 2000] for i in range(0, len(system), 2000)),
-                context=payload,
-            )
-            allowance = min(8192, max(1024, self.token_budget // 4))
-            output_limit = min(options["max_output_tokens"], 2048, allowance // 2)
-            node = tree.add(
-                f"{role}:{model['provider']}/{model['model']}",
-                parent_id=parent,
-                model_id=f"{model['provider']}/{model['model']}",
-                max_tokens=allowance,
-                prompt_hash=packet.identity,
-                role=role,
-            )
-            claim = tree.claim(node.id)
-            if claim is None or claim.claim_token is None:
-                raise InvalidInputError("reasoning token reservation unavailable")
-            emit(
-                "reasoning.node.started",
-                run_id=run_id,
-                node_id=node.id,
-                role=role,
-                model=model["model"],
-                prompt_hash=packet.identity,
-            )
-            selection_options = {**options, "max_output_tokens": output_limit}
-            # OpenAI and Gemini expose native JSON-only generation constraints;
-            # other providers still receive the canonical JSON prompt contract.
-            if role != "synthesizer" and model["provider"] in {"openai", "gemini"}:
-                selection_options["response_format"] = "json_object"
-            ticket = None
-            if episode_id is not None:
-                assert self.budget_journal is not None and lease_token is not None
-                ticket = self.budget_journal.prepare(
-                    context,
+            nonlocal invocations, last_model_revision
+            # A raced context update can rebuild an undispatched prompt. It
+            # can never cause a sent or uncertain invocation to be replayed.
+            for _recompile in range(4):
+                stopped()
+                if temporal is not None:
+                    temporal.background()
+                    stopped()
+                packet = compile_reasoning_prompt(
+                    model=f"{model['provider']}/{model['model']}",
+                    role=role,
+                    task=task,
+                    constraints=tuple(system[i : i + 2000] for i in range(0, len(system), 2000)),
+                    context={**payload, **temporal.prompt_context()} if temporal else payload,
+                )
+                allowance = min(8192, max(1024, self.token_budget // 4))
+                output_limit = min(options["max_output_tokens"], 2048, allowance // 2)
+                node = tree.add(
+                    f"{role}:{model['provider']}/{model['model']}",
+                    parent_id=parent,
+                    model_id=f"{model['provider']}/{model['model']}",
+                    max_tokens=allowance,
+                    prompt_hash=packet.identity,
+                    role=role,
+                )
+                claim = tree.claim(node.id)
+                if claim is None or claim.claim_token is None:
+                    raise InvalidInputError("reasoning token reservation unavailable")
+                emit(
+                    "reasoning.node.started",
                     run_id=run_id,
                     node_id=node.id,
-                    lease_token=lease_token,
-                    episode_id=episode_id,
-                    provider=model["provider"],
+                    role=role,
                     model=model["model"],
-                    protocol=model.get("protocol"),
                     prompt_hash=packet.identity,
-                    system=packet.system,
-                    prompt=packet.user,
-                    max_output_tokens=output_limit,
-                    timeout_seconds=min(120, self.budget_journal.policy.max_timeout_seconds),
                 )
-            # A committed possible-dispatch receipt precedes every paid call.
-            # Any failure after dispatch holds the reservation for reconciliation.
-            try:
-                if ticket is not None:
+                selection_options = {**options, "max_output_tokens": output_limit}
+                if role != "synthesizer" and model["provider"] in {"openai", "gemini"}:
+                    selection_options["response_format"] = "json_object"
+                ticket = None
+                if episode_id is not None:
                     assert self.budget_journal is not None and lease_token is not None
-                    self.budget_journal.dispatch(context, ticket, lease_token)
-                started_at = time.monotonic()
-                output, measured, finish = invoke(
-                    model,
-                    packet.system,
-                    packet.user,
-                    selection_options,
-                    on_text if final else (lambda _delta: None),
-                    run_id,
-                    cancelled,
-                )
-                invocations += 1
-                if ticket is not None:
-                    assert self.budget_journal is not None
-                    self.budget_journal.observe(
+                    ticket = self.budget_journal.prepare(
                         context,
-                        ticket,
-                        measured,
-                        elapsed_ms=int((time.monotonic() - started_at) * 1000),
-                        rate_provider=model["provider"],
-                        rate_model=model["model"],
+                        run_id=run_id,
+                        node_id=node.id,
+                        lease_token=lease_token,
+                        episode_id=episode_id,
+                        provider=model["provider"],
+                        model=model["model"],
+                        protocol=model.get("protocol"),
+                        prompt_hash=packet.identity,
+                        system=packet.system,
+                        prompt=packet.user,
+                        max_output_tokens=output_limit,
+                        timeout_seconds=min(120, self.budget_journal.policy.max_timeout_seconds),
                     )
-            except Exception:
-                if ticket is not None:
-                    assert self.budget_journal is not None
-                    self.budget_journal.uncertain(context, ticket)
-                raise
-            if finish != "stop":
-                raise CapabilityUnavailableError("reasoning model completion was interrupted")
-            if any(type(measured.get(k)) is not int or measured[k] < 0 for k in usage):
-                raise InvalidInputError("provider returned invalid usage")
-            if measured["total_tokens"] > allowance:
-                raise InvalidInputError("reported tokens exceed the reserved node allowance")
-            tree.finish(node.id, claim.claim_token, output[:32768], tokens=measured["total_tokens"])
-            for key in usage:
-                usage[key] += measured[key]
-            emit(
-                "reasoning.node.completed",
-                run_id=run_id,
-                node_id=node.id,
-                role=role,
-                usage=measured,
-                prompt_hash=packet.identity,
-            )
-            return output
+                dispatch_id = None
+                invocation_started = False
+                dispatch_observed = False
+                try:
+                    if temporal is not None:
+                        assert state_store is not None and lease_token is not None
+                        dispatch_id = state_store.begin_dispatch(
+                            context,
+                            run_id,
+                            lease_token,
+                            node_id=node.id,
+                            kind="model",
+                            context_epoch=tree.context_epoch,
+                        )
+                    if ticket is not None:
+                        assert self.budget_journal is not None and lease_token is not None
+                        self.budget_journal.dispatch(context, ticket, lease_token)
+                    started_at = time.monotonic()
+                    invocation_started = True
+                    output, measured, finish = invoke(
+                        model,
+                        packet.system,
+                        packet.user,
+                        selection_options,
+                        on_text if final else (lambda _delta: None),
+                        run_id,
+                        cancellation_requested if temporal else cancelled,
+                    )
+                    invocations += 1
+                    if ticket is not None:
+                        assert self.budget_journal is not None
+                        self.budget_journal.observe(
+                            context,
+                            ticket,
+                            measured,
+                            elapsed_ms=int((time.monotonic() - started_at) * 1000),
+                            rate_provider=model["provider"],
+                            rate_model=model["model"],
+                        )
+                    if finish != "stop":
+                        raise CapabilityUnavailableError(
+                            "reasoning model completion was interrupted"
+                        )
+                    if any(type(measured.get(k)) is not int or measured[k] < 0 for k in usage):
+                        raise InvalidInputError("provider returned invalid usage")
+                    if measured["total_tokens"] > allowance:
+                        raise InvalidInputError(
+                            "reported tokens exceed the reserved node allowance"
+                        )
+                    if dispatch_id is not None:
+                        assert state_store is not None and lease_token is not None
+                        state_store.finish_dispatch(
+                            context, run_id, lease_token, dispatch_id, outcome="completed"
+                        )
+                        dispatch_observed = True
+                except Exception as error:
+                    if ticket is not None:
+                        assert self.budget_journal is not None
+                        self.budget_journal.uncertain(context, ticket)
+                    if dispatch_id is not None and not dispatch_observed:
+                        assert state_store is not None and lease_token is not None
+                        state_store.finish_dispatch(
+                            context,
+                            run_id,
+                            lease_token,
+                            dispatch_id,
+                            outcome="indeterminate" if invocation_started else "not_started",
+                        )
+                    if isinstance(error, ReasoningContextChanged) and not invocation_started:
+                        tree.confirm_not_started(node.id, "context changed before dispatch")
+                        continue
+                    if temporal is not None:
+                        temporal.check_interrupt()
+                    raise
+                tree.finish(
+                    node.id, claim.claim_token, output[:32768], tokens=measured["total_tokens"]
+                )
+                for key in usage:
+                    usage[key] += measured[key]
+                emit(
+                    "reasoning.node.completed",
+                    run_id=run_id,
+                    node_id=node.id,
+                    role=role,
+                    usage=measured,
+                    prompt_hash=packet.identity,
+                )
+                stopped()
+                last_model_revision = node.revision
+                return output
+            raise ReasoningContextChanged("background context changed repeatedly before dispatch")
 
         def steering_actor() -> Any:
             return (
@@ -563,8 +639,13 @@ class ReasoningInvestigator:
 
         def drain_steering() -> bool:
             """Single-owner checkpoint: evaluate and respond to every queued input."""
-            changed = False
-            for request in self.steering_inbox.pending(steering_actor(), run_id):
+            changed = temporal.background() if temporal else False
+            requests = (
+                temporal.eligible()
+                if temporal
+                else self.steering_inbox.pending(steering_actor(), run_id)
+            )
+            for request in requests:
                 stopped()
                 emit(
                     "reasoning.steering.evaluating",
@@ -640,6 +721,7 @@ class ReasoningInvestigator:
                     tree.nodes[created].role = "investigator"
                     tree.save()
                     hypotheses.append((Hypothesis(hypothesis, (), ()), "user-steering"))
+                    hypothesis_revisions[hypothesis] = tree.revision
                     steered_nodes[hypothesis] = created
                     seen.add(" ".join(hypothesis.casefold().split()))
                     changed = True
@@ -656,17 +738,19 @@ class ReasoningInvestigator:
                         branch_id, claim.claim_token, old_result, tokens=0, evidence=old_receipts
                     )
                     changed = True
-                response = self.steering_inbox.resolve(
-                    steering_actor(),
-                    run_id,
-                    request,
-                    {
-                        "decision": decision,
-                        "explanation": candidate["explanation"],
-                        "branch_id": branch_id,
-                        "hypothesis": hypothesis,
-                        "task_revision": item["revision"],
-                    },
+                decision_record = {
+                    "decision": decision,
+                    "explanation": candidate["explanation"],
+                    "branch_id": branch_id,
+                    "hypothesis": hypothesis,
+                    "task_revision": item["revision"],
+                }
+                response = (
+                    temporal.resolve(request, decision_record)
+                    if temporal and "temporal_component" in request
+                    else self.steering_inbox.resolve(
+                        steering_actor(), run_id, request, decision_record
+                    )
                 )
                 emit(
                     "reasoning.steering.responded",
@@ -693,6 +777,19 @@ class ReasoningInvestigator:
             for item in parse_hypotheses(output):
                 normalized = " ".join(item.hypothesis.casefold().split())
                 if normalized in seen:
+                    # A fresh proposal may replace an unexecuted stale plan
+                    # after material user context changes. Identical titles
+                    # alone do not make the old questions current.
+                    if temporal is not None:
+                        for index, (previous, _source) in enumerate(hypotheses):
+                            if (
+                                " ".join(previous.hypothesis.casefold().split()) == normalized
+                                and hypothesis_revisions.get(previous.hypothesis, 0)
+                                < last_model_revision
+                            ):
+                                hypotheses[index] = (item, f"{model['provider']}/{model['model']}")
+                                hypothesis_revisions[item.hypothesis] = last_model_revision
+                                break
                     emit(
                         "reasoning.hypothesis.duplicate",
                         run_id=run_id,
@@ -707,6 +804,7 @@ class ReasoningInvestigator:
                 if len(hypotheses) >= initial_cap:
                     break
                 hypotheses.append((item, f"{model['provider']}/{model['model']}"))
+                hypothesis_revisions[item.hypothesis] = last_model_revision
 
         drain_steering()
         investigation: list[dict[str, Any]] = []
@@ -744,6 +842,19 @@ class ReasoningInvestigator:
                 # only explicitly registered, host-authorized tools.
                 for question_record in item.questions[:3]:
                     channel, question = question_record.channel, question_record.query
+                    stopped()
+                    if temporal is not None:
+                        temporal.background()
+                        stopped()
+                        if (
+                            node.revision != tree.revision
+                            or hypothesis_revisions.get(item.hypothesis, node.revision)
+                            != tree.revision
+                        ):
+                            records.append(
+                                {"channel": channel, "status": "context_reassessment_required"}
+                            )
+                            continue
                     if tool_calls >= self.max_tool_calls:
                         records.append({"channel": channel, "status": "budget_limited"})
                         continue
@@ -772,9 +883,48 @@ class ReasoningInvestigator:
                     )
                     # An exception here leaves an indeterminate node on recovery;
                     # never retry an uncertain external action automatically.
-                    found = self.gateway.search(
-                        channel=channel, query=question, run_id=run_id, limit=3
-                    )
+                    evidence_dispatch = None
+                    try:
+                        if temporal is not None:
+                            assert state_store is not None and lease_token is not None
+                            evidence_dispatch = state_store.begin_dispatch(
+                                context,
+                                run_id,
+                                lease_token,
+                                node_id=node.id,
+                                kind="evidence",
+                                context_epoch=tree.context_epoch,
+                            )
+                        found = self.gateway.search(
+                            channel=channel, query=question, run_id=run_id, limit=3
+                        )
+                    except ReasoningContextChanged:
+                        # No admitted effect occurred. A later model must
+                        # reassess this query with the new context.
+                        assert temporal is not None
+                        temporal.background()
+                        records.append(
+                            {"channel": channel, "status": "context_reassessment_required"}
+                        )
+                        continue
+                    except Exception:
+                        if evidence_dispatch is not None:
+                            assert state_store is not None and lease_token is not None
+                            state_store.finish_dispatch(
+                                context,
+                                run_id,
+                                lease_token,
+                                evidence_dispatch,
+                                outcome="indeterminate",
+                            )
+                        if temporal is not None:
+                            temporal.check_interrupt()
+                        raise
+                    if evidence_dispatch is not None:
+                        assert state_store is not None and lease_token is not None
+                        state_store.finish_dispatch(
+                            context, run_id, lease_token, evidence_dispatch, outcome="completed"
+                        )
                     per_run_cache[cache_key] = found
                     records.append(
                         {
@@ -808,6 +958,9 @@ class ReasoningInvestigator:
                         "assumptions": list(item.assumptions),
                         "investigation": records,
                         "node_id": node.id,
+                        "proposal_revision": hypothesis_revisions.get(
+                            item.hypothesis, node.revision
+                        ),
                     }
                 )
 
@@ -919,6 +1072,7 @@ class ReasoningInvestigator:
                         continue
                     seen.add(normalized)
                     hypotheses.append((hypothesis, f"{model['provider']}/{model['model']}"))
+                    hypothesis_revisions[hypothesis.hypothesis] = last_model_revision
                     lineage[hypothesis.hypothesis] = parent
                     added += 1
             if not added:
@@ -957,7 +1111,13 @@ class ReasoningInvestigator:
                 },
                 None,
             )
-        tree.close("completed")
+        try:
+            stopped()
+            tree.close("completed")
+        except ReasoningDispatchInterrupted:
+            if temporal is not None:
+                temporal.check_interrupt()
+            raise
         # Buffer synthesis until steering has been addressed; streamed deltas
         # cannot be retracted after the task-understanding revision changes.
         for offset in range(0, len(answer), 512):

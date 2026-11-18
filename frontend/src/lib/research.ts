@@ -15,8 +15,9 @@ export type ResearchTask = { episodeId: string; contractRevisionId: string; repo
 export type ResearchActionScope = { workspace_id: string; task_id: string; contract_revision_id: string; need_id: string; need_revision_id: string; repository_state_id: string; semantic_release_digest: string };
 export type ResearchQuery = { category: "documentation"; operation: "query_source"; locator: "external-research"; search_text: string; required_identifiers: string[]; expected_observation: string; decision_effect: string; evidence_requirement: string; stopping_condition: string; fallback: string; target_version: string; freshness_seconds: number; max_results: number; max_source_bytes: number };
 export type ResearchAction = { schema_version: 1; primary_type_ref: "synny://type/potbot-research-action"; action_id: string; scope: ResearchActionScope; query: ResearchQuery; predecessor_id: string | null; identity: string };
-export type ResearchPolicy = { schema: "potbot-external-research-policy/v1"; allow_query_disclosure: boolean; providers: { provider: "brave" | "tavily"; cost_microunits_per_call: number; minimum_interval_ms: number }[]; fetch_hosts: { host: string; terms_approved: boolean; minimum_interval_ms: number }[]; fallback_statuses: ("rate_limited" | "quota_exhausted" | "unavailable")[]; max_results: number; max_documents: number; max_requests: number; max_source_bytes: number; timeout_seconds: number };
-export type ResearchProvider = { id: "brave" | "tavily"; method: "POST"; endpoint: string; adapterRevision: 1; mode: "web_search"; scope: "explicit_query_disclosure" };
+export type ResearchPolicy = { schema: "potbot-external-research-policy/v1"; allow_query_disclosure: boolean; providers: { provider: ResearchProviderId; cost_microunits_per_call: number; minimum_interval_ms: number }[]; fetch_hosts: { host: string; terms_approved: boolean; minimum_interval_ms: number }[]; fallback_statuses: ("rate_limited" | "quota_exhausted" | "unavailable")[]; max_results: number; max_documents: number; max_requests: number; max_source_bytes: number; timeout_seconds: number };
+export type ResearchProviderId = keyof typeof RESEARCH_ENDPOINTS;
+export type ResearchProvider = { id: ResearchProviderId; method: "POST"; endpoint: string; adapterRevision: 1; mode: "web_search" | "specialist_retrieval"; scope: "explicit_query_disclosure" };
 export type ResearchContext = ResearchEnvelope & { task: ResearchTask; needs: ResearchNeedSummary[]; need: ResearchNeed | null; policy: { sha256: string; content: ResearchPolicy } | null; providerDescriptors: ResearchProvider[]; contextSha256: string; queryTemplate: ResearchQuery | null; current: boolean; reasonCodes: string[]; visibility: "workspace" };
 export type ResearchActionReceipt = ResearchEnvelope & { action: ResearchAction; actionIdentity: string; reused: boolean };
 export type ResearchNeedReceipt = ResearchEnvelope & { need: ResearchNeed };
@@ -84,21 +85,37 @@ export function projectResearchAction(value: unknown, workspace: string): Resear
 }
 export function projectResearchPolicy(value: unknown): ResearchPolicy | null {
   const row = taskObject(value);
-  if (!row || !researchKeys(row, ["schema", "allow_query_disclosure", "providers", "fetch_hosts", "fallback_statuses", "max_results", "max_documents", "max_requests", "max_source_bytes", "timeout_seconds"]) || row.schema !== "potbot-external-research-policy/v1" || typeof row.allow_query_disclosure !== "boolean" || !Array.isArray(row.providers) || row.providers.length > 2 || !Array.isArray(row.fetch_hosts) || row.fetch_hosts.length > 32 || !strings(row.fallback_statuses, 3, 32) || !distinct(row.fallback_statuses) || !row.fallback_statuses.every(value => ["rate_limited", "quota_exhausted", "unavailable"].includes(value)) || !researchInteger(row.max_results, 1, 20) || !researchInteger(row.max_documents, 0, 8) || !researchInteger(row.max_requests, 1, 32) || !researchInteger(row.max_source_bytes, 1, 262144) || !researchInteger(row.timeout_seconds, 1, 30)) return null;
-  for (const raw of row.providers) { const item = taskObject(raw); if (!item || !researchKeys(item, ["provider", "cost_microunits_per_call", "minimum_interval_ms"]) || !["brave", "tavily"].includes(String(item.provider)) || !researchInteger(item.cost_microunits_per_call, 0, 1e12) || !researchInteger(item.minimum_interval_ms, 0, 3600000)) return null; }
+  if (!row || !researchKeys(row, ["schema", "allow_query_disclosure", "providers", "fetch_hosts", "fallback_statuses", "max_results", "max_documents", "max_requests", "max_source_bytes", "timeout_seconds"]) || row.schema !== "potbot-external-research-policy/v1" || typeof row.allow_query_disclosure !== "boolean" || !Array.isArray(row.providers) || row.providers.length > RESEARCH_PROVIDER_IDS.length || !Array.isArray(row.fetch_hosts) || row.fetch_hosts.length > 32 || !strings(row.fallback_statuses, 3, 32) || !distinct(row.fallback_statuses) || !row.fallback_statuses.every(value => ["rate_limited", "quota_exhausted", "unavailable"].includes(value)) || !researchInteger(row.max_results, 1, 20) || !researchInteger(row.max_documents, 0, 8) || !researchInteger(row.max_requests, 1, 32) || !researchInteger(row.max_source_bytes, 1, 262144) || !researchInteger(row.timeout_seconds, 1, 30)) return null;
+  for (const raw of row.providers) { const item = taskObject(raw); if (!item || !researchKeys(item, ["provider", "cost_microunits_per_call", "minimum_interval_ms"]) || !researchProviderId(item.provider) || !researchInteger(item.cost_microunits_per_call, 0, 1e12) || !researchInteger(item.minimum_interval_ms, 0, 3600000)) return null; }
   for (const raw of row.fetch_hosts) { const item = taskObject(raw); if (!item || !researchKeys(item, ["host", "terms_approved", "minimum_interval_ms"]) || typeof item.host !== "string" || item.host.length > 253 || !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z][a-z0-9-]*$/.test(item.host) || typeof item.terms_approved !== "boolean" || !researchInteger(item.minimum_interval_ms, 0, 3600000)) return null; }
   if (!distinct(row.providers.map(item => item.provider)) || !distinct(row.fetch_hosts.map(item => item.host))) return null;
   return structuredClone(row) as ResearchPolicy;
 }
 /** Current admission ceiling preview; the native budget owner makes the decision. */
 export function researchReservationPreview(policy: ResearchPolicy): Record<string, number> {
-  const interval = Math.max(0, ...policy.providers.map(item => item.minimum_interval_ms), ...policy.fetch_hosts.map(item => item.minimum_interval_ms));
+  const interval = Math.max(0, ...policy.providers.map(researchProviderInterval), ...policy.fetch_hosts.map(item => item.minimum_interval_ms));
   return { calls: policy.max_requests, tool_ms: policy.max_requests * (policy.timeout_seconds * 1000 + interval) + policy.max_documents * 5000, bytes_read: policy.max_requests * policy.max_source_bytes, money_microunits: policy.max_requests * Math.max(0, ...policy.providers.map(item => item.cost_microunits_per_call)), concurrency: 1 };
 }
-export const RESEARCH_ENDPOINTS = { brave: "https://api.search.brave.com/res/v1/web/search", tavily: "https://api.tavily.com/search" } as const;
+export const RESEARCH_PROVIDER_INTERVALS: Record<ResearchProviderId, number> = { brave: 0, tavily: 0, crossref: 1000, openalex: 1000, arxiv: 3000, pubmed: 400, semantic_scholar: 1000, wikidata: 1000, internet_archive: 1000 };
+export const researchProviderInterval = (rule: ResearchPolicy["providers"][number]): number => Math.max(rule.minimum_interval_ms, RESEARCH_PROVIDER_INTERVALS[rule.provider]);
+export const researchProviderRequestAllowance = (policy: ResearchPolicy): number => policy.providers.reduce((count, item) => count + (item.provider === "pubmed" ? 2 : 1), 0);
+export const RESEARCH_ENDPOINTS = {
+  brave: "https://api.search.brave.com/res/v1/web/search",
+  tavily: "https://api.tavily.com/search",
+  crossref: "https://api.crossref.org/works",
+  openalex: "https://api.openalex.org/works",
+  arxiv: "https://export.arxiv.org/api/query",
+  pubmed: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
+  semantic_scholar: "https://api.semanticscholar.org/graph/v1/paper/search",
+  wikidata: "https://query.wikidata.org/sparql",
+  internet_archive: "https://archive.org/advancedsearch.php",
+} as const;
+export const RESEARCH_PROVIDER_IDS = Object.keys(RESEARCH_ENDPOINTS) as ResearchProviderId[];
+export const researchProviderId = (value: unknown): value is ResearchProviderId => typeof value === "string" && Object.hasOwn(RESEARCH_ENDPOINTS, value);
+export const researchSpecialistProvider = (value: unknown): value is ResearchProviderId => researchProviderId(value) && value !== "brave" && value !== "tavily";
 export function projectResearchProvider(value: unknown): ResearchProvider | null {
   const row = taskObject(value);
-  return row && researchKeys(row, ["id", "method", "endpoint", "adapterRevision", "mode", "scope"]) && (row.id === "brave" || row.id === "tavily") && row.method === "POST" && row.endpoint === RESEARCH_ENDPOINTS[row.id] && row.adapterRevision === 1 && row.mode === "web_search" && row.scope === "explicit_query_disclosure" ? { ...row } as ResearchProvider : null;
+  return row && researchKeys(row, ["id", "method", "endpoint", "adapterRevision", "mode", "scope"]) && researchProviderId(row.id) && row.method === "POST" && row.endpoint === RESEARCH_ENDPOINTS[row.id] && row.adapterRevision === 1 && row.mode === (researchSpecialistProvider(row.id) ? "specialist_retrieval" : "web_search") && row.scope === "explicit_query_disclosure" ? { ...row } as ResearchProvider : null;
 }
 export function projectResearchEnvelope(value: unknown, workspace: string, principal?: string): ResearchEnvelope | null {
   const row = taskObject(value), scope = taskObject(row?.scope);
@@ -106,7 +123,7 @@ export function projectResearchEnvelope(value: unknown, workspace: string, princ
 }
 export function projectResearchContext(value: unknown, workspace: string, episode?: string, state?: string, needId?: string | null, principal?: string): ResearchContext | null {
   const row = taskObject(value), envelope = projectResearchEnvelope(value, workspace, principal), task = taskObject(row?.task);
-  if (!row || !envelope || !task || !researchKeys(task, ["episodeId", "contractRevisionId", "repositoryStateId", "semanticReleaseSha256", "status"]) || ![task.episodeId, task.contractRevisionId, task.repositoryStateId].every(researchId) || !researchSha(task.semanticReleaseSha256) || !taskStates.includes(String(task.status)) || episode && task.episodeId !== episode || state && task.repositoryStateId !== state || !Array.isArray(row.needs) || row.needs.length > 25 || !Array.isArray(row.providerDescriptors) || row.providerDescriptors.length > 2 || !researchSha(row.contextSha256) || typeof row.current !== "boolean" || !researchCodes(row.reasonCodes) || row.visibility !== "workspace") return null;
+  if (!row || !envelope || !task || !researchKeys(task, ["episodeId", "contractRevisionId", "repositoryStateId", "semanticReleaseSha256", "status"]) || ![task.episodeId, task.contractRevisionId, task.repositoryStateId].every(researchId) || !researchSha(task.semanticReleaseSha256) || !taskStates.includes(String(task.status)) || episode && task.episodeId !== episode || state && task.repositoryStateId !== state || !Array.isArray(row.needs) || row.needs.length > 25 || !Array.isArray(row.providerDescriptors) || row.providerDescriptors.length > RESEARCH_PROVIDER_IDS.length || !researchSha(row.contextSha256) || typeof row.current !== "boolean" || !researchCodes(row.reasonCodes) || row.visibility !== "workspace") return null;
   const needs: ResearchNeedSummary[] = [];
   for (const raw of row.needs) { const item = taskObject(raw); if (!item || !researchKeys(item, ["id", "revisionId", "contentSha256", "status", "question"]) || !researchId(item.id) || !researchId(item.revisionId) || !researchSha(item.contentSha256) || !needStates.includes(String(item.status)) || !researchText(item.question, 512) || needs.some(need => need.id === item.id)) return null; needs.push({ ...item } as ResearchNeedSummary); }
   const need = row.need === null ? null : projectResearchNeed(row.need), rawPolicy = taskObject(row.policy), policyContent = projectResearchPolicy(rawPolicy?.content), queryTemplate = row.queryTemplate === null ? null : projectResearchQuery(row.queryTemplate), providers = row.providerDescriptors.map(projectResearchProvider);

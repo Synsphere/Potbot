@@ -27,6 +27,7 @@ from potbot.research.external_transport import (
 from potbot.research.providers import (
     fetch_request,
     merge_search_results,
+    metadata_request,
     normalize_search_results,
     robots_permits,
     robots_request,
@@ -149,6 +150,23 @@ class ExternalResearchWorker:
                     if response.status not in self.policy.fallback_statuses:
                         return self._stop(context, lease, "request_failed")
                     continue
+                assert response.data is not None
+                if rule.provider == "pubmed":
+                    from potbot.research.specialist import verify_pubmed_summary
+
+                    child = metadata_request(self.policy, response.data)
+                    if child is not None:
+                        search_raw = response.data
+                        response = await self._send(context, lease, child)
+                        calls += 1
+                        if response.status != "fetched":
+                            if response.status in {"timed_out", "indeterminate"}:
+                                return self._stop(context, lease, "usage_indeterminate")
+                            if response.status not in self.policy.fallback_statuses:
+                                return self._stop(context, lease, "request_failed")
+                            continue
+                        assert response.data is not None
+                        verify_pubmed_summary(response.data, search_raw, self.policy.max_results)
                 assert response.data is not None
                 batches.append(
                     normalize_search_results(

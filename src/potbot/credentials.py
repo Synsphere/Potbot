@@ -39,6 +39,8 @@ SERVICE_CREDENTIAL_NAMES = (
     "providers.evolink",
     "research.brave",
     "research.tavily",
+    "research.openalex",
+    "research.semantic_scholar",
     "api.access_token",
     "api.setup_token",
 )

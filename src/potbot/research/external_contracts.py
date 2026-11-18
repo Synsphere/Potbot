@@ -15,11 +15,13 @@ from urllib.parse import urlsplit
 
 from potbot.domain.errors import InvalidInputError
 from potbot.domain.serialization import content_hash
+from potbot.research.specialist import SPECIALIST_ENDPOINTS
 from potbot.tools.pinned_https import canonical_https_host
 
 PROVIDER_ENDPOINTS = {
     "brave": "https://api.search.brave.com/res/v1/web/search",
     "tavily": "https://api.tavily.com/search",
+    **SPECIALIST_ENDPOINTS,
 }
 RESEARCH_USER_AGENT = "PotbotResearch/1"
 MAX_RESPONSE_BYTES = 262144
@@ -56,13 +58,13 @@ class ExternalRequest:
     def __post_init__(self) -> None:
         if (
             not isinstance(self.kind, str)
-            or self.kind not in {"search", "robots", "fetch"}
+            or self.kind not in {"search", "metadata", "robots", "fetch"}
             or type(self.body) is not bytes
             or (self.provider is not None and not isinstance(self.provider, str))
         ):
             raise InvalidInputError("Research request kind is unsupported")
         canonical_https_host(self.url, allow_query=self.kind == "fetch")
-        if self.kind == "search":
+        if self.kind in {"search", "metadata"}:
             if (
                 self.provider not in PROVIDER_ENDPOINTS
                 or self.method != "POST"
@@ -72,6 +74,10 @@ class ExternalRequest:
             ):
                 raise InvalidInputError(
                     "Research search requires the exact supported provider route"
+                )
+            if self.kind == "metadata" and self.provider != "pubmed":
+                raise InvalidInputError(
+                    "Only retained PubMed identifiers support metadata requests"
                 )
         elif self.provider is not None or self.method != "GET" or self.body != b"":
             raise InvalidInputError("Document research requires an unauthenticated GET")

@@ -62,6 +62,63 @@ fallback statuses, disclosure permission and request/result/byte/time limits.
 `providerDescriptors` lists fixed adapter method/endpoint/revision information;
 no credentials are returned. `visibility` is always `workspace`.
 
+### T05.3 specialist provider extension
+
+The same policy and disclosure lifecycle supports at most nine distinct
+configured providers: `brave`, `tavily`, `crossref`, `openalex`, `arxiv`, `pubmed`,
+`semantic_scholar`, `wikidata` and `internet_archive`. This does not add a browser
+endpoint for arbitrary search or SPARQL. The operator still reviews one literal
+`search_text` and the fixed provider list before authorizing a run.
+
+Provider descriptors retain exactly `{id,method,endpoint,adapterRevision,mode,
+scope}`. Specialist descriptors use `mode:"specialist_retrieval"` and the same
+`scope:"explicit_query_disclosure"`. `method:"POST"` describes the admitted
+internal query envelope. The pinned adapter generates its documented wire
+method, path and parameters; credentials never appear in these descriptors.
+PubMed can retain a second request of `kind:"metadata"`, with provider `pubmed`
+and its same fixed logical search endpoint, after an admitted search supplies
+the exact bounded identifiers. This request is separately authorized, accounted
+and retained. It cannot accept a caller-supplied metadata URL.
+
+Each specialist normalized item has the ordinary search fields plus an exact
+`specialist` record:
+
+```text
+schema: "potbot-specialist-metadata/v1"
+recordId: string (at most 512 bytes)
+doi: normalized DOI or null
+authors: at most 64 names, each at most 512 bytes
+publicationDate, eventDate, updatedDate: MetadataDate or null
+sourceRole: "primary" | "secondary" | "unknown"
+recordKind: "publisher_registry" | "repository" | "bibliographic_index"
+            | "knowledge_graph" | "archive_catalogue"
+retraction: {state: "reported_retracted" | "not_reported" | "unknown",
+             notices: at most 20 Notice records}
+```
+
+`MetadataDate` is exactly `{value,precision,provenance}`. Value and provenance
+are at most 128 bytes; precision is `year`, `month`, `day`, `instant` or
+`reported`. The first four retain their actual temporal precision; `reported`
+retains a bounded unparsed source string. Partial dates never become fabricated
+UTC instants for freshness. Ordinary `publishedAt` remains an actual UTC instant
+or null. Retrieval time is separate from all three metadata dates.
+
+`Notice` is exactly `{kind,relation,targetDoi,date}`. Kind is `retraction`,
+`correction`, `update`, `expression_of_concern` or `withdrawal`; relation is
+`updates`, `updated_by` or `record_flag`; target DOI and MetadataDate may be
+null. A notice's direction is retained. `not_reported` means only that this
+provider record does not report a retraction; it is not a clean-status verdict.
+
+Merged results retain their existing five fields and every complete normalized
+lineage item. Exact URLs can join as before. Distinct specialist URLs can join
+by matching non-null DOI, or by a conservative normalized title and complete
+author-set match without conflicting non-null DOIs. Every pair in a group must
+match; a DOI-less intermediary cannot bridge two conflicting DOIs. The first
+observed URL, title and snippet remain the displayed representative. Separate
+indexes reporting the same work do not prove independent publisher evidence.
+The browser displays the original provider metadata for each lineage item and
+keeps authored source citation requirements unchanged.
+
 `contextSha256` pins the current reader/workspace, exact task and selected need,
 and policy fingerprint. Action admission rechecks it. `queryTemplate` is null
 without a current need and policy; otherwise it is an editable existing

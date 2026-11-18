@@ -764,7 +764,7 @@ export function OrbWorkspace({ demo }: { demo: boolean }) {
         });
         setGraphHealth(prev => ({ ...prev, [workspaceId]: document.gap ? "source event history incomplete" : document.status || "ready" }));
         timer = setTimeout(poll, document.gap || document.more ? 300 :
-          graphMinimized || ["completed", "failed", "indeterminate", "cancelled"].includes(document.status || "") ? 15000 : 3000);
+          graphMinimized || ["completed", "failed", "interrupted", "indeterminate", "cancelled"].includes(document.status || "") ? 15000 : 3000);
       } catch {
         if (!alive) return;
         setGraphHealth(prev => ({ ...prev, [workspaceId]: "unavailable — retrying" }));
