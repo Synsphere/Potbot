@@ -283,9 +283,8 @@ def provision(args: argparse.Namespace) -> None:
     service, auditor = pwd.getpwnam(args.service_user), pwd.getpwnam(args.auditor_user)
     uid, gid = service.pw_uid, service.pw_gid
     if (
-        min(uid, gid, auditor.pw_uid) <= 0
+        min(uid, gid, auditor.pw_uid, auditor.pw_gid) <= 0
         or auditor.pw_uid == uid
-        or auditor.pw_uid != auditor.pw_gid
         or auditor.pw_gid == gid
     ):
         raise CapabilityUnavailableError("Use separate unprivileged service and auditor accounts.")
