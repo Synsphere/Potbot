@@ -1,0 +1,319 @@
+"""Windows handoff for Potbot's mandatory Linux/WSL core runtime.
+
+The native Windows service continues to own PostgreSQL, API, hosted workers and
+the Next.js UI.  This module provisions and supervises the mandatory Linux-only
+operator/Xpra/sandbox layer inside Potbot's already-owned WSL distribution.
+
+No UI/API/database secret is copied into WSL.  Only the ephemeral Xpra bridge
+bearer is inherited by the one WSL child through WSLENV.
+"""
+from __future__ import annotations
+
+import hashlib
+import io
+import os
+import re
+import stat
+import subprocess
+import tarfile
+from dataclasses import dataclass
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+from potbot.dependencies import project_root
+from potbot.domain.errors import CapabilityUnavailableError, StateMismatchError
+
+if TYPE_CHECKING:
+    from potbot.service import ServiceConfig
+
+_SOURCE_TOP = (
+    "README.md",
+    "pyproject.toml",
+    "uv.lock",
+    "src",
+    "scripts",
+    "sandbox/clients",
+    "sandbox/qualification",
+    "native/potbot-cgroup-join",
+    "vocab",
+)
+_SKIP_NAMES = {
+    "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".git",
+    ".venv", ".potbot", "node_modules", ".next",
+}
+_MAX_SOURCE_BYTES = 160 * 1024 * 1024
+_HEX = re.compile(r"[0-9a-f]{64}\Z")
+_COMMIT = re.compile(r"[0-9a-f]{40}\Z")
+
+UV_VERSION = "0.12.23"
+UV_URL = (
+    "https://github.com/astral-sh/uv/releases/download/0.12.23/"
+    "uv-x86_64-unknown-linux-gnu.tar.gz"
+)
+UV_SHA256 = "9167d72b3319674b6303c4cbe071854bba13ebdf3d76b1a7cbdc175471fb66d6"
+COSIGN_VERSION = "3.1.3"
+COSIGN_URL = (
+    "https://github.com/sigstore/cosign/releases/download/v3.1.3/cosign-linux-amd64"
+)
+COSIGN_SHA256 = "4629c757b7618056f8ddd7e2625ae9fdd94c0372a65049520bc7d9df9efc7f71"
+
+_ROOT_BOOTSTRAP = r"""
+set -eu
+bundle="$1"
+source_sha="$2"
+uv_url="$3"
+uv_sha="$4"
+cosign_url="$5"
+cosign_sha="$6"
+test -f "$bundle"
+test "${#source_sha}" -eq 64
+
+. /etc/os-release
+test "$ID" = ubuntu
+test "$VERSION_ID" = 24.04
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install --yes --no-install-recommends \
+  ca-certificates curl python3.12 python3.12-venv python3.12-dev \
+  xpra xauth bubblewrap uidmap libseccomp2 strace build-essential \
+  skopeo umoci jq util-linux
+command -v xpra >/dev/null
+command -v bwrap >/dev/null
+command -v xauth >/dev/null
+command -v skopeo >/dev/null
+command -v umoci >/dev/null
+command -v strace >/dev/null
+command -v setpriv >/dev/null
+
+install -d -m 0755 -o root -g root /usr/local/libexec
+install -d -m 0755 -o root -g root /var/lib/potbot/core-source
+
+uv_dir=/usr/local/libexec/potbot-uv-0.12.23
+uv_bin="$uv_dir/uv"
+uv_marker="$uv_dir/.archive-sha256"
+if [ -e "$uv_dir" ]; then
+  test -x "$uv_bin"
+  test -f "$uv_marker"
+  test "$(cat "$uv_marker")" = "$uv_sha"
+else
+  tmp="$(mktemp -d /var/tmp/potbot-uv.XXXXXX)"
+  trap 'rm -rf "$tmp"' EXIT
+  curl --proto '=https' --tlsv1.2 --fail --location --silent --show-error \
+    "$uv_url" -o "$tmp/uv.tar.gz"
+  test "$(sha256sum "$tmp/uv.tar.gz" | awk '{print $1}')" = "$uv_sha"
+  install -d -m 0755 -o root -g root "$uv_dir"
+  tar -xzf "$tmp/uv.tar.gz" -C "$tmp"
+  found="$(find "$tmp" -type f -name uv -perm -u+x | head -n 1)"
+  test -n "$found"
+  install -o root -g root -m 0755 "$found" "$uv_bin"
+  printf '%s\n' "$uv_sha" > "$uv_marker"
+  chmod 0444 "$uv_marker"
+  rm -rf "$tmp"
+  trap - EXIT
+fi
+
+cosign=/usr/local/libexec/potbot-cosign
+if [ ! -x "$cosign" ] || [ "$(sha256sum "$cosign" | awk '{print $1}')" != "$cosign_sha" ]; then
+  tmp="$(mktemp /var/tmp/potbot-cosign.XXXXXX)"
+  trap 'rm -f "$tmp"' EXIT
+  curl --proto '=https' --tlsv1.2 --fail --location --silent --show-error \
+    "$cosign_url" -o "$tmp"
+  test "$(sha256sum "$tmp" | awk '{print $1}')" = "$cosign_sha"
+  install -o root -g root -m 0755 "$tmp" "$cosign"
+  rm -f "$tmp"
+  trap - EXIT
+fi
+
+source_root="/var/lib/potbot/core-source/$source_sha"
+marker="$source_root/.potbot-source-sha256"
+if [ -e "$source_root" ] && [ ! -f "$marker" ]; then
+  echo "Existing core source needs reconciliation" >&2
+  exit 20
+fi
+if [ ! -f "$marker" ]; then
+  pending="/var/lib/potbot/core-source/.${source_sha}.pending"
+  rm -rf "$pending"
+  install -d -m 0755 -o root -g root "$pending"
+  /usr/bin/python3.12 - "$bundle" "$pending" <<'PY'
+import pathlib, sys, tarfile
+archive = pathlib.Path(sys.argv[1])
+target = pathlib.Path(sys.argv[2])
+with tarfile.open(archive, "r:gz") as tf:
+    tf.extractall(target, filter="data")
+PY
+  printf '%s\n' "$source_sha" > "$pending/.potbot-source-sha256"
+  chmod 0444 "$pending/.potbot-source-sha256"
+  mv "$pending" "$source_root"
+fi
+test "$(cat "$marker")" = "$source_sha"
+
+cd "$source_root"
+export UV_PROJECT_ENVIRONMENT="$source_root/.venv"
+"$uv_bin" sync --locked --no-dev \
+  --extra web --extra security --extra semantics --extra credentials --extra skills \
+  --python /usr/bin/python3.12
+test -x "$source_root/.venv/bin/python"
+printf '%s\n' "$source_root/.venv/bin/python"
+"""
+
+
+@dataclass(frozen=True)
+class WindowsCoreRuntime:
+    command: tuple[str, ...]
+    environment: dict[str, str]
+
+
+def _source_files(root: Path) -> list[Path]:
+    files: list[Path] = []
+    total = 0
+    for name in _SOURCE_TOP:
+        selected = root / name
+        if not selected.exists():
+            if name == "vocab":
+                continue
+            raise CapabilityUnavailableError(f"Core runtime source is missing: {name}")
+        candidates = [selected] if selected.is_file() else selected.rglob("*")
+        for path in candidates:
+            relative = path.relative_to(root)
+            if any(part in _SKIP_NAMES for part in relative.parts):
+                continue
+            if path.is_symlink():
+                raise CapabilityUnavailableError("Core runtime source contains a symbolic link")
+            if not path.is_file():
+                continue
+            size = path.stat().st_size
+            total += size
+            if total > _MAX_SOURCE_BYTES:
+                raise CapabilityUnavailableError("Core runtime source bundle exceeds its bound")
+            files.append(path)
+    return sorted(set(files), key=lambda p: p.as_posix())
+
+
+def _source_digest(root: Path, files: list[Path]) -> str:
+    digest = hashlib.sha256()
+    for path in files:
+        relative = path.relative_to(root).as_posix().encode("utf-8")
+        payload = path.read_bytes()
+        mode = stat.S_IMODE(path.stat().st_mode)
+        digest.update(len(relative).to_bytes(4, "big"))
+        digest.update(relative)
+        digest.update(mode.to_bytes(4, "big"))
+        digest.update(len(payload).to_bytes(8, "big"))
+        digest.update(payload)
+    return digest.hexdigest()
+
+
+def _write_bundle(root: Path, files: list[Path], target: Path) -> None:
+    if target.is_symlink():
+        raise CapabilityUnavailableError("Core runtime staging archive is redirected")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    temporary = target.with_suffix(".pending")
+    temporary.unlink(missing_ok=True)
+    with tarfile.open(temporary, "w:gz", format=tarfile.PAX_FORMAT) as archive:
+        for path in files:
+            relative = path.relative_to(root).as_posix()
+            payload = path.read_bytes()
+            info = tarfile.TarInfo(relative)
+            info.size = len(payload)
+            info.mode = stat.S_IMODE(path.stat().st_mode) & 0o755 or 0o644
+            info.uid = info.gid = 0
+            info.uname = info.gname = "root"
+            info.mtime = 0
+            archive.addfile(info, io.BytesIO(payload))
+    os.replace(temporary, target)
+
+
+def _head(root: Path) -> str:
+    result = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "HEAD"],
+        capture_output=True, text=True, timeout=10, check=False,
+    )
+    value = result.stdout.strip()
+    if result.returncode or _COMMIT.fullmatch(value) is None:
+        raise CapabilityUnavailableError("Current Potbot Git commit could not be identified")
+    return value
+
+
+def _wsl_environment(token: str) -> dict[str, str]:
+    if not isinstance(token, str) or not 32 <= len(token) <= 4096 or "\n" in token or "\r" in token:
+        raise StateMismatchError("Xpra bridge token is invalid")
+    env = dict(os.environ)
+    env["POTBOT_XPRA_BRIDGE_TOKEN"] = token
+    existing = [item for item in env.get("WSLENV", "").split(":") if item]
+    if "POTBOT_XPRA_BRIDGE_TOKEN" not in existing:
+        existing.append("POTBOT_XPRA_BRIDGE_TOKEN")
+    env["WSLENV"] = ":".join(existing)
+    return env
+
+
+def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> WindowsCoreRuntime:
+    if os.name != "nt":
+        raise CapabilityUnavailableError("Windows core runtime handoff requires Windows")
+    from potbot.syn_release.host import DISTRO, WslOperatorHost, run_host
+
+    root = project_root()
+    files = _source_files(root)
+    source_sha = _source_digest(root, files)
+    if _HEX.fullmatch(source_sha) is None:
+        raise AssertionError("source digest is not canonical")
+    manager = WslOperatorHost()
+    manager.setup()
+
+    staging = manager.root / "core-runtime" / source_sha
+    bundle = staging / "source.tar.gz"
+    _write_bundle(root, files, bundle)
+    native = run_host(manager.command("/usr/bin/wslpath", ["-a", "-u", str(bundle)])).strip()
+    if not native.startswith("/") or "\n" in native:
+        raise CapabilityUnavailableError("Core runtime source bundle is not visible to WSL")
+
+    root_command = [
+        manager.wsl, "--distribution", DISTRO, "--user", "root", "--exec",
+        "/bin/sh", "-c", _ROOT_BOOTSTRAP, "potbot-core",
+        native, source_sha, UV_URL, UV_SHA256, COSIGN_URL, COSIGN_SHA256,
+    ]
+    result = subprocess.run(
+        root_command, capture_output=True, text=True, timeout=1800, check=False,
+        env={**os.environ, "PATH": os.environ.get("PATH", "")},
+    )
+    if result.returncode:
+        raise CapabilityUnavailableError(
+            "Managed WSL core prerequisites or locked Python environment failed"
+        )
+    python = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else ""
+    expected = f"/var/lib/potbot/core-source/{source_sha}/.venv/bin/python"
+    if python != expected:
+        raise CapabilityUnavailableError("Managed WSL core Python did not confirm its identity")
+
+    prepare = subprocess.run(
+        [
+            manager.wsl, "--distribution", DISTRO, "--user", "root", "--exec",
+            python, "-I", "-B", "-m", "potbot.wsl_core_runtime", "prepare",
+            "--workspace-id", config.workspace_id,
+            "--principal-id", config.principal_id,
+            "--source-root", f"/var/lib/potbot/core-source/{source_sha}",
+            "--source-sha256", source_sha,
+            "--consumer-commit", _head(root),
+        ],
+        capture_output=True, text=True, timeout=1800, check=False,
+        env={**os.environ, "PATH": os.environ.get("PATH", "")},
+    )
+    if prepare.returncode:
+        raise CapabilityUnavailableError(
+            "Managed WSL sandbox image, accounting or Xpra qualification failed"
+        )
+    try:
+        import json
+        record = json.loads(prepare.stdout.strip().splitlines()[-1])
+        state = record["state"]
+    except (ValueError, KeyError, IndexError, TypeError):
+        raise CapabilityUnavailableError("Managed WSL core runtime returned an invalid receipt") from None
+    if not isinstance(state, str) or not state.startswith("/home/synoperator/"):
+        raise CapabilityUnavailableError("Managed WSL core runtime state escaped its private owner")
+
+    return WindowsCoreRuntime(
+        command=tuple(manager.command(
+            python,
+            ["-I", "-B", "-m", "potbot.wsl_core_runtime", "run", "--state", state],
+        )),
+        environment=_wsl_environment(token),
+    )

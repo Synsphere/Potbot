@@ -429,11 +429,20 @@ def _supervise(config: ServiceConfig) -> int:
     xpra_policy: Path | None = None
     xpra_token: str | None = None
     xpra_home: Path | None = None
+    xpra_remote_command: tuple[str, ...] | None = None
+    xpra_remote_environment: dict[str, str] | None = None
     if config.frontend_enabled:
-        from potbot.core_runtime import prepare_core_runtime
-
-        xpra_policy, xpra_home = prepare_core_runtime(config)
         xpra_token = secrets.token_urlsafe(48)
+        if os.name == "nt":
+            from potbot.windows_core_runtime import prepare_windows_core_runtime
+
+            remote = prepare_windows_core_runtime(config, xpra_token)
+            xpra_remote_command = remote.command
+            xpra_remote_environment = remote.environment
+        else:
+            from potbot.core_runtime import prepare_core_runtime
+
+            xpra_policy, xpra_home = prepare_core_runtime(config)
     common = [
         "--workspace-id",
         config.workspace_id,
@@ -475,16 +484,19 @@ def _supervise(config: ServiceConfig) -> int:
             config.debugger_forwarding,
         ]
     if config.frontend_enabled:
-        # One native supervisor owns API, worker, atomic scheduler, Xpra and GUI.
-        assert xpra_policy is not None and xpra_token is not None and xpra_home is not None
-        commands["xpra"] = _service_command()[:2] + [
-            "potbot.tools.x11_workspace_server",
-            "--workspace-id", config.workspace_id,
-            "--sandbox-root", str(xpra_home),
-            "--browser-origin", "http://127.0.0.1:3100",
-            "--port", "8766",
-            "--apps-policy", str(xpra_policy),
-        ]
+        assert xpra_token is not None
+        if xpra_remote_command is not None:
+            commands["xpra"] = list(xpra_remote_command)
+        else:
+            assert xpra_policy is not None and xpra_home is not None
+            commands["xpra"] = _service_command()[:2] + [
+                "potbot.tools.x11_workspace_server",
+                "--workspace-id", config.workspace_id,
+                "--sandbox-root", str(xpra_home),
+                "--browser-origin", "http://127.0.0.1:3100",
+                "--port", "8766",
+                "--apps-policy", str(xpra_policy),
+            ]
         commands["frontend"] = _service_command()[:2] + ["potbot.frontend_worker"]
     stopped = threading.Event()
 
@@ -573,10 +585,13 @@ def _supervise(config: ServiceConfig) -> int:
     if xpra_token is not None:
         from potbot.core_runtime import frontend_bridge_environment
 
-        xpra_env = dict(env)
-        xpra_env["POTBOT_XPRA_BRIDGE_TOKEN"] = xpra_token
-        xpra_env["POTBOT_GUI_AUDIT_REQUIRED"] = "1"
-        child_envs["xpra"] = xpra_env
+        if xpra_remote_environment is not None:
+            child_envs["xpra"] = xpra_remote_environment
+        else:
+            xpra_env = dict(env)
+            xpra_env["POTBOT_XPRA_BRIDGE_TOKEN"] = xpra_token
+            xpra_env["POTBOT_GUI_AUDIT_REQUIRED"] = "1"
+            child_envs["xpra"] = xpra_env
         frontend_env = dict(env)
         frontend_env.update(frontend_bridge_environment(config, xpra_token))
         child_envs["frontend"] = frontend_env
@@ -772,16 +787,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     except (DomainError, OSError, ValueError) as error:
         code = error.code.value if isinstance(error, DomainError) else "service_unavailable"
-        # Never echo native manager stderr, connection secrets, policy data or exceptions.
+        message = (
+            str(error)
+            if isinstance(error, DomainError)
+            else "The service operation failed; inspect the local supervisor log."
+        )
         print(
-            json.dumps(
-                {
-                    "error": {
-                        "code": code,
-                        "message": "The service operation failed; check configuration and native manager permissions.",
-                    }
-                }
-            ),
+            json.dumps({"error": {"code": code, "message": message}}),
             file=sys.stderr,
         )
         return 1
