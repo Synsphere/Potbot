@@ -140,7 +140,12 @@ def main() -> int:
                         # operation and executable lifecycle migrations. Its
                         # prior 15-minute bound expired at 89% on merged U04-A.
                         # Keep a finite process deadline without dropping gates.
-                        timeout={"postgres": 1800, "sandbox": 360}.get(label, 240),
+                        # The 4,484-test unit/git selection reached 85% when its
+                        # four-minute deadline expired on merged U04-D. Allow
+                        # ten minutes for that growing lane and runner contention.
+                        timeout={"unit-and-git": 600, "postgres": 1800, "sandbox": 360}.get(
+                            label, 240
+                        ),
                         temporary_root=pytest_root,
                     )
                 finally:

@@ -33,6 +33,22 @@ _MAX_STATUS_BYTES = 65_536
 _SHUTDOWN_GRACE_S = 0.5
 
 
+async def await_terminal_cleanup[Terminal](task: asyncio.Task[Terminal]) -> Terminal:
+    """Preserve cancellation without abandoning an already-owned shutdown."""
+    interrupted: asyncio.CancelledError | None = None
+    while True:
+        try:
+            result = await asyncio.shield(task)
+            break
+        except asyncio.CancelledError as error:
+            if task.cancelled():
+                raise
+            interrupted = error
+    if interrupted is not None:
+        raise interrupted
+    return result
+
+
 @dataclass(frozen=True, slots=True)
 class InteractiveExit:
     """Bounded metadata only. Raw stderr is deliberately never published."""
@@ -85,6 +101,7 @@ class IsolatedInteractiveProcess:
             else None
         )
         self._close_lock = asyncio.Lock()
+        self._cleanup: asyncio.Task[InteractiveExit] | None = None
 
     @property
     def reader(self) -> asyncio.StreamReader:
@@ -189,6 +206,13 @@ class IsolatedInteractiveProcess:
             pass
 
     async def close(self, *, force: bool = False) -> InteractiveExit:
+        if self._cleanup is None:
+            self._cleanup = asyncio.create_task(self._close_owned(force=force))
+        elif force:
+            self._signal(force=True)
+        return await await_terminal_cleanup(self._cleanup)
+
+    async def _close_owned(self, *, force: bool = False) -> InteractiveExit:
         async with self._close_lock:
             if not self._closed:
                 self._closed = True

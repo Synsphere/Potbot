@@ -6,6 +6,17 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**18 November 2026, after the discovery merge:**
+[U04-M live MCP reconciliation](u04-m-live-mcp-reconciliation.md) completes the
+supported installed-interface observation lifecycle on merged main
+`ed2a6af914076834be88f1059bc5d60d5f678efe`: bounded tools/resources/templates/prompts
+collection, signed native binding and worker claims, confirmed lifetime evidence,
+atomic catalogue replacement, TTL/change/removal invalidation, exact linked
+gateway references, CLI/API and operator UI. Migration 43 preserves the existing
+installation, runtime, task and execution owners. Installed-host and vendor/task
+qualification, broader semantic retrieval and interoperability remain open;
+U04/M4/T04 stays partial and historical U00 qualification claims are unchanged.
+
 **18 November 2026, after the executable acquisition merge:**
 [U04-D curated discovery](u04-d-curated-discovery.md) completes the supported
 source-to-acquisition review on merged main
@@ -246,7 +257,8 @@ These suffixes identify work within existing U packages. They do not renumber th
 | U04-E | U04/U05/U07/U13/U16 | Complete the [controlled operation workbench](u04-e-operation-workbench.md): worker eligibility, explicit checked launch, owned monitoring/cancellation and verified results for existing native Cog/hosted routes. Qualify the installed host and chosen provider without promoting the wider U04/M4/T04 programme; RD18/RD23. |
 | U04-A | U04/U05/U13/U16 | Complete the [portable skill lifecycle](u04-a-portable-skill-acquisition.md): immutable package acquisition, review, operator-approved installation, Context resource reads, update/rollback/disable/revoke. Keep registry search, executable dependency admission, native skill interoperability and deployed-host qualification as independent remaining work. |
 | U04-X | U04/U05/U11/U13/U16 | Complete the [executable acquisition lifecycle](u04-x-executable-tool-acquisition.md): pinned source, operator recipes, exact build approval, measured tests, first installation, upgrades, S12 release, rollback/withdrawal and signed recovery. Qualify the actual installed host and extend curated registry/publisher/dependency breadth through these owners. |
-| U04-D | U04/U05/U11/U13/U16 | Complete [curated discovery and measured prerequisites](u04-d-curated-discovery.md): bounded registry snapshots, signed source/publisher admission, explained task ranking, exact package/recipe review, current sandbox measurements and existing-owner handoffs. Next reconcile admitted live MCP interfaces and qualify actual installed host/vendor/task profiles; retain independent execution grants. |
+| U04-D | U04/U05/U11/U13/U16 | Complete [curated discovery and measured prerequisites](u04-d-curated-discovery.md): bounded registry snapshots, signed source/publisher admission, explained task ranking, exact package/recipe review, current sandbox measurements and existing-owner handoffs. U04-M supplies admitted live MCP reconciliation; actual installed host/vendor/task profiles retain independent qualification and execution grants. |
+| U04-M | U04/U11/U13/U16 | Complete [live MCP reconciliation](u04-m-live-mcp-reconciliation.md): complete interface snapshots, signed native lifetime/claims, current exact references, gateway enforcement and operator recovery. Qualify installed hosts and exact vendor/task profiles next; metadata and controlled fixtures grant no production authority. |
 | U07-Q | U02/U05/U07/U13/U16 | Native service/vault, provider and inbound API matrix, model downloads/cache paths and installed/runnable/qualified readiness; RD01–RD04. |
 | U08-T | U01/U04/U08/U14 | Existing fenced reasoning/accounting plus ensemble verification, temporal steering, atomic leaf scheduling and active research; RD05–RD09. |
 | U09-C | U06/U09/U11/U13 | Preserve data-only state/history and Stage 10D integration; close constructor/protocol, semantic-reconciliation and authored-skill gaps; RD26–RD29. |

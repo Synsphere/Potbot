@@ -41,6 +41,7 @@ from potbot.tools.mcp_headers import (
 
 if TYPE_CHECKING:
     from potbot.tools.mcp_confirmation import McpConfirmation
+    from potbot.tools.mcp_discovery import McpDiscoveryCatalog
     from potbot.tools.mcp_http import McpHttpTransport
 
 _LOG = logging.getLogger(__name__)
@@ -63,6 +64,10 @@ _ALLOWED_EFFECTS = frozenset(
 
 class McpProtocolError(ToolFailureError):
     """Invalid peer data or protocol negotiation; never auto-retry a write."""
+
+
+class McpCatalogChangedError(StateMismatchError):
+    """A peer notification invalidated a catalogue observation in progress."""
 
 
 class McpRpcError(ToolFailureError):
@@ -370,6 +375,13 @@ class McpClient:
         self._version: str | None = None
         self._catalog: McpCatalog | None = None
         self._tools_list_changed = False
+        self._server_info: dict[str, Any] | None = None
+        self._server_capabilities: dict[str, Any] = {}
+        self._server_cache_ttl: int | None = None
+        self._discovery_catalog: McpDiscoveryCatalog | None = None
+        self._notification_generation = 0
+        if http_transport is not None:
+            http_transport.set_notification_handler(self.observe_notification)
 
     @property
     def protocol_version(self) -> str | None:
@@ -378,6 +390,35 @@ class McpClient:
     @property
     def catalog(self) -> McpCatalog | None:
         return self._catalog
+
+    @property
+    def discovery_catalog(self) -> McpDiscoveryCatalog | None:
+        return self._discovery_catalog
+
+    def observe_notification(self, document: dict[str, Any]) -> None:
+        """Invalidate observations without executing any server-supplied request."""
+        from potbot.tools.mcp_discovery import NOTIFICATION_COLLECTIONS
+
+        if (
+            document.get("jsonrpc") != "2.0"
+            or "id" in document
+            or not isinstance(document.get("method"), str)
+            or not document["method"].startswith("notifications/")
+        ):
+            raise McpProtocolError("Invalid MCP notification envelope")
+        if document["method"] in NOTIFICATION_COLLECTIONS:
+            self._notification_generation += 1
+            self._catalog = None
+            self._discovery_catalog = None
+
+    def _observe_server(self, result: dict[str, Any], version: str) -> None:
+        from potbot.tools.mcp_discovery import cache_ttl, server_observation
+
+        self._server_info, self._server_capabilities = server_observation(result, version)
+        self._server_cache_ttl = cache_ttl(result)
+        self._tools_list_changed = (
+            self._server_capabilities.get("tools", {}).get("listChanged") is True
+        )
 
     async def _rpc(
         self,
@@ -419,9 +460,7 @@ class McpClient:
             versions = discovered.get("supportedVersions")
             if not isinstance(versions, list) or MODERN not in versions:
                 raise McpProtocolError("Unsupported MCP modern protocol advertisement")
-            capabilities = discovered.get("capabilities")
-            tools = capabilities.get("tools") if isinstance(capabilities, dict) else None
-            self._tools_list_changed = isinstance(tools, dict) and tools.get("listChanged") is True
+            self._observe_server(discovered, MODERN)
             self._version = MODERN
             return MODERN
         result = await self._rpc(
@@ -435,6 +474,7 @@ class McpClient:
         version = result.get("protocolVersion")
         if not isinstance(version, str) or version not in SUPPORTED_LEGACY:
             raise McpProtocolError("Server negotiated an unsupported legacy MCP revision")
+        self._observe_server(result, version)
         await self._notify("notifications/initialized")
         self._version = version
         return version
@@ -450,8 +490,10 @@ class McpClient:
         return bool(observed["changed"])
 
     async def refresh_tools(self) -> McpCatalog:
+        self._catalog = None
         if self._version is None:
             await self.connect()
+        generation = self._notification_generation
         cursor: str | None = None
         seen: set[str] = set()
         names: set[str] = set()
@@ -483,6 +525,8 @@ class McpClient:
                     tools.append(tool)
             next_cursor = page.get("nextCursor")
             if next_cursor is None:
+                if self._notification_generation != generation:
+                    raise McpCatalogChangedError("MCP interfaces changed during tool discovery")
                 catalog = McpCatalog(
                     tuple(tools),
                     content_hash(
@@ -500,6 +544,124 @@ class McpClient:
             seen.add(next_cursor)
             cursor = next_cursor
         raise McpProtocolError("MCP listing exceeds its pagination budget")
+
+    async def discover_catalog(self) -> McpDiscoveryCatalog:
+        """Collect every advertised metadata collection as one bounded snapshot."""
+        from potbot.tools.mcp_discovery import (
+            COLLECTIONS,
+            MAX_CATALOG_BYTES,
+            MAX_COLLECTION_ITEMS,
+            SCHEMA,
+            SUBSCRIPTION_FILTERS,
+            McpDiscoveryCatalog,
+            cache_ttl,
+            catalog_item,
+        )
+
+        self._discovery_catalog = None
+        self._catalog = None
+        if self._version is None:
+            await self.connect()
+        generation = self._notification_generation
+        items: list[dict[str, Any]] = []
+        collections: dict[str, str] = {}
+        ttls = [] if self._server_cache_ttl is None else [self._server_cache_ttl]
+        total = 0
+        for collection, (capability, method, kind) in COLLECTIONS.items():
+            if capability not in self._server_capabilities:
+                collections[collection] = "not_advertised"
+                continue
+            collections[collection] = "observed"
+            cursor: str | None = None
+            seen: set[str] = set()
+            identities: set[str] = set()
+            for _ in range(MAX_PAGES):
+                page = await self._rpc(method, {} if cursor is None else {"cursor": cursor})
+                if page.get("resultType", "complete") != "complete":
+                    raise McpProtocolError(
+                        "MCP metadata discovery cannot request interactive input"
+                    )
+                listed = page.get(collection)
+                if not isinstance(listed, list):
+                    raise McpProtocolError("MCP listing omitted its advertised collection")
+                hint = cache_ttl(page)
+                if hint is not None:
+                    ttls.append(hint)
+                for raw in listed:
+                    item = catalog_item(
+                        kind,
+                        raw,
+                        allow_http_headers=self._version == MODERN
+                        and self._http_transport is not None,
+                    )
+                    identity = item["identity"]
+                    if identity in identities or len(identities) >= MAX_COLLECTION_ITEMS:
+                        raise McpProtocolError(
+                            "MCP collection is duplicated or exceeds its allowance"
+                        )
+                    identities.add(identity)
+                    total += len(canonical_json(item).encode())
+                    if total > MAX_CATALOG_BYTES:
+                        raise McpProtocolError("MCP catalogue exceeds its combined byte allowance")
+                    items.append(item)
+                cursor = page.get("nextCursor")
+                if cursor is None:
+                    break
+                if not isinstance(cursor, str) or not 1 <= len(cursor) <= 2048 or cursor in seen:
+                    raise McpProtocolError("MCP listing cursor is invalid or cycling")
+                seen.add(cursor)
+            else:
+                raise McpProtocolError("MCP collection exceeds its pagination allowance")
+        if self._notification_generation != generation:
+            raise McpCatalogChangedError("MCP interfaces changed while collecting the snapshot")
+        result = McpDiscoveryCatalog.from_dict(
+            {
+                "schema": SCHEMA,
+                "protocolVersion": self._version,
+                "serverInfo": self._server_info,
+                "capabilities": self._server_capabilities,
+                "collections": collections,
+                "items": items,
+                "cacheTtlMs": min(ttls) if ttls else None,
+                "notificationSupport": {
+                    name: self._server_capabilities.get(name, {}).get("listChanged") is True
+                    for name in SUBSCRIPTION_FILTERS
+                },
+            }
+        )
+        self._discovery_catalog = result
+        return result
+
+    async def watch_catalog(self) -> tuple[str, ...]:
+        """Observe one explicitly bounded modern HTTP change-notification window."""
+        from potbot.tools.mcp_discovery import SUBSCRIPTION_FILTERS
+
+        if self._version != MODERN or self._http_transport is None:
+            raise ScopeDeniedError("MCP catalogue watch needs the admitted modern HTTP transport")
+        notifications = {
+            flag: True
+            for name, flag in SUBSCRIPTION_FILTERS.items()
+            if self._server_capabilities.get(name, {}).get("listChanged") is True
+        }
+        if not notifications:
+            raise ScopeDeniedError("MCP server declares no supported list-change notifications")
+        self._catalog = None
+        self._discovery_catalog = None
+        observed = await self._rpc(TOOLS_LISTEN, {"notifications": notifications})
+        changed = observed.get("changedCollections")
+        if (
+            set(observed) != {"changedCollections"}
+            or not isinstance(changed, list)
+            or any(
+                not isinstance(name, str) or name not in SUBSCRIPTION_FILTERS for name in changed
+            )
+            or changed != sorted(set(changed))
+            or any(SUBSCRIPTION_FILTERS[name] not in notifications for name in changed)
+        ):
+            raise McpProtocolError("Invalid MCP catalogue change observation")
+        if changed:
+            self._notification_generation += 1
+        return tuple(changed)
 
     def _admit_tool(
         self,

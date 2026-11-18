@@ -419,6 +419,65 @@ pipeline export to check the current backend responses against
 explicit integration fixtures; real sandbox qualification retains its existing
 host acceptance gates.
 
+## U04-M — Admitted MCP catalogues and reconciliation
+
+Open **Admitted MCP catalogues and reconciliation** from the workspace menu, or
+visit `/discover/mcp?workspace=WORKSPACE_UUID`. An optional `binding=BINDING_UUID`
+opens one retained binding only when the URL contains one explicit, authorized
+workspace selection. The capability discovery and operation workbench pages also
+link to this view.
+
+The configured host admits a binding to an existing installed MCP descriptor,
+configuration and native owner. The browser lists those admitted bindings and
+their retained tools, resources, resource templates and prompts. It shows exact
+installation, configuration, tool, definition and snapshot digests alongside
+protocol version, server claims, collection support, freshness, attempt history
+and added/removed/changed/unchanged counts. Peer definitions, URLs, URI templates,
+icons and schemas remain text data. Inspecting a resource does not read it;
+inspecting a prompt does not expand it; discovering a tool does not grant
+permission to invoke it.
+
+**Request exact reconciliation** records one durable attempt. The configured host
+must explicitly run its retained attempt ID; page loads, GET requests and status
+polling never dispatch host work. Automatic status reads are bounded to thirty
+checks, pause when the tab is hidden, and can be paused or resumed explicitly.
+Enable, disable, terminal revoke and attempt cancellation all use the reviewed
+revision and digest. Cancellation fences publication without claiming that the
+native process has stopped. A replacement source or installation requires a new
+host admission; this page has no endpoint, command or installation editor.
+
+The **Inspect exact reference** action reads a scope-bound reference to one exact
+retained definition. Copy stays available only while the enabled signed binding,
+installation, revision, snapshot, entry and expiry remain current. The client
+rechecks expiry immediately before copying. References grant no execution,
+resource-read, prompt-expansion or subscription authority. Disabling, revoking,
+schema drift, a newer snapshot, stale evidence or signature invalidation prevents
+use of the previous reference.
+
+The fixed `/api/ui/mcp-discovery` BFF forwards only the retained read routes and
+reviewed decision routes under `/v1/ui/mcp-discovery`. Deploy the matching API and
+migration with this frontend. Reads use ordinary authenticated workspace scope;
+mutations also require same-origin checks and the server-only
+`POTBOT_UI_SETUP_TOKEN`. Responses are bounded and projected through strict DTOs;
+native endpoints, commands, paths, tokens and signatures are never forwarded as
+binding fields. Embedded peer metadata is displayed as untrusted plain JSON.
+
+Each mutation is retained before dispatch in a separate per-tab,
+workspace-and-principal recovery journal. Reloading recovers the original path,
+JSON bytes and idempotency key without submitting it. An explicit identical retry
+recovers the original receipt, after which the UI rereads current state. An
+uncertain request cannot be replaced by a new decision. Scope denial or a changed
+workspace/principal removes the mounted private views; request generations fence
+late responses, filter changes and snapshot pagination.
+
+`mcp-discovery.test.mjs`, `mcp-discovery-routes.test.mjs` and
+`mcp-discovery-recovery.test.mjs` cover strict projections, fixed BFF routing,
+scoping, mutations, bounded metadata and exact recovery/currentness behavior.
+`mcp-discovery-contract.test.mjs` consumes real HTTP/PostgreSQL lifecycle output
+through `POTBOT_MCP_DISCOVERY_CONTRACT_OUTPUT`, with a checked-in wire fixture for
+offline frontend checks. These checks do not qualify an external MCP provider or
+a rendered browser session.
+
 ## U04-D — Capability discovery and exact acquisition review
 
 Open **Capability discovery and source review** from the workspace menu, or

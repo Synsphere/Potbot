@@ -6,10 +6,11 @@ No model-provided executable or environment is executed. Server tool metadata
 is not trusted to grant access. This offline/local adapter deliberately disables
 external network and rejects credentials until T03's scoped durable broker exists.
 
-DO NOT expose this as a standalone authorization API: a controller must first
-obtain and persist the existing task/lease/budget approval, and must pass the
-trusted per-call approval callback. All effects are limited to the operator's
-pre-approved read-only tool names in this initial adapter.
+DO NOT expose this as a standalone authorization API: invocations require the
+existing task/lease/budget approval and a trusted per-call approval callback.
+The explicit metadata-only profile instead requires a current operator-owned
+discovery admission, rechecked inside the native lease and around exchanges.
+That profile never permits tool calls, resource reads or prompt expansion.
 """
 
 from __future__ import annotations
@@ -38,6 +39,7 @@ from potbot.tools.interactive_supervisor import (
     InteractiveExit,
     InteractiveProcessSupervisor,
     IsolatedInteractiveProcess,
+    await_terminal_cleanup,
 )
 from potbot.tools.mcp_confirmation import McpConfirmation, McpConfirmationDeclined
 from potbot.tools.mcp_http_worker import check_http_worker, relay_http_call
@@ -61,6 +63,7 @@ from potbot.tools.workspace_supervision import (
 from potbot.workspace_sandbox import WorkspaceSandbox
 
 if TYPE_CHECKING:
+    from potbot.tools.mcp_discovery import McpDiscoveryCatalog
     from potbot.tools.mcp_http import McpHttpTransport
     from potbot.tools.mcp_oauth import McpOAuthProvider
 
@@ -131,6 +134,8 @@ class SandboxedMcpClient:
         confirmation: McpConfirmation | None = None,
         watch_ms: int = 0,
         before_http_call: Callable[[dict[str, Any]], Awaitable[None]] | None = None,
+        discovery_only: bool = False,
+        authorize_discovery: Callable[[], None] | None = None,
     ) -> None:
         if not isinstance(supervisor, InteractiveProcessSupervisor):
             raise InvalidInputError("MCP requires the qualified interactive ProcessSupervisor")
@@ -167,7 +172,18 @@ class SandboxedMcpClient:
         if not callable(approve_call):
             raise ScopeDeniedError("MCP tool calls require a controller-owned admission function")
         if (
-            not permitted
+            type(discovery_only) is not bool
+            or (
+                discovery_only
+                and (not callable(authorize_discovery) or permitted or confirmation is not None)
+            )
+            or (not discovery_only and authorize_discovery is not None)
+        ):
+            raise ScopeDeniedError(
+                "MCP metadata discovery requires its own current operator admission"
+            )
+        if (
+            (not permitted and not discovery_only)
             or len(permitted) > 256
             or any(not isinstance(x, ReadOnlyMcpGrant) for x in permitted)
             or len(set(x.tool_name for x in permitted)) != len(permitted)
@@ -192,6 +208,8 @@ class SandboxedMcpClient:
         self._watch_ms = watch_ms
         self._watched = False
         self._before_http_call = before_http_call
+        self._discovery_only = discovery_only
+        self._authorize_discovery = authorize_discovery
         self._http_session = AsyncExitStack()
         self._broker: McpHttpTransport | None = None
         self._lease: WorkspaceLeaseGuard | None = None
@@ -201,6 +219,19 @@ class SandboxedMcpClient:
         self._client: McpClient | None = None
         self._catalog: McpCatalog | None = None
         self._launched_definition_hash: str | None = None
+        self._completion: InteractiveExit | None = None
+        self._cleanup: asyncio.Task[InteractiveExit | None] | None = None
+
+    def _authorize_metadata(self) -> None:
+        if self._discovery_only:
+            assert self._authorize_discovery is not None
+            if self._authorize_discovery() is not None:
+                raise ScopeDeniedError("MCP discovery admission must raise on denial")
+
+    def _observe_notification(self, document: dict[str, Any]) -> None:
+        if self._client is not None:
+            self._client.observe_notification(document)
+            self._catalog = self._client.catalog
 
     @staticmethod
     def _managed_candidate(root: Path, candidates: Path, scope: ManagedMcpScope | None) -> bool:
@@ -314,6 +345,19 @@ class SandboxedMcpClient:
         )
         guard.start()
         self._lease = guard
+        try:
+            # This check is inside the native lease and before process dispatch.
+            self._authorize_metadata()
+        except BaseException:
+            try:
+                guard.finish(
+                    evidence_sha256=content_hash({"mcp_discovery": "denied_before_dispatch"}),
+                    uncertain=False,
+                )
+            finally:
+                guard.abandon()
+                self._lease = None
+            raise
         opening = asyncio.create_task(
             self._supervisor.open(request, cancelled=self._cancel_requested)
         )
@@ -357,6 +401,7 @@ class SandboxedMcpClient:
     async def __aenter__(self) -> SandboxedMcpClient:
         if self._process is not None:
             raise StateMismatchError("An MCP server lifetime cannot be restarted")
+        self._authorize_metadata()
         if os.environ.get("POTBOT_OPERATOR_REQUIRED") == "1":
             if self._syn_route is None:
                 raise ScopeDeniedError("Managed MCP execution requires its installed Syn route")
@@ -368,9 +413,21 @@ class SandboxedMcpClient:
             definition.argv_prefix[1:],
             http=self._http_provider is not None,
             confirmation=self._confirmation is not None,
-            watch_ms=self._watch_ms,
+            watch_ms=0 if self._discovery_only else self._watch_ms,
         )
-        journaled = self._confirmation is not None or self._watch_ms != 0
+        if (
+            self._discovery_only
+            and self._watch_ms
+            and (
+                self._http_provider is None
+                or type(self._watch_ms) is not int
+                or not 250 <= self._watch_ms <= 5000
+            )
+        ):
+            raise ScopeDeniedError("MCP metadata watch needs a bounded admitted HTTP lifetime")
+        journaled = not self._discovery_only and (
+            self._confirmation is not None or self._watch_ms != 0
+        )
         if journaled != (self._before_http_call is not None) or (
             journaled and self._syn_route is None
         ):
@@ -384,7 +441,8 @@ class SandboxedMcpClient:
                 or http_grant.principal_id != scope.principal.principal_id
             ):
                 raise ScopeDeniedError("MCP HTTP grant does not match the managed Agent")
-        self._capabilities.authorize(definition, self._task_contract)
+        if not self._discovery_only:
+            self._capabilities.authorize(definition, self._task_contract)
         if definition.secret_refs:
             raise ScopeDeniedError("MCP secret injection awaits a qualified credential broker")
         if any(
@@ -432,6 +490,7 @@ class SandboxedMcpClient:
             self._process.reader,
             self._process.writer,
             request_timeout_s=min(10.0, request.timeout_ms / 1000),
+            notification_handler=self._observe_notification,
         )
         try:
             broker = None
@@ -443,8 +502,15 @@ class SandboxedMcpClient:
                         )
                     )
                 self._broker = broker
-            self._client = McpClient(self._exchange, admit=self._admit, http_transport=broker)
+            self._client = McpClient(
+                self._exchange,
+                admit=None if self._discovery_only else self._admit,
+                http_transport=broker,
+            )
             await self._client.connect()
+            if self._discovery_only:
+                self._authorize_metadata()
+                return self
             self._catalog = await self._client.refresh_tools()
             # Refuse grants for tools absent from this exact, pinned discovery.
             for name, grant in self._grants.items():
@@ -492,6 +558,16 @@ class SandboxedMcpClient:
         async with asyncio.timeout(process.remaining_seconds()):
             if method not in ("tools/call", TOOLS_LISTEN):
                 return await broker.exchange(message, expect_reply)
+            if self._discovery_only and method == TOOLS_LISTEN:
+                # Metadata subscriptions share the existing broker and Syn route.
+                # The exact installed relay argv stays untouched and never
+                # receives a fabricated tools/call just to inspect metadata.
+                self._authorize_metadata()
+                await self._check_live()
+                result = await broker.listen_catalog(message, window_ms=self._watch_ms)
+                await self._check_live()
+                self._authorize_metadata()
+                return result
             if method == TOOLS_LISTEN and not self._watch_ms:
                 raise ScopeDeniedError("MCP catalogue watch is not installed")
 
@@ -502,6 +578,8 @@ class SandboxedMcpClient:
                     await self._before_http_call(request)
                 await self._check_live()
                 if method == TOOLS_LISTEN:
+                    if self._discovery_only:
+                        return await broker.listen_catalog(request, window_ms=self._watch_ms)
                     return await broker.listen_tools(request, window_ms=self._watch_ms)
                 return await broker.exchange(request, expect)
 
@@ -517,12 +595,59 @@ class SandboxedMcpClient:
         await self._live_process()
 
     async def _exchange(self, message: dict[str, Any], expect_reply: bool) -> dict[str, Any] | None:
+        if self._discovery_only:
+            if message.get("method") not in {
+                "server/discover",
+                "initialize",
+                "notifications/initialized",
+                "tools/list",
+                "resources/list",
+                "resources/templates/list",
+                "prompts/list",
+                TOOLS_LISTEN,
+            }:
+                raise ScopeDeniedError("MCP metadata admission cannot invoke an operation")
+            self._authorize_metadata()
         dispatch = self._dispatch_http if self._broker is not None else self._dispatch
         if message.get("method") == TOOLS_LISTEN and not self._watch_ms:
             raise ScopeDeniedError("MCP catalogue watch is not installed")
+        reply: dict[str, Any] | None
         if self._syn_route is not None and message.get("method") in ("tools/call", TOOLS_LISTEN):
-            return await self._syn_route.invoke(message, dispatch)
-        return await dispatch(message, expect_reply)
+            reply = await self._syn_route.invoke(message, dispatch)
+        else:
+            reply = await dispatch(message, expect_reply)
+        self._authorize_metadata()
+        return reply
+
+    async def discover_catalog(self) -> McpDiscoveryCatalog:
+        async with self._call_lock:
+            if not self._discovery_only or self._client is None:
+                raise ScopeDeniedError(
+                    "MCP metadata collection needs an explicitly admitted discovery lifetime"
+                )
+            await self._check_live()
+            self._authorize_metadata()
+            catalog = await self._client.discover_catalog()
+            await self._check_live()
+            self._authorize_metadata()
+            return catalog
+
+    async def watch_catalog(self) -> tuple[str, ...]:
+        async with self._call_lock:
+            if (
+                not self._discovery_only
+                or not self._watch_ms
+                or self._watched
+                or self._client is None
+            ):
+                raise ScopeDeniedError(
+                    "MCP metadata watch is unavailable for this admitted lifetime"
+                )
+            self._authorize_metadata()
+            changed = await self._client.watch_catalog()
+            self._watched = True
+            self._authorize_metadata()
+            return changed
 
     async def watch_tool_catalog(self) -> bool:
         async with self._call_lock:
@@ -539,6 +664,8 @@ class SandboxedMcpClient:
             return await self._call(name, arguments)
 
     async def _call(self, name: str, arguments: dict[str, Any]) -> McpCallResult:
+        if self._discovery_only:
+            raise ScopeDeniedError("MCP discovery never grants tool invocation")
         if self._process is None or self._process.closed or self._client is None:
             raise IndeterminateExecutionError("MCP process is not available for invocation")
         if self._catalog is None or (self._watch_ms and not self._watched):
@@ -574,8 +701,16 @@ class SandboxedMcpClient:
             raise
 
     async def close(self, *, force: bool = False) -> InteractiveExit | None:
+        if self._completion is not None:
+            return self._completion
         if self._process is None:
             return None
+        if self._cleanup is None:
+            self._cleanup = asyncio.create_task(self._close_owned(force=force))
+        return await await_terminal_cleanup(self._cleanup)
+
+    async def _close_owned(self, *, force: bool) -> InteractiveExit | None:
+        assert self._process is not None
         result = None
         try:
             try:
@@ -587,8 +722,16 @@ class SandboxedMcpClient:
                 finally:
                     await self._http_session.aclose()
         finally:
+            # Preserve the actual stop receipt even if durable lease finalization
+            # raises. That failure still propagates and cannot become success.
+            self._completion = result
             self._finish_lease(result)
         return result
+
+    @property
+    def completion(self) -> InteractiveExit | None:
+        """Actual supervisor stop evidence; never synthesized from a catalog."""
+        return self._completion
 
     async def __aexit__(self, *_: object) -> None:
         await self.close()

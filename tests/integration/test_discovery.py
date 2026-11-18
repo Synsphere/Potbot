@@ -1171,7 +1171,9 @@ def test_actual_http_discovery_lifecycle_exports_only_public_contracts(rig):
     )
     assert len(r.runtime.supervisor.calls) == 2
     if destination := os.environ.get("POTBOT_DISCOVERY_CONTRACT_OUTPUT"):
-        Path(destination).write_text(encoded + "\n", encoding="utf-8")
+        output = Path(destination)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(encoded + "\n", encoding="utf-8")
 
 
 def test_populated_v41_migration_preserves_existing_recipes_and_checksums(app_env, tmp_path):

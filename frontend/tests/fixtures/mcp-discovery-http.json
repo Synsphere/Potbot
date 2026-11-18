@@ -1,0 +1,1253 @@
+{
+  "attempts": {
+    "items": [
+      {
+        "actions": [],
+        "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "bindingSha256": "35a5470fd208a25dc4e9c0d68fd608a209ea222dc1b1ed84db9d810cd22261b4",
+        "changes": {
+          "added": 5,
+          "changed": 0,
+          "removed": 0,
+          "unchanged": 0
+        },
+        "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "createdAt": "2026-11-18T01:49:13.023157+00:00",
+        "id": "87c032e7-9c0a-42f9-8ceb-7bacd4e727ca",
+        "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+        "reasonCode": null,
+        "requestedBindingSha256": "cc86961fd3a2159e7dcc7bd679f7b15c4d06fa2ed892a871249d768e8ac77a2a",
+        "revision": 3,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22",
+        "status": "succeeded",
+        "updatedAt": "2026-11-18T01:49:13.450503+00:00"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "binding": {
+    "binding": {
+      "actions": [
+        "disable",
+        "reconcile",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "approvalValid": true,
+      "bindingSha256": "cc86961fd3a2159e7dcc7bd679f7b15c4d06fa2ed892a871249d768e8ac77a2a",
+      "catalogInfo": null,
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "counts": {
+        "prompts": 0,
+        "resourceTemplates": 0,
+        "resources": 0,
+        "tools": 0
+      },
+      "createdAt": "2026-11-18T01:49:12.918227+00:00",
+      "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+      "expiresAt": null,
+      "fetchedAt": null,
+      "id": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "lastAttemptId": null,
+      "lastErrorCode": "not_observed",
+      "name": "Fixture MCP",
+      "revision": 1,
+      "snapshotId": null,
+      "snapshotSha256": null,
+      "stale": true,
+      "state": "enabled",
+      "toolFingerprint": "7aa39a9bea2f184873ddb9013009cee3f71f2486b5e3d3f70a197e9f73cdef28",
+      "toolName": "search",
+      "transport": "stdio",
+      "ttlSeconds": 300,
+      "updatedAt": "2026-11-18T01:49:12.918227+00:00",
+      "watchMs": 0
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "bindings": {
+    "items": [
+      {
+        "actions": [
+          "disable",
+          "reconcile",
+          "revoke"
+        ],
+        "activeAttemptId": null,
+        "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+        "approvalValid": true,
+        "bindingSha256": "cc86961fd3a2159e7dcc7bd679f7b15c4d06fa2ed892a871249d768e8ac77a2a",
+        "catalogInfo": null,
+        "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "counts": {
+          "prompts": 0,
+          "resourceTemplates": 0,
+          "resources": 0,
+          "tools": 0
+        },
+        "createdAt": "2026-11-18T01:49:12.918227+00:00",
+        "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+        "expiresAt": null,
+        "fetchedAt": null,
+        "id": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+        "lastAttemptId": null,
+        "lastErrorCode": "not_observed",
+        "name": "Fixture MCP",
+        "revision": 1,
+        "snapshotId": null,
+        "snapshotSha256": null,
+        "stale": true,
+        "state": "enabled",
+        "toolFingerprint": "7aa39a9bea2f184873ddb9013009cee3f71f2486b5e3d3f70a197e9f73cdef28",
+        "toolName": "search",
+        "transport": "stdio",
+        "ttlSeconds": 300,
+        "updatedAt": "2026-11-18T01:49:12.918227+00:00",
+        "watchMs": 0
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "cancelledAttempt": {
+    "attempt": {
+      "actions": [],
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "bindingSha256": "f3d5e9686489f985d93153784b3d1bf3c9520f2bb1a984ef520f6f1364cecfdd",
+      "changes": null,
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "createdAt": "2026-11-18T01:49:13.905544+00:00",
+      "id": "5f577ad0-91ae-45d6-b4a7-792a5412c28b",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "reasonCode": "reconciliation_cancelled",
+      "requestedBindingSha256": "db11f65e5c97e7998f88e34dc62cd949a2a49ace93892ea8845fd684957f946b",
+      "revision": 2,
+      "snapshotId": null,
+      "snapshotSha256": null,
+      "status": "cancelled",
+      "updatedAt": "2026-11-18T01:49:13.943094+00:00"
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "disabledBinding": {
+    "binding": {
+      "actions": [
+        "enable",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "approvalValid": true,
+      "bindingSha256": "3b15bd65ba6fea7699fcdc17b26abe8e9ef9ffb353e9093cad52bc927572f9f8",
+      "catalogInfo": {
+        "cacheTtlMs": 60000,
+        "capabilities": {
+          "prompts": {
+            "listChanged": true
+          },
+          "resources": {
+            "listChanged": true,
+            "subscribe": true
+          },
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "collections": {
+          "prompts": "observed",
+          "resourceTemplates": "observed",
+          "resources": "observed",
+          "tools": "observed"
+        },
+        "notificationSupport": {
+          "prompts": true,
+          "resources": true,
+          "tools": true
+        },
+        "protocolVersion": "2026-07-28",
+        "serverInfo": {
+          "name": "fixture-live-catalog",
+          "version": "1"
+        }
+      },
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "counts": {
+        "prompts": 1,
+        "resourceTemplates": 1,
+        "resources": 1,
+        "tools": 2
+      },
+      "createdAt": "2026-11-18T01:49:12.918227+00:00",
+      "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+      "expiresAt": "2026-11-18T01:50:12.904286+00:00",
+      "fetchedAt": "2026-11-18T01:49:12.904286+00:00",
+      "id": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "lastAttemptId": "58ac7dd0-a5c3-4650-bc11-bea232fefdf6",
+      "lastErrorCode": "binding_disabled",
+      "name": "Fixture MCP",
+      "revision": 6,
+      "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+      "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22",
+      "stale": true,
+      "state": "disabled",
+      "toolFingerprint": "7aa39a9bea2f184873ddb9013009cee3f71f2486b5e3d3f70a197e9f73cdef28",
+      "toolName": "search",
+      "transport": "stdio",
+      "ttlSeconds": 300,
+      "updatedAt": "2026-11-18T01:49:13.826431+00:00",
+      "watchMs": 0
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "emptyAttempts": {
+    "items": [],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "emptyEntries": {
+    "items": [],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "enabledBinding": {
+    "binding": {
+      "actions": [
+        "disable",
+        "reconcile",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "approvalValid": true,
+      "bindingSha256": "db11f65e5c97e7998f88e34dc62cd949a2a49ace93892ea8845fd684957f946b",
+      "catalogInfo": {
+        "cacheTtlMs": 60000,
+        "capabilities": {
+          "prompts": {
+            "listChanged": true
+          },
+          "resources": {
+            "listChanged": true,
+            "subscribe": true
+          },
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "collections": {
+          "prompts": "observed",
+          "resourceTemplates": "observed",
+          "resources": "observed",
+          "tools": "observed"
+        },
+        "notificationSupport": {
+          "prompts": true,
+          "resources": true,
+          "tools": true
+        },
+        "protocolVersion": "2026-07-28",
+        "serverInfo": {
+          "name": "fixture-live-catalog",
+          "version": "1"
+        }
+      },
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "counts": {
+        "prompts": 1,
+        "resourceTemplates": 1,
+        "resources": 1,
+        "tools": 2
+      },
+      "createdAt": "2026-11-18T01:49:12.918227+00:00",
+      "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+      "expiresAt": "2026-11-18T01:50:12.904286+00:00",
+      "fetchedAt": "2026-11-18T01:49:12.904286+00:00",
+      "id": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "lastAttemptId": "58ac7dd0-a5c3-4650-bc11-bea232fefdf6",
+      "lastErrorCode": "revalidation_required",
+      "name": "Fixture MCP",
+      "revision": 7,
+      "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+      "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22",
+      "stale": true,
+      "state": "enabled",
+      "toolFingerprint": "7aa39a9bea2f184873ddb9013009cee3f71f2486b5e3d3f70a197e9f73cdef28",
+      "toolName": "search",
+      "transport": "stdio",
+      "ttlSeconds": 300,
+      "updatedAt": "2026-11-18T01:49:13.868357+00:00",
+      "watchMs": 0
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "entries": {
+    "items": [
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "name": "documents",
+          "uriTemplate": "fixture://documents/{id}"
+        },
+        "definitionSha256": "6fd8b6b22d451b1208a1836544bb450d73df3bdc6fe63bd9847f707fe4ea57c3",
+        "description": "",
+        "executable": false,
+        "id": "14217ce5-88d2-548a-b9b9-a2fbd9b4d193",
+        "identity": "fixture://documents/{id}",
+        "kind": "resource_template",
+        "name": "documents",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "arguments": [
+            {
+              "name": "text",
+              "required": true
+            }
+          ],
+          "name": "review"
+        },
+        "definitionSha256": "2026ecc3314ad990b662b78ed6ffbae8ea76a0a27c0c174d63a7562c8d3492eb",
+        "description": "",
+        "executable": false,
+        "id": "286c1a54-c2fa-5326-9b1b-35fa44adfcb7",
+        "identity": "review",
+        "kind": "prompt",
+        "name": "review",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "inputSchema": {
+            "type": "object"
+          },
+          "name": "summarize"
+        },
+        "definitionSha256": "733b1b3154c068b49cab36491051df6e3f87575a9887e3ff58560b3c8cd7a5d6",
+        "description": "",
+        "executable": false,
+        "id": "92d1c4c8-d0e4-5c9b-8c81-b7291d1bca3f",
+        "identity": "summarize",
+        "kind": "tool",
+        "name": "summarize",
+        "reasonCodes": [
+          "tool_requires_separate_admission"
+        ],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": true,
+        "definition": {
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "description": "Search fixture documents",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "type": "object"
+          },
+          "name": "search"
+        },
+        "definitionSha256": "406314f42958d920f22628fd234ef0496d1e71f1740371e4ec0a7ab5b34ff30c",
+        "description": "Search fixture documents",
+        "executable": false,
+        "id": "a98885e4-efb8-52b2-96db-d7b4f1887bf4",
+        "identity": "search",
+        "kind": "tool",
+        "name": "search",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "mimeType": "text/plain",
+          "name": "document",
+          "size": 12,
+          "uri": "fixture://documents/1"
+        },
+        "definitionSha256": "2578f1db79870bdc848eab8c8043b69cd7d5182f2797859832cbba8d9134c3d6",
+        "description": "",
+        "executable": false,
+        "id": "ecccf389-3b35-5f87-aed5-011e2fdf7aab",
+        "identity": "fixture://documents/1",
+        "kind": "resource",
+        "name": "document",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "failedAttempt": {
+    "attempt": {
+      "actions": [],
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "bindingSha256": "3aed14e34f79e8f3e30a4dae7a703dd1b96f603de7537981c1ea95ee894f5dbb",
+      "changes": null,
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "createdAt": "2026-11-18T01:49:13.715621+00:00",
+      "id": "58ac7dd0-a5c3-4650-bc11-bea232fefdf6",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "reasonCode": "reconciliation_failed",
+      "requestedBindingSha256": "f0a5a4681c2d6784d3903f1299fbd5ee42f900ff340e87bb4997492cdaee121a",
+      "revision": 3,
+      "snapshotId": null,
+      "snapshotSha256": null,
+      "status": "failed",
+      "updatedAt": "2026-11-18T01:49:13.771948+00:00"
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "firstPage": {
+    "items": [
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "name": "documents",
+          "uriTemplate": "fixture://documents/{id}"
+        },
+        "definitionSha256": "6fd8b6b22d451b1208a1836544bb450d73df3bdc6fe63bd9847f707fe4ea57c3",
+        "description": "",
+        "executable": false,
+        "id": "14217ce5-88d2-548a-b9b9-a2fbd9b4d193",
+        "identity": "fixture://documents/{id}",
+        "kind": "resource_template",
+        "name": "documents",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "arguments": [
+            {
+              "name": "text",
+              "required": true
+            }
+          ],
+          "name": "review"
+        },
+        "definitionSha256": "2026ecc3314ad990b662b78ed6ffbae8ea76a0a27c0c174d63a7562c8d3492eb",
+        "description": "",
+        "executable": false,
+        "id": "286c1a54-c2fa-5326-9b1b-35fa44adfcb7",
+        "identity": "review",
+        "kind": "prompt",
+        "name": "review",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      }
+    ],
+    "nextCursor": "286c1a54-c2fa-5326-9b1b-35fa44adfcb7",
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "freshBinding": {
+    "binding": {
+      "actions": [
+        "disable",
+        "reconcile",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "approvalValid": true,
+      "bindingSha256": "f0a5a4681c2d6784d3903f1299fbd5ee42f900ff340e87bb4997492cdaee121a",
+      "catalogInfo": {
+        "cacheTtlMs": 60000,
+        "capabilities": {
+          "prompts": {
+            "listChanged": true
+          },
+          "resources": {
+            "listChanged": true,
+            "subscribe": true
+          },
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "collections": {
+          "prompts": "observed",
+          "resourceTemplates": "observed",
+          "resources": "observed",
+          "tools": "observed"
+        },
+        "notificationSupport": {
+          "prompts": true,
+          "resources": true,
+          "tools": true
+        },
+        "protocolVersion": "2026-07-28",
+        "serverInfo": {
+          "name": "fixture-live-catalog",
+          "version": "1"
+        }
+      },
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "counts": {
+        "prompts": 1,
+        "resourceTemplates": 1,
+        "resources": 1,
+        "tools": 2
+      },
+      "createdAt": "2026-11-18T01:49:12.918227+00:00",
+      "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+      "expiresAt": "2026-11-18T01:50:12.904286+00:00",
+      "fetchedAt": "2026-11-18T01:49:12.904286+00:00",
+      "id": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "lastAttemptId": "87c032e7-9c0a-42f9-8ceb-7bacd4e727ca",
+      "lastErrorCode": null,
+      "name": "Fixture MCP",
+      "revision": 3,
+      "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+      "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22",
+      "stale": false,
+      "state": "enabled",
+      "toolFingerprint": "7aa39a9bea2f184873ddb9013009cee3f71f2486b5e3d3f70a197e9f73cdef28",
+      "toolName": "search",
+      "transport": "stdio",
+      "ttlSeconds": 300,
+      "updatedAt": "2026-11-18T01:49:13.452432+00:00",
+      "watchMs": 0
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "prompts": {
+    "items": [
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "arguments": [
+            {
+              "name": "text",
+              "required": true
+            }
+          ],
+          "name": "review"
+        },
+        "definitionSha256": "2026ecc3314ad990b662b78ed6ffbae8ea76a0a27c0c174d63a7562c8d3492eb",
+        "description": "",
+        "executable": false,
+        "id": "286c1a54-c2fa-5326-9b1b-35fa44adfcb7",
+        "identity": "review",
+        "kind": "prompt",
+        "name": "review",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "reference": {
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "reference": {
+      "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "bindingRevision": 3,
+      "bindingSha256": "f0a5a4681c2d6784d3903f1299fbd5ee42f900ff340e87bb4997492cdaee121a",
+      "definitionSha256": "406314f42958d920f22628fd234ef0496d1e71f1740371e4ec0a7ab5b34ff30c",
+      "entryId": "a98885e4-efb8-52b2-96db-d7b4f1887bf4",
+      "expiresAt": "2026-11-18T01:50:12.904286+00:00",
+      "identity": "search",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "kind": "tool",
+      "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+      "schema": "potbot-mcp-reference/v1",
+      "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+      "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22",
+      "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+    },
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "requestedAttempt": {
+    "attempt": {
+      "actions": [
+        "cancel"
+      ],
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "bindingSha256": "ec119060800cae50de4b0dffbf8f831f88bb21cb5710f1475d0a0a4296223061",
+      "changes": null,
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "createdAt": "2026-11-18T01:49:13.023157+00:00",
+      "id": "87c032e7-9c0a-42f9-8ceb-7bacd4e727ca",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "reasonCode": null,
+      "requestedBindingSha256": "cc86961fd3a2159e7dcc7bd679f7b15c4d06fa2ed892a871249d768e8ac77a2a",
+      "revision": 1,
+      "snapshotId": null,
+      "snapshotSha256": null,
+      "status": "requested",
+      "updatedAt": "2026-11-18T01:49:13.023158+00:00"
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "requests": {
+    "cancel": {
+      "confirm": true,
+      "digest": "cfde14b4cf6b0fb7a7cfebaed8e82bc2a39f51ee29c981b3d863126a2dfa9a2d",
+      "revision": 1
+    },
+    "disable": {
+      "confirm": true,
+      "digest": "c0ecec2a7966d13488e86a3a3793acf4937e79bb7ee0222b8710d176a5aef1e2",
+      "revision": 5
+    },
+    "enable": {
+      "confirm": true,
+      "digest": "3b15bd65ba6fea7699fcdc17b26abe8e9ef9ffb353e9093cad52bc927572f9f8",
+      "revision": 6
+    },
+    "reconcile": {
+      "confirm": true,
+      "digest": "cc86961fd3a2159e7dcc7bd679f7b15c4d06fa2ed892a871249d768e8ac77a2a",
+      "revision": 1
+    },
+    "revoke": {
+      "confirm": true,
+      "digest": "975a593b2452aa0e5a563875dead43c250d116da1a82817728d13f7c037ce619",
+      "revision": 9
+    }
+  },
+  "resources": {
+    "items": [
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "mimeType": "text/plain",
+          "name": "document",
+          "size": 12,
+          "uri": "fixture://documents/1"
+        },
+        "definitionSha256": "2578f1db79870bdc848eab8c8043b69cd7d5182f2797859832cbba8d9134c3d6",
+        "description": "",
+        "executable": false,
+        "id": "ecccf389-3b35-5f87-aed5-011e2fdf7aab",
+        "identity": "fixture://documents/1",
+        "kind": "resource",
+        "name": "document",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "revokedBinding": {
+    "binding": {
+      "actions": [],
+      "activeAttemptId": null,
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "approvalValid": true,
+      "bindingSha256": "296c7a612b425d5cd2ece0498e164bc8ec845b326e65357e5c59b7fe228f9e7d",
+      "catalogInfo": {
+        "cacheTtlMs": 60000,
+        "capabilities": {
+          "prompts": {
+            "listChanged": true
+          },
+          "resources": {
+            "listChanged": true,
+            "subscribe": true
+          },
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "collections": {
+          "prompts": "observed",
+          "resourceTemplates": "observed",
+          "resources": "observed",
+          "tools": "observed"
+        },
+        "notificationSupport": {
+          "prompts": true,
+          "resources": true,
+          "tools": true
+        },
+        "protocolVersion": "2026-07-28",
+        "serverInfo": {
+          "name": "fixture-live-catalog",
+          "version": "1"
+        }
+      },
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "counts": {
+        "prompts": 1,
+        "resourceTemplates": 1,
+        "resources": 1,
+        "tools": 2
+      },
+      "createdAt": "2026-11-18T01:49:12.918227+00:00",
+      "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+      "expiresAt": "2026-11-18T01:50:12.904286+00:00",
+      "fetchedAt": "2026-11-18T01:49:12.904286+00:00",
+      "id": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "lastAttemptId": "5f577ad0-91ae-45d6-b4a7-792a5412c28b",
+      "lastErrorCode": "binding_revoked",
+      "name": "Fixture MCP",
+      "revision": 10,
+      "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+      "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22",
+      "stale": true,
+      "state": "revoked",
+      "toolFingerprint": "7aa39a9bea2f184873ddb9013009cee3f71f2486b5e3d3f70a197e9f73cdef28",
+      "toolName": "search",
+      "transport": "stdio",
+      "ttlSeconds": 300,
+      "updatedAt": "2026-11-18T01:49:13.997096+00:00",
+      "watchMs": 0
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "runningAttempt": {
+    "attempt": {
+      "actions": [
+        "cancel"
+      ],
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "bindingSha256": "0f311c9c533059fb2f65a8c19d7a60f14cace3e096826d7973ae08ce00521a47",
+      "changes": null,
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "createdAt": "2026-11-18T01:49:13.023157+00:00",
+      "id": "87c032e7-9c0a-42f9-8ceb-7bacd4e727ca",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "reasonCode": null,
+      "requestedBindingSha256": "cc86961fd3a2159e7dcc7bd679f7b15c4d06fa2ed892a871249d768e8ac77a2a",
+      "revision": 2,
+      "snapshotId": null,
+      "snapshotSha256": null,
+      "status": "running",
+      "updatedAt": "2026-11-18T01:49:13.109579+00:00"
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "search": {
+    "items": [
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": true,
+        "definition": {
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "description": "Search fixture documents",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "type": "object"
+          },
+          "name": "search"
+        },
+        "definitionSha256": "406314f42958d920f22628fd234ef0496d1e71f1740371e4ec0a7ab5b34ff30c",
+        "description": "Search fixture documents",
+        "executable": false,
+        "id": "a98885e4-efb8-52b2-96db-d7b4f1887bf4",
+        "identity": "search",
+        "kind": "tool",
+        "name": "search",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "secondPage": {
+    "items": [
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "inputSchema": {
+            "type": "object"
+          },
+          "name": "summarize"
+        },
+        "definitionSha256": "733b1b3154c068b49cab36491051df6e3f87575a9887e3ff58560b3c8cd7a5d6",
+        "description": "",
+        "executable": false,
+        "id": "92d1c4c8-d0e4-5c9b-8c81-b7291d1bca3f",
+        "identity": "summarize",
+        "kind": "tool",
+        "name": "summarize",
+        "reasonCodes": [
+          "tool_requires_separate_admission"
+        ],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": true,
+        "definition": {
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "description": "Search fixture documents",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "type": "object"
+          },
+          "name": "search"
+        },
+        "definitionSha256": "406314f42958d920f22628fd234ef0496d1e71f1740371e4ec0a7ab5b34ff30c",
+        "description": "Search fixture documents",
+        "executable": false,
+        "id": "a98885e4-efb8-52b2-96db-d7b4f1887bf4",
+        "identity": "search",
+        "kind": "tool",
+        "name": "search",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      }
+    ],
+    "nextCursor": "a98885e4-efb8-52b2-96db-d7b4f1887bf4",
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "staleBinding": {
+    "binding": {
+      "actions": [
+        "disable",
+        "reconcile",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "approvalValid": true,
+      "bindingSha256": "f0a5a4681c2d6784d3903f1299fbd5ee42f900ff340e87bb4997492cdaee121a",
+      "catalogInfo": {
+        "cacheTtlMs": 60000,
+        "capabilities": {
+          "prompts": {
+            "listChanged": true
+          },
+          "resources": {
+            "listChanged": true,
+            "subscribe": true
+          },
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "collections": {
+          "prompts": "observed",
+          "resourceTemplates": "observed",
+          "resources": "observed",
+          "tools": "observed"
+        },
+        "notificationSupport": {
+          "prompts": true,
+          "resources": true,
+          "tools": true
+        },
+        "protocolVersion": "2026-07-28",
+        "serverInfo": {
+          "name": "fixture-live-catalog",
+          "version": "1"
+        }
+      },
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "counts": {
+        "prompts": 1,
+        "resourceTemplates": 1,
+        "resources": 1,
+        "tools": 2
+      },
+      "createdAt": "2026-11-18T01:49:12.918227+00:00",
+      "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+      "expiresAt": "2026-11-18T01:50:12.904286+00:00",
+      "fetchedAt": "2026-11-18T01:49:12.904286+00:00",
+      "id": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "lastAttemptId": "87c032e7-9c0a-42f9-8ceb-7bacd4e727ca",
+      "lastErrorCode": null,
+      "name": "Fixture MCP",
+      "revision": 3,
+      "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+      "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22",
+      "stale": true,
+      "state": "enabled",
+      "toolFingerprint": "7aa39a9bea2f184873ddb9013009cee3f71f2486b5e3d3f70a197e9f73cdef28",
+      "toolName": "search",
+      "transport": "stdio",
+      "ttlSeconds": 300,
+      "updatedAt": "2026-11-18T01:49:13.452432+00:00",
+      "watchMs": 0
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "staleEntries": {
+    "items": [
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "name": "documents",
+          "uriTemplate": "fixture://documents/{id}"
+        },
+        "definitionSha256": "6fd8b6b22d451b1208a1836544bb450d73df3bdc6fe63bd9847f707fe4ea57c3",
+        "description": "",
+        "executable": false,
+        "id": "14217ce5-88d2-548a-b9b9-a2fbd9b4d193",
+        "identity": "fixture://documents/{id}",
+        "kind": "resource_template",
+        "name": "documents",
+        "reasonCodes": [
+          "catalogue_not_current"
+        ],
+        "referenceAvailable": false,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "arguments": [
+            {
+              "name": "text",
+              "required": true
+            }
+          ],
+          "name": "review"
+        },
+        "definitionSha256": "2026ecc3314ad990b662b78ed6ffbae8ea76a0a27c0c174d63a7562c8d3492eb",
+        "description": "",
+        "executable": false,
+        "id": "286c1a54-c2fa-5326-9b1b-35fa44adfcb7",
+        "identity": "review",
+        "kind": "prompt",
+        "name": "review",
+        "reasonCodes": [
+          "catalogue_not_current"
+        ],
+        "referenceAvailable": false,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "inputSchema": {
+            "type": "object"
+          },
+          "name": "summarize"
+        },
+        "definitionSha256": "733b1b3154c068b49cab36491051df6e3f87575a9887e3ff58560b3c8cd7a5d6",
+        "description": "",
+        "executable": false,
+        "id": "92d1c4c8-d0e4-5c9b-8c81-b7291d1bca3f",
+        "identity": "summarize",
+        "kind": "tool",
+        "name": "summarize",
+        "reasonCodes": [
+          "catalogue_not_current",
+          "tool_requires_separate_admission"
+        ],
+        "referenceAvailable": false,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": true,
+        "definition": {
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "description": "Search fixture documents",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "type": "object"
+          },
+          "name": "search"
+        },
+        "definitionSha256": "406314f42958d920f22628fd234ef0496d1e71f1740371e4ec0a7ab5b34ff30c",
+        "description": "Search fixture documents",
+        "executable": false,
+        "id": "a98885e4-efb8-52b2-96db-d7b4f1887bf4",
+        "identity": "search",
+        "kind": "tool",
+        "name": "search",
+        "reasonCodes": [
+          "catalogue_not_current"
+        ],
+        "referenceAvailable": false,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "mimeType": "text/plain",
+          "name": "document",
+          "size": 12,
+          "uri": "fixture://documents/1"
+        },
+        "definitionSha256": "2578f1db79870bdc848eab8c8043b69cd7d5182f2797859832cbba8d9134c3d6",
+        "description": "",
+        "executable": false,
+        "id": "ecccf389-3b35-5f87-aed5-011e2fdf7aab",
+        "identity": "fixture://documents/1",
+        "kind": "resource",
+        "name": "document",
+        "reasonCodes": [
+          "catalogue_not_current"
+        ],
+        "referenceAvailable": false,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "succeededAttempt": {
+    "attempt": {
+      "actions": [],
+      "agentId": "9ebc4393-19a0-454c-bf9a-4429f57de4c7",
+      "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+      "bindingSha256": "35a5470fd208a25dc4e9c0d68fd608a209ea222dc1b1ed84db9d810cd22261b4",
+      "changes": {
+        "added": 5,
+        "changed": 0,
+        "removed": 0,
+        "unchanged": 0
+      },
+      "configurationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "createdAt": "2026-11-18T01:49:13.023157+00:00",
+      "id": "87c032e7-9c0a-42f9-8ceb-7bacd4e727ca",
+      "installationSha256": "8744148cd6e2693ca8a780bf0e622ab817d4f5291b174ee8313cf31942d95588",
+      "reasonCode": null,
+      "requestedBindingSha256": "cc86961fd3a2159e7dcc7bd679f7b15c4d06fa2ed892a871249d768e8ac77a2a",
+      "revision": 3,
+      "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+      "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22",
+      "status": "succeeded",
+      "updatedAt": "2026-11-18T01:49:13.450503+00:00"
+    },
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "templates": {
+    "items": [
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "name": "documents",
+          "uriTemplate": "fixture://documents/{id}"
+        },
+        "definitionSha256": "6fd8b6b22d451b1208a1836544bb450d73df3bdc6fe63bd9847f707fe4ea57c3",
+        "description": "",
+        "executable": false,
+        "id": "14217ce5-88d2-548a-b9b9-a2fbd9b4d193",
+        "identity": "fixture://documents/{id}",
+        "kind": "resource_template",
+        "name": "documents",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  },
+  "tools": {
+    "items": [
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": false,
+        "definition": {
+          "inputSchema": {
+            "type": "object"
+          },
+          "name": "summarize"
+        },
+        "definitionSha256": "733b1b3154c068b49cab36491051df6e3f87575a9887e3ff58560b3c8cd7a5d6",
+        "description": "",
+        "executable": false,
+        "id": "92d1c4c8-d0e4-5c9b-8c81-b7291d1bca3f",
+        "identity": "summarize",
+        "kind": "tool",
+        "name": "summarize",
+        "reasonCodes": [
+          "tool_requires_separate_admission"
+        ],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      },
+      {
+        "bindingId": "61be63ac-9510-4a2f-8850-6ed6d347babc",
+        "configuredTool": true,
+        "definition": {
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "description": "Search fixture documents",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "type": "object"
+          },
+          "name": "search"
+        },
+        "definitionSha256": "406314f42958d920f22628fd234ef0496d1e71f1740371e4ec0a7ab5b34ff30c",
+        "description": "Search fixture documents",
+        "executable": false,
+        "id": "a98885e4-efb8-52b2-96db-d7b4f1887bf4",
+        "identity": "search",
+        "kind": "tool",
+        "name": "search",
+        "reasonCodes": [],
+        "referenceAvailable": true,
+        "snapshotId": "817f55f8-22d6-4236-9e2c-7dfc982868d8",
+        "snapshotSha256": "15fbfe9e957ce0dfbd5646746527ca982bc1a7478ce2e43cafaae4347cf13b22"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "10f874ed-5283-4239-8958-2e750529aecb",
+    "schema": "potbot-mcp-discovery/v1",
+    "workspaceId": "354d9e81-16ab-40e0-bce9-757a73e4a9ee"
+  }
+}

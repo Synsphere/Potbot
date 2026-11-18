@@ -695,6 +695,21 @@ class ToolGateway:
             details = dispatch["details"] if dispatch else {}
             if receipt.get("mcp_intent_hash") != details.get("mcp_intent_hash"):
                 raise StateMismatchError("Receipt does not match the admitted MCP intent")
+            reference = details.get("mcp_discovery_reference")
+            reference_hash = details.get("mcp_discovery_reference_sha256")
+            if (
+                (reference is None) != (reference_hash is None)
+                or (
+                    reference is not None
+                    and (
+                        not isinstance(reference, dict) or content_hash(reference) != reference_hash
+                    )
+                )
+                or receipt.get("mcp_discovery_reference_sha256") != reference_hash
+            ):
+                raise StateMismatchError(
+                    "Receipt does not match the admitted MCP discovery reference"
+                )
             watch = "mcp_catalog_watch_ms" in details
             if watch or "mcp_confirmation_field" in details:
                 rounds = conn.execute(
@@ -849,7 +864,7 @@ class ToolGateway:
             details.update(
                 {"recovered": recovered, "publication_lease_generation": lease.generation}
             )
-            for key in ("mcp_intent_hash", "mcp_http_calls"):
+            for key in ("mcp_intent_hash", "mcp_http_calls", "mcp_discovery_reference_sha256"):
                 if key in receipt:
                     details[key] = receipt[key]
             conn.execute(

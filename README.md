@@ -126,7 +126,18 @@ measured sandbox prerequisites. `/discover`, `potbot discovery` and the scoped
 API use migration 42, then hand the exact reviewed record to the existing skill
 or executable acquisition owner. Installed-skill preference uses current signed
 controls. Registry metadata and prerequisite reports grant no execution authority;
-live MCP reconciliation and installed-host/task qualification remain open.
+installed-host/task qualification retains its separate evidence gates.
+
+The [U04-M live MCP workbench](docs/implementation/u04-m-live-mcp-reconciliation.md)
+adds complete tools/resources/templates/prompts observations for existing
+admitted installations, atomic reconciliation, change/removal tracking and
+exact expiring references. `/discover/mcp`, `potbot mcp-discovery` and the scoped
+API share migration 43 and signed native controls. Reconciliation reuses the
+qualified runtime, Agent home, Syn route, process supervisor and lease ledger;
+linked gateway calls recheck the exact current catalogue and installed profile.
+Failed or interrupted refreshes retain readable stale data, and retries recover
+existing attempts without redispatch. Installed-host and actual vendor/task
+qualification remain separate from these implementation and fixture results.
 
 ## Install and check
 

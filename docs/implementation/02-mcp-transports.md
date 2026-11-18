@@ -1,5 +1,14 @@
 # Universal Tool Platform — MCP Transport Increment T02.1/T02.2
 
+**18 November 2026 follow-on:**
+[U04-M live MCP reconciliation](u04-m-live-mcp-reconciliation.md) adds complete
+bounded tools/resources/templates/prompts collection, in-band change detection
+and supported bounded HTTP metadata watch. The native host uses the existing
+interactive sandbox, Agent home, Syn route and lifetime ledger to produce a
+durable complete snapshot. Current exact references are enforced by linked
+gateway installations. The historical increment and its outstanding production
+qualification limits below remain distinct from these new acceptance results.
+
 **Target:** `kieransimkin/potbot`
 **Checked upstream baseline:** GitHub `main` `84d220fe2fb29d1c001987654c30a75d25048492` (22 October 2026; newer merge checked before packaging).
 **Protocol versions implemented:** modern MCP `2026-07-28`; fallback to handshake-era `2025-11-25`, `2025-06-18`, `2025-03-26`.

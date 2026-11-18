@@ -26,7 +26,6 @@ from potbot.tools.mcp_protocol import (
     MAX_NOTIFICATION_MESSAGES,
     MAX_WIRE_BYTES,
     MODERN,
-    TOOLS_CHANGED,
     TOOLS_LISTEN,
     McpProtocolError,
     McpToolInfo,
@@ -111,6 +110,12 @@ class McpHttpTransport:
         self._session_id: str | None = None
         self._legacy_version: str | None = None
         self._header_tool = header_tool
+        self._notification_handler: Callable[[dict[str, Any]], None] | None = None
+
+    def set_notification_handler(self, handler: Callable[[dict[str, Any]], None]) -> None:
+        if not callable(handler):
+            raise InvalidInputError("MCP notification observer must be callable")
+        self._notification_handler = handler
 
     def accepts_header_tool(self, tool: McpToolInfo) -> bool:
         return self._header_tool is not None and self._header_tool.fingerprint == tool.fingerprint
@@ -132,12 +137,17 @@ class McpHttpTransport:
         return token
 
     @staticmethod
-    def _sse_result(body: bytes, request_id: int) -> dict[str, Any]:
+    def _sse_result(
+        body: bytes,
+        request_id: int,
+        notification_handler: Callable[[dict[str, Any]], None] | None = None,
+    ) -> dict[str, Any]:
         try:
             text = body.decode("utf-8", "strict").replace("\r\n", "\n")
         except UnicodeError as error:
             raise McpProtocolError("Invalid MCP SSE UTF-8") from error
         count = 0
+        reply = None
         for event in text.split("\n\n"):
             if not event.strip():
                 continue
@@ -153,10 +163,14 @@ class McpHttpTransport:
             if "id" not in message and isinstance(message.get("method"), str):
                 if not message["method"].startswith("notifications/"):
                     raise McpProtocolError("Unsupported MCP SSE server request")
+                if notification_handler is not None:
+                    notification_handler(message)
                 continue
-            if message.get("id") != request_id:
+            if message.get("id") != request_id or reply is not None or "method" in message:
                 raise McpProtocolError("MCP SSE returned the wrong request identity")
-            return message
+            reply = message
+        if reply is not None:
+            return reply
         raise IndeterminateExecutionError("MCP SSE closed without a final response")
 
     async def exchange(
@@ -237,7 +251,7 @@ class McpHttpTransport:
                     elif kind == "text/event-stream":
                         if type(message.get("id")) is not int:
                             raise McpProtocolError("MCP SSE response has no corresponding request")
-                        document = self._sse_result(body, message["id"])
+                        document = self._sse_result(body, message["id"], self._notification_handler)
                     else:
                         raise McpProtocolError("Unsupported MCP HTTP content type")
                     if token is not None and _contains_secret(document, token):
@@ -274,16 +288,34 @@ class McpHttpTransport:
 
     async def listen_tools(self, request: dict[str, Any], *, window_ms: int) -> dict[str, Any]:
         """Observe at most one catalogue invalidation within the admitted window."""
+        params = request.get("params")
+        if not isinstance(params, dict) or params.get("notifications") != {
+            "toolsListChanged": True
+        }:
+            raise InvalidInputError("Invalid MCP tool catalogue watch")
+        observed = await self.listen_catalog(request, window_ms=window_ms)
+        return {
+            "jsonrpc": "2.0",
+            "id": request["id"],
+            "result": {"changed": bool(observed["result"]["changedCollections"])},
+        }
+
+    async def listen_catalog(self, request: dict[str, Any], *, window_ms: int) -> dict[str, Any]:
+        """Observe declared list changes without reading resources or running tools."""
+        from potbot.tools.mcp_discovery import NOTIFICATION_COLLECTIONS, SUBSCRIPTION_FILTERS
+
         request_id = request.get("id")
         requested = request.get("params")
         version = requested.get("_meta") if isinstance(requested, dict) else None
+        filters = requested.get("notifications") if isinstance(requested, dict) else None
         if (
             request.get("jsonrpc") != "2.0"
             or not isinstance(requested, dict)
             or set(requested) != {"notifications", "_meta"}
-            or not isinstance(requested["notifications"], dict)
-            or set(requested["notifications"]) != {"toolsListChanged"}
-            or requested["notifications"]["toolsListChanged"] is not True
+            or not isinstance(filters, dict)
+            or not filters
+            or not set(filters) <= set(SUBSCRIPTION_FILTERS.values())
+            or any(flag is not True for flag in filters.values())
             or not isinstance(version, dict)
             or version.get("io.modelcontextprotocol/protocolVersion") != MODERN
             or type(request_id) is not int
@@ -301,7 +333,7 @@ class McpHttpTransport:
         }
         token = self._authorize(headers)
         acknowledged = False
-        changed = False
+        changed: list[str] = []
         deadline = asyncio.timeout(min(self.deadline_s, window_ms / 1000))
         try:
             async with deadline:
@@ -326,7 +358,8 @@ class McpHttpTransport:
                             result = decode_reply(document, request_id)
                             if (
                                 not acknowledged
-                                or set(result) - {"_meta"}
+                                or set(result) - {"_meta", "resultType"}
+                                or result.get("resultType", "complete") != "complete"
                                 or not _matches_subscription(result, request_id)
                             ):
                                 raise McpProtocolError("Invalid MCP subscription completion")
@@ -342,15 +375,27 @@ class McpHttpTransport:
                         if not acknowledged:
                             if (
                                 method != "notifications/subscriptions/acknowledged"
-                                or params.get("notifications") != {"toolsListChanged": True}
-                                or params["notifications"]["toolsListChanged"] is not True
+                                or params.get("notifications") != filters
+                                or any(
+                                    flag is not True for flag in params["notifications"].values()
+                                )
                             ):
                                 raise McpProtocolError(
-                                    "MCP provider did not acknowledge toolsListChanged"
+                                    "MCP provider did not acknowledge the requested catalogue changes"
                                 )
                             acknowledged = True
-                        elif method == TOOLS_CHANGED:
-                            changed = True
+                        elif (
+                            method in NOTIFICATION_COLLECTIONS
+                            and method != "notifications/resources/updated"
+                        ):
+                            collection = NOTIFICATION_COLLECTIONS[method]
+                            if SUBSCRIPTION_FILTERS[collection] not in filters:
+                                raise McpProtocolError(
+                                    "MCP subscription returned an unrequested change"
+                                )
+                            changed = [collection]
+                            if self._notification_handler is not None:
+                                self._notification_handler(document)
                             break
                         else:
                             raise McpProtocolError(
@@ -367,7 +412,7 @@ class McpHttpTransport:
                 ) from None
         except (OSError, ConnectionError, httpx.TransportError):
             raise IndeterminateExecutionError("MCP catalogue subscription was lost") from None
-        return {"jsonrpc": "2.0", "id": request_id, "result": {"changed": changed}}
+        return {"jsonrpc": "2.0", "id": request_id, "result": {"changedCollections": changed}}
 
 
 def _matches_subscription(fields: dict[str, Any], request_id: int) -> bool:

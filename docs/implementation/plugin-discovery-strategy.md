@@ -1,5 +1,15 @@
 # Potbot plugin and capability discovery strategy
 
+**Live interface implementation, 18 November 2026:**
+[U04-M](u04-m-live-mcp-reconciliation.md) now supplies the bounded T04.2
+observation lifecycle for existing admitted MCP installations: complete tool,
+resource/template and prompt catalogues, exact fingerprints, TTL and supported
+bounded change observations, atomic reconciliation and linked gateway reference
+invalidation. Signed native controls and process-stop evidence preserve existing
+installation/runtime authority. Broader semantic retrieval, native vendor
+interoperability and installed-host/task qualification remain independent work.
+Canonical T04 statuses and acceptance thresholds are unchanged.
+
 **Implementation follow-on, 18 November 2026:**
 [U04-D](u04-d-curated-discovery.md) now implements bounded registry source
 snapshots, independently signed source/publisher decisions, deterministic task

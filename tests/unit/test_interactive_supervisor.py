@@ -116,6 +116,27 @@ def test_watchdog_terminates_idle_child_and_reaps(tmp_path: Path):
     run(scenario())
 
 
+def test_cancellation_during_shutdown_waits_for_reap_before_propagating(tmp_path: Path):
+    source = script(
+        tmp_path,
+        "import signal,time\nsignal.signal(signal.SIGTERM,signal.SIG_IGN)\n"
+        'print("ready",flush=True)\ntime.sleep(30)\n',
+    )
+
+    async def scenario():
+        proc = await InteractiveProcessSupervisor(LocalOnlyFixtureBackend()).open(
+            request(tmp_path, source, timeout=10_000)
+        )
+        assert await asyncio.wait_for(proc.reader.readline(), 2) == b"ready\n"
+        with pytest.raises(TimeoutError):
+            await asyncio.wait_for(proc.close(), timeout=0.02)
+        assert proc.process.returncode is not None
+        receipt = await proc.close(force=True)
+        assert receipt.processes_stopped and receipt.forced_termination
+
+    run(scenario())
+
+
 def test_closes_after_early_child_exit(tmp_path: Path):
     source = script(tmp_path, "raise SystemExit(13)\n")
 

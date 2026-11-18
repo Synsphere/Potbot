@@ -9,6 +9,7 @@ sandbox authorization and is intentionally absent.
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Callable
 from typing import Any
 
 from potbot.domain.errors import IndeterminateExecutionError, InvalidInputError
@@ -30,6 +31,7 @@ class McpStdioTransport:
         writer: asyncio.StreamWriter,
         *,
         request_timeout_s: float = 30.0,
+        notification_handler: Callable[[dict[str, Any]], None] | None = None,
     ) -> None:
         if not isinstance(reader, asyncio.StreamReader) or not hasattr(writer, "drain"):
             raise InvalidInputError("MCP stdio requires an approved byte stream pair")
@@ -40,6 +42,9 @@ class McpStdioTransport:
         self.timeout = request_timeout_s
         self._lock = asyncio.Lock()
         self._poisoned = False
+        if notification_handler is not None and not callable(notification_handler):
+            raise InvalidInputError("MCP notification observer must be callable")
+        self.notification_handler = notification_handler
 
     async def _send(self, message: dict[str, Any]) -> None:
         self.writer.write(encoded_frame(message) + b"\n")
@@ -80,6 +85,8 @@ class McpStdioTransport:
                         if "id" not in document and isinstance(document.get("method"), str):
                             if not document["method"].startswith("notifications/"):
                                 raise McpProtocolError("Unexpected MCP peer notification method")
+                            if self.notification_handler is not None:
+                                self.notification_handler(document)
                             continue
                         if "method" in document and "id" in document:
                             # We deliberately do not implement server-triggered

@@ -273,6 +273,6 @@ export default function OperationCataloguePage() {
         </div>}
       </aside>
     </div>
-    <footer className={styles.footer}><span>One view over existing workspace records.</span><a href={`/discover${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Capability discovery ↗</a><a href={`/skills${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Skill workshop ↗</a><a href={`/setup/tools${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Tool upgrade review ↗</a><a href="/setup/operator">Operator health ↗</a></footer>
+    <footer className={styles.footer}><span>One view over existing workspace records.</span><a href={`/discover${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Capability discovery ↗</a><a href={`/discover/mcp${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Admitted MCP catalogues ↗</a><a href={`/skills${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Skill workshop ↗</a><a href={`/setup/tools${workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : ""}`}>Tool upgrade review ↗</a><a href="/setup/operator">Operator health ↗</a></footer>
   </main>;
 }

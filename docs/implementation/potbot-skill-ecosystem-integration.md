@@ -1,5 +1,14 @@
 # Potbot external skill ecosystem integration
 
+**Live MCP follow-on, 18 November 2026:**
+[U04-M](u04-m-live-mcp-reconciliation.md) extends the registry/acquisition path
+with complete installed MCP interface observations and exact current gateway
+references. Tools, resources, templates and prompts remain separate retained
+types. A changed, removed, expired or revoked observation cannot supply a fresh
+linked invocation. This completes the bounded reconciliation implementation;
+native skill/plugin interoperability and real vendor/task qualification retain
+their separate gates.
+
 **Implementation follow-on, 18 November 2026:**
 [U04-D](u04-d-curated-discovery.md) connects documented ClawHub and skills.sh
 metadata to exact verified package snapshots, scoped source/publisher admission,

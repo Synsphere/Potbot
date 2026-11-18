@@ -16,6 +16,7 @@ from potbot.controller.execution import scoped_row
 from potbot.controller.tasks import lock_episode
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import (
+    DomainError,
     IndeterminateExecutionError,
     InvalidInputError,
     ScopeDeniedError,
@@ -93,10 +94,23 @@ class InstalledMcpTool:
     confirmation: McpConfirmation | None = field(default=None, repr=False)
     watch_ms: int = 0
     principal_id: UUID | None = None
+    discovery_binding_id: UUID | None = None
+    discovery_configuration_sha256: str | None = None
 
     def __post_init__(self) -> None:
         if self.principal_id is not None and not isinstance(self.principal_id, UUID):
             raise InvalidInputError("MCP installation principal must be a UUID")
+        if (self.discovery_binding_id is None) != (self.discovery_configuration_sha256 is None):
+            raise InvalidInputError("MCP discovery linkage requires its exact configuration pin")
+        if self.discovery_binding_id is not None and (
+            not isinstance(self.discovery_binding_id, UUID)
+            or self.principal_id is None
+            or not isinstance(self.discovery_configuration_sha256, str)
+            or re.fullmatch(r"[a-f0-9]{64}", self.discovery_configuration_sha256) is None
+        ):
+            raise InvalidInputError(
+                "Discovery-linked MCP installations require a binding, principal and configuration pin"
+            )
         if (
             self.definition.protocol != "mcp"
             or self.capability.protocol != "mcp"
@@ -159,23 +173,33 @@ class InstalledMcpTool:
             raise ScopeDeniedError("MCP installation belongs to another workspace or principal")
 
 
-def _frozen_input(raw: bytes, installation: ToolInstallationDescriptor) -> dict[str, Any]:
+def _frozen_input(
+    raw: bytes,
+    installation: ToolInstallationDescriptor,
+    *,
+    discovery_binding_id: UUID | None = None,
+) -> dict[str, Any]:
     if not raw or len(raw) > MAX_WIRE_BYTES:
         raise InvalidInputError("MCP action input exceeds its bound")
     try:
         value = json.loads(raw)
-    except (ValueError, RecursionError):
+        canonical = canonical_json(value).encode("utf-8")
+    except (ValueError, UnicodeError, RecursionError):
         raise InvalidInputError("MCP action input is invalid JSON") from None
+    fields = {"installation_hash", "arguments"}
+    if discovery_binding_id is not None:
+        fields.add("mcp_reference")
     if (
         not isinstance(value, dict)
-        or set(value) != {"installation_hash", "arguments"}
+        or set(value) != fields
         or not isinstance(value["arguments"], dict)
-        or canonical_json(value).encode("utf-8") != raw
+        or (discovery_binding_id is not None and not isinstance(value["mcp_reference"], dict))
+        or canonical != raw
     ):
         raise InvalidInputError("MCP action requires canonical arguments and an installation hash")
     if value["installation_hash"] != installation.fingerprint:
         raise ScopeDeniedError("MCP action does not select the installed policy and tool")
-    return value["arguments"]
+    return value
 
 
 def _record_mcp_event(
@@ -291,8 +315,26 @@ async def execute_mcp_action(
     input_id = prior["action"].get("stdin_artifact_id")
     if input_id is None:
         raise InvalidInputError("MCP action requires a frozen input artifact")
-    arguments = _frozen_input(gateway.artifacts.read(context, UUID(input_id)), binding.installation)
+    frozen_input = _frozen_input(
+        gateway.artifacts.read(context, UUID(input_id)),
+        binding.installation,
+        discovery_binding_id=binding.discovery_binding_id,
+    )
+    arguments = frozen_input["arguments"]
     validate_arguments(binding.tool, arguments)
+    reference = frozen_input.get("mcp_reference")
+
+    def validate_discovery() -> None:
+        if binding.discovery_binding_id is not None:
+            if not isinstance(reference, dict):
+                raise ScopeDeniedError("An exact retained MCP discovery reference is required")
+            from potbot.controller.mcp_discovery import McpDiscoveryService
+
+            McpDiscoveryService(gateway.database).validate_reference(
+                context, reference, installed=binding
+            )
+
+    validate_discovery()
 
     candidate = gateway.candidates.check_lease(context, lease)
     agent = gateway.agent_homes.lookup(context.workspace_id, gateway.host_agent_id)
@@ -340,6 +382,7 @@ async def execute_mcp_action(
     ) -> dict[str, Any]:
         nonlocal intent, task_contract
         binding.authorize(context)
+        validate_discovery()
         if (
             str(action["stdin_artifact_id"]) != input_id
             or selected.fingerprint != binding.definition.fingerprint
@@ -368,6 +411,9 @@ async def execute_mcp_action(
             details["mcp_confirmation_field"] = confirmation.field
         if watch_ms:
             details["mcp_catalog_watch_ms"] = watch_ms
+        if reference is not None:
+            details["mcp_discovery_reference"] = reference
+            details["mcp_discovery_reference_sha256"] = content_hash(reference)
         return {
             **details,
             "mcp_installation": binding.installation.to_dict(),
@@ -387,10 +433,17 @@ async def execute_mcp_action(
     started = monotonic()
 
     def cancelled() -> bool:
-        return gateway._cancelled(context, run, lease, require_reservation=True)
+        if gateway._cancelled(context, run, lease, require_reservation=True):
+            return True
+        try:
+            validate_discovery()
+        except DomainError:
+            return True
+        return False
 
     def approve(tool: McpToolInfo, supplied: Mapping[str, Any]) -> None:
         binding.authorize(context)
+        validate_discovery()
         if (
             tool.fingerprint != binding.tool.fingerprint
             or content_hash(dict(supplied)) != intent.input_hash
@@ -405,6 +458,7 @@ async def execute_mcp_action(
         if cancelled():
             raise ScopeDeniedError("MCP confirmation admission expired")
         approved = await confirmation.approve(prompt) is True
+        validate_discovery()
         _record_mcp_event(
             gateway,
             context,
@@ -423,6 +477,7 @@ async def execute_mcp_action(
     async def record_call(request: dict[str, Any]) -> None:
         nonlocal calls
         binding.authorize(context)
+        validate_discovery()
         details = {"round": calls + 1, "request_sha256": content_hash(request)}
         if watch_ms:
             details["method"] = request["method"]
@@ -431,9 +486,13 @@ async def execute_mcp_action(
         )
         calls += 1
 
+    async def validate_http_call(_request: dict[str, Any]) -> None:
+        validate_discovery()
+
     try:
         if Path(candidate["path"]).resolve(strict=True) != root:
             raise StateMismatchError("MCP candidate changed during admission")
+        validate_discovery()
         async with SandboxedMcpClient(
             supervisor=InteractiveProcessSupervisor(
                 gateway.supervisor.backend, monitor_config=gateway.supervisor.monitor_config
@@ -453,7 +512,11 @@ async def execute_mcp_action(
             http_provider=binding.http_provider,
             http_header_tool=binding.tool if binding.tool.header_parameters else None,
             confirmation=replace(confirmation, approve=confirm) if confirmation else None,
-            before_http_call=record_call if journaled else None,
+            before_http_call=record_call
+            if journaled
+            else validate_http_call
+            if reference is not None and binding.http_provider is not None
+            else None,
             watch_ms=watch_ms,
             managed_scope=ManagedMcpScope(
                 context, gateway.host_agent_id, run["id"], gateway.agent_homes
@@ -529,11 +592,11 @@ async def execute_mcp_action(
             "retryable": False,
             "processes_stopped": True,
             "stdin_artifact_id": input_id,
-            "stdin_digest": content_hash(
-                {"installation_hash": binding.installation.fingerprint, "arguments": arguments}
-            ),
+            "stdin_digest": content_hash(frozen_input),
             "mcp_intent_hash": intent.fingerprint,
         }
+        if reference is not None:
+            receipt["mcp_discovery_reference_sha256"] = content_hash(reference)
         if journaled:
             receipt["mcp_http_calls"] = calls
         gateway.receipts.write(context.workspace_id, run["id"], receipt)
