@@ -50,6 +50,7 @@ class ServiceConfig:
     scoped_worker_launcher: bool = False
     native_cog_config: str | None = None
     debugger_forwarding: str | None = None
+    frontend_enabled: bool = False
 
     @classmethod
     def load(cls, path: Path) -> ServiceConfig:
@@ -86,6 +87,10 @@ class ServiceConfig:
             ):
                 raise ValueError
             if type(self.log_content) is not bool:
+                raise ValueError
+            if type(self.frontend_enabled) is not bool or (
+                self.frontend_enabled and self.host not in {"localhost", "127.0.0.1", "::1"}
+            ):
                 raise ValueError
             if not Path(self.provider_policy).is_absolute():
                 raise ValueError
@@ -449,6 +454,10 @@ def _supervise(config: ServiceConfig) -> int:
             "--registration",
             config.debugger_forwarding,
         ]
+    if config.frontend_enabled:
+        # One native supervisor owns API, worker and production Next.js GUI.
+        # The GUI child loads native-vault secrets; no keys enter command args.
+        commands["frontend"] = _service_command()[:2] + ["potbot.frontend_worker"]
     stopped = threading.Event()
 
     def halt(_sig: int, _frame: Any) -> None:
@@ -460,6 +469,7 @@ def _supervise(config: ServiceConfig) -> int:
 
     children: dict[str, subprocess.Popen[str]] = {}
     env = dict(os.environ)
+    env.pop("POTBOT_ADMIN_DSN", None)  # Privileged migration authority never reaches workers.
     env.pop("POTBOT_NATIVE_COG_CONFIG", None)
     env["POTBOT_CREDENTIAL_PROFILE"] = config.credential_profile
     env["POTBOT_PROJECT_ROOT"] = str(project_root())
@@ -695,7 +705,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = {"action": args.command, "manager": _manager()}
         elif args.command == "logs":
             directory = service_home()
-            for name in ("supervisor", "api", "worker"):
+            for name in ("supervisor", "api", "worker", "frontend"):
                 path = directory / (name + ".jsonl")
                 if path.is_file():
                     with path.open(encoding="utf-8") as reader:

@@ -1,5 +1,10 @@
 # Startup, dependency downloads and credentials
 
+**Default launch now starts the complete application** (backend, worker and
+Next.js GUI) and opens <http://127.0.0.1:3100>. See
+[one-command startup](implementation/one-click-startup.md) for first-run setup,
+secure credentials, GUI installation and service controls.
+
 Potbot 0.4 adds a common startup flow for Windows BAT, Windows PowerShell and Bash.
 The entry scripts live at the repository root. They work from another current directory
 and from a checkout path containing spaces. Arguments, stdin and exit codes pass
@@ -42,23 +47,22 @@ The scripts propagate failed installation and application exit codes.
 
 ## PostgreSQL on first startup
 
-With no command-line arguments, startup resolves the application connection in this
-order:
+The default launcher now configures the application rather than printing CLI help.
+It uses a stored PostgreSQL admin connection, an optional consented persistent
+loopback-only Docker pgvector database, or a hidden admin URL prompt. The admin
+connection applies migrations and creates a restricted workspace login; its
+privileges are never used by running jobs. Once configured, subsequent startups
+reuse the retained workspace and native-vault secrets. See the guide above.
 
-1. `POTBOT_DSN`, when explicitly set.
-2. `postgres.application` in the selected native credential-store profile.
-3. A hidden interactive prompt for a `postgresql://` or `postgres://` URL.
+Explicit database commands continue to resolve the application connection in
+this order: `POTBOT_DSN` if set, stored `postgres.application`, then a hidden
+interactive URL prompt. The administrative connection is separate.
 
 A newly entered value is syntax checked, tested with a bounded read-only database
 connection, and saved only after validation succeeds. Storage is read back to confirm
 persistence. The URL and password are never printed in normal status or failure
 messages. An unsuccessful connection is not saved. Environment overrides are used
 for that process and are not automatically copied into the vault.
-
-Startup confirms connectivity and prints the command help. It does not create
-database roles, apply migrations, or start a long-running worker automatically.
-Application operations still require the restricted PostgreSQL login and scoped
-workspace/principal established by the Phase 2 provisioning flow.
 
 The administrative connection is independent. `potbot admin migrate` resolves
 `POTBOT_ADMIN_DSN`, then `postgres.admin` in the vault, then its own hidden prompt.

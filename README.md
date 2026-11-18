@@ -194,6 +194,10 @@ document formats remain separate gates; research reports leave needs unresolved.
 
 ## Install and check
 
+**Just run `start.bat`, `.\start.ps1`, or `bash ./start.sh` with no arguments.**
+The default entry point sets up and launches the backend, worker and Next.js GUI.
+See [one-command startup](docs/implementation/one-click-startup.md).
+
 Run the entry point for your platform from the extracted checkout:
 
 ```powershell

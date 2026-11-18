@@ -43,6 +43,8 @@ SERVICE_CREDENTIAL_NAMES = (
     "research.semantic_scholar",
     "api.access_token",
     "api.setup_token",
+    "ui.password",
+    "ui.cookie_secret",
 )
 _NAMES = {"postgres.application", "postgres.admin", *SERVICE_CREDENTIAL_NAMES}
 _MCP_TOKEN_NAME = re.compile(r"mcp\.oauth\.[a-f0-9]{64}\Z")
