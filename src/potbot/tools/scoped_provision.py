@@ -181,6 +181,14 @@ def _apply(files: dict[Path, str], uid: int, gid: int) -> None:
     pending = {path: data for path, data in files.items() if not _inspect(path, data)}
     for name in (KEEPER, BROKER, SOCKET):
         instance = name.replace("@.", "@provision-check.")
+        enablement = _manager("is-enabled", instance, check=False)
+        unit_state = enablement.stdout.strip()
+        if unit_state == "not-found":
+            continue
+        if not unit_state:
+            raise CapabilityUnavailableError(
+                "systemd could not inspect existing launcher configuration."
+            )
         props = _manager("show", "-p", "FragmentPath", "-p", "DropInPaths", instance).stdout
         values = dict(line.split("=", 1) for line in props.splitlines() if "=" in line)
         if values.get("FragmentPath", "") not in ("", str(UNIT_DIR / name)) or values.get(
