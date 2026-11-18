@@ -411,6 +411,13 @@ def _supervise(config: ServiceConfig) -> int:
     """Keep API and worker alive under one native user-managed service process."""
     if config.credential_profile != credential_profile():
         raise InvalidInputError("Service credential profile does not match the running user.")
+    if config.frontend_enabled:
+        # User services can start after reboot before an interactive start.*
+        # invocation. Restart only the exact private cluster Potbot created.
+        from potbot.native_postgres import ensure_running, is_managed
+
+        if is_managed(project_root()):
+            ensure_running(project_root())
     home = service_home()
     home.mkdir(parents=True, exist_ok=True, mode=0o700)
     if home.is_symlink():

@@ -6,11 +6,16 @@ application, rather than printing command help.
 
 On the first launch, Potbot:
 
-1. Reuses an admin PostgreSQL URL stored in the native OS keyring. Where none
-   exists, a machine with an interactive, running Docker daemon can opt into a
-   persistent, **loopback-only** local `pgvector/pgvector:pg17` database; otherwise
-   the normal hidden PostgreSQL admin URL prompt is used. An existing container
-   with the reserved name is never destroyed or adopted without its own key.
+1. Checks for an operator-configured PostgreSQL administrator connection. If no
+   external connection is configured, installs a **native** PostgreSQL and pgvector
+   pair from conda-forge using a SHA-256 verified official micromamba executable.
+   No Docker daemon, administrator elevation, global PostgreSQL installation or
+   Visual C++ compiler is needed. The database binds only to `127.0.0.1:55436`,
+   runs as the current user and stores persistent data in
+   `.potbot/native-postgres/data`. Windows uses PostgreSQL 16.15 and pgvector 0.8.6;
+   supported Linux/macOS builds use PostgreSQL 18.6 and pgvector 0.8.6. The
+   installer retains a private cluster marker and refuses to replace/adopt
+   partial or unknown database files or a competing port listener.
 2. Applies versioned PostgreSQL migrations using **admin** credentials, separately
    from the worker's restricted application login. If no application login exists,
    it creates an unprivileged login and a new private workspace, stores the tested
@@ -46,13 +51,22 @@ Convenient commands: `start.bat start`, `start.bat stop`, `start.bat restart`,
 `start.bat status`, `start.bat logs`, `start.bat ui-password` (interactive terminal only) (and equivalent PowerShell/Bash launchers).
 A foreground fallback is stopped with Ctrl-C in its original terminal.
 
-**Security and system boundaries:** Potbot cannot silently assume administrator
-rights, access an absent Docker daemon, or start a database on an already-used
-port. If neither a configured PostgreSQL admin connection nor an available local
-Docker daemon exists, first run asks for the admin connection and reports a
-specific failure if none can be supplied. The opt-in local database container
-uses a persistent named volume and loopback binding; Docker administrators can
-inspect its environment. It is a developer convenience, **not** qualified
-production PostgreSQL. Installed native Syn/Cog operations still require their
-independent released host/WSL/isolation qualification; startup does not bypass
-those gates. The service does not silently grant paid inference access.
+**Security and system boundaries:** An existing configured PostgreSQL
+connection takes precedence; Potbot never overwrites an operator-managed server.
+The packaged native server is an actual OS PostgreSQL process, not Docker and
+not an elevated Windows service. It starts automatically when the Potbot user
+service starts, and the `stop` command stops the owned local cluster after the
+API and workers. The cluster is private to the current user and uses SCRAM
+password authentication. Its database identity, data and credentials are retained
+across restarts. A port collision, corrupt cluster, missing vault credential or
+partial installation fails closed instead of deleting existing data. Reinstalling
+application code must not delete `.potbot/native-postgres/data`; back up this
+folder with ordinary database-aware backup procedures.
+
+The conda-forge package combination and installer digests are recorded in
+`potbot.native_postgres`. The package-manager executable is SHA-256 verified
+against an official versioned release; conda-forge package artifacts use their
+repository metadata checksums. Installed native Syn/Cog operations still need
+independent host/WSL/isolation qualification and startup never grants paid
+inference access. Native installer and supervised process acceptance must still
+be exercised on Windows, Linux and macOS before describing them as qualified.

@@ -8,10 +8,8 @@ initialisation and unsupported host package installation are never guessed.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
-import shutil
 import secrets
 import subprocess
 import sys
@@ -113,93 +111,14 @@ def _create_restricted_login(admin_dsn: str, schema: str, root: Path) -> Workspa
 
 
 
-def _optional_local_database() -> None:
-    """Offer a persistent loopback pgvector container if no admin DB was supplied.
-
-    The image is user-approved, not claimed as signed/production-qualified.
-    Database files survive application stop/uninstall in a named Docker volume.
-    Container environment is visible to Docker administrators; do not use this
-    development convenience for Internet-exposed or multi-user deployments.
-    """
-    store = CredentialStore(credential_profile())
-    if os.environ.get("POTBOT_ADMIN_DSN") or store.get("postgres.admin"):
-        return
-    docker = shutil.which("docker")
-    if docker is None or not sys.stdin.isatty():
-        return
-    try:
-        ready = subprocess.run(
-            [docker, "info", "--format", "{{.ServerVersion}}"],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10,
-            check=False,
-        ).returncode == 0
-    except (OSError, subprocess.TimeoutExpired):
-        return
-    if not ready:
-        return
-    _notice("No PostgreSQL admin connection is configured.")
-    try:
-        choice = input("Create a private, persistent local pgvector database using Docker? [Y/n] ").strip().lower()
-    except (EOFError, KeyboardInterrupt):
-        raise InvalidInputError("Local database setup was cancelled") from None
-    if choice not in {"", "y", "yes"}:
-        return
-    name = "potbot-pg-" + hashlib.sha256(str(project_root().resolve()).encode()).hexdigest()[:10]
-    volume = name + "-data"
-    exists = subprocess.run(
-        [docker, "container", "inspect", name], capture_output=True,
-        text=True, timeout=15, check=False,
-    )
-    if exists.returncode == 0:
-        raise InvalidInputError(
-            "A Potbot-named Docker database already exists without a saved admin key; "
-            "refusing to replace or take over existing data"
-        )
-    password = secrets.token_urlsafe(42)
-    database_url = ("postgresql://potbot_admin:" + quote(password, safe="")
-                    + "@127.0.0.1:55436/potbot")
-    command = [
-        docker, "run", "--detach", "--name", name, "--restart", "unless-stopped",
-        "--label", "uk.co.potbot.managed=1", "--publish", "127.0.0.1:55436:5432",
-        "--volume", volume + ":/var/lib/postgresql/data",
-        "--env", "POSTGRES_USER=potbot_admin", "--env", "POSTGRES_DB=potbot",
-        "--env", "POSTGRES_PASSWORD", "pgvector/pgvector:pg17",
-    ]
-    environment = dict(os.environ)
-    environment["POSTGRES_PASSWORD"] = password
-    try:
-        created = subprocess.run(
-            command, env=environment, stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL, timeout=180, check=False,
-        )
-    finally:
-        environment.pop("POSTGRES_PASSWORD", None)
-    if created.returncode:
-        raise CapabilityUnavailableError(
-            "Could not create the local pgvector database; check Docker and port 55436"
-        )
-    for _ in range(45):
-        try:
-            validate_connection(database_url)
-            store.set("postgres.admin", database_url)
-            _notice("Private local PostgreSQL database is ready")
-            return
-        except DomainError:
-            time.sleep(1)
-    # The just-created container is not a known working database. Remove only
-    # that container so another first launch can retry; never delete its volume.
-    subprocess.run([docker, "rm", "--force", name], stdout=subprocess.DEVNULL,
-                   stderr=subprocess.DEVNULL, timeout=25, check=False)
-    raise CapabilityUnavailableError(
-        "Local PostgreSQL did not become ready; its Docker volume was retained"
-    )
-
 def _provision_database(root: Path) -> WorkspaceContext:
     """Migrate with separate admin authority; never use admin login for workers."""
     from potbot.persistence.database import Database, migrate
 
     _notice("Checking PostgreSQL and applying Potbot's versioned schema")
-    _optional_local_database()
+    from potbot.native_postgres import provision_if_needed
+
+    provision_if_needed(root)
     admin_dsn = resolve_postgres_dsn("admin")
     schema = "potbot"
     migrate(admin_dsn, schema)
@@ -364,8 +283,13 @@ def _foreground(config: Any) -> int:
 
 def _start() -> int:
     from potbot import service
+    from potbot.native_postgres import ensure_running, is_managed
 
     root = project_root()
+    # A previously managed native cluster may be stopped after Windows login.
+    # Start it before any backend health check or service-manager activation.
+    if is_managed(root):
+        ensure_running(root)
     # Opening the app again must not run npm ci or replace a live Next.js
     # build. Explicit restart stops the managed service before rebuilding.
     saved = service.config_path()
@@ -411,7 +335,7 @@ def _start() -> int:
 
 def main(arguments: list[str] | None = None) -> int:
     arguments = [] if arguments is None else arguments
-    if arguments not in ([], ["start"], ["stop"], ["restart"], ["status"], ["logs"]):
+    if arguments not in ([], ["start"], ["stop"], ["restart"], ["status"], ["logs"], ["ui-password"]):
         raise InvalidInputError("Unsupported simple launch command")
     try:
         from potbot import service
@@ -441,7 +365,12 @@ def main(arguments: list[str] | None = None) -> int:
                 raise InvalidInputError("Potbot has not been configured")
             service.manager_action("stop")
             _notice("Stopped the Potbot service")
-            return _start() if action == "restart" else 0
+            if action == "stop":
+                from potbot.native_postgres import stop_if_managed
+
+                stop_if_managed(project_root())
+                return 0
+            return _start()
         return 1
     except (DomainError, OSError, ValueError) as error:
         # Credential / DB helpers already sanitize exception messages. Other

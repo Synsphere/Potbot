@@ -48,8 +48,8 @@ The scripts propagate failed installation and application exit codes.
 ## PostgreSQL on first startup
 
 The default launcher now configures the application rather than printing CLI help.
-It uses a stored PostgreSQL admin connection, an optional consented persistent
-loopback-only Docker pgvector database, or a hidden admin URL prompt. The admin
+It uses a stored PostgreSQL admin connection or automatically installs a
+native, user-owned PostgreSQL/pgvector server (no Docker). The admin
 connection applies migrations and creates a restricted workspace login; its
 privileges are never used by running jobs. Once configured, subsequent startups
 reuse the retained workspace and native-vault secrets. See the guide above.
