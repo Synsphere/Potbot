@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import re
+from contextlib import nullcontext
 from pathlib import Path
 
 from potbot.domain.errors import ScopeDeniedError, StateMismatchError
@@ -173,24 +174,67 @@ def forward(manager: WslOperatorHost, command: str, arguments: list[str]) -> int
         or controller != _controller_receipt(selected)
     ):
         raise StateMismatchError("Install the exact reviewed native Potbot controller wheel first")
-    # Interactive unlock inherits the real terminal; Potbot never captures it.
-    environment = windows_environment()
-    # Only the acquisition controller may receive a repository access token.
-    # Its installer strips this before launching official Syn or build tools.
-    if command == "syn-release" and "POTBOT_SYN_GITHUB_TOKEN" in os.environ:
-        environment["POTBOT_SYN_GITHUB_TOKEN"] = os.environ["POTBOT_SYN_GITHUB_TOKEN"]
-        environment["WSLENV"] = "POTBOT_SYN_GITHUB_TOKEN"
+
     install_service = command == "syn-operator" and arguments and arguments[0] == "install-service"
-    result = subprocess.run(
-        manager.command(controller["python"], ["-I", "-B", "-m", "potbot", command, *arguments]),
-        check=False,
-        env=environment,
-        stdout=subprocess.PIPE if install_service else None,
-    )
+    if command == "syn-operator":
+        from .windows_custody import (
+            CUSTODY_ENVIRONMENT,
+            REQUIRED_MARKER,
+            windows_host_custody,
+        )
+
+        environment_context = windows_host_custody(manager)
+    else:
+        CUSTODY_ENVIRONMENT = ()
+        REQUIRED_MARKER = ""
+        environment_context = nullcontext(windows_environment())
+
+    native = None
+    with environment_context as environment:
+        # Only the acquisition controller may receive a repository access token.
+        # Its installer strips this before launching official Syn or build tools.
+        if command == "syn-release" and "POTBOT_SYN_GITHUB_TOKEN" in os.environ:
+            environment["POTBOT_SYN_GITHUB_TOKEN"] = os.environ["POTBOT_SYN_GITHUB_TOKEN"]
+            environment["WSLENV"] = "POTBOT_SYN_GITHUB_TOKEN"
+
+        if install_service:
+            # systemd's user manager outlives this WSL client. Import the fresh
+            # broker bridge before --now starts/restarts the managed unit.
+            imported = subprocess.run(
+                manager.command(
+                    "/usr/bin/systemctl",
+                    [
+                        "--user",
+                        "import-environment",
+                        *CUSTODY_ENVIRONMENT,
+                        REQUIRED_MARKER,
+                    ],
+                ),
+                check=False,
+                env=environment,
+            )
+            if imported.returncode:
+                raise StateMismatchError(
+                    "Managed WSL systemd could not import the Windows DPAPI custody bridge"
+                )
+
+        result = subprocess.run(
+            manager.command(
+                controller["python"], ["-I", "-B", "-m", "potbot", command, *arguments]
+            ),
+            check=False,
+            env=environment,
+            stdout=subprocess.PIPE if install_service else None,
+        )
+        if install_service:
+            if len(result.stdout) > 65536:
+                raise StateMismatchError("Native user service response exceeded its bound")
+            native = json.loads(result.stdout)
+
+    # The short-lived administration broker must release the DPAPI vault before
+    # the scheduled lifetime broker starts. Otherwise both brokers would contend
+    # for Syn's exclusive Windows authority lock.
     if install_service:
-        if len(result.stdout) > 65536:
-            raise StateMismatchError("Native user service response exceeded its bound")
-        native = json.loads(result.stdout)
         if result.returncode == 0:
             from .windows_service import install_windows_service
 

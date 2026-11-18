@@ -29,6 +29,26 @@ class SynPublicCommands:
         }
         # Native session endpoints are not credentials; arbitrary Python, token,
         # private-key and package-manager configuration is never inherited.
+        if os.environ.get("POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED") == "1":
+            from .windows_custody import CUSTODY_ENVIRONMENT, require_windows_custody_policy
+
+            policy = getattr(self, "policy", None)
+            if policy is None:
+                raise StateMismatchError("Windows DPAPI custody requires an explicit Syn policy")
+            require_windows_custody_policy(policy.value)
+            missing = [name for name in CUSTODY_ENVIRONMENT if not os.environ.get(name)]
+            if missing:
+                raise StateMismatchError(
+                    "Windows DPAPI custody bridge is unavailable; refusing Linux keyring fallback"
+                )
+            environment["POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED"] = "1"
+            for name in CUSTODY_ENVIRONMENT:
+                environment[name] = os.environ[name]
+            for name in ("DISPLAY", "WAYLAND_DISPLAY"):
+                if name in os.environ:
+                    environment[name] = os.environ[name]
+            return environment
+
         for name in ("DBUS_SESSION_BUS_ADDRESS", "XDG_RUNTIME_DIR", "DISPLAY", "WAYLAND_DISPLAY"):
             if name in os.environ:
                 environment[name] = os.environ[name]

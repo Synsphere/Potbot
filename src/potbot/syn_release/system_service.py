@@ -91,18 +91,31 @@ def supervisor_arguments(
     ]
 
 
-def _linux_unit(argv: list[str], uid: int) -> bytes:
+def _linux_unit(argv: list[str], uid: int, *, host_custody: bool = False) -> bytes:
     runtime = f"/run/user/{uid}"
+    dependency = (
+        ""
+        if host_custody
+        else "After=gnome-keyring-daemon.service\nRequires=gnome-keyring-daemon.service\n"
+    )
+    custody = (
+        "\nEnvironment=POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED=1"
+        "\nPassEnvironment=SYN_HOST_CUSTODY_PIPE SYN_HOST_CUSTODY_CLIENT_WIN "
+        "SYN_HOST_CUSTODY_POWERSHELL"
+        if host_custody
+        else ""
+    )
     return (
         "[Unit]\nDescription=Verified Syn operator supervised by Potbot\n"
-        "After=gnome-keyring-daemon.service\nRequires=gnome-keyring-daemon.service\n\n"
-        "[Service]\nType=simple\nExecStart="
+        + dependency
+        + "\n[Service]\nType=simple\nExecStart="
         + " ".join(systemd_argument(x) for x in argv)
         + "\nEnvironment=XDG_RUNTIME_DIR="
         + runtime
         + "\nEnvironment=DBUS_SESSION_BUS_ADDRESS=unix:path="
         + runtime
         + "/bus"
+        + custody
         + "\nRestart=no\nKillMode=control-group\nTimeoutStopSec=15\nUMask=0077\n\n"
         + "[Install]\nWantedBy=default.target\n"
     ).encode()
@@ -159,19 +172,32 @@ def install_service(
     deployment._installation()
     argv = supervisor_arguments(deployment, policy_path, context_rpc=context_rpc)
     home = Path(pwd.getpwuid(os.getuid()).pw_dir).resolve()
-    previous_unit: bytes | None = None
+    previous_units: set[bytes] = set()
     if platform.system() == "Linux":
         parent = home
         for name in (".config", "systemd", "user"):
             parent /= name
             user_service_directory(parent)
         path = parent / "potbot-syn-operator.service"
-        raw = _linux_unit(argv, os.getuid())
+        host_custody = os.environ.get("POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED") == "1"
+        raw = _linux_unit(argv, os.getuid(), host_custody=host_custody)
         if context_rpc:
-            previous_unit = _linux_unit(argv[:-1], os.getuid())
+            previous_units.add(
+                _linux_unit(argv[:-1], os.getuid(), host_custody=host_custody)
+            )
+        if host_custody:
+            # One-time migration from Potbot's previous Windows/WSL unit, which
+            # incorrectly depended on GNOME Keyring for operator custody.
+            previous_units.add(_linux_unit(argv, os.getuid()))
+            if context_rpc:
+                previous_units.add(_linux_unit(argv[:-1], os.getuid()))
         commands = [
             ["/usr/bin/systemctl", "--user", "daemon-reload"],
-            ["/usr/bin/systemctl", "--user", "enable", "--now", path.name],
+            (
+                ["/usr/bin/systemctl", "--user", "disable", "--now", path.name]
+                if host_custody
+                else ["/usr/bin/systemctl", "--user", "enable", "--now", path.name]
+            ),
         ]
     elif platform.system() == "Darwin":
         parent = home / "Library" / "LaunchAgents"
@@ -204,7 +230,7 @@ def install_service(
         )
     if path.exists():
         installed = read_user_unit(path)
-        if installed != raw and installed != previous_unit:
+        if installed != raw and installed not in previous_units:
             raise StateMismatchError("Existing user service differs from the managed unit")
         if installed != raw:
             with _unit_edit_lock(path):
@@ -213,13 +239,25 @@ def install_service(
                 _replace_unit(path, raw)
                 restart = [
                     ["/usr/bin/systemctl", "--user", "daemon-reload"],
-                    ["/usr/bin/systemctl", "--user", "restart", path.name],
+                    (
+                        ["/usr/bin/systemctl", "--user", "disable", "--now", path.name]
+                        if host_custody
+                        else ["/usr/bin/systemctl", "--user", "restart", path.name]
+                    ),
                 ]
                 try:
                     _run_unit_commands(restart)
                 except (StateMismatchError, OSError, subprocess.TimeoutExpired):
                     _replace_unit(path, installed)
-                    _run_unit_commands(restart)
+                    rollback = (
+                        [
+                            ["/usr/bin/systemctl", "--user", "daemon-reload"],
+                            ["/usr/bin/systemctl", "--user", "disable", "--now", path.name],
+                        ]
+                        if host_custody
+                        else restart
+                    )
+                    _run_unit_commands(rollback)
                     raise
         else:
             _run_unit_commands(commands)
@@ -229,6 +267,6 @@ def install_service(
     return {
         "profile": "potbot.syn-operator-user-service/1",
         "unit": str(path),
-        "state": "start_requested",
+        "state": "enabled_awaiting_host_custody" if platform.system() == "Linux" and host_custody else "start_requested",
         "identity_recreated": False,
     }

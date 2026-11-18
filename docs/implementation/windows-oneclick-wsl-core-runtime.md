@@ -36,3 +36,47 @@ A failed WSL setup/restart, image signature, kernel accounting gate, sandbox
 qualification, operator attachment or Xpra bridge remains a startup failure.
 The service error response preserves the fixed DomainError stage instead of
 mislabeling every failure as a native service-manager permissions problem.
+
+## Windows Operator custody
+
+Windows Operator custody is host-owned. Potbot requires the exact signed Syn
+`v0.11.0` operator policy (source
+`3ed8a43c7e08480b4e5ce13c9e4720c3001b70dc`, manifest
+`bb496a73ebd9d37018f6274a6dc29e4e20f03b96b9ab4e687289dcf6a2ac9a6e`) and runs
+Syn's Windows DPAPI host-custody broker as the logged-in Windows user. WSL
+receives only the bounded named-pipe bridge variables. When Windows custody is
+required, the Potbot operator wrapper refuses to launch if that bridge is
+missing or if the selected Syn policy differs, so the operator cannot silently
+fall back to GNOME Keyring.
+
+Syn 0.11.0's ordinary runtime wheel does not contain the separate
+`host-custody/` project. As an interim integration, Potbot stages only that
+project's required files from the exact signed release source commit, verifies
+their immutable Git blob identities, and creates a separate environment from
+Syn's own `host-custody/uv.lock`. This environment is deliberately separate from
+Potbot's Python environment because the two projects retain different
+cryptography dependency contracts.
+
+Interactive/operator-administration commands use a short-lived broker. The
+installed Windows lifetime task uses a separate broker whose process lifetime is
+bound to the WSL operator service. The short-lived broker is stopped before the
+lifetime broker starts so both processes never contend for the same exclusive
+DPAPI vault lock.
+
+### Planned release-flow improvement — not implemented
+
+A future Syn release milestone should emit Potbot-specific signed artifacts for
+the Windows integration instead of requiring source-file staging. At minimum the
+release should provide a versioned Potbot host-custody wheel/bundle containing
+the broker, pipe client and exact dependency lock, identify it in the signed Syn
+release manifest, and publish immutable hashes alongside the normal runtime and
+client packages. Potbot should then consume that artifact through its existing
+release verifier, eliminating raw source retrieval and the temporary Git-blob
+allow-list.
+
+Acceptance for that future milestone must prove reproducible Windows artifacts,
+signed-manifest coverage, clean/offline installation from retained release
+bytes, DPAPI/named-pipe qualification, upgrade/rollback without identity
+replacement, and refusal of an absent or mismatched Potbot-specific artifact.
+It must not be implemented by silently copying an arbitrary Syn checkout into a
+Potbot release.
