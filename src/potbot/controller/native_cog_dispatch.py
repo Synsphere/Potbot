@@ -27,6 +27,7 @@ from potbot.domain.errors import (
 )
 from potbot.domain.jobs import CogJobInput, JobLease
 from potbot.domain.serialization import canonical_json, content_hash
+from potbot.domain.syn import type_identity
 from potbot.persistence.artifacts import ArtifactStore, LocalArtifactBackend
 from potbot.syn_release.contracts import DOCUMENT_LIMIT, document, fields
 from potbot.syn_release.mesh_endpoint import NativeMeshClient, root_path
@@ -109,7 +110,7 @@ class NativeCogDispatcher:
             request.profile_sha256 != self.profile_hash
             or request.agent_id not in self.agents
             or operation is None
-            or request.type_ref != operation.binding.input_type_ref
+            or type_identity(request.type_ref) != type_identity(operation.binding.input_type_ref)
         ):
             raise ScopeDeniedError("Job differs from the installed native Cog profile.")
         with jobs.database.transaction(actor) as connection:
@@ -119,7 +120,9 @@ class NativeCogDispatcher:
             ).fetchone()
         if state is None or state["content_digest"] != operation.binding.policy.source_digest:
             raise ScopeDeniedError("Job repository state differs from the installed Cog pin.")
-        value = TypedCogValue(request.type_ref, request.value)
+        # Public canonical aliases identify the same type. Preserve the signed
+        # request above, then use the installed spelling at the worker wire.
+        value = TypedCogValue(operation.binding.input_type_ref, request.value)
         invocation = CogRunContext(
             self.profile_hash, lease.contract_revision_id, request.repository_state_id, lease.job_id
         )

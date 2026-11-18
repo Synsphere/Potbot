@@ -74,18 +74,22 @@ class LocalArtifactBackend:
         *,
         max_bytes: int = 64 * 1024 * 1024,
         max_range_bytes: int = 8 * 1024,
+        create_root: bool = True,
     ) -> None:
         if type(max_bytes) is not int or max_bytes < 1:
             raise InvalidInputError("Artifact size limit must be a positive integer.")
         if type(max_range_bytes) is not int or not 1 <= max_range_bytes <= 256 * 1024:
             raise InvalidInputError("Artifact range limit must be between 1 and 262144 bytes.")
+        if type(create_root) is not bool:
+            raise InvalidInputError("Artifact root creation must be an explicit boolean.")
         self.root = Path(root).absolute()
         self.max_bytes = max_bytes
         # Native artifact Cog schemas retain their independent 8 KiB admission
         # cap. The operator workbench explicitly opts into larger bounded pages
         # using the same whole-object verifier, with one scan per returned page.
         self.max_range_bytes = max_range_bytes
-        self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if create_root:
+            self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
         if self.root.is_symlink() or not self.root.is_dir():
             raise ArtifactIntegrityError("Artifact root must be a real directory.")
 

@@ -459,7 +459,7 @@ An owner or task conflict requires refreshing the search before another decision
 
 **Review selection** retains an exact handoff after current identities are
 rechecked. Selection grants no execution permission. Fixed scoped destinations
-select the actual operation in `/tools?workspace=…&operation=SHA256`, registry
+select the actual operation in `/tools?workspace=…&operation=SHA256&selection=UUID`, registry
 candidate in `/discover?workspace=…&candidate=UUID`, or MCP binding in
 `/discover/mcp?workspace=…&binding=UUID`. Matching qualification suites link to
 `/discover/mcp/qualification`. Historical evidence remains inspectable; a stale
@@ -667,3 +667,61 @@ Run `npm test`, `npm run typecheck` and `npm run build`. Set
 the current backend responses with `tests/discovery-contract.test.mjs`. The saved
 fixture includes explicit runtime/provider test outcomes; live sandbox and remote
 provider qualification retain their separate host gates.
+
+## U04-T — Selected-task execution and declared result verification
+
+An operation handoff from `/discover/tasks` now opens
+`/tools?workspace=UUID&operation=SHA256&selection=UUID`. The retained selection
+identity stays attached throughout check, launch, history, events and result
+inspection. An optional `job=UUID` reopens that exact check or run. Duplicate,
+missing or cross-workspace selectors show a review notice; selecting a workspace
+or operation explicitly clears the selected-task context. Registry and MCP
+handoffs continue through their existing review owners.
+
+The selected workbench reads current context before presenting its form. Task,
+contract and repository-state identities come from the server. The operator
+reviews an exact existing Cog or hosted-model `JobSpec` and declares 1–16 fixed
+result assertions before requesting a worker check. Supported assertion operators
+are `equals`, `contains` and `length_equals`, using bounded RFC 6901 pointers and
+literal JSON values. Hosted text uses `/text`; typed Cog results use `/value/…`.
+Assertions never evaluate expressions or run provider-supplied code.
+
+Launch is a separate confirmation and submits only the retained check job UUID
+and binding SHA-256. The server supplies the original checked request and
+assertions. The binding includes the selection, discovery result, owner, task,
+canonical capabilities and execution/verification implementation fingerprint.
+Changing input requires a new check. Expired checks, stale context, owner drift,
+an observed prior launch and mismatched bindings disable a new launch.
+
+The result view shows **execution state** and **declared assertion verification**
+separately. Verification evaluates complete server-owned evidence, independently
+of the bounded preview and job success flag. `passed` means only that the fixed
+declared assertions passed; it does not mark a whole task complete or qualify a
+host or model. Missing, changed, incomplete or oversized evidence stays
+`unavailable`. Output and metadata render as plain text/JSON. Download reads
+bounded artifact ranges through the selected job owner and checks the complete
+SHA-256 before exposing up to 16 MiB to the browser.
+
+History is read-only and uses the existing opaque job cursor. Opening or reloading
+the page does not check, launch or cancel anything. Progress monitoring pauses
+when hidden and after 30 refresh cycles. Each mutation is retained before sending
+in a separate per-tab/workspace/principal/selection recovery journal. Unknown
+outcomes keep the exact original bytes and idempotency key; retry is explicit,
+including after a task or check changes. A verified receipt is followed by fresh
+context and job reads. If durable storage is unavailable, keep the tab open until
+the original receipt is resolved.
+
+The fixed `/api/ui/task-execution` BFF requires the operator session, configured
+workspace and exact origin for mutations. Checks and runs additionally use the
+server-only setup capability. Cancellation uses ordinary owner authority and
+remains available by exact job UUID if positive binding evidence is lost. Only
+that negative cancellation receipt may contain `binding: null`; a null binding
+cannot support a check, launch, result verification, event or artifact read.
+Request bodies are limited to 131,072 bytes and responses to 1,500,000 bytes.
+
+Run `npm test`, `npm run typecheck` and `npm run build`. The U04-T workflow exports
+actual PostgreSQL/HTTP/worker responses using
+`POTBOT_TASK_EXECUTION_HTTP_FIXTURE=artifacts/task-execution-http.json`, then runs
+`tests/task-execution-contract.test.mjs` against that fresh file. The retained
+offline fixture has an explicitly synthetic provider transport; it is lifecycle
+and contract evidence, not live-provider or rendered-browser qualification.

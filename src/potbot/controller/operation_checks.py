@@ -167,8 +167,59 @@ class OperationChecks:
             ):
                 raise StateMismatchError("A current running task contract is required.")
 
+        def selected_task() -> None:
+            from potbot.controller.task_execution import (
+                TaskExecutionService,
+                validate_current_binding,
+            )
+
+            with self.jobs.database.transaction(actor) as connection:
+                row = self.jobs._lease_row(connection, actor, lease)
+                service = TaskExecutionService(
+                    self.jobs.database,
+                    setup_token=self._token,
+                    artifacts=self.jobs.task_execution_artifacts,
+                )
+                binding = service._verified_binding(connection, actor, row, require_current=True)
+                try:
+                    validate_current_binding(
+                        self.jobs.database,
+                        actor,
+                        connection,
+                        binding,
+                        setup_token=self._token(),
+                        artifacts=self.jobs.task_execution_artifacts,
+                    )
+                except RevisionConflictError:
+                    raise StateMismatchError("Selected task authority changed") from None
+            bindings["taskExecutionSha256"] = binding["sha256"]
+
+        def canonical_ports(native: NativeCogDispatcher) -> None:
+            from potbot.semantics.catalog import canonical_type_ref
+
+            binding = lease.task_execution_binding
+            if binding is None:
+                return
+            operation = native.operations.get(request.input["operation_ref"])
+            if (
+                operation is None
+                or binding["capabilities"]["inputTypes"]
+                != [str(canonical_type_ref(operation.binding.input_type_ref))]
+                or binding["capabilities"]["outputTypes"]
+                != [str(canonical_type_ref(operation.binding.output_type_ref))]
+            ):
+                raise ScopeDeniedError(
+                    "Installed native ports differ from the selected canonical contract"
+                )
+
         try:
             check("task_contract", task)
+            if (
+                lease.task_selection_id is not None
+                or lease.task_execution_binding is not None
+                or "task_execution_sha256" in lease.input
+            ):
+                check("task_selection", selected_task)
             if request.job_type == COG_JOB:
 
                 def installed() -> NativeCogDispatcher:
@@ -177,6 +228,8 @@ class OperationChecks:
                     return self.native_cogs
 
                 native = check("native_handler", installed)
+                if lease.task_execution_binding is not None:
+                    check("selected_canonical_ports", lambda: canonical_ports(native))
                 target = replace(
                     lease,
                     job_type=request.job_type,
@@ -207,6 +260,8 @@ class OperationChecks:
 
             check("task_budget", budget)
             check("task_still_current", task)
+            if lease.task_execution_binding is not None:
+                check("task_selection_still_current", selected_task)
         except _StoppedCheck:
             pass
         expires = min(now + timedelta(seconds=120), authorization_expiry)

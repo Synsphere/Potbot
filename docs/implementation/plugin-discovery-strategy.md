@@ -1,5 +1,16 @@
 # Potbot plugin and capability discovery strategy
 
+**Selected execution implementation, 18 November 2026:**
+[U04-T](u04-t-selected-task-execution.md) carries a retained operation selection
+through the existing worker check, explicit launch, owned progress/recovery and
+independent literal result assertions. Verified source declarations now supply
+Cog descriptions and canonical ports; installed hosted generation supplies its
+own descriptive input/output contract. The exact task, selected owner, request,
+assertions and consumer source are bound before launch. Complete result and
+accounting evidence determine the assertion outcome, separately from a job's
+success state. Registry/MCP candidates retain their existing owners, and actual
+host/model qualification and broader canonical T04 gates remain open.
+
 **Task-aware retrieval implementation, 18 November 2026:**
 [U04-S](u04-s-task-aware-capability-discovery.md) implements bounded T04.3
 task-context collection, directional canonical type constraints, explained

@@ -1,0 +1,1551 @@
+{
+  "check": {
+    "binding": {
+      "acceptance": {
+        "assertions": [
+          {
+            "op": "equals",
+            "pointer": "/text",
+            "value": "model output"
+          }
+        ],
+        "schema": "potbot-task-result-oracle/v1"
+      },
+      "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+      "candidateId": "9ca999d3f8aa558e2437090080615c9e673893f76feb8d505ebc5ecb7faff6a5",
+      "capabilities": {
+        "classes": [],
+        "effects": [],
+        "inputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "outputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "platforms": [
+          "remote"
+        ],
+        "scopes": []
+      },
+      "consumerSha256": "73a25fa02c495da0b6650f4dfb2d94ba754c5daedf28053e8189e148a516a9bc",
+      "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+      "ownerSha256": "d229328e3d45411db0090f34f3826fe7af9dcc598b658e870c4803060b8427d6",
+      "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "request": {
+        "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "input": {
+          "max_output_tokens": 16,
+          "prompt": "private task prompt",
+          "timeout_seconds": 30
+        },
+        "job_type": "model.generate",
+        "selected_models": [
+          {
+            "model": "fixture-model",
+            "provider": "openai",
+            "role": "reasoning"
+          }
+        ]
+      },
+      "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+      "resultId": "e9ffd0e8-6c34-4e60-83ed-cf3385622965",
+      "schema": "potbot-task-execution-binding/v1",
+      "searchId": "f0b5c2e8-ae19-4cd8-ad20-755332bf4c57",
+      "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+      "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+      "sha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+      "taskBinding": {
+        "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+        "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+        "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+        "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+    },
+    "job": {
+      "cancellation_requested": false,
+      "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "created_at": "2026-11-18T04:54:00.086316+00:00",
+      "dispatched_at": null,
+      "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "error_code": null,
+      "finished_at": null,
+      "heartbeat_at": null,
+      "id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+      "job_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+      "job_type": "operation.check",
+      "lease_until": null,
+      "operation_check_id": null,
+      "output_bytes": 0,
+      "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "progress": {
+        "stage": "queued"
+      },
+      "result": null,
+      "schema_version": 1,
+      "selected_models": [],
+      "started_at": null,
+      "state": "queued",
+      "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "update_token": 0,
+      "updated_at": "2026-11-18T04:54:00.086316+00:00"
+    },
+    "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+    "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+    "schema": "potbot-task-execution/v1",
+    "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+    "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+    "taskBinding": {
+      "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+      "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+      "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+      "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+      "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+    },
+    "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+  },
+  "checkedJob": {
+    "binding": {
+      "acceptance": {
+        "assertions": [
+          {
+            "op": "equals",
+            "pointer": "/text",
+            "value": "model output"
+          }
+        ],
+        "schema": "potbot-task-result-oracle/v1"
+      },
+      "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+      "candidateId": "9ca999d3f8aa558e2437090080615c9e673893f76feb8d505ebc5ecb7faff6a5",
+      "capabilities": {
+        "classes": [],
+        "effects": [],
+        "inputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "outputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "platforms": [
+          "remote"
+        ],
+        "scopes": []
+      },
+      "consumerSha256": "73a25fa02c495da0b6650f4dfb2d94ba754c5daedf28053e8189e148a516a9bc",
+      "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+      "ownerSha256": "d229328e3d45411db0090f34f3826fe7af9dcc598b658e870c4803060b8427d6",
+      "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "request": {
+        "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "input": {
+          "max_output_tokens": 16,
+          "prompt": "private task prompt",
+          "timeout_seconds": 30
+        },
+        "job_type": "model.generate",
+        "selected_models": [
+          {
+            "model": "fixture-model",
+            "provider": "openai",
+            "role": "reasoning"
+          }
+        ]
+      },
+      "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+      "resultId": "e9ffd0e8-6c34-4e60-83ed-cf3385622965",
+      "schema": "potbot-task-execution-binding/v1",
+      "searchId": "f0b5c2e8-ae19-4cd8-ad20-755332bf4c57",
+      "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+      "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+      "sha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+      "taskBinding": {
+        "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+        "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+        "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+        "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+    },
+    "job": {
+      "cancellation_requested": false,
+      "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "created_at": "2026-11-18T04:54:00.086316+00:00",
+      "dispatched_at": null,
+      "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "error_code": null,
+      "event_cursor": 5,
+      "finished_at": "2026-11-18T04:54:00.528702+00:00",
+      "heartbeat_at": "2026-11-18T04:54:00.113466+00:00",
+      "id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+      "job_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+      "job_type": "operation.check",
+      "lease_until": null,
+      "operation_check_id": null,
+      "output_bytes": 0,
+      "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "progress": {
+        "stage": "succeeded"
+      },
+      "result": {
+        "operation_check": {
+          "bindingSha256": "175848ad6d88f72ba4597eb3583b410d0a7cbf0f293f0476e8bd12f3872f50b9",
+          "bindings": {
+            "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+            "policySha256": "64944db24594c1fc1a3ef3b8ab0eee57e2256159eaa3cdd579181fcdb5b79034",
+            "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+            "taskExecutionSha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87"
+          },
+          "checkedAt": "2026-11-18T04:54:00.118222+00:00",
+          "checks": [
+            {
+              "code": "task_contract",
+              "status": "passed"
+            },
+            {
+              "code": "task_selection",
+              "status": "passed"
+            },
+            {
+              "code": "hosted_policy",
+              "status": "passed"
+            },
+            {
+              "code": "provider_credentials",
+              "status": "passed"
+            },
+            {
+              "code": "task_budget",
+              "status": "passed"
+            },
+            {
+              "code": "task_still_current",
+              "status": "passed"
+            },
+            {
+              "code": "task_selection_still_current",
+              "status": "passed"
+            }
+          ],
+          "eligible": true,
+          "expiresAt": "2026-11-18T04:56:00.118222+00:00",
+          "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+          "schema": "potbot-operation-check/v1"
+        }
+      },
+      "schema_version": 1,
+      "selected_models": [],
+      "started_at": "2026-11-18T04:54:00.113476+00:00",
+      "state": "succeeded",
+      "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "update_token": 2,
+      "updated_at": "2026-11-18T04:54:00.528702+00:00"
+    },
+    "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+    "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+    "schema": "potbot-task-execution/v1",
+    "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+    "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+    "taskBinding": {
+      "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+      "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+      "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+      "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+      "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+    },
+    "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+  },
+  "context": {
+    "current": true,
+    "operation": {
+      "executionReference": null,
+      "inputFields": [
+        "episode_id",
+        "provider",
+        "role",
+        "prompt",
+        "max_output_tokens",
+        "timeout_seconds"
+      ],
+      "jobType": "model.generate",
+      "kind": "model",
+      "maxInputBytes": 16384,
+      "name": "fixture-model",
+      "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+      "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "reasonCodes": [
+        "worker_check_required",
+        "operator_authorization_required"
+      ],
+      "reference": "model:fixture-model",
+      "schema": "potbot-operation-workbench/v1",
+      "supported": true,
+      "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+    },
+    "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+    "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+    "reasonCodes": [],
+    "schema": "potbot-task-execution/v1",
+    "selection": {
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "candidateId": "9ca999d3f8aa558e2437090080615c9e673893f76feb8d505ebc5ecb7faff6a5",
+      "handoff": {
+        "bindingId": null,
+        "identity": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+        "kind": "operation"
+      },
+      "id": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+      "owner": {
+        "bindingId": null,
+        "kind": "operation",
+        "ownerId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+        "ownerSha256": "d229328e3d45411db0090f34f3826fe7af9dcc598b658e870c4803060b8427d6"
+      },
+      "reasonCodes": [],
+      "recordedAt": "2026-11-18T04:53:59.228457+00:00",
+      "resultId": "e9ffd0e8-6c34-4e60-83ed-cf3385622965",
+      "searchId": "f0b5c2e8-ae19-4cd8-ad20-755332bf4c57",
+      "sha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+      "taskBinding": {
+        "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+        "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+        "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+        "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      }
+    },
+    "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+    "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+    "supported": true,
+    "taskBinding": {
+      "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+      "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+      "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+      "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+      "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+    },
+    "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+  },
+  "description": "Actual PostgreSQL/HTTP selected-task lifecycle; explicit synthetic provider transport.",
+  "events": {
+    "binding": {
+      "acceptance": {
+        "assertions": [
+          {
+            "op": "equals",
+            "pointer": "/text",
+            "value": "model output"
+          }
+        ],
+        "schema": "potbot-task-result-oracle/v1"
+      },
+      "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+      "candidateId": "9ca999d3f8aa558e2437090080615c9e673893f76feb8d505ebc5ecb7faff6a5",
+      "capabilities": {
+        "classes": [],
+        "effects": [],
+        "inputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "outputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "platforms": [
+          "remote"
+        ],
+        "scopes": []
+      },
+      "consumerSha256": "73a25fa02c495da0b6650f4dfb2d94ba754c5daedf28053e8189e148a516a9bc",
+      "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+      "ownerSha256": "d229328e3d45411db0090f34f3826fe7af9dcc598b658e870c4803060b8427d6",
+      "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "request": {
+        "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "input": {
+          "max_output_tokens": 16,
+          "prompt": "private task prompt",
+          "timeout_seconds": 30
+        },
+        "job_type": "model.generate",
+        "selected_models": [
+          {
+            "model": "fixture-model",
+            "provider": "openai",
+            "role": "reasoning"
+          }
+        ]
+      },
+      "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+      "resultId": "e9ffd0e8-6c34-4e60-83ed-cf3385622965",
+      "schema": "potbot-task-execution-binding/v1",
+      "searchId": "f0b5c2e8-ae19-4cd8-ad20-755332bf4c57",
+      "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+      "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+      "sha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+      "taskBinding": {
+        "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+        "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+        "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+        "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+    },
+    "has_more": false,
+    "items": [
+      {
+        "data": {
+          "job": {
+            "cancellation_requested": false,
+            "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+            "created_at": "2026-11-18T04:54:00.774942+00:00",
+            "dispatched_at": null,
+            "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "error_code": null,
+            "finished_at": null,
+            "heartbeat_at": null,
+            "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_type": "model.generate",
+            "lease_until": null,
+            "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+            "output_bytes": 0,
+            "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+            "progress": {
+              "stage": "queued"
+            },
+            "result": null,
+            "schema_version": 1,
+            "selected_models": [
+              {
+                "model": "fixture-model",
+                "provider": "openai",
+                "role": "reasoning"
+              }
+            ],
+            "started_at": null,
+            "state": "queued",
+            "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "update_token": 0,
+            "updated_at": "2026-11-18T04:54:00.774943+00:00"
+          }
+        },
+        "event_id": "1d84fa27-063d-46b6-b1fd-00cc8f6565d9",
+        "event_type": "job.queued",
+        "id": "1d84fa27-063d-46b6-b1fd-00cc8f6565d9",
+        "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "recorded_at": "2026-11-18T04:54:00.780026+00:00",
+        "schema_version": 1,
+        "sequence": 6
+      },
+      {
+        "data": {
+          "job": {
+            "cancellation_requested": false,
+            "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+            "created_at": "2026-11-18T04:54:00.774942+00:00",
+            "dispatched_at": null,
+            "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "error_code": null,
+            "finished_at": null,
+            "heartbeat_at": "2026-11-18T04:54:00.872387+00:00",
+            "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_type": "model.generate",
+            "lease_until": "2026-11-18T04:54:45.872386+00:00",
+            "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+            "output_bytes": 0,
+            "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+            "progress": {
+              "stage": "claimed"
+            },
+            "result": null,
+            "schema_version": 1,
+            "selected_models": [
+              {
+                "model": "fixture-model",
+                "provider": "openai",
+                "role": "reasoning"
+              }
+            ],
+            "started_at": "2026-11-18T04:54:00.872395+00:00",
+            "state": "running",
+            "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "update_token": 1,
+            "updated_at": "2026-11-18T04:54:00.872395+00:00"
+          }
+        },
+        "event_id": "1e7b43bf-92e4-4676-bae5-6b71d57a7d34",
+        "event_type": "job.running",
+        "id": "1e7b43bf-92e4-4676-bae5-6b71d57a7d34",
+        "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "recorded_at": "2026-11-18T04:54:00.875825+00:00",
+        "schema_version": 1,
+        "sequence": 7
+      },
+      {
+        "data": {
+          "job": {
+            "cancellation_requested": false,
+            "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+            "created_at": "2026-11-18T04:54:00.774942+00:00",
+            "dispatched_at": null,
+            "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "error_code": null,
+            "finished_at": null,
+            "heartbeat_at": "2026-11-18T04:54:00.872387+00:00",
+            "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_type": "model.generate",
+            "lease_until": "2026-11-18T04:54:45.872386+00:00",
+            "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+            "output_bytes": 0,
+            "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+            "progress": {
+              "completed": 0,
+              "stage": "generating",
+              "total": 1
+            },
+            "result": null,
+            "schema_version": 1,
+            "selected_models": [
+              {
+                "model": "fixture-model",
+                "provider": "openai",
+                "role": "reasoning"
+              }
+            ],
+            "started_at": "2026-11-18T04:54:00.872395+00:00",
+            "state": "running",
+            "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "update_token": 2,
+            "updated_at": "2026-11-18T04:54:01.315215+00:00"
+          }
+        },
+        "event_id": "7ed943ea-4272-4812-8f1a-7fb914c00241",
+        "event_type": "job.progress",
+        "id": "7ed943ea-4272-4812-8f1a-7fb914c00241",
+        "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "recorded_at": "2026-11-18T04:54:01.332203+00:00",
+        "schema_version": 1,
+        "sequence": 8
+      },
+      {
+        "data": {
+          "job": {
+            "cancellation_requested": false,
+            "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+            "created_at": "2026-11-18T04:54:00.774942+00:00",
+            "dispatched_at": "2026-11-18T04:54:01.744023+00:00",
+            "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "error_code": null,
+            "finished_at": null,
+            "heartbeat_at": "2026-11-18T04:54:00.872387+00:00",
+            "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_type": "model.generate",
+            "lease_until": "2026-11-18T04:54:45.872386+00:00",
+            "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+            "output_bytes": 0,
+            "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+            "progress": {
+              "stage": "dispatching"
+            },
+            "result": null,
+            "schema_version": 1,
+            "selected_models": [
+              {
+                "model": "fixture-model",
+                "provider": "openai",
+                "role": "reasoning"
+              }
+            ],
+            "started_at": "2026-11-18T04:54:00.872395+00:00",
+            "state": "running",
+            "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "update_token": 3,
+            "updated_at": "2026-11-18T04:54:01.744027+00:00"
+          }
+        },
+        "event_id": "bf9fe42f-f044-48ed-b986-fc6d2c83c709",
+        "event_type": "job.dispatched",
+        "id": "bf9fe42f-f044-48ed-b986-fc6d2c83c709",
+        "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "recorded_at": "2026-11-18T04:54:01.748065+00:00",
+        "schema_version": 1,
+        "sequence": 9
+      },
+      {
+        "data": {
+          "model": "fixture-model",
+          "provider": "openai",
+          "role": "reasoning",
+          "text": "model output"
+        },
+        "event_id": "c75b8a5b-4546-428f-ab2a-8fe181f9d8c5",
+        "event_type": "job.output",
+        "id": "c75b8a5b-4546-428f-ab2a-8fe181f9d8c5",
+        "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "recorded_at": "2026-11-18T04:54:01.781863+00:00",
+        "schema_version": 1,
+        "sequence": 10
+      },
+      {
+        "data": {
+          "job": {
+            "cancellation_requested": false,
+            "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+            "created_at": "2026-11-18T04:54:00.774942+00:00",
+            "dispatched_at": "2026-11-18T04:54:01.744023+00:00",
+            "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "error_code": null,
+            "finished_at": null,
+            "heartbeat_at": "2026-11-18T04:54:00.872387+00:00",
+            "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_type": "model.generate",
+            "lease_until": "2026-11-18T04:54:45.872386+00:00",
+            "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+            "output_bytes": 12,
+            "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+            "progress": {
+              "completed": 1,
+              "stage": "model_completed",
+              "total": 1
+            },
+            "result": null,
+            "schema_version": 1,
+            "selected_models": [
+              {
+                "model": "fixture-model",
+                "provider": "openai",
+                "role": "reasoning"
+              }
+            ],
+            "started_at": "2026-11-18T04:54:00.872395+00:00",
+            "state": "running",
+            "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "update_token": 5,
+            "updated_at": "2026-11-18T04:54:01.860704+00:00"
+          }
+        },
+        "event_id": "41d8aed6-49ef-4a16-a4bc-5a813b04b9d1",
+        "event_type": "job.progress",
+        "id": "41d8aed6-49ef-4a16-a4bc-5a813b04b9d1",
+        "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "recorded_at": "2026-11-18T04:54:01.864568+00:00",
+        "schema_version": 1,
+        "sequence": 11
+      },
+      {
+        "data": {
+          "job": {
+            "cancellation_requested": false,
+            "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+            "created_at": "2026-11-18T04:54:00.774942+00:00",
+            "dispatched_at": "2026-11-18T04:54:01.744023+00:00",
+            "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "error_code": null,
+            "finished_at": "2026-11-18T04:54:01.876993+00:00",
+            "heartbeat_at": "2026-11-18T04:54:00.872387+00:00",
+            "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+            "job_type": "model.generate",
+            "lease_until": null,
+            "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+            "output_bytes": 12,
+            "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+            "progress": {
+              "stage": "succeeded"
+            },
+            "result": {
+              "accounting": "conservative_estimate",
+              "completed_models": 1,
+              "invocation_ids": [
+                "6ff7919b-2e7f-5ec2-91f6-18978982f6a2"
+              ],
+              "usage": {
+                "calls": 1,
+                "inference_ms": 292,
+                "money_microunits": 18,
+                "tokens": 15
+              }
+            },
+            "schema_version": 1,
+            "selected_models": [
+              {
+                "model": "fixture-model",
+                "provider": "openai",
+                "role": "reasoning"
+              }
+            ],
+            "started_at": "2026-11-18T04:54:00.872395+00:00",
+            "state": "succeeded",
+            "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "update_token": 6,
+            "updated_at": "2026-11-18T04:54:01.876993+00:00"
+          }
+        },
+        "event_id": "70079208-11e8-4d42-8d60-51a866d60b88",
+        "event_type": "job.succeeded",
+        "id": "70079208-11e8-4d42-8d60-51a866d60b88",
+        "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "recorded_at": "2026-11-18T04:54:01.880437+00:00",
+        "schema_version": 1,
+        "sequence": 12
+      }
+    ],
+    "job": {
+      "cancellation_requested": false,
+      "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "created_at": "2026-11-18T04:54:00.774942+00:00",
+      "dispatched_at": "2026-11-18T04:54:01.744023+00:00",
+      "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "error_code": null,
+      "event_cursor": 12,
+      "finished_at": "2026-11-18T04:54:01.876993+00:00",
+      "heartbeat_at": "2026-11-18T04:54:00.872387+00:00",
+      "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+      "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+      "job_type": "model.generate",
+      "lease_until": null,
+      "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+      "output_bytes": 12,
+      "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "progress": {
+        "stage": "succeeded"
+      },
+      "result": {
+        "accounting": "conservative_estimate",
+        "completed_models": 1,
+        "invocation_ids": [
+          "6ff7919b-2e7f-5ec2-91f6-18978982f6a2"
+        ],
+        "usage": {
+          "calls": 1,
+          "inference_ms": 292,
+          "money_microunits": 18,
+          "tokens": 15
+        }
+      },
+      "schema_version": 1,
+      "selected_models": [
+        {
+          "model": "fixture-model",
+          "provider": "openai",
+          "role": "reasoning"
+        }
+      ],
+      "started_at": "2026-11-18T04:54:00.872395+00:00",
+      "state": "succeeded",
+      "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "update_token": 6,
+      "updated_at": "2026-11-18T04:54:01.876993+00:00"
+    },
+    "next_cursor": 12,
+    "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+    "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+    "schema": "potbot-task-execution/v1",
+    "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+    "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+    "taskBinding": {
+      "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+      "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+      "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+      "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+      "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+    },
+    "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+  },
+  "jobs": {
+    "hasMore": false,
+    "items": [
+      {
+        "binding": {
+          "acceptance": {
+            "assertions": [
+              {
+                "op": "equals",
+                "pointer": "/text",
+                "value": "model output"
+              }
+            ],
+            "schema": "potbot-task-result-oracle/v1"
+          },
+          "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+          "candidateId": "9ca999d3f8aa558e2437090080615c9e673893f76feb8d505ebc5ecb7faff6a5",
+          "capabilities": {
+            "classes": [],
+            "effects": [],
+            "inputTypes": [
+              "synny://type/potbot-data-text"
+            ],
+            "outputTypes": [
+              "synny://type/potbot-data-text"
+            ],
+            "platforms": [
+              "remote"
+            ],
+            "scopes": []
+          },
+          "consumerSha256": "73a25fa02c495da0b6650f4dfb2d94ba754c5daedf28053e8189e148a516a9bc",
+          "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+          "ownerSha256": "d229328e3d45411db0090f34f3826fe7af9dcc598b658e870c4803060b8427d6",
+          "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+          "request": {
+            "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "input": {
+              "max_output_tokens": 16,
+              "prompt": "private task prompt",
+              "timeout_seconds": 30
+            },
+            "job_type": "model.generate",
+            "selected_models": [
+              {
+                "model": "fixture-model",
+                "provider": "openai",
+                "role": "reasoning"
+              }
+            ]
+          },
+          "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+          "resultId": "e9ffd0e8-6c34-4e60-83ed-cf3385622965",
+          "schema": "potbot-task-execution-binding/v1",
+          "searchId": "f0b5c2e8-ae19-4cd8-ad20-755332bf4c57",
+          "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+          "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+          "sha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+          "taskBinding": {
+            "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+            "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+            "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+            "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+            "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+            "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+          },
+          "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+        },
+        "job": {
+          "cancellation_requested": false,
+          "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+          "created_at": "2026-11-18T04:54:00.774942+00:00",
+          "dispatched_at": "2026-11-18T04:54:01.744023+00:00",
+          "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+          "error_code": null,
+          "finished_at": "2026-11-18T04:54:01.876993+00:00",
+          "heartbeat_at": "2026-11-18T04:54:00.872387+00:00",
+          "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+          "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+          "job_type": "model.generate",
+          "lease_until": null,
+          "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+          "output_bytes": 12,
+          "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+          "progress": {
+            "stage": "succeeded"
+          },
+          "result": {
+            "accounting": "conservative_estimate",
+            "completed_models": 1,
+            "invocation_ids": [
+              "6ff7919b-2e7f-5ec2-91f6-18978982f6a2"
+            ],
+            "usage": {
+              "calls": 1,
+              "inference_ms": 292,
+              "money_microunits": 18,
+              "tokens": 15
+            }
+          },
+          "schema_version": 1,
+          "selected_models": [
+            {
+              "model": "fixture-model",
+              "provider": "openai",
+              "role": "reasoning"
+            }
+          ],
+          "started_at": "2026-11-18T04:54:00.872395+00:00",
+          "state": "succeeded",
+          "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+          "update_token": 6,
+          "updated_at": "2026-11-18T04:54:01.876993+00:00"
+        }
+      },
+      {
+        "binding": {
+          "acceptance": {
+            "assertions": [
+              {
+                "op": "equals",
+                "pointer": "/text",
+                "value": "model output"
+              }
+            ],
+            "schema": "potbot-task-result-oracle/v1"
+          },
+          "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+          "candidateId": "9ca999d3f8aa558e2437090080615c9e673893f76feb8d505ebc5ecb7faff6a5",
+          "capabilities": {
+            "classes": [],
+            "effects": [],
+            "inputTypes": [
+              "synny://type/potbot-data-text"
+            ],
+            "outputTypes": [
+              "synny://type/potbot-data-text"
+            ],
+            "platforms": [
+              "remote"
+            ],
+            "scopes": []
+          },
+          "consumerSha256": "73a25fa02c495da0b6650f4dfb2d94ba754c5daedf28053e8189e148a516a9bc",
+          "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+          "ownerSha256": "d229328e3d45411db0090f34f3826fe7af9dcc598b658e870c4803060b8427d6",
+          "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+          "request": {
+            "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "input": {
+              "max_output_tokens": 16,
+              "prompt": "private task prompt",
+              "timeout_seconds": 30
+            },
+            "job_type": "model.generate",
+            "selected_models": [
+              {
+                "model": "fixture-model",
+                "provider": "openai",
+                "role": "reasoning"
+              }
+            ]
+          },
+          "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+          "resultId": "e9ffd0e8-6c34-4e60-83ed-cf3385622965",
+          "schema": "potbot-task-execution-binding/v1",
+          "searchId": "f0b5c2e8-ae19-4cd8-ad20-755332bf4c57",
+          "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+          "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+          "sha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+          "taskBinding": {
+            "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+            "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+            "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+            "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+            "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+            "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+            "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+          },
+          "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+        },
+        "job": {
+          "cancellation_requested": false,
+          "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+          "created_at": "2026-11-18T04:54:00.086316+00:00",
+          "dispatched_at": null,
+          "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+          "error_code": null,
+          "finished_at": "2026-11-18T04:54:00.528702+00:00",
+          "heartbeat_at": "2026-11-18T04:54:00.113466+00:00",
+          "id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+          "job_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+          "job_type": "operation.check",
+          "lease_until": null,
+          "operation_check_id": null,
+          "output_bytes": 0,
+          "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+          "progress": {
+            "stage": "succeeded"
+          },
+          "result": {
+            "operation_check": {
+              "bindingSha256": "175848ad6d88f72ba4597eb3583b410d0a7cbf0f293f0476e8bd12f3872f50b9",
+              "bindings": {
+                "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+                "policySha256": "64944db24594c1fc1a3ef3b8ab0eee57e2256159eaa3cdd579181fcdb5b79034",
+                "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+                "taskExecutionSha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87"
+              },
+              "checkedAt": "2026-11-18T04:54:00.118222+00:00",
+              "checks": [
+                {
+                  "code": "task_contract",
+                  "status": "passed"
+                },
+                {
+                  "code": "task_selection",
+                  "status": "passed"
+                },
+                {
+                  "code": "hosted_policy",
+                  "status": "passed"
+                },
+                {
+                  "code": "provider_credentials",
+                  "status": "passed"
+                },
+                {
+                  "code": "task_budget",
+                  "status": "passed"
+                },
+                {
+                  "code": "task_still_current",
+                  "status": "passed"
+                },
+                {
+                  "code": "task_selection_still_current",
+                  "status": "passed"
+                }
+              ],
+              "eligible": true,
+              "expiresAt": "2026-11-18T04:56:00.118222+00:00",
+              "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+              "schema": "potbot-operation-check/v1"
+            }
+          },
+          "schema_version": 1,
+          "selected_models": [],
+          "started_at": "2026-11-18T04:54:00.113476+00:00",
+          "state": "succeeded",
+          "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+          "update_token": 2,
+          "updated_at": "2026-11-18T04:54:00.528702+00:00"
+        }
+      }
+    ],
+    "nextCursor": null,
+    "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+    "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+    "schema": "potbot-task-execution/v1",
+    "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+    "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+    "taskBinding": {
+      "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+      "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+      "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+      "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+      "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+    },
+    "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+  },
+  "launch": {
+    "binding": {
+      "acceptance": {
+        "assertions": [
+          {
+            "op": "equals",
+            "pointer": "/text",
+            "value": "model output"
+          }
+        ],
+        "schema": "potbot-task-result-oracle/v1"
+      },
+      "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+      "candidateId": "9ca999d3f8aa558e2437090080615c9e673893f76feb8d505ebc5ecb7faff6a5",
+      "capabilities": {
+        "classes": [],
+        "effects": [],
+        "inputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "outputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "platforms": [
+          "remote"
+        ],
+        "scopes": []
+      },
+      "consumerSha256": "73a25fa02c495da0b6650f4dfb2d94ba754c5daedf28053e8189e148a516a9bc",
+      "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+      "ownerSha256": "d229328e3d45411db0090f34f3826fe7af9dcc598b658e870c4803060b8427d6",
+      "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "request": {
+        "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "input": {
+          "max_output_tokens": 16,
+          "prompt": "private task prompt",
+          "timeout_seconds": 30
+        },
+        "job_type": "model.generate",
+        "selected_models": [
+          {
+            "model": "fixture-model",
+            "provider": "openai",
+            "role": "reasoning"
+          }
+        ]
+      },
+      "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+      "resultId": "e9ffd0e8-6c34-4e60-83ed-cf3385622965",
+      "schema": "potbot-task-execution-binding/v1",
+      "searchId": "f0b5c2e8-ae19-4cd8-ad20-755332bf4c57",
+      "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+      "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+      "sha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+      "taskBinding": {
+        "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+        "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+        "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+        "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+    },
+    "job": {
+      "cancellation_requested": false,
+      "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "created_at": "2026-11-18T04:54:00.774942+00:00",
+      "dispatched_at": null,
+      "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "error_code": null,
+      "finished_at": null,
+      "heartbeat_at": null,
+      "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+      "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+      "job_type": "model.generate",
+      "lease_until": null,
+      "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+      "output_bytes": 0,
+      "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "progress": {
+        "stage": "queued"
+      },
+      "result": null,
+      "schema_version": 1,
+      "selected_models": [
+        {
+          "model": "fixture-model",
+          "provider": "openai",
+          "role": "reasoning"
+        }
+      ],
+      "started_at": null,
+      "state": "queued",
+      "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "update_token": 0,
+      "updated_at": "2026-11-18T04:54:00.774943+00:00"
+    },
+    "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+    "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+    "schema": "potbot-task-execution/v1",
+    "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+    "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+    "taskBinding": {
+      "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+      "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+      "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+      "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+      "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+    },
+    "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+  },
+  "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+  "pending": {
+    "binding": {
+      "acceptance": {
+        "assertions": [
+          {
+            "op": "equals",
+            "pointer": "/text",
+            "value": "model output"
+          }
+        ],
+        "schema": "potbot-task-result-oracle/v1"
+      },
+      "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+      "candidateId": "9ca999d3f8aa558e2437090080615c9e673893f76feb8d505ebc5ecb7faff6a5",
+      "capabilities": {
+        "classes": [],
+        "effects": [],
+        "inputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "outputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "platforms": [
+          "remote"
+        ],
+        "scopes": []
+      },
+      "consumerSha256": "73a25fa02c495da0b6650f4dfb2d94ba754c5daedf28053e8189e148a516a9bc",
+      "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+      "ownerSha256": "d229328e3d45411db0090f34f3826fe7af9dcc598b658e870c4803060b8427d6",
+      "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "request": {
+        "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "input": {
+          "max_output_tokens": 16,
+          "prompt": "private task prompt",
+          "timeout_seconds": 30
+        },
+        "job_type": "model.generate",
+        "selected_models": [
+          {
+            "model": "fixture-model",
+            "provider": "openai",
+            "role": "reasoning"
+          }
+        ]
+      },
+      "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+      "resultId": "e9ffd0e8-6c34-4e60-83ed-cf3385622965",
+      "schema": "potbot-task-execution-binding/v1",
+      "searchId": "f0b5c2e8-ae19-4cd8-ad20-755332bf4c57",
+      "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+      "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+      "sha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+      "taskBinding": {
+        "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+        "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+        "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+        "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+    },
+    "job": {
+      "cancellation_requested": false,
+      "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "created_at": "2026-11-18T04:54:00.774942+00:00",
+      "dispatched_at": null,
+      "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "error_code": null,
+      "event_cursor": 6,
+      "finished_at": null,
+      "heartbeat_at": null,
+      "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+      "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+      "job_type": "model.generate",
+      "lease_until": null,
+      "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+      "output_bytes": 0,
+      "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "progress": {
+        "stage": "queued"
+      },
+      "result": null,
+      "schema_version": 1,
+      "selected_models": [
+        {
+          "model": "fixture-model",
+          "provider": "openai",
+          "role": "reasoning"
+        }
+      ],
+      "started_at": null,
+      "state": "queued",
+      "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "update_token": 0,
+      "updated_at": "2026-11-18T04:54:00.774943+00:00"
+    },
+    "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+    "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+    "result": {
+      "artifact": null,
+      "artifactText": null,
+      "artifactTruncated": false,
+      "job": {
+        "cancellation_requested": false,
+        "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+        "created_at": "2026-11-18T04:54:00.774942+00:00",
+        "dispatched_at": null,
+        "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "error_code": null,
+        "finished_at": null,
+        "heartbeat_at": null,
+        "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "job_type": "model.generate",
+        "lease_until": null,
+        "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+        "output_bytes": 0,
+        "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+        "progress": {
+          "stage": "queued"
+        },
+        "result": null,
+        "schema_version": 1,
+        "selected_models": [
+          {
+            "model": "fixture-model",
+            "provider": "openai",
+            "role": "reasoning"
+          }
+        ],
+        "started_at": null,
+        "state": "queued",
+        "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "update_token": 0,
+        "updated_at": "2026-11-18T04:54:00.774943+00:00"
+      },
+      "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+      "output": "",
+      "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "schema": "potbot-operation-workbench/v1",
+      "truncated": false,
+      "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+    },
+    "schema": "potbot-task-execution/v1",
+    "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+    "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+    "taskBinding": {
+      "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+      "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+      "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+      "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+      "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+    },
+    "verification": {
+      "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+      "bindingSha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+      "checks": [],
+      "evidenceSha256": null,
+      "outputSha256": null,
+      "reasonCodes": [
+        "execution_not_complete"
+      ],
+      "resultKind": null,
+      "schema": "potbot-task-result-verification/v1",
+      "status": "pending"
+    },
+    "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+  },
+  "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+  "result": {
+    "binding": {
+      "acceptance": {
+        "assertions": [
+          {
+            "op": "equals",
+            "pointer": "/text",
+            "value": "model output"
+          }
+        ],
+        "schema": "potbot-task-result-oracle/v1"
+      },
+      "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+      "candidateId": "9ca999d3f8aa558e2437090080615c9e673893f76feb8d505ebc5ecb7faff6a5",
+      "capabilities": {
+        "classes": [],
+        "effects": [],
+        "inputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "outputTypes": [
+          "synny://type/potbot-data-text"
+        ],
+        "platforms": [
+          "remote"
+        ],
+        "scopes": []
+      },
+      "consumerSha256": "73a25fa02c495da0b6650f4dfb2d94ba754c5daedf28053e8189e148a516a9bc",
+      "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+      "ownerSha256": "d229328e3d45411db0090f34f3826fe7af9dcc598b658e870c4803060b8427d6",
+      "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "request": {
+        "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "input": {
+          "max_output_tokens": 16,
+          "prompt": "private task prompt",
+          "timeout_seconds": 30
+        },
+        "job_type": "model.generate",
+        "selected_models": [
+          {
+            "model": "fixture-model",
+            "provider": "openai",
+            "role": "reasoning"
+          }
+        ]
+      },
+      "requestSha256": "f67b3b58303d219704adf22eb5b233701d24aec82ccf54dfbebeace5147edc92",
+      "resultId": "e9ffd0e8-6c34-4e60-83ed-cf3385622965",
+      "schema": "potbot-task-execution-binding/v1",
+      "searchId": "f0b5c2e8-ae19-4cd8-ad20-755332bf4c57",
+      "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+      "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+      "sha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+      "taskBinding": {
+        "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+        "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+        "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+        "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+    },
+    "job": {
+      "cancellation_requested": false,
+      "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "created_at": "2026-11-18T04:54:00.774942+00:00",
+      "dispatched_at": "2026-11-18T04:54:01.744023+00:00",
+      "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "error_code": null,
+      "event_cursor": 12,
+      "finished_at": "2026-11-18T04:54:01.876993+00:00",
+      "heartbeat_at": "2026-11-18T04:54:00.872387+00:00",
+      "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+      "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+      "job_type": "model.generate",
+      "lease_until": null,
+      "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+      "output_bytes": 12,
+      "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "progress": {
+        "stage": "succeeded"
+      },
+      "result": {
+        "accounting": "conservative_estimate",
+        "completed_models": 1,
+        "invocation_ids": [
+          "6ff7919b-2e7f-5ec2-91f6-18978982f6a2"
+        ],
+        "usage": {
+          "calls": 1,
+          "inference_ms": 292,
+          "money_microunits": 18,
+          "tokens": 15
+        }
+      },
+      "schema_version": 1,
+      "selected_models": [
+        {
+          "model": "fixture-model",
+          "provider": "openai",
+          "role": "reasoning"
+        }
+      ],
+      "started_at": "2026-11-18T04:54:00.872395+00:00",
+      "state": "succeeded",
+      "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "update_token": 6,
+      "updated_at": "2026-11-18T04:54:01.876993+00:00"
+    },
+    "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+    "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+    "result": {
+      "artifact": null,
+      "artifactText": null,
+      "artifactTruncated": false,
+      "job": {
+        "cancellation_requested": false,
+        "contract_revision_id": "8934ca27-76de-43d3-9af6-e06758f2596c",
+        "created_at": "2026-11-18T04:54:00.774942+00:00",
+        "dispatched_at": "2026-11-18T04:54:01.744023+00:00",
+        "episode_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "error_code": null,
+        "finished_at": "2026-11-18T04:54:01.876993+00:00",
+        "heartbeat_at": "2026-11-18T04:54:00.872387+00:00",
+        "id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "job_id": "6e56f1b9-88d7-40bc-b4f2-a4ba23f7e299",
+        "job_type": "model.generate",
+        "lease_until": null,
+        "operation_check_id": "6367eb23-c8ea-4f17-b60a-ca1d7d84e000",
+        "output_bytes": 12,
+        "owner_principal_id": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+        "progress": {
+          "stage": "succeeded"
+        },
+        "result": {
+          "accounting": "conservative_estimate",
+          "completed_models": 1,
+          "invocation_ids": [
+            "6ff7919b-2e7f-5ec2-91f6-18978982f6a2"
+          ],
+          "usage": {
+            "calls": 1,
+            "inference_ms": 292,
+            "money_microunits": 18,
+            "tokens": 15
+          }
+        },
+        "schema_version": 1,
+        "selected_models": [
+          {
+            "model": "fixture-model",
+            "provider": "openai",
+            "role": "reasoning"
+          }
+        ],
+        "started_at": "2026-11-18T04:54:00.872395+00:00",
+        "state": "succeeded",
+        "task_id": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+        "update_token": 6,
+        "updated_at": "2026-11-18T04:54:01.876993+00:00"
+      },
+      "operationId": "9d7d3b7e192c5a080d1b67c82889e4aaf2f745131b522cbfb82f2b401b3c16a4",
+      "output": "model output",
+      "principalId": "da236404-d86f-41ef-bd6a-8abdc89e4724",
+      "schema": "potbot-operation-workbench/v1",
+      "truncated": false,
+      "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+    },
+    "schema": "potbot-task-execution/v1",
+    "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+    "selectionSha256": "d71a231fbc45b5db5f72a547344360de381f196d64cc2b152bf7b5d46b22dba0",
+    "taskBinding": {
+      "contractRevisionId": "8934ca27-76de-43d3-9af6-e06758f2596c",
+      "contractSha256": "afde21c2d2b2c78557ec94d329e643c531815a2cdb288a6d8569a1bca227c0e3",
+      "episodeId": "f6373eb4-2df7-4e4b-a412-635f74d4f0e4",
+      "repositorySha256": "dc894c4b89b2b94b29db640302b6de916e97e2384206407dc9639f38c8a81794",
+      "repositoryStateId": "cd7f1176-c2f4-5638-b0dd-cd8066e46d5e",
+      "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+      "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+    },
+    "verification": {
+      "acceptanceSha256": "c69ed947bb00d7ab2e0811d03242d586a5f62193ed3fffeac0144c25b19ff123",
+      "bindingSha256": "8a37e28ff093bcde864c3f4cefd93399a64655824d97208bb88ad9122d078b87",
+      "checks": [
+        {
+          "index": 0,
+          "passed": true,
+          "reasonCode": null
+        }
+      ],
+      "evidenceSha256": "44c14ff82e25bc94f640afc5b59e6ce471e01231b1fc42d8d4d25555eccf0fd6",
+      "outputSha256": "32cb1ccc37abb42a8e0d891a7192dbbf65f3ef13a9dc9b93a134cf106259b942",
+      "reasonCodes": [],
+      "resultKind": "hosted_text",
+      "schema": "potbot-task-result-verification/v1",
+      "status": "passed"
+    },
+    "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+  },
+  "selectionId": "91a51d9f-489e-4fd3-aef2-4a89aef3002d",
+  "workspaceId": "0ca1b5a2-c696-4a21-b2ab-14e6e0625768"
+}

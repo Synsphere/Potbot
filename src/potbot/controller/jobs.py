@@ -214,8 +214,9 @@ def _parse_cursor(value: str | None) -> tuple[datetime, UUID] | None:
 
 
 class JobService:
-    def __init__(self, database: Database) -> None:
+    def __init__(self, database: Database, *, task_execution_artifacts: Any = None) -> None:
         self.database = database
+        self.task_execution_artifacts = task_execution_artifacts
 
     def submit(
         self,
@@ -227,6 +228,7 @@ class JobService:
         operation_check_id: UUID | None = None,
         operation_authorization: dict[str, Any] | None = None,
         create_guard: Callable[[Any, dict[str, Any]], None] | None = None,
+        task_execution_binding: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         from psycopg.types.json import Jsonb
 
@@ -236,12 +238,32 @@ class JobService:
             or operation_check_id is not None
             or operation_authorization is not None
             or create_guard is not None
+            or task_execution_binding is not None
         ) and not trusted_operation:
             raise ScopeDeniedError("Operation jobs require the operator workbench")
         if (operation_check_id is None) != (operation_authorization is None):
             raise InvalidInputError("Operation launches require their check and authorization")
         if spec.job_type == CHECK_JOB and operation_check_id is not None:
             raise InvalidInputError("A check cannot itself be a checked execution")
+        selection_id = None
+        if task_execution_binding is not None:
+            from potbot.domain.task_execution import parse_binding
+
+            task_execution_binding = parse_binding(task_execution_binding)
+            selection_id = UUID(task_execution_binding["selectionId"])
+            if (
+                task_execution_binding["workspaceId"] != str(context.workspace_id)
+                or task_execution_binding["principalId"] != str(context.principal_id)
+                or task_execution_binding["taskBinding"]["episodeId"] != str(spec.episode_id)
+                or (spec.job_type != CHECK_JOB and operation_check_id is None)
+                or (
+                    spec.job_type == CHECK_JOB
+                    and spec.input.get("task_execution_sha256") != task_execution_binding["sha256"]
+                )
+            ):
+                raise ScopeDeniedError("Selected task work must retain its exact owned binding")
+        elif spec.job_type == CHECK_JOB and "task_execution_sha256" in spec.input:
+            raise ScopeDeniedError("Selected task checks require their immutable binding")
         with self.database.transaction(context) as conn:
 
             def create() -> dict[str, Any]:
@@ -268,7 +290,8 @@ class JobService:
                 row = conn.execute(
                     "INSERT INTO jobs(workspace_id,id,episode_id,contract_revision_id,"
                     "job_type,input,selected_models,owner_principal_id,operation_check_id,"
-                    "operation_authorization) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING *",
+                    "operation_authorization,task_selection_id,task_execution_binding) "
+                    "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING *",
                     (
                         context.workspace_id,
                         job_id,
@@ -280,6 +303,8 @@ class JobService:
                         context.principal_id,
                         operation_check_id,
                         Jsonb(operation_authorization) if operation_authorization else None,
+                        selection_id,
+                        Jsonb(task_execution_binding) if task_execution_binding else None,
                     ),
                 ).fetchone()
                 public = _public(dict(row))
@@ -299,6 +324,11 @@ class JobService:
                 }
             if operation_check_id is not None:
                 request = {"request": request, "operation_check_id": str(operation_check_id)}
+            if task_execution_binding is not None:
+                request = {
+                    "request": request,
+                    "task_execution_sha256": task_execution_binding["sha256"],
+                }
             result = idempotent_command(conn, context, "submit_api_job", key, request, create)
             # Existing command keys are workspace-scoped. Never let a matching
             # key return another principal's committed private result.
@@ -460,6 +490,8 @@ class JobService:
             or not row["valid_lease"]
             or row["operation_check_id"] != lease.operation_check_id
             or row["operation_authorization"] != lease.operation_authorization
+            or row.get("task_selection_id") != lease.task_selection_id
+            or row.get("task_execution_binding") != lease.task_execution_binding
             or (
                 lease.owner_principal_id is not None
                 and lease.owner_principal_id != context.principal_id
@@ -561,6 +593,8 @@ class JobService:
                 row["owner_principal_id"],
                 row["operation_check_id"],
                 dict(row["operation_authorization"]) if row["operation_authorization"] else None,
+                row["task_selection_id"],
+                dict(row["task_execution_binding"]) if row["task_execution_binding"] else None,
             )
 
     def renew(
@@ -600,6 +634,12 @@ class JobService:
                 raise OperationCancelledError("Job cancellation preceded external dispatch.")
             if old["job_type"] == CHECK_JOB:
                 raise ScopeDeniedError("Operation checks cannot dispatch effects")
+            if old.get("task_selection_id") is not None:
+                from potbot.controller.task_execution import validate_dispatch_binding
+
+                validate_dispatch_binding(
+                    self.database, context, conn, old, artifacts=self.task_execution_artifacts
+                )
             if old["dispatched_at"] is not None:
                 if old["job_type"] == COG_JOB:
                     raise StateMismatchError("A native Cog dispatch cannot be repeated.")

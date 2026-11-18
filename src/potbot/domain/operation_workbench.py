@@ -36,6 +36,7 @@ _BINDINGS = {
     "nativeSha256",
     "runtimeSha256",
     "releaseSha256",
+    "taskExecutionSha256",
 }
 
 
@@ -99,9 +100,14 @@ def _authorization(value: object) -> dict[str, Any]:
 
 
 def parse_check_input(value: object) -> tuple[str, JobSpec]:
-    if not isinstance(value, dict) or set(value) != {"operation_id", "request", "authorization"}:
+    if not isinstance(value, dict) or set(value) not in (
+        {"operation_id", "request", "authorization"},
+        {"operation_id", "request", "authorization", "task_execution_sha256"},
+    ):
         raise InvalidInputError("Operation check fields do not match the supported contract")
     _authorization(value["authorization"])
+    if "task_execution_sha256" in value:
+        operation_id(value["task_execution_sha256"])
     return operation_id(value["operation_id"]), parse_request(value["request"])
 
 
@@ -113,21 +119,23 @@ def _body(
     *,
     purpose: str,
     check_id: UUID | None,
+    task_execution_sha256: str | None = None,
 ) -> bytes:
     spec = parse_request(request)
-    return canonical_json(
-        {
-            "schema": "potbot-operation-authorization/v1",
-            "purpose": purpose,
-            "workspace_id": str(actor.workspace_id),
-            "principal_id": str(actor.principal_id),
-            "operation_id": operation_id(identity),
-            "job_type": spec.job_type,
-            "request_sha256": content_hash(spec.to_dict()),
-            "expires_at": expires,
-            "check_job_id": str(check_id) if check_id else None,
-        }
-    ).encode()
+    value = {
+        "schema": "potbot-operation-authorization/v1",
+        "purpose": purpose,
+        "workspace_id": str(actor.workspace_id),
+        "principal_id": str(actor.principal_id),
+        "operation_id": operation_id(identity),
+        "job_type": spec.job_type,
+        "request_sha256": content_hash(spec.to_dict()),
+        "expires_at": expires,
+        "check_job_id": str(check_id) if check_id else None,
+    }
+    if task_execution_sha256 is not None:
+        value["task_execution_sha256"] = operation_id(task_execution_sha256)
+    return canonical_json(value).encode()
 
 
 def sign_authorization(
@@ -140,6 +148,7 @@ def sign_authorization(
     check_id: UUID | None = None,
     expires_at: int | None = None,
     now: datetime | None = None,
+    task_execution_sha256: str | None = None,
 ) -> dict[str, Any]:
     current = int((now or datetime.now(UTC)).timestamp())
     expires = expires_at if expires_at is not None else current + MAX_AUTHORIZATION_SECONDS
@@ -154,7 +163,15 @@ def sign_authorization(
         "expires_at": expires,
         "mac": hmac.new(
             setup_token.encode(),
-            _body(actor, identity, request, expires, purpose=purpose, check_id=check_id),
+            _body(
+                actor,
+                identity,
+                request,
+                expires,
+                purpose=purpose,
+                check_id=check_id,
+                task_execution_sha256=task_execution_sha256,
+            ),
             hashlib.sha256,
         ).hexdigest(),
     }
@@ -170,19 +187,28 @@ def _verify(
     purpose: str,
     check_id: UUID | None,
     now: datetime | None,
+    task_execution_sha256: str | None = None,
+    require_current: bool = True,
 ) -> None:
     authorization = _authorization(authorization)
     current = int((now or datetime.now(UTC)).timestamp())
     expires = authorization["expires_at"]
-    if (
-        not _valid_token(setup_token)
-        or not current < expires <= current + MAX_AUTHORIZATION_SECONDS
+    if not _valid_token(setup_token) or (
+        require_current and not current < expires <= current + MAX_AUTHORIZATION_SECONDS
     ):
         raise ScopeDeniedError("Operation authorization is unavailable or expired")
     assert isinstance(setup_token, str)
     expected = hmac.new(
         setup_token.encode(),
-        _body(actor, identity, request, expires, purpose=purpose, check_id=check_id),
+        _body(
+            actor,
+            identity,
+            request,
+            expires,
+            purpose=purpose,
+            check_id=check_id,
+            task_execution_sha256=task_execution_sha256,
+        ),
         hashlib.sha256,
     ).hexdigest()
     if not hmac.compare_digest(expected, authorization["mac"]):
@@ -195,6 +221,7 @@ def verify_check_authorization(
     setup_token: str | None,
     *,
     now: datetime | None = None,
+    require_current: bool = True,
 ) -> tuple[str, JobSpec]:
     identity, spec = parse_check_input(value)
     assert isinstance(value, dict)
@@ -207,6 +234,8 @@ def verify_check_authorization(
         purpose="check",
         check_id=None,
         now=now,
+        task_execution_sha256=value.get("task_execution_sha256"),
+        require_current=require_current,
     )
     return identity, spec
 
@@ -218,8 +247,11 @@ def verify_launch_authorization(
     setup_token: str | None,
     *,
     now: datetime | None = None,
+    require_current: bool = True,
 ) -> None:
-    identity, request = verify_check_authorization(actor, original_input, setup_token, now=now)
+    identity, request = verify_check_authorization(
+        actor, original_input, setup_token, now=now, require_current=require_current
+    )
     if lease.operation_check_id is None:
         raise ScopeDeniedError("Operation launch requires its original check")
     actual = {
@@ -230,6 +262,12 @@ def verify_launch_authorization(
     }
     if request_digest(actual) != request_digest(request.to_dict()):
         raise ScopeDeniedError("Operation launch differs from the checked request")
+    assert isinstance(original_input, dict)
+    binding = lease.task_execution_binding
+    if original_input.get("task_execution_sha256") != (
+        binding.get("sha256") if binding is not None else None
+    ):
+        raise ScopeDeniedError("Operation launch differs from the selected task binding")
     _verify(
         actor,
         identity,
@@ -239,6 +277,8 @@ def verify_launch_authorization(
         purpose="launch",
         check_id=lease.operation_check_id,
         now=now,
+        task_execution_sha256=original_input.get("task_execution_sha256"),
+        require_current=require_current,
     )
 
 

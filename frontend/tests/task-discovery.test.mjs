@@ -74,7 +74,7 @@ test('exact mutations reject ambient authority and bind receipts to reviewed req
 });
 
 test('fixed handoffs and exact deep links cannot change owner or workspace', () => {
-  assert.equal(taskHandoffHref(w, selection), `/tools?workspace=${w}&operation=${candidate.ownerId}`); assert.equal(taskHandoffHref(w, { ...selection, authorityCurrent: false }), null);
+  assert.equal(taskHandoffHref(w, selection), `/tools?workspace=${w}&operation=${candidate.ownerId}&selection=${selection.id}`); assert.equal(taskHandoffHref(w, { ...selection, authorityCurrent: false }), null);
   assert.equal(taskOwnerHref(w, { kind: 'registry', ownerId: other, bindingId: null }), `/discover?workspace=${w}&candidate=${other}`);
   assert.equal(taskOwnerHref(w, { kind: 'mcp', ownerId: uuid('b'), bindingId: other }), `/discover/mcp?workspace=${w}&binding=${other}`);
   assert.equal(projectTaskSelection({ ...selection, handoff: { ...selection.handoff, url: 'https://evil.example' } }), null); assert.equal(projectTaskSelection({ ...selection, handoff: { ...selection.handoff, identity: hash('f') } }), null);

@@ -34,5 +34,9 @@ export function taskOwnerHref(workspace: string, owner: { kind: "registry" | "op
   if (owner.kind === "mcp" && UUID.test(owner.ownerId) && owner.bindingId !== null && UUID.test(owner.bindingId)) { p.set("binding", owner.bindingId); return "/discover/mcp?" + p; }
   return null;
 }
-export function taskHandoffHref(workspace: string, selection: TaskDiscoverySelection): string | null { return selection.approvalValid && selection.authorityCurrent ? taskOwnerHref(workspace, { kind: selection.handoff.kind, ownerId: selection.handoff.identity, bindingId: selection.handoff.bindingId }) : null; }
+export function taskHandoffHref(workspace: string, selection: TaskDiscoverySelection): string | null {
+  if (!selection.approvalValid || !selection.authorityCurrent) return null;
+  const href = taskOwnerHref(workspace, { kind: selection.handoff.kind, ownerId: selection.handoff.identity, bindingId: selection.handoff.bindingId });
+  return selection.handoff.kind === "operation" ? href && UUID.test(selection.id) ? `${href}&selection=${selection.id}` : null : href;
+}
 export function exactOwnerSelection(query: string, workspace: string, kind: "operation" | "candidate"): string | null { const p = new URLSearchParams(query), value = p.get(kind); return UUID.test(workspace) && p.getAll("workspace").length === 1 && p.get("workspace") === workspace && p.getAll(kind).length === 1 && value !== null && (kind === "operation" ? SHA256 : UUID).test(value) ? value : null; }

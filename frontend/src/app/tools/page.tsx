@@ -9,6 +9,8 @@ import {
 import styles from "./tools.module.css";
 import { exactOwnerSelection } from "../../lib/task-discovery-client.ts";
 import OperationWorkbench from "./OperationWorkbench.tsx";
+import SelectedTaskWorkbench from "./SelectedTaskWorkbench.tsx";
+import { selectedExecutionQuery } from "../../lib/task-execution-client.ts";
 
 type Workspace = { id: string; name: string };
 const workspaceHeaders = (id: string): HeadersInit => ({ "X-Potbot-Workspace": id });
@@ -19,7 +21,7 @@ function Readiness({ state }: { state: OperationState }) {
   return <span className={`${styles.badge} ${styles[state]}`}>{READINESS_LABELS[state]}</span>;
 }
 
-function Detail({ item, workspaceId, principalId, snapshot }: { item: Operation; workspaceId: string; principalId: string; snapshot: string }) {
+function Detail({ item, workspaceId, principalId, snapshot, showWorkbench = true }: { item: Operation; workspaceId: string; principalId: string; snapshot: string; showWorkbench?: boolean }) {
   const accounting = item.accounting;
   return <article className={styles.detail} aria-label={`Details for ${item.name}`}>
     <div className={styles.detailHeading}>
@@ -28,7 +30,7 @@ function Detail({ item, workspaceId, principalId, snapshot }: { item: Operation;
       <div className={styles.badges}><Readiness state={item.state} />
         {item.updateAvailable === true && <span className={styles.update}>Update available</span>}</div>
     </div>
-    <OperationWorkbench key={`${workspaceId}:${principalId}:${item.id}:${snapshot}`} workspaceId={workspaceId} principalId={principalId} operationId={item.id} />
+    {showWorkbench && <OperationWorkbench key={`${workspaceId}:${principalId}:${item.id}:${snapshot}`} workspaceId={workspaceId} principalId={principalId} operationId={item.id} />}
     {item.kind === "skill" && <section className={styles.detailSection}><h3>Skill packages</h3><p className={styles.muted}>Review imported instructions and resources, exact releases, activation and rollback in the skill workshop.</p>
       <a className={styles.linkButton} href={`/skills?workspace=${encodeURIComponent(workspaceId)}`}>Open skill workshop <span aria-hidden="true">↗</span></a></section>}
     <section className={styles.detailSection} aria-labelledby="readiness-title">
@@ -115,6 +117,7 @@ export default function OperationCataloguePage() {
   const [after, setAfter] = useState<string | null>(null), [history, setHistory] = useState<(string | null)[]>([]);
   const [listing, setListing] = useState<OperationListing | null>(null), [detail, setDetail] = useState<OperationDetail | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null), [refresh, setRefresh] = useState(0);
+  const [selectionId, setSelectionId] = useState<string | null>(null), [initialJobId, setInitialJobId] = useState<string | null>(null), [selectionInvalid, setSelectionInvalid] = useState(false);
   const [busy, setBusy] = useState(false), [detailBusy, setDetailBusy] = useState(false), [paused, setPaused] = useState(false);
   const [notice, setNotice] = useState("Loading authorized workspaces…"), [detailNotice, setDetailNotice] = useState("");
   const listGeneration = useRef(0), detailGeneration = useRef(0), currentWorkspace = useRef("");
@@ -153,7 +156,11 @@ export default function OperationCataloguePage() {
         setWorkspaces(known);
         const params = new URLSearchParams(window.location.search), requested = params.get("workspace");
         const selected = params.getAll("workspace").length > 1 ? undefined : requested ? known.find(entry => entry.id === requested) : known[0];
-        if (selected) { currentWorkspace.current = selected.id; directOperation.current = exactOwnerSelection(window.location.search, selected.id, "operation"); setWorkspaceId(selected.id); }
+        if (selected) {
+          currentWorkspace.current = selected.id; directOperation.current = exactOwnerSelection(window.location.search, selected.id, "operation");
+          const execution = selectedExecutionQuery(window.location.search, selected.id, directOperation.current);
+          setSelectionId(execution.selection); setInitialJobId(execution.job); setSelectionInvalid(execution.invalid); setWorkspaceId(selected.id);
+        }
         else setNotice(known.length ? "Select an authorized workspace to inspect its operations." : "No authorized workspace is configured.");
       }).catch(() => { if (!request.signal.aborted) setNotice("Sign in to Potbot to load your authorized workspace catalogue."); });
     return () => request.abort();
@@ -207,14 +214,15 @@ export default function OperationCataloguePage() {
   }, [selectedId, listing, workspaceId, paused, changed]);
 
   const selectWorkspace = (id: string) => {
-    currentWorkspace.current = id; directOperation.current = null; restart(); setWorkspaceId(id);
-    const url = new URL(window.location.href); url.searchParams.set("workspace", id); url.searchParams.delete("operation");
+    currentWorkspace.current = id; directOperation.current = null; restart(); setWorkspaceId(id); setSelectionId(null); setInitialJobId(null); setSelectionInvalid(false);
+    const url = new URL(window.location.href); url.searchParams.set("workspace", id); url.searchParams.delete("operation"); url.searchParams.delete("selection"); url.searchParams.delete("job");
     window.history.replaceState(null, "", url);
   };
   const selectOperation = (id: string) => {
     detailGeneration.current++; detailRequest.current?.abort(); setDetail(null); setDetailNotice(""); setDetailBusy(false);
+    setSelectionId(null); setInitialJobId(null); setSelectionInvalid(false);
     const next = id === selectedId ? null : id; directOperation.current = next; setSelectedId(next);
-    const url = new URL(window.location.href); url.searchParams.set("workspace", workspaceId); url.searchParams.delete("operation"); if (next) url.searchParams.set("operation", next); window.history.replaceState(null, "", url);
+    const url = new URL(window.location.href); url.searchParams.set("workspace", workspaceId); url.searchParams.delete("operation"); url.searchParams.delete("selection"); url.searchParams.delete("job"); if (next) url.searchParams.set("operation", next); window.history.replaceState(null, "", url);
   };
   const page = (cursor: string | null, previous: boolean) => {
     invalidate(); setHistory(values => previous ? values.slice(0, -1) : [...values, after]); setAfter(cursor);
@@ -269,7 +277,9 @@ export default function OperationCataloguePage() {
         </nav>
       </section>
       <aside className={styles.detailPanel} aria-label="Selected operation" aria-busy={detailBusy}>
-        {detail ? <Detail item={detail.item} workspaceId={workspaceId} principalId={detail.principalId} snapshot={detail.snapshotSha256} /> : <div className={styles.empty}>
+        {selectionInvalid && <div className={styles.empty} role="status"><h2>Review the selected-task link</h2><p>This link does not identify one exact workspace, operation, selection and optional job. Return to task discovery, or explicitly select an operation to open its ordinary workbench.</p></div>}
+        {listing && selectedId && selectionId && !selectionInvalid && <SelectedTaskWorkbench key={`${workspaceId}:${listing.principalId}:${selectedId}:${selectionId}`} workspaceId={workspaceId} principalId={listing.principalId} operationId={selectedId} selectionId={selectionId} initialJobId={initialJobId} onScopeInvalidated={restart} />}
+        {detail ? <Detail item={detail.item} workspaceId={workspaceId} principalId={detail.principalId} snapshot={detail.snapshotSha256} showWorkbench={!selectionId && !selectionInvalid} /> : <div className={styles.empty}>
           <span className={styles.emptyMark} aria-hidden="true">↗</span>
           <h2>{detailBusy ? "Reading operation details…" : "Follow the evidence"}</h2>
           <p role="status">{detailNotice || "Select an operation to inspect readiness reasons, provenance, release records and recent linked accounting."}</p>

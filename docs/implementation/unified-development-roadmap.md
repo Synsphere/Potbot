@@ -6,6 +6,21 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**18 November 2026, after the task discovery merge:**
+[U04-T selected task execution](u04-t-selected-task-execution.md) connects an exact
+U04-S operation selection to worker readiness, separately authorized execution,
+owned recovery and independent result assertions on merged main
+`f275dcc62495ef73d1de3ffcd0b22f393be381ac`. Verified sealed-source Cog metadata and
+handler-owned hosted descriptions feed discovery; immutable selection/input/
+acceptance bindings extend the existing jobs lifecycle through migration 46.
+The existing dispatch boundary revalidates current task/source authority, while
+complete output, gateway/artifact receipts and settled usage supply the assertion
+result. No additional scheduler or task-completion authority is introduced.
+Installed host/provider quality and broader interoperability retain independent
+gates; U04/M4/T04 and historical runtime qualification statuses are unchanged.
+The next coherent implementation batch is the supported T05 external research,
+immutable source and cited-evidence workflow through its existing research owners.
+
 **18 November 2026, after the task qualification merge:**
 [U04-S task-aware capability discovery](u04-s-task-aware-capability-discovery.md)
 implements the supported T04.3 task-to-selection lifecycle on merged main

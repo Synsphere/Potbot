@@ -1,0 +1,126 @@
+name: U04-T selected-task execution and verified outcome
+on:
+  push:
+    paths:
+      - 'src/potbot/controller/*task_execution*.py'
+      - 'src/potbot/controller/operation*.py'
+      - 'src/potbot/controller/jobs.py'
+      - 'src/potbot/controller/job_runner.py'
+      - 'src/potbot/controller/native_cog_dispatch.py'
+      - 'src/potbot/controller/task_discovery*.py'
+      - 'src/potbot/domain/task_execution.py'
+      - 'src/potbot/domain/operation_workbench.py'
+      - 'src/potbot/domain/result_assertions.py'
+      - 'src/potbot/domain/jobs.py'
+      - 'src/potbot/api/*task_execution*.py'
+      - 'src/potbot/api/server_cli.py'
+      - 'src/potbot/cli.py'
+      - 'src/potbot/persistence/task_execution_schema.py'
+      - 'src/potbot/persistence/schema.py'
+      - 'src/potbot/persistence/artifacts.py'
+      - 'src/potbot/models/hosted_gateway.py'
+      - 'src/potbot/models/hosted_policy.py'
+      - 'src/potbot/tools/execution_contracts.py'
+      - 'src/potbot/tools/sandbox_cog_worker.py'
+      - 'src/potbot/semantics/catalog*'
+      - 'src/potbot/tools/mcp_qualification_*.py'
+      - 'frontend/src/app/api/ui/task-execution/**'
+      - 'frontend/src/app/tools/**'
+      - 'frontend/src/lib/task-execution*.ts'
+      - 'frontend/src/lib/task-discovery-client.ts'
+      - 'frontend/src/lib/server/task-execution.ts'
+      - 'frontend/tests/task-execution*'
+      - 'frontend/tests/fixtures/task-execution-http.json'
+      - 'tests/unit/test_task_execution*.py'
+      - 'tests/unit/test_ui_task_execution.py'
+      - 'tests/unit/test_operation*.py'
+      - 'tests/unit/test_mcp_qualification_oracle.py'
+      - 'tests/unit/test_artifacts.py'
+      - 'tests/integration/test_task_execution*.py'
+      - 'tests/integration/test_operation_discovery_metadata.py'
+      - 'tests/integration/test_process_isolation.py'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'compose.yaml'
+      - '.github/workflows/task-execution-u04-t.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  task-execution:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      UV_PYTHON: '3.12'
+      # Disposable fixture credentials and explicit synthetic provider transport.
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+      POTBOT_TASK_EXECUTION_HTTP_FIXTURE: artifacts/task-execution-http.json
+      COMPOSE_PROJECT_NAME: potbot-task-execution-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.23'
+      - name: Install locked application and test dependencies
+        run: uv sync --locked --extra postgres --extra credentials --extra web --dev
+      - name: Install existing Linux process isolation prerequisites
+        run: |
+          bash scripts/ci_prepare_ubuntu_mirror.sh
+          sudo apt-get update
+          sudo apt-get install --yes bubblewrap libseccomp2 apparmor-profiles
+      - name: Load the distribution Bubblewrap user-namespace profile
+        shell: bash
+        run: |
+          potbot_userns_restriction=/proc/sys/kernel/apparmor_restrict_unprivileged_userns
+          if [[ -r "$potbot_userns_restriction" ]] && [[ "$(cat "$potbot_userns_restriction")" == 1 ]]; then
+            potbot_bwrap_profile=/usr/share/apparmor/extra-profiles/bwrap-userns-restrict
+            test -r "$potbot_bwrap_profile"
+            sudo apparmor_parser --replace "$potbot_bwrap_profile"
+          fi
+      - name: Verify real process isolation before native selected-task evidence
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/integration/test_process_isolation.py
+          --junitxml=artifacts/task-execution-isolation.xml
+      - name: Start the repository PostgreSQL and pgvector fixture
+        run: docker compose up --detach --wait --wait-timeout 90
+      - name: Verify selected-task checks, worker dispatch, receipts, assertions and metadata
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_task_execution.py
+          tests/unit/test_task_execution_cli.py
+          tests/unit/test_ui_task_execution.py
+          tests/unit/test_operation_discovery_metadata.py
+          tests/unit/test_operation_checks.py
+          tests/unit/test_operation_workbench.py
+          tests/unit/test_operation_workbench_qualification.py
+          tests/unit/test_mcp_qualification_oracle.py
+          tests/unit/test_artifacts.py
+          tests/integration/test_task_execution.py
+          tests/integration/test_task_execution_outcomes.py
+          tests/integration/test_operation_discovery_metadata.py
+          --junitxml=artifacts/task-execution-u04-t.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Consume fresh HTTP responses and verify selected browser recovery
+        run: >-
+          node --experimental-strip-types --test
+          frontend/tests/task-execution*.test.mjs
+      - name: Retain selected-task acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: task-execution-u04-t
+          path: |
+            artifacts/task-execution-isolation.xml
+            artifacts/task-execution-u04-t.xml
+            artifacts/task-execution-http.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Stop only this disposable database
+        if: always()
+        run: docker compose down --volumes --remove-orphans --timeout 10

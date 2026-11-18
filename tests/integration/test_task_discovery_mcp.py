@@ -174,8 +174,11 @@ def test_populated_v44_upgrade_preserves_exact_signed_q_evidence(qualification):
     with admin_connection(r.env.admin_dsn, r.env.schema) as conn:
         checksums = conn.execute("SELECT * FROM schema_migrations ORDER BY version").fetchall()
     assert len(checksums) == 44
-    assert migrate(r.env.admin_dsn, r.env.schema) == tuple(range(1, 46))
-    assert migrate(r.env.admin_dsn, r.env.schema) == tuple(range(1, 46))
+    # Preserve this historical 44 -> 45 evidence-retention gate. The selected
+    # execution migration has its own populated 45 -> 46 acceptance test.
+    revisions = tuple(item for item in application_migrations() if item.version <= 45)
+    assert migrate(r.env.admin_dsn, r.env.schema, revisions) == tuple(range(1, 46))
+    assert migrate(r.env.admin_dsn, r.env.schema, revisions) == tuple(range(1, 46))
     with r.env.db.transaction(r.actor) as conn:
         for table, rows in before.items():
             assert conn.execute(f"SELECT * FROM {table} ORDER BY id").fetchall() == rows

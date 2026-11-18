@@ -132,16 +132,36 @@ class OperationWorkbench:
         key: str,
         *,
         setup_token: str,
+        task_execution_binding: dict[str, Any] | None = None,
+        task_execution_artifacts: Any = None,
     ) -> dict[str, Any]:
         identity, spec = operation_id(identity), parse_request(request)
         authorization = sign_authorization(
-            context, identity, spec.to_dict(), setup_token, purpose="check"
+            context,
+            identity,
+            spec.to_dict(),
+            setup_token,
+            purpose="check",
+            task_execution_sha256=task_execution_binding["sha256"]
+            if task_execution_binding
+            else None,
         )
 
         def validate(_connection: Any, episode: dict[str, Any]) -> None:
             self._request(context, identity, spec)
             if episode["status"] != "running":
                 raise ScopeDeniedError("Operation checks require a running task")
+            if task_execution_binding is not None:
+                from potbot.controller.task_execution import validate_current_binding
+
+                validate_current_binding(
+                    self.database,
+                    context,
+                    _connection,
+                    task_execution_binding,
+                    setup_token=setup_token,
+                    artifacts=task_execution_artifacts,
+                )
 
         job = self.jobs.submit(
             context,
@@ -152,12 +172,18 @@ class OperationWorkbench:
                     "operation_id": identity,
                     "request": spec.to_dict(),
                     "authorization": authorization,
+                    **(
+                        {"task_execution_sha256": task_execution_binding["sha256"]}
+                        if task_execution_binding
+                        else {}
+                    ),
                 },
                 "selected_models": [],
             },
             key,
             trusted_operation=True,
             create_guard=validate,
+            task_execution_binding=task_execution_binding,
         )
         return {**self._scope(context, identity), "job": job}
 
@@ -170,6 +196,8 @@ class OperationWorkbench:
         key: str,
         *,
         setup_token: str,
+        task_execution_binding: dict[str, Any] | None = None,
+        task_execution_artifacts: Any = None,
     ) -> dict[str, Any]:
         identity, spec = operation_id(identity), parse_request(request)
         if not isinstance(check_job_id, UUID):
@@ -179,6 +207,19 @@ class OperationWorkbench:
         def validate(connection: Any, episode: dict[str, Any]) -> None:
             self._request(context, identity, spec)
             check = _read(connection, context, check_job_id, lock=True)
+            if check.get("task_execution_binding") != task_execution_binding:
+                raise ScopeDeniedError("Launch must retain the original selected task binding")
+            if task_execution_binding is not None:
+                from potbot.controller.task_execution import validate_current_binding
+
+                validate_current_binding(
+                    self.database,
+                    context,
+                    connection,
+                    task_execution_binding,
+                    setup_token=setup_token,
+                    artifacts=task_execution_artifacts,
+                )
             if check["job_type"] != CHECK_JOB or check["state"] != JobState.SUCCEEDED:
                 raise ScopeDeniedError("A completed eligible check is required")
             checked_identity, checked = verify_check_authorization(
@@ -218,6 +259,9 @@ class OperationWorkbench:
                     check_id=check_job_id,
                     expires_at=int(report_time(report["expiresAt"]).timestamp()),
                     now=current,
+                    task_execution_sha256=task_execution_binding["sha256"]
+                    if task_execution_binding
+                    else None,
                 )
             )
 
@@ -229,6 +273,7 @@ class OperationWorkbench:
             operation_check_id=check_job_id,
             operation_authorization=authorization,
             create_guard=validate,
+            task_execution_binding=task_execution_binding,
         )
         # Idempotent retries skip fresh authorization/expiry validation. They
         # must still belong to the operation named in this route.

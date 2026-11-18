@@ -158,6 +158,16 @@ private descriptions into a shared vector index. Selection opens the existing
 review owner and grants no execution permission. Deployed model quality and
 installed host/vendor qualification remain separate evidence gates.
 
+The [U04-T selected task execution workbench](docs/implementation/u04-t-selected-task-execution.md)
+connects an exact discovery selection to the existing native Cog or hosted
+generation queue. Verified source metadata supplies canonical ports; the worker
+rechecks the selected task and source before a separately authorized launch.
+`potbot task-execution`, the selected Operations view and the authenticated API
+share migration 46, original-key recovery, owned history/cancellation, and
+independent assertions over complete verified results. Assertions are fixed
+before launch; their outcome is displayed separately from execution success.
+The existing worker, budget ledger, gateway and artifact owners remain authoritative.
+
 ## Install and check
 
 Run the entry point for your platform from the extracted checkout:

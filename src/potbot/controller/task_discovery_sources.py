@@ -20,6 +20,7 @@ from potbot.controller.discovery_installed import installed_skill_preference
 from potbot.controller.mcp_discovery import MAX_BINDINGS, McpDiscoveryService
 from potbot.controller.mcp_qualification import MAX_SUITES, McpQualificationService
 from potbot.controller.operation_catalogue import OperationCatalogue
+from potbot.controller.operation_discovery_metadata import OperationDiscoveryMetadata
 from potbot.controller.task_discovery_ranking import (
     MAX_TASK_CANDIDATES,
     validate_task_candidates,
@@ -33,6 +34,7 @@ from potbot.domain.errors import (
     ScopeDeniedError,
 )
 from potbot.domain.serialization import content_hash
+from potbot.persistence.artifacts import ArtifactStore
 from potbot.persistence.database import Database
 from potbot.semantics.catalog import catalog_fingerprint
 
@@ -451,6 +453,7 @@ def _operation_candidate(
     context: WorkspaceContext,
     item: dict[str, Any],
     skill: dict[str, Any] | None = None,
+    metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     head = _pick(item, _OPERATION_FIELDS)
     reasons = sorted(set(item["reasons"]) - _ACCOUNTING_REASONS)
@@ -459,6 +462,9 @@ def _operation_candidate(
         "unsupported_reference" not in reasons
     )
     description = ""
+    capabilities: dict[str, list[str]] = {key: [] for key in _UNKNOWN_CAPABILITIES}
+    required_capability = None
+    unknown = set(_UNKNOWN_REASONS)
     # The general read model has no canonical port/effect declarations. The
     # acquired-package owner can separately supply a current verified control
     # and a digest-pinned description, without loading SKILL.md instructions.
@@ -487,6 +493,23 @@ def _operation_candidate(
             "acquired_skill_control_current" if current else "acquired_skill_control_unavailable"
         )
         head["reasons"] = reasons
+    if metadata is not None:
+        # The projection is derived from existing sealed source/handler owners.
+        # It does not modify installation, qualification or execution authority.
+        head["operationMetadata"] = metadata
+        description = metadata["description"]
+        capabilities = metadata["capabilities"]
+        required_capability = metadata["requiredTaskCapability"]
+        reasons.extend(metadata["reasonCodes"])
+        if capabilities["inputTypes"] and capabilities["outputTypes"]:
+            unknown.discard("canonical_ports_unknown")
+        if capabilities["effects"]:
+            unknown.discard("effects_unknown")
+        if capabilities["scopes"]:
+            unknown.discard("canonical_scopes_unknown")
+        if required_capability is not None:
+            unknown.discard("task_capability_unknown")
+        head["reasons"] = sorted(set(reasons))
     return {
         "id": _identity(context, "operation", item["id"], None),
         "kind": "operation",
@@ -495,11 +518,11 @@ def _operation_candidate(
         "ownerId": item["id"],
         "bindingId": None,
         "ownerSha256": content_hash(head),
-        "capabilities": {key: [] for key in _UNKNOWN_CAPABILITIES},
-        "requiredTaskCapability": None,
+        "capabilities": capabilities,
+        "requiredTaskCapability": required_capability,
         "installed": installed,
         "authorityCurrent": current,
-        "reasonCodes": sorted(set([*reasons, *_UNKNOWN_REASONS])),
+        "reasonCodes": sorted(set(reasons) | unknown),
         "taskEvidence": _no_evidence(),
     }
 
@@ -686,6 +709,7 @@ def collect_task_candidates(
     *,
     setup_token: Callable[[], str | None] | None = None,
     clock: Callable[[], datetime] | None = None,
+    artifacts: ArtifactStore | None = None,
 ) -> dict[str, Any]:
     """Return a complete scoped catalogue, or reject overflow/incomplete scans.
 
@@ -708,8 +732,14 @@ def collect_task_candidates(
     operation_snapshot = OperationCatalogue(database)._snapshot(context)
     if len(registry_items) + len(operation_snapshot) > MAX_TASK_CANDIDATES:
         raise ScopeDeniedError("Task discovery exceeds its complete 256-candidate allowance")
+    operation_metadata = OperationDiscoveryMetadata(database, context, artifacts=artifacts)
     operation_items = [
-        _operation_candidate(context, item, _operation_skill(context, item, skills))
+        _operation_candidate(
+            context,
+            item,
+            _operation_skill(context, item, skills),
+            operation_metadata.for_operation(item),
+        )
         for item in operation_snapshot
     ]
     binding_ids = _active_ids(database, context, "mcp_discovery_bindings", MAX_BINDINGS)
@@ -767,6 +797,7 @@ def inspect_task_candidate(
     *,
     setup_token: Callable[[], str | None] | None = None,
     clock: Callable[[], datetime] | None = None,
+    artifacts: ArtifactStore | None = None,
 ) -> dict[str, Any]:
     """Read one existing-owner detail after the service revalidates its snapshot.
 
@@ -801,10 +832,15 @@ def inspect_task_candidate(
         skill = _operation_skill(
             context, item, SkillAcquisition(database, setup_token_resolver=resolver)
         )
-        current = _operation_candidate(context, item, skill)
+        metadata = OperationDiscoveryMetadata(database, context, artifacts=artifacts).for_operation(
+            item
+        )
+        current = _operation_candidate(context, item, skill, metadata)
         detail = {"item": item}
         if skill is not None:
             detail["acquiredSkill"] = skill
+        if metadata is not None:
+            detail["operationMetadata"] = metadata
     else:
         discovery = McpDiscoveryService(database, setup_token=resolver, clock=clock)
         binding = discovery.binding(context, UUID(candidate["bindingId"]))["binding"]

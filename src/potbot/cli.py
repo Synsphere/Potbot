@@ -135,6 +135,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         return task_discovery_main(args[1:])
 
+    if args and args[0] == "task-execution":
+        from potbot.api.task_execution_cli import main as task_execution_main
+
+        return task_execution_main(args[1:])
+
     parser = argparse.ArgumentParser(
         prog="potbot",
         description="Foundation for an evidence-driven, multi-model coding agent.",
@@ -157,6 +162,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "mcp-qualification", help="qualify MCP task cases and recover native receipts"
     )
     commands.add_parser("task-discovery", help="review task shortlists and refine with local Qwen")
+    commands.add_parser("task-execution", help="execute and verify an exact discovery selection")
     commands.add_parser(
         "tool-acquisition", help="review, build, qualify and release executable tools"
     )

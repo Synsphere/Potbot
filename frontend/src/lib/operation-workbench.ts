@@ -20,7 +20,7 @@ export type CheckReport = {
   checks: { code: string; status: "passed" | "blocked" | "unsupported" }[];
   bindings: { requestSha256: string; contractRevisionId: string; policySha256?: string; profileSha256?: string;
     installationSha256?: string; grantGeneration?: number; grantSha256?: string; repositorySha256?: string;
-    releaseSha256?: string; nativeSha256?: string; runtimeSha256?: string };
+    releaseSha256?: string; nativeSha256?: string; runtimeSha256?: string; taskExecutionSha256?: string };
   checkedAt: string; expiresAt: string; bindingSha256: string;
 };
 export type JobMetadata = {
@@ -104,7 +104,7 @@ export function projectCheck(value: unknown, operation: string): CheckReport | n
   }
   if (new Set(checks.map(item => item.code)).size !== checks.length || row.eligible !== checks.every(check => check.status === "passed")) return null;
   const bindings: CheckReport["bindings"] = { requestSha256: raw.requestSha256, contractRevisionId: raw.contractRevisionId };
-  for (const name of ["policySha256", "profileSha256", "installationSha256", "grantSha256", "repositorySha256", "releaseSha256", "nativeSha256", "runtimeSha256"] as const) {
+  for (const name of ["policySha256", "profileSha256", "installationSha256", "grantSha256", "repositorySha256", "releaseSha256", "nativeSha256", "runtimeSha256", "taskExecutionSha256"] as const) {
     if (raw[name] !== undefined) { if (!identifier(raw[name], SHA256)) return null; bindings[name] = raw[name]; }
   }
   if (raw.grantGeneration !== undefined) { if (!number(raw.grantGeneration) || raw.grantGeneration < 1) return null; bindings.grantGeneration = raw.grantGeneration; }

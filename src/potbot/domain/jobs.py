@@ -173,6 +173,8 @@ class JobLease:
     owner_principal_id: UUID | None = None
     operation_check_id: UUID | None = None
     operation_authorization: dict[str, Any] | None = field(default=None, repr=False)
+    task_selection_id: UUID | None = None
+    task_execution_binding: dict[str, Any] | None = field(default=None, repr=False)
 
 
 @dataclass(frozen=True, slots=True)

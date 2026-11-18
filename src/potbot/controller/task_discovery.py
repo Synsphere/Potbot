@@ -38,6 +38,7 @@ from potbot.domain.errors import (
 )
 from potbot.domain.serialization import canonical_json, content_hash
 from potbot.memory.embedding_profile import EmbeddingProfile
+from potbot.persistence.artifacts import ArtifactStore
 from potbot.persistence.database import Database, idempotent_command
 from potbot.tools.mcp_discovery import bounded_metadata
 from potbot.tools.mcp_qualification_host import read_mcp_task_binding
@@ -149,6 +150,7 @@ def discovery_consumer_sha256() -> str:
         "controller/discovery_installed.py",
         "controller/discovery_ranking.py",
         "controller/operation_catalogue.py",
+        "controller/operation_discovery_metadata.py",
         "controller/mcp_discovery.py",
         "controller/mcp_qualification.py",
         "controller/tasks.py",
@@ -161,8 +163,15 @@ def discovery_consumer_sha256() -> str:
         "api/task_discovery_cli.py",
         "context/skill_acquisition.py",
         "context/skill_packages.py",
+        "cogs/contracts.py",
+        "cogs/registry.py",
+        "cogs/builtin.py",
+        "models/providers/contracts.py",
+        "persistence/artifacts.py",
         "semantics/catalog.py",
         "semantics/catalog.json",
+        "semantics/service.py",
+        "domain/jobs.py",
         "domain/syn.py",
     )
     pins = {}
@@ -204,10 +213,18 @@ def refinement_claim_sha256(context: WorkspaceContext, identity: UUID, worker: U
 
 class TaskDiscoveryService:
     def __init__(
-        self, database: Database, *, setup_token: Any = native_skill_setup_token, clock: Any = None
+        self,
+        database: Database,
+        *,
+        setup_token: Any = native_skill_setup_token,
+        clock: Any = None,
+        artifacts: ArtifactStore | None = None,
     ) -> None:
+        if artifacts is not None and artifacts.db is not database:
+            raise InvalidInputError("Task discovery and artifacts must share a database")
         self.database, self.setup_token = database, setup_token
         self.clock = clock
+        self.artifacts = artifacts
 
     def _token(self) -> str | None:
         try:
@@ -356,7 +373,12 @@ class TaskDiscoveryService:
         )
         token = self._token()
         sources = collect_task_candidates(
-            self.database, context, task, setup_token=lambda: token, clock=self.clock
+            self.database,
+            context,
+            task,
+            setup_token=lambda: token,
+            clock=self.clock,
+            artifacts=self.artifacts,
         )
         with self.database.transaction(context) as conn:
             contract = conn.execute(
@@ -979,7 +1001,12 @@ class TaskDiscoveryService:
                 raise ScopeDeniedError("Inspect a candidate included in this shortlist")
         retained = next(item for item in row["payload"]["candidates"] if item["id"] == candidate_id)
         inspected = inspect_task_candidate(
-            self.database, context, retained, setup_token=self.setup_token, clock=self.clock
+            self.database,
+            context,
+            retained,
+            setup_token=self.setup_token,
+            clock=self.clock,
+            artifacts=self.artifacts,
         )
         if any(
             inspected[key] != candidate[key] for key in ("id", "kind", "ownerId", "ownerSha256")

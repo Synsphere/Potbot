@@ -265,6 +265,7 @@ def qualification_consumer_sha256() -> str:
         "controller/tasks.py",
         "tools/mcp_qualification_host.py",
         "tools/mcp_qualification_oracle.py",
+        "domain/result_assertions.py",
         "tools/mcp_discovery_host.py",
         "tools/mcp_gateway.py",
         "tools/gateway.py",
