@@ -11,7 +11,7 @@ from uuid import uuid4
 import pytest
 
 from potbot import frontend_worker, oneclick, startup
-from potbot.domain.errors import CapabilityUnavailableError, InvalidInputError
+from potbot.domain.errors import CapabilityUnavailableError, InvalidInputError, ScopeDeniedError
 
 
 def test_application_url_uses_separate_restricted_login_and_encodes_password() -> None:
@@ -107,3 +107,144 @@ def test_supported_node_release_does_not_depend_on_latest_network_listing(monkey
     monkeypatch.setattr(frontend_worker.platform, "machine", lambda: "AMD64")
     monkeypatch.setattr(frontend_worker, "os", SimpleNamespace(name="nt"))
     assert frontend_worker._node_release_name() == "node-v22.16.0-win-x64.zip"
+
+
+def test_native_bootstrap_recovers_a_saved_administrator_as_application_login(
+    monkeypatch, tmp_path: Path
+) -> None:
+    """The first native boot must not bind the superuser as a workspace principal."""
+    from potbot import native_postgres
+    from potbot.persistence import database
+
+    admin_url = "postgresql://potbot_admin:private@127.0.0.1:55436/potbot?sslmode=disable"
+    memory = {"postgres.application": admin_url}
+    recovered = SimpleNamespace(workspace_id=uuid4(), principal_id=uuid4())
+    events: list[str] = []
+
+    class Store:
+        def __init__(self, _profile: str) -> None:
+            pass
+
+        def get(self, key: str) -> str | None:
+            return memory.get(key)
+
+    monkeypatch.delenv("POTBOT_DSN", raising=False)
+    monkeypatch.setattr(oneclick, "CredentialStore", Store)
+    monkeypatch.setattr(native_postgres, "provision_if_needed", lambda root: True)
+    monkeypatch.setattr(oneclick, "resolve_postgres_dsn", lambda purpose: admin_url)
+    monkeypatch.setattr(database, "migrate", lambda *args: events.append("migrate"))
+
+    def reject_role(app: str, admin: str, schema: str) -> str:
+        assert (app, admin, schema) == (admin_url, admin_url, "potbot")
+        events.append("reject_admin")
+        raise ScopeDeniedError("Administrator cannot act as the application")
+
+    monkeypatch.setattr(oneclick, "_verified_application_role", reject_role)
+    monkeypatch.setattr(oneclick, "_existing_context", lambda *args, **kwargs: pytest.fail("Do not bind admin"))
+    monkeypatch.setattr(oneclick, "_new_workspace", lambda *args: pytest.fail("Do not bind admin"))
+
+    def create_restricted(admin: str, schema: str, role_root: Path):
+        assert (admin, schema, role_root) == (admin_url, "potbot", tmp_path)
+        events.append("new_restricted_login")
+        return recovered
+
+    monkeypatch.setattr(oneclick, "_create_restricted_login", create_restricted)
+    assert oneclick._provision_database(tmp_path) is recovered
+    assert events == ["migrate", "reject_admin", "new_restricted_login"]
+
+
+def test_explicit_admin_override_does_not_get_replaced_silently(
+    monkeypatch, tmp_path: Path
+) -> None:
+    from potbot import native_postgres
+    from potbot.persistence import database
+
+    admin_url = "postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?sslmode=disable"
+    monkeypatch.setenv("POTBOT_DSN", admin_url)
+    monkeypatch.setattr(native_postgres, "provision_if_needed", lambda root: True)
+    monkeypatch.setattr(oneclick, "resolve_postgres_dsn", lambda purpose: admin_url)
+    monkeypatch.setattr(database, "migrate", lambda *args: None)
+    monkeypatch.setattr(oneclick, "CredentialStore", lambda profile: SimpleNamespace(get=lambda key: None))
+    monkeypatch.setattr(oneclick, "_verified_application_role", lambda *args: (_ for _ in ()).throw(
+        ScopeDeniedError("Administrator cannot be application login")
+    ))
+    monkeypatch.setattr(oneclick, "_create_restricted_login", lambda *args: pytest.fail(
+        "Explicit connection must never be replaced"
+    ))
+    with pytest.raises(InvalidInputError, match="POTBOT_DSN"):
+        oneclick._provision_database(tmp_path)
+
+
+def test_native_bootstrap_reuses_a_valid_existing_application_login(
+    monkeypatch, tmp_path: Path
+) -> None:
+    from potbot import native_postgres
+    from potbot.persistence import database
+    from contextlib import nullcontext
+
+    admin_url = "postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?sslmode=disable"
+    app_url = "postgresql://potbot_app_test:secret@127.0.0.1:55436/potbot?sslmode=disable"
+    scope = SimpleNamespace(workspace_id=uuid4(), principal_id=uuid4())
+    monkeypatch.delenv("POTBOT_DSN", raising=False)
+    monkeypatch.setattr(native_postgres, "provision_if_needed", lambda root: True)
+    monkeypatch.setattr(oneclick, "resolve_postgres_dsn", lambda purpose: admin_url)
+    monkeypatch.setattr(database, "migrate", lambda *args: None)
+    monkeypatch.setattr(oneclick, "CredentialStore", lambda profile: SimpleNamespace(
+        get=lambda key: app_url if key == "postgres.application" else None
+    ))
+    monkeypatch.setattr(oneclick, "_verified_application_role", lambda *args: "potbot_app_test")
+    monkeypatch.setattr(oneclick, "_existing_context", lambda *args, **kwargs: scope)
+    monkeypatch.setattr(oneclick, "_create_restricted_login", lambda *args: pytest.fail(
+        "Existing restricted login must be reused"
+    ))
+    monkeypatch.setattr(database, "Database", lambda *args: SimpleNamespace(transaction=lambda ctx: nullcontext()))
+    assert oneclick._provision_database(tmp_path) is scope
+
+
+@pytest.mark.parametrize("url,expected", [
+    ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?sslmode=disable", True),
+    ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot", True),
+    ("postgresql://potbot_admin:secret@127.0.0.1:55436/other", False),
+    ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?host=elsewhere", False),
+    ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?sslmode=disable&port=9999", False),
+    ("postgresql://potbot_admin:secret@example.com:55436/potbot", False),
+    ("postgresql://potbot_admin:secret@127.0.0.1:55437/potbot", False),
+])
+def test_native_endpoint_check_rejects_redirects(url: str, expected: bool) -> None:
+    assert oneclick._is_native_database_url(url) is expected
+
+
+def test_verified_application_role_rejects_privileged_identity_before_workspace_lookup(
+    monkeypatch
+) -> None:
+    """A successful password login is not enough to authorize a workspace."""
+    import sys
+    from contextlib import nullcontext
+    from potbot.persistence import database
+
+    class Connection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def execute(self, query: str):
+            assert query == "SELECT session_user"
+            return SimpleNamespace(fetchone=lambda: ("potbot_admin",))
+
+    monkeypatch.setitem(
+        sys.modules, "psycopg", SimpleNamespace(connect=lambda *args, **kwargs: Connection(), Error=Exception)
+    )
+    monkeypatch.setattr(database, "admin_connection", lambda *_: nullcontext("checked-admin"))
+    validated: list[str] = []
+
+    def reject(_conn, schema: str, role: str) -> None:
+        validated.append(role)
+        assert schema == "potbot"
+        raise ScopeDeniedError("Application transactions require a restricted database login")
+
+    monkeypatch.setattr(database, "_restricted_login", reject)
+    with pytest.raises(ScopeDeniedError):
+        oneclick._verified_application_role("app-dsn", "admin-dsn", "potbot")
+    assert validated == ["potbot_admin"]

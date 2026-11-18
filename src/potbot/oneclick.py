@@ -27,7 +27,9 @@ from potbot.credentials import (CredentialStore, credential_profile, resolve_pos
                                 validate_connection)
 from potbot.dependencies import project_root
 from potbot.domain.auth import WorkspaceContext
-from potbot.domain.errors import CapabilityUnavailableError, DomainError, InvalidInputError
+from potbot.domain.errors import (
+    CapabilityUnavailableError, DomainError, InvalidInputError, ScopeDeniedError,
+)
 
 _GUI_URL = "http://127.0.0.1:3100"
 
@@ -53,14 +55,66 @@ def _application_url(admin_dsn: str, user: str, password: str) -> str:
     ))
 
 
-def _existing_context(app_dsn: str, admin_dsn: str, schema: str) -> WorkspaceContext | None:
+def _is_native_database_url(dsn: str) -> bool:
+    """Match the managed cluster exactly, rejecting URI query endpoint overrides.
+
+    The native installer stores a loopback-only URI with sslmode=disable. A
+    hostname in the URI is not enough: libpq accepts host/port overrides in
+    query parameters, which must not qualify as the Potbot-owned cluster.
+    """
+    from potbot.native_postgres import PORT
+
+    try:
+        parsed = urlsplit(dsn)
+        return (
+            parsed.scheme == "postgresql"
+            and parsed.hostname == "127.0.0.1"
+            and parsed.port == PORT
+            and parsed.path == "/potbot"
+            and parsed.fragment == ""
+            and parsed.query in {"", "sslmode=disable"}
+        )
+    except (TypeError, ValueError):
+        return False
+
+
+def _verified_application_role(app_dsn: str, admin_dsn: str, schema: str) -> str:
+    """Check the existing login BEFORE allocating any workspace for it.
+
+    A historic no-argument startup could save an administrative URL under
+    postgres.application. Authentication alone cannot make it an application
+    identity. Use the same restrictive database check as every API transaction,
+    rather than treating the connected user's name as permission to bind it.
+    """
     import psycopg
+    from potbot.persistence.database import _restricted_login, admin_connection
+
+    try:
+        with psycopg.connect(app_dsn, connect_timeout=5) as connection:
+            identity = connection.execute("SELECT session_user").fetchone()
+    except psycopg.Error:
+        # PostgreSQL errors can include full DSNs and private host details.
+        raise CapabilityUnavailableError(
+            "The stored PostgreSQL application login could not authenticate"
+        ) from None
+    if identity is None or not isinstance(identity[0], str):
+        raise CapabilityUnavailableError("The application login identity is unavailable")
+    role: str = identity[0]
+    with admin_connection(admin_dsn, schema) as connection:
+        _restricted_login(connection, schema, role)
+    return role
+
+
+def _existing_context(
+    app_dsn: str, admin_dsn: str, schema: str, *, verified_role: str | None = None
+) -> WorkspaceContext | None:
     from potbot.persistence.database import admin_connection
 
-    # A trusted DB session reports its own login. No principal UUID comes from
-    # a browser, model message or untrusted configuration file.
-    with psycopg.connect(app_dsn, connect_timeout=5) as connection:
-        login = connection.execute("SELECT session_user").fetchone()[0]
+    # Never allocate a workspace using an unchecked application identity.
+    # A trusted database session supplies the role, not a browser/model input.
+    login = verified_role if verified_role is not None else _verified_application_role(
+        app_dsn, admin_dsn, schema
+    )
     with admin_connection(admin_dsn, schema) as connection:
         rows = connection.execute(
             "SELECT p.id AS principal_id,m.workspace_id FROM principals p "
@@ -118,21 +172,45 @@ def _provision_database(root: Path) -> WorkspaceContext:
     _notice("Checking PostgreSQL and applying Potbot's versioned schema")
     from potbot.native_postgres import provision_if_needed
 
-    provision_if_needed(root)
+    managed = provision_if_needed(root)
     admin_dsn = resolve_postgres_dsn("admin")
     schema = "potbot"
     migrate(admin_dsn, schema)
     store = CredentialStore(credential_profile())
-    # A stored application URL may already be an operator-provisioned restricted
-    # login. Reuse its unambiguous existing principal rather than minting one.
-    application = os.environ.get("POTBOT_DSN") or store.get("postgres.application")
+    # A past startup may have saved a superuser connection as the *application*
+    # credential. That must never become an API role or an owned workspace.
+    # If this is our verified native cluster, recover automatically by creating
+    # a fresh restricted login and replacing the vault key only after verification.
+    # An explicit POTBOT_DSN override is authoritative: never ignore it.
+    explicit = os.environ.get("POTBOT_DSN")
+    application = explicit or store.get("postgres.application")
+    native = managed and _is_native_database_url(admin_dsn)
     if application:
-        scope = _existing_context(application, admin_dsn, schema)
+        if native and not _is_native_database_url(application):
+            if explicit:
+                raise InvalidInputError(
+                    "POTBOT_DSN points outside Potbot's native database. Remove the override "
+                    "to use automatic native PostgreSQL setup."
+                )
+            _notice("Saved application connection targets another database; configuring a local restricted login")
+            return _create_restricted_login(admin_dsn, schema, root)
+        try:
+            role = _verified_application_role(application, admin_dsn, schema)
+        except (ScopeDeniedError, CapabilityUnavailableError):
+            if explicit:
+                raise InvalidInputError(
+                    "POTBOT_DSN must authenticate as a restricted application login, not the "
+                    "database administrator. Remove the override for automatic setup."
+                ) from None
+            if not native:
+                raise InvalidInputError(
+                    "The saved application login is unavailable or privileged. Select a "
+                    "restricted login for the configured external PostgreSQL database."
+                ) from None
+            _notice("Saved application credential is unsuitable; creating a private restricted login")
+            return _create_restricted_login(admin_dsn, schema, root)
+        scope = _existing_context(application, admin_dsn, schema, verified_role=role)
         if scope is None:
-            import psycopg
-
-            with psycopg.connect(application, connect_timeout=5) as connection:
-                role = connection.execute("SELECT session_user").fetchone()[0]
             scope = _new_workspace(admin_dsn, schema, role, root)
         with Database(application, schema).transaction(scope):
             pass
