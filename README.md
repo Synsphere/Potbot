@@ -15,8 +15,13 @@ Wikidata and Internet Archive through the existing admitted research workflow.
 Urgent instructions fence new reasoning dispatch, deferred instructions retain
 their predecessor dependency, and background information has source-linked
 context revisions. Apply application migration **48** for the steering extension.
-The next agentic milestone is R7.2 atomic scheduling; new Syn integration work
-is deferred until Syn is ready for a release.
+[R7.2-A](docs/implementation/r7-2-atomic-scheduler-admission.md) admits typed
+atomic leaf plans without executing them. [R7.2-B](docs/implementation/r7-2-b-durable-atomic-graphs.md)
+adds migration **49**: immutable DAG admission, checked native Cog launch through
+the existing jobs queue, workspace-wide atomic resource holds, dependency and
+parallelism gates, and interrupt fencing. Installed-host qualification and
+an automatic operator scheduler tick remain separate integration gates. R7.3
+benchmarks are next; new Syn work is deferred until Syn is ready for release.
 
 **Implemented: Phases 1–4, the Phase 5 model foundation, and hosted jobs/API (`0.5.0.dev13`).** Tasks, contracts,
 evidence, artifacts, worker jobs, budgets, configuration, environment identities, and

@@ -174,6 +174,15 @@ class AtomicAdmissionPlanner:
             )
             self._admitted[task_id] = candidate
 
+    def admitted(self) -> tuple[DispatchCandidate, ...]:
+        """Immutable ordered snapshot for the separate checked execution owner.
+
+        This is not a dispatch authorization or a durable worker claim.
+        """
+        return tuple(
+            self._admitted[key] for key in self.graph.nodes if key in self._admitted
+        )
+
     def ready(
         self,
         *,
