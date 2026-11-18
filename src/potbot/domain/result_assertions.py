@@ -134,9 +134,7 @@ def _check(assertion: dict[str, Any], view: Any) -> str | None:
     return None if len(actual) == expected else "length_mismatch"
 
 
-def evaluate_result_assertions(
-    oracle: object, view: Any, *, schema: str
-) -> list[dict[str, Any]]:
+def evaluate_result_assertions(oracle: object, view: Any, *, schema: str) -> list[dict[str, Any]]:
     """Return value-blind checks; callers retain the verified output identity."""
     checked = validate_result_oracle(oracle, schema=schema)
     checks = []

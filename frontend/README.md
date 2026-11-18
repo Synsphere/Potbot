@@ -725,3 +725,101 @@ actual PostgreSQL/HTTP/worker responses using
 `tests/task-execution-contract.test.mjs` against that fresh file. The retained
 offline fixture has an explicitly synthetic provider transport; it is lifecycle
 and contract evidence, not live-provider or rendered-browser qualification.
+
+## T05-A — External research and cited evidence
+
+Open `/research?workspace=WORKSPACE_UUID` from the live workspace menu. Optional
+`episode`, `state`, `need` and `run` UUID selectors require that exact explicit
+workspace. Duplicate or foreign selectors are rejected. Opening the page and
+resuming a run only read retained records. The page prominently identifies
+research questions, outgoing queries and retained source artifacts as shared
+with authenticated members of the workspace; the current reader may differ
+from the original admitting operator.
+
+The operator workflow is complete from an existing task and repository state:
+
+1. Read the exact task/state context, select an existing information need, or
+   review and create a new need with its pending decision, evidence and resolution
+   criteria, scope, optional existing evidence references and budget. Need
+   creation is available for a running task before a need is selected.
+2. Review the source policy and query template. The request contains literal
+   search text, identifiers, observation/decision/evidence descriptions,
+   stopping condition, fallback and freshness. The external selector and
+   policy/result/source-byte limits are fixed to the reviewed policy. Admitting
+   an action is inert. An equivalent reused action retains its original literal
+   query, which is displayed before disclosure review.
+3. Separately approve external query disclosure, review the exact queue request,
+   and confirm its admission. The server-only setup capability and existing
+   task, need, policy and budget owners authorize the native worker. Browser
+   requests cannot specify arbitrary provider endpoints, credentials, fetch URLs
+   or a new scheduler. Configured provider order, declared monetary ceilings,
+   intervals, approved source hosts and bounded request/result limits remain
+   visible before this decision.
+4. Inspect workspace history or resume an exact run UUID. The view distinguishes
+   execution state, record integrity and independently verified batch evidence.
+   It shows disclosure/reservation identities, immutable actor, current reader,
+   request receipts, provider/rank lineage, document exclusions, settled usage
+   origin and typed transformation receipts. Optional visible-tab progress reads
+   stop after 30 cycles. Exact cancellation remains available without setup
+   capability when positive authorization or action evidence is damaged; null
+   positive records cannot support verified results.
+5. Read a fetched source, inspect its complete bounded extracted text, and select
+   an exact quote. Selection converts browser UTF-16 indices into UTF-8 byte
+   offsets; manually entered ranges also require valid codepoint boundaries.
+   The browser verifies the extracted text hash and requested quote bytes. The
+   citation owner independently verifies retained source chains. Publication
+   time is explicitly source reported or unknown, retrieval time is separate,
+   and license remains `unknown`. PDF extraction shows its isolated executable,
+   profile and process supervisor receipt; incomplete/unavailable extraction is
+   never presented as citable content.
+6. Attach comparable quotes to operator-authored claim keys, review the exact
+   comparison, and retain its evidence artifact. Readback by evidence UUID
+   revalidates historical evidence. “Supported” means literal cited-source
+   agreement at the report’s evaluation time. Different quotes, unavailable
+   evidence and stale or unknown required publication times remain unresolved
+   or unsupported. This workflow never resolves the information need or marks
+   the task complete automatically.
+
+All source text, snippets, labels, locations and raw details render as inert
+text/JSON. Explicit source links use HTTPS with a separate browsing context and
+`noopener noreferrer`; source inspection does not execute or embed authored
+HTML. Search snippets remain discovery observations, not citation evidence.
+
+The fixed `/api/ui/research` BFF requires an operator session and configured
+workspace. Exact Origin is required for POSTs and checked whenever supplied on
+reads. Every POST, including citation verification and cancellation, carries
+`X-Potbot-Expected-Principal` with the canonical UUID from the reviewed browser
+scope. The BFF validates and forwards it unchanged, and the backend rejects a
+different authenticated principal before invoking the owner. Scoped reads may
+also send it; the initial history read discovers the current scope.
+Need/action/run/comparison mutations require a stable idempotency key,
+explicit confirmation and the server-only setup capability. Cancellation uses
+ordinary workspace authority. `POST /citations` is a pure explicit read with
+Origin protection: it has no setup capability, confirmation, idempotency header
+or mutation journal, and makes no external request. Requests are limited to
+131,072 bytes and responses to 1,500,000 bytes; duplicate JSON keys, ambiguous
+selectors, unexpected routes and foreign response scopes fail closed.
+
+Actual mutations use a separate per-tab/workspace/principal recovery journal.
+The exact original body and key survive an uncertain response; recovery is
+deliberate, never automatic. A rejected retry cannot establish that an earlier
+attempt did not commit. Switching scopes aborts pending reads and fences late
+responses. A changed backend credential cannot replay an old principal's
+command under a new principal: authorization failures remount the current
+scope, while an uncertain retry remains in its original principal's journal.
+Bounded opaque history cursors and ordered integer event cursors are
+validated independently. Source and citation reads retain exact run, source,
+task, need revision and receipt identities throughout the review.
+
+Validation includes `npm test`, `npm run typecheck`, `npm run build`, focused
+`tests/research*.test.mjs` boundary/recovery tests and the dedicated
+`research-t05-a.yml` producer/consumer workflow. Synthetic unit fixtures exercise
+contract boundaries only; actual HTTP lifecycle fixtures are exported by the
+PostgreSQL integration owner using
+`POTBOT_RESEARCH_HTTP_FIXTURE=artifacts/research-http.json`. The consumer
+`tests/research-contract.test.mjs` requires that fresh file in CI and uses the
+retained `tests/fixtures/research-http.json` offline. Neither synthetic provider transport nor browser
+contract tests establish live-provider, rendered-browser or deployed-profile
+qualification. See `../docs/implementation/t05-a-research-contract.md` and
+`../docs/implementation/t05-a-external-research.md` for the shared contract and
+native setup/worker instructions.

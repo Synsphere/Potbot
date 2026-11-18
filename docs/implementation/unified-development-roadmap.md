@@ -6,6 +6,20 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**18 November 2026, after the selected task execution merge:**
+[T05-A external research and cited evidence](t05-a-external-research.md) adds the
+complete configured search-to-citation operator workflow on merged main
+`9c0305301a4cf74a2972c89bb567ba0157c0772c`. Fixed Brave/Tavily adapters, separate
+query disclosure, approved-host robots/fetch checks, retained raw/extracted
+artifacts and exact UTF-8 citations use the existing research queue and budget
+owners. CLI/API/browser comparisons preserve literal conflicts and publication
+freshness without resolving needs or claiming publisher truth. Optional authored
+PDF extraction requires a separately qualified isolated native profile; the
+development host's real PDF test failed closed. Live providers, deployed SYN
+activation, full G07 formats and canonical T05 status remain separate gates.
+The next implementation batch is T05.3 scientific/archival retrieval, alongside
+deployment qualification of the configured provider and PDF profiles.
+
 **18 November 2026, after the task discovery merge:**
 [U04-T selected task execution](u04-t-selected-task-execution.md) connects an exact
 U04-S operation selection to worker readiness, separately authorized execution,

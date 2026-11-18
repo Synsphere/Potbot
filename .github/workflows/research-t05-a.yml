@@ -1,0 +1,133 @@
+name: T05-A external research and cited evidence
+on:
+  push:
+    paths:
+      - 'src/potbot/research/**'
+      - 'src/potbot/controller/research*.py'
+      - 'src/potbot/controller/information_needs.py'
+      - 'src/potbot/controller/budgets.py'
+      - 'src/potbot/controller/execution_events.py'
+      - 'src/potbot/controller/tasks.py'
+      - 'src/potbot/cogs/contracts.py'
+      - 'src/potbot/domain/research_evidence.py'
+      - 'src/potbot/domain/execution_events.py'
+      - 'src/potbot/domain/result_assertions.py'
+      - 'src/potbot/api/*research*.py'
+      - 'src/potbot/api/server_cli.py'
+      - 'src/potbot/cli.py'
+      - 'src/potbot/credentials.py'
+      - 'src/potbot/persistence/*research*.py'
+      - 'src/potbot/persistence/artifacts.py'
+      - 'src/potbot/persistence/schema.py'
+      - 'src/potbot/tools/pinned_https.py'
+      - 'src/potbot/tools/connect_policy.py'
+      - 'src/potbot/tools/supervisor.py'
+      - 'src/potbot/tools/isolation.py'
+      - 'src/potbot/tools/secrets.py'
+      - 'src/potbot/tools/worker_telemetry.py'
+      - 'src/potbot/workspace_sandbox.py'
+      - 'frontend/src/app/research/**'
+      - 'frontend/src/app/api/ui/research/**'
+      - 'frontend/src/lib/research*.ts'
+      - 'frontend/src/lib/server/research.ts'
+      - 'frontend/src/lib/server/security.ts'
+      - 'frontend/src/lib/server/potbot.ts'
+      - 'frontend/src/lib/skill-workshop-client.ts'
+      - 'frontend/tests/research*'
+      - 'frontend/tests/fixtures/research-http.json'
+      - 'tests/unit/test_research*.py'
+      - 'tests/unit/test_ui_research.py'
+      - 'tests/unit/test_phase7_research*.py'
+      - 'tests/integration/test_research*.py'
+      - 'tests/integration/test_phase7_research*.py'
+      - 'tests/integration/test_process_isolation.py'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'frontend/package.json'
+      - 'frontend/package-lock.json'
+      - 'compose.yaml'
+      - '.github/workflows/research-t05-a.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  research:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      UV_PYTHON: '3.12'
+      # Disposable database and explicitly synthetic search/fetch transport.
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+      POTBOT_RESEARCH_HTTP_FIXTURE: artifacts/research-http.json
+      COMPOSE_PROJECT_NAME: potbot-research-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.23'
+      - name: Install locked application and test dependencies
+        run: uv sync --locked --extra postgres --extra credentials --extra web --dev
+      - name: Install existing isolation and isolated PDF prerequisites
+        run: |
+          bash scripts/ci_prepare_ubuntu_mirror.sh
+          sudo apt-get update
+          sudo apt-get install --yes bubblewrap libseccomp2 apparmor-profiles poppler-utils
+      - name: Load the distribution Bubblewrap user-namespace profile
+        shell: bash
+        run: |
+          potbot_userns_restriction=/proc/sys/kernel/apparmor_restrict_unprivileged_userns
+          if [[ -r "$potbot_userns_restriction" ]] && [[ "$(cat "$potbot_userns_restriction")" == 1 ]]; then
+            potbot_bwrap_profile=/usr/share/apparmor/extra-profiles/bwrap-userns-restrict
+            test -r "$potbot_bwrap_profile"
+            sudo apparmor_parser --replace "$potbot_bwrap_profile"
+          fi
+      - name: Verify real isolation and authored PDF extraction
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/integration/test_process_isolation.py
+          tests/integration/test_research_pdf_extraction_sandbox.py
+          --junitxml=artifacts/research-isolation.xml
+      - name: Start the repository PostgreSQL and pgvector fixture
+        run: docker compose up --detach --wait --wait-timeout 90
+      - name: Verify research admission, transport, extraction, citation and legacy owners
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_research*.py
+          tests/unit/test_ui_research.py
+          tests/unit/test_phase7_research*.py
+          tests/integration/test_research_external.py
+          tests/integration/test_research_evidence.py
+          tests/integration/test_phase7_research*.py
+          --junitxml=artifacts/research-t05-a.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Consume fresh HTTP research responses and verify browser recovery
+        run: >-
+          node --experimental-strip-types --test
+          frontend/tests/research*.test.mjs
+      - name: Install the locked browser dependencies
+        working-directory: frontend
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Typecheck and build the operator workbench
+        working-directory: frontend
+        run: |
+          npm run typecheck
+          npm run build
+      - name: Retain research acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: research-t05-a
+          path: |
+            artifacts/research-isolation.xml
+            artifacts/research-t05-a.xml
+            artifacts/research-http.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Stop only this disposable database
+        if: always()
+        run: docker compose down --volumes --remove-orphans --timeout 10

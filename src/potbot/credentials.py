@@ -37,6 +37,8 @@ SERVICE_CREDENTIAL_NAMES = (
     "providers.xai",
     "providers.gemini",
     "providers.evolink",
+    "research.brave",
+    "research.tavily",
     "api.access_token",
     "api.setup_token",
 )

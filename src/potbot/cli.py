@@ -140,6 +140,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         return task_execution_main(args[1:])
 
+    if args and args[0] == "research":
+        from potbot.api.research_cli import main as research_main
+
+        return research_main(args[1:])
+
     parser = argparse.ArgumentParser(
         prog="potbot",
         description="Foundation for an evidence-driven, multi-model coding agent.",
@@ -163,6 +168,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     commands.add_parser("task-discovery", help="review task shortlists and refine with local Qwen")
     commands.add_parser("task-execution", help="execute and verify an exact discovery selection")
+    commands.add_parser("research", help="run configured research and verify cited source evidence")
     commands.add_parser(
         "tool-acquisition", help="review, build, qualify and release executable tools"
     )

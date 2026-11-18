@@ -9,9 +9,10 @@ expired leases are quarantined, not replayed. No HTTP or code execution occurs.
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from uuid import UUID, uuid4
 
 from potbot.domain.auth import WorkspaceContext
@@ -30,6 +31,10 @@ from potbot.research.contracts import ResearchAction, ResearchCategory, Research
 from potbot.research.repository import SnapshotResearchAdapter
 from potbot.semantics.releases import read_task_pin
 from potbot.tools.repository_snapshot import RepositorySnapshot
+
+if TYPE_CHECKING:
+    from potbot.research.external_contracts import ExternalRequest, ExternalResponse
+    from potbot.research.source_policy import ExternalResearchPolicy
 
 _WORKER = re.compile(r"[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}\Z")
 _MAX_RESULTS = 100
@@ -140,10 +145,153 @@ class ResearchLease:
 class ResearchRunStore:
     """Durable exact-snapshot inspector queue with one fenced attempt per action."""
 
-    def __init__(self, database: Database, artifacts: ArtifactStore) -> None:
+    def __init__(
+        self,
+        database: Database,
+        artifacts: ArtifactStore,
+        *,
+        setup_token: Callable[[], str | None] | None = None,
+    ) -> None:
         if artifacts.db != database:
             raise InvalidInputError("Research execution and artifact storage must share a database")
         self.database, self.artifacts = database, artifacts
+        if setup_token is None:
+            from potbot.context.service import native_skill_setup_token
+
+            setup_token = native_skill_setup_token
+        self.setup_token = setup_token
+
+    def queue_external(
+        self,
+        context: WorkspaceContext,
+        action_id: UUID,
+        policy: ExternalResearchPolicy,
+        key: str,
+        *,
+        setup_token: str,
+        disclosure_confirmed: bool,
+    ) -> dict[str, Any]:
+        from potbot.controller.research_external import queue_external
+
+        return queue_external(
+            self,
+            context,
+            action_id,
+            policy,
+            key,
+            setup_token=setup_token,
+            disclosure_confirmed=disclosure_confirmed,
+        )
+
+    def claim_external(
+        self,
+        context: WorkspaceContext,
+        worker_id: str,
+        policy: ExternalResearchPolicy,
+        *,
+        lease_seconds: int = 90,
+    ) -> ResearchLease | None:
+        from potbot.controller.research_external import claim_external
+
+        return claim_external(self, context, worker_id, policy, lease_seconds=lease_seconds)
+
+    def before_send_external(
+        self,
+        context: WorkspaceContext,
+        lease: ResearchLease,
+        policy: ExternalResearchPolicy,
+        request: ExternalRequest,
+    ) -> dict[str, Any]:
+        from potbot.controller.research_external import before_send_external
+
+        return before_send_external(self, context, lease, policy, request)
+
+    def record_external_response(
+        self,
+        context: WorkspaceContext,
+        lease: ResearchLease,
+        request: ExternalRequest,
+        response: ExternalResponse,
+        *,
+        usage_origin: str = "measured",
+    ) -> dict[str, Any]:
+        from potbot.controller.research_external import record_external_response
+
+        return record_external_response(
+            self, context, lease, request, response, usage_origin=usage_origin
+        )
+
+    def complete_external(
+        self,
+        context: WorkspaceContext,
+        lease: ResearchLease,
+        policy: ExternalResearchPolicy,
+        batch: dict[str, Any] | None = None,
+        *,
+        revalidate: Callable[[], None] | None = None,
+    ) -> dict[str, Any]:
+        from potbot.controller.research_external import complete_external
+
+        return complete_external(self, context, lease, policy, batch, revalidate=revalidate)
+
+    def fail_external(
+        self,
+        context: WorkspaceContext,
+        lease: ResearchLease,
+        reason: str,
+    ) -> dict[str, Any]:
+        from potbot.controller.research_external import fail_external
+
+        return fail_external(self, context, lease, reason)
+
+    def cancel_external(
+        self,
+        context: WorkspaceContext,
+        run_id: UUID,
+        key: str,
+    ) -> dict[str, Any]:
+        from potbot.controller.research_external import cancel_external
+
+        return cancel_external(self, context, run_id, key)
+
+    def inspect_external(self, context: WorkspaceContext, run_id: UUID) -> dict[str, Any]:
+        from potbot.controller.research_external import inspect_external
+
+        return inspect_external(self, context, run_id)
+
+    def list_external(
+        self,
+        context: WorkspaceContext,
+        episode_id: UUID | None = None,
+        *,
+        limit: int = 25,
+        after: str | None = None,
+    ) -> dict[str, Any]:
+        from potbot.controller.research_external import list_external
+
+        return list_external(self, context, episode_id, limit=limit, after=after)
+
+    def events_external(
+        self,
+        context: WorkspaceContext,
+        run_id: UUID,
+        *,
+        limit: int = 25,
+        after: int = 0,
+    ) -> dict[str, Any]:
+        from potbot.controller.research_external import events_external
+
+        return events_external(self, context, run_id, limit=limit, after=after)
+
+    def audit_external(self, context: WorkspaceContext, run_id: UUID) -> dict[str, Any]:
+        from potbot.controller.research_external import audit_external
+
+        return audit_external(self, context, run_id)
+
+    def quarantine_external(self, context: WorkspaceContext) -> int:
+        from potbot.controller.research_external import quarantine_external
+
+        return quarantine_external(self, context)
 
     def queue(self, context: WorkspaceContext, action_id: UUID, key: str) -> dict[str, Any]:
         if not isinstance(action_id, UUID):
@@ -207,7 +355,7 @@ class ResearchRunStore:
             raise InvalidInputError("Research lease duration must be from 5 to 900 seconds")
         with self.database.transaction(context) as conn:
             row = conn.execute(
-                "SELECT * FROM research_runs WHERE workspace_id=%s AND state='queued' "
+                "SELECT * FROM research_runs WHERE workspace_id=%s AND state='queued' AND execution_kind='local' "
                 "ORDER BY created_at,id FOR UPDATE SKIP LOCKED LIMIT 1",
                 (context.workspace_id,),
             ).fetchone()
@@ -297,6 +445,8 @@ class ResearchRunStore:
 
         with self.database.transaction(context) as conn:
             run = self._check_lease(conn, context, lease)
+            if run["execution_kind"] != "local":
+                raise ScopeDeniedError("External research requires its budgeted completion owner")
             action, snapshot_row = _action(conn, context, run["action_id"])
             _current(conn, context, action, snapshot_row)
             if (
@@ -434,7 +584,11 @@ class ResearchRunStore:
         if not isinstance(error_code, str) or not re.fullmatch(r"[a-z][a-z0-9_]{0,60}", error_code):
             raise InvalidInputError("Research terminal error requires a safe code")
         with self.database.transaction(context) as conn:
-            self._check_lease(conn, context, lease)
+            row = self._check_lease(conn, context, lease)
+            if row["execution_kind"] != "local":
+                raise ScopeDeniedError(
+                    "External research requires its accounting-aware retirement owner"
+                )
             conn.execute(
                 "UPDATE research_runs SET state='blocked',error_code=%s,"
                 "lease_owner=NULL,lease_until=NULL,finished_at=clock_timestamp(),"
@@ -449,7 +603,7 @@ class ResearchRunStore:
             rows = conn.execute(
                 "UPDATE research_runs SET state='indeterminate',error_code='lease_expired',"
                 "lease_owner=NULL,lease_until=NULL,finished_at=clock_timestamp(),"
-                "updated_at=clock_timestamp() WHERE workspace_id=%s AND state='running' "
+                "updated_at=clock_timestamp() WHERE workspace_id=%s AND state='running' AND execution_kind='local' "
                 "AND lease_until<=clock_timestamp() RETURNING id",
                 (context.workspace_id,),
             ).fetchall()

@@ -168,6 +168,15 @@ independent assertions over complete verified results. Assertions are fixed
 before launch; their outcome is displayed separately from execution success.
 The existing worker, budget ledger, gateway and artifact owners remain authoritative.
 
+The [T05-A research workbench](docs/implementation/t05-a-external-research.md)
+adds configured Brave/Tavily search, approved-host robots/fetch admission,
+immutable source extraction, exact UTF-8 citations and reproducible source
+agreement/conflict reports. `/research`, `potbot research` and the API share
+migration 47 and the existing research queue, task budgets and workspace-shared
+evidence owners. Optional PDF extraction requires an explicitly pinned isolated
+profile. Live provider/PDF host qualification, specialist connectors and broader
+document formats remain separate gates; research reports leave needs unresolved.
+
 ## Install and check
 
 Run the entry point for your platform from the extracted checkout:

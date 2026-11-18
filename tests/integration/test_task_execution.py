@@ -517,7 +517,7 @@ def test_migration_45_to_46_preserves_owned_legacy_jobs_without_making_selection
     from tests.integration.test_hosted_gateway import hosted_contract
 
     schema = "before_task_execution"
-    revisions = application_migrations()
+    revisions = application_migrations()[:46]
     assert revisions[-1].version == 46
     migrate(app_env.admin_dsn, schema, tuple(item for item in revisions if item.version <= 45))
     with app_env.db.transaction(app_env.context) as connection:

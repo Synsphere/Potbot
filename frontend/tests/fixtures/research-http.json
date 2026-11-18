@@ -1,0 +1,2469 @@
+{
+  "description": "Actual HTTP/PostgreSQL research lifecycle with explicitly synthetic provider transport; this does not qualify live providers, deployed SYN activation or PDF isolation.",
+  "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+  "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+  "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+  "repositoryStateId": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+  "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+  "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+  "contextBeforeNeed": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "task": {
+      "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+      "contractRevisionId": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+      "repositoryStateId": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+      "semanticReleaseSha256": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1",
+      "status": "running"
+    },
+    "needs": [
+      {
+        "id": "6c9e4922-c213-4f38-bf1a-8c6de0142248",
+        "revisionId": "4b848db8-984b-46fc-9728-e93e27c93bd4",
+        "contentSha256": "432fcd2f48d2dbd0dff5fc5850af8424acad206eb941863961df9819c15d97ba",
+        "status": "open",
+        "question": "Which source file is relevant?"
+      }
+    ],
+    "need": null,
+    "policy": {
+      "sha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+      "content": {
+        "schema": "potbot-external-research-policy/v1",
+        "allow_query_disclosure": true,
+        "providers": [
+          {
+            "provider": "brave",
+            "cost_microunits_per_call": 3,
+            "minimum_interval_ms": 0
+          },
+          {
+            "provider": "tavily",
+            "cost_microunits_per_call": 5,
+            "minimum_interval_ms": 0
+          }
+        ],
+        "fetch_hosts": [
+          {
+            "host": "docs.example.com",
+            "terms_approved": true,
+            "minimum_interval_ms": 0
+          }
+        ],
+        "fallback_statuses": [
+          "rate_limited",
+          "quota_exhausted",
+          "unavailable"
+        ],
+        "max_results": 3,
+        "max_documents": 2,
+        "max_requests": 6,
+        "max_source_bytes": 16384,
+        "timeout_seconds": 1
+      }
+    },
+    "providerDescriptors": [
+      {
+        "id": "brave",
+        "method": "POST",
+        "endpoint": "https://api.search.brave.com/res/v1/web/search",
+        "adapterRevision": 1,
+        "mode": "web_search",
+        "scope": "explicit_query_disclosure"
+      },
+      {
+        "id": "tavily",
+        "method": "POST",
+        "endpoint": "https://api.tavily.com/search",
+        "adapterRevision": 1,
+        "mode": "web_search",
+        "scope": "explicit_query_disclosure"
+      }
+    ],
+    "contextSha256": "b62fdd4c38decdadab235c5093ca04ebe44ae9d9af56431acca9ab540d5d3417",
+    "queryTemplate": null,
+    "current": false,
+    "reasonCodes": [
+      "need_not_selected"
+    ],
+    "visibility": "workspace"
+  },
+  "createdNeed": {
+    "need": {
+      "contentSha256": "cae3cc71095931739083b7cda19c088d0c91ac193e367a2a34d7be4943ec14bc",
+      "id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+      "revisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+      "spec": {
+        "alternatives": [
+          "use source value",
+          "leave unresolved"
+        ],
+        "budget": {},
+        "known_evidence": [],
+        "pending_decision": "Select a value supported by an exact source quote",
+        "priority": 50,
+        "query_profiles": [],
+        "question": "Which value does the retained source report?",
+        "required_evidence": [
+          "fetched source text and immutable byte citation"
+        ],
+        "resolution_criteria": [
+          "literal source agreement with explicit conflicts"
+        ],
+        "schema_version": 1,
+        "scope": "selected task and repository state"
+      },
+      "status": "open"
+    },
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390"
+    }
+  },
+  "context": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "task": {
+      "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+      "contractRevisionId": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+      "repositoryStateId": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+      "semanticReleaseSha256": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1",
+      "status": "running"
+    },
+    "needs": [
+      {
+        "id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+        "revisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+        "contentSha256": "cae3cc71095931739083b7cda19c088d0c91ac193e367a2a34d7be4943ec14bc",
+        "status": "open",
+        "question": "Which value does the retained source report?"
+      },
+      {
+        "id": "6c9e4922-c213-4f38-bf1a-8c6de0142248",
+        "revisionId": "4b848db8-984b-46fc-9728-e93e27c93bd4",
+        "contentSha256": "432fcd2f48d2dbd0dff5fc5850af8424acad206eb941863961df9819c15d97ba",
+        "status": "open",
+        "question": "Which source file is relevant?"
+      }
+    ],
+    "need": {
+      "id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+      "revisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+      "contentSha256": "cae3cc71095931739083b7cda19c088d0c91ac193e367a2a34d7be4943ec14bc",
+      "status": "open",
+      "spec": {
+        "schema_version": 1,
+        "question": "Which value does the retained source report?",
+        "pending_decision": "Select a value supported by an exact source quote",
+        "alternatives": [
+          "use source value",
+          "leave unresolved"
+        ],
+        "required_evidence": [
+          "fetched source text and immutable byte citation"
+        ],
+        "resolution_criteria": [
+          "literal source agreement with explicit conflicts"
+        ],
+        "scope": "selected task and repository state",
+        "known_evidence": [],
+        "priority": 50,
+        "budget": {},
+        "query_profiles": []
+      }
+    },
+    "policy": {
+      "sha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+      "content": {
+        "schema": "potbot-external-research-policy/v1",
+        "allow_query_disclosure": true,
+        "providers": [
+          {
+            "provider": "brave",
+            "cost_microunits_per_call": 3,
+            "minimum_interval_ms": 0
+          },
+          {
+            "provider": "tavily",
+            "cost_microunits_per_call": 5,
+            "minimum_interval_ms": 0
+          }
+        ],
+        "fetch_hosts": [
+          {
+            "host": "docs.example.com",
+            "terms_approved": true,
+            "minimum_interval_ms": 0
+          }
+        ],
+        "fallback_statuses": [
+          "rate_limited",
+          "quota_exhausted",
+          "unavailable"
+        ],
+        "max_results": 3,
+        "max_documents": 2,
+        "max_requests": 6,
+        "max_source_bytes": 16384,
+        "timeout_seconds": 1
+      }
+    },
+    "providerDescriptors": [
+      {
+        "id": "brave",
+        "method": "POST",
+        "endpoint": "https://api.search.brave.com/res/v1/web/search",
+        "adapterRevision": 1,
+        "mode": "web_search",
+        "scope": "explicit_query_disclosure"
+      },
+      {
+        "id": "tavily",
+        "method": "POST",
+        "endpoint": "https://api.tavily.com/search",
+        "adapterRevision": 1,
+        "mode": "web_search",
+        "scope": "explicit_query_disclosure"
+      }
+    ],
+    "contextSha256": "735846a0671827158097d9205dcc2b48fe0788338af1365ccd837c6329df9cd6",
+    "queryTemplate": {
+      "category": "documentation",
+      "operation": "query_source",
+      "locator": "external-research",
+      "search_text": "Which value does the retained source report?",
+      "required_identifiers": [],
+      "expected_observation": "fetched source text and immutable byte citation",
+      "decision_effect": "Select a value supported by an exact source quote",
+      "evidence_requirement": "fetched source text and immutable byte citation",
+      "stopping_condition": "literal source agreement with explicit conflicts",
+      "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+      "target_version": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+      "freshness_seconds": 0,
+      "max_results": 3,
+      "max_source_bytes": 16384
+    },
+    "current": true,
+    "reasonCodes": [],
+    "visibility": "workspace"
+  },
+  "action": {
+    "action": {
+      "action_id": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+      "identity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+      "predecessor_id": null,
+      "primary_type_ref": "synny://type/potbot-research-action",
+      "query": {
+        "category": "documentation",
+        "decision_effect": "Select a value supported by an exact source quote",
+        "evidence_requirement": "fetched source text and immutable byte citation",
+        "expected_observation": "fetched source text and immutable byte citation",
+        "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+        "freshness_seconds": 0,
+        "locator": "external-research",
+        "max_results": 3,
+        "max_source_bytes": 16384,
+        "operation": "query_source",
+        "required_identifiers": [],
+        "search_text": "Which value does the retained source report?",
+        "stopping_condition": "literal source agreement with explicit conflicts",
+        "target_version": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208"
+      },
+      "schema_version": 1,
+      "scope": {
+        "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+        "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+        "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+        "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+        "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1",
+        "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+        "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390"
+      }
+    },
+    "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+    "reused": false,
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390"
+    }
+  },
+  "queued": {
+    "execution": {
+      "action": {
+        "action_id": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "identity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "predecessor_id": null,
+        "primary_type_ref": "synny://type/potbot-research-action",
+        "query": {
+          "category": "documentation",
+          "decision_effect": "Select a value supported by an exact source quote",
+          "evidence_requirement": "fetched source text and immutable byte citation",
+          "expected_observation": "fetched source text and immutable byte citation",
+          "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+          "freshness_seconds": 0,
+          "locator": "external-research",
+          "max_results": 3,
+          "max_source_bytes": 16384,
+          "operation": "query_source",
+          "required_identifiers": [],
+          "search_text": "Which value does the retained source report?",
+          "stopping_condition": "literal source agreement with explicit conflicts",
+          "target_version": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208"
+        },
+        "schema_version": 1,
+        "scope": {
+          "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+          "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+          "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+          "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+          "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1",
+          "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+          "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390"
+        }
+      },
+      "authorization": {
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "actorPrincipalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "disclosureSha256": "56c17dd8d952e5ba449e2d61fee22c5d464dff6312ff5602c210c1192e95bd34",
+        "issuedAt": "2026-11-18T05:57:27.893190Z",
+        "limits": {
+          "bytes_read": 98304,
+          "calls": 6,
+          "concurrency": 1,
+          "money_microunits": 30,
+          "tool_ms": 16000
+        },
+        "pdfProfileSha256": null,
+        "policy": {
+          "allow_query_disclosure": true,
+          "fallback_statuses": [
+            "rate_limited",
+            "quota_exhausted",
+            "unavailable"
+          ],
+          "fetch_hosts": [
+            {
+              "host": "docs.example.com",
+              "minimum_interval_ms": 0,
+              "terms_approved": true
+            }
+          ],
+          "max_documents": 2,
+          "max_requests": 6,
+          "max_results": 3,
+          "max_source_bytes": 16384,
+          "providers": [
+            {
+              "cost_microunits_per_call": 3,
+              "minimum_interval_ms": 0,
+              "provider": "brave"
+            },
+            {
+              "cost_microunits_per_call": 5,
+              "minimum_interval_ms": 0,
+              "provider": "tavily"
+            }
+          ],
+          "schema": "potbot-external-research-policy/v1",
+          "timeout_seconds": 1
+        },
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "schema": "potbot-external-research-authorization/v1",
+        "sha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "sourceArtifactId": "55af5133-e7e4-5e76-81c3-55b09e221763",
+        "sourceRevision": "36d8322d849d610c2eded654441c027a4424fcdb8c705ce6bd4771e12d68d84e",
+        "visibility": "workspace",
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390"
+      },
+      "receipt": null,
+      "run": {
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "cancelRequested": false,
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "createdAt": "2026-11-18T05:57:27.894795Z",
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+        "errorCode": null,
+        "finishedAt": null,
+        "id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+        "needRevisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "receiptSha256": null,
+        "recordIntegrityValid": true,
+        "requestCount": 0,
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "resultArtifactId": null,
+        "resultSha256": null,
+        "revision": 1,
+        "startedAt": null,
+        "state": "queued",
+        "usageOrigin": null,
+        "visibility": "workspace"
+      },
+      "schema": "potbot-external-research-run/v1",
+      "scope": {
+        "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390"
+      }
+    },
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390"
+    }
+  },
+  "pending": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "execution": {
+      "schema": "potbot-external-research-run/v1",
+      "scope": {
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+      },
+      "run": {
+        "id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+        "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+        "needRevisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+        "state": "queued",
+        "revision": 1,
+        "createdAt": "2026-11-18T05:57:27.894795Z",
+        "startedAt": null,
+        "finishedAt": null,
+        "errorCode": null,
+        "cancelRequested": false,
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "resultArtifactId": null,
+        "resultSha256": null,
+        "receiptSha256": null,
+        "requestCount": 0,
+        "usageOrigin": null,
+        "visibility": "workspace",
+        "recordIntegrityValid": true
+      },
+      "action": {
+        "schema_version": 1,
+        "primary_type_ref": "synny://type/potbot-research-action",
+        "action_id": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "scope": {
+          "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390",
+          "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+          "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+          "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+          "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+          "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+          "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1"
+        },
+        "query": {
+          "category": "documentation",
+          "operation": "query_source",
+          "locator": "external-research",
+          "search_text": "Which value does the retained source report?",
+          "required_identifiers": [],
+          "expected_observation": "fetched source text and immutable byte citation",
+          "decision_effect": "Select a value supported by an exact source quote",
+          "evidence_requirement": "fetched source text and immutable byte citation",
+          "stopping_condition": "literal source agreement with explicit conflicts",
+          "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+          "target_version": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+          "freshness_seconds": 0,
+          "max_results": 3,
+          "max_source_bytes": 16384
+        },
+        "predecessor_id": null,
+        "identity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738"
+      },
+      "authorization": {
+        "schema": "potbot-external-research-authorization/v1",
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "actorPrincipalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+        "policy": {
+          "schema": "potbot-external-research-policy/v1",
+          "providers": [
+            {
+              "provider": "brave",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 3
+            },
+            {
+              "provider": "tavily",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 5
+            }
+          ],
+          "fetch_hosts": [
+            {
+              "host": "docs.example.com",
+              "terms_approved": true,
+              "minimum_interval_ms": 0
+            }
+          ],
+          "max_results": 3,
+          "max_requests": 6,
+          "max_documents": 2,
+          "timeout_seconds": 1,
+          "max_source_bytes": 16384,
+          "fallback_statuses": [
+            "rate_limited",
+            "quota_exhausted",
+            "unavailable"
+          ],
+          "allow_query_disclosure": true
+        },
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "pdfProfileSha256": null,
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "disclosureSha256": "56c17dd8d952e5ba449e2d61fee22c5d464dff6312ff5602c210c1192e95bd34",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "limits": {
+          "calls": 6,
+          "tool_ms": 16000,
+          "bytes_read": 98304,
+          "concurrency": 1,
+          "money_microunits": 30
+        },
+        "sourceArtifactId": "55af5133-e7e4-5e76-81c3-55b09e221763",
+        "sourceRevision": "36d8322d849d610c2eded654441c027a4424fcdb8c705ce6bd4771e12d68d84e",
+        "issuedAt": "2026-11-18T05:57:27.893190Z",
+        "visibility": "workspace",
+        "sha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+      },
+      "receipt": null
+    },
+    "batch": null,
+    "verification": "pending",
+    "reasonCodes": []
+  },
+  "execution": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "execution": {
+      "schema": "potbot-external-research-run/v1",
+      "scope": {
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+      },
+      "run": {
+        "id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+        "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+        "needRevisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+        "state": "succeeded",
+        "revision": 11,
+        "createdAt": "2026-11-18T05:57:27.894795Z",
+        "startedAt": "2026-11-18T05:57:27.950255Z",
+        "finishedAt": "2026-11-18T05:57:28.314567Z",
+        "errorCode": null,
+        "cancelRequested": false,
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "resultArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+        "resultSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+        "receiptSha256": "f6dadeab8fe6ad1c84da93b060e547b396253c8cb3c0bc9b88acda813fb3d23a",
+        "requestCount": 4,
+        "usageOrigin": "synthetic",
+        "visibility": "workspace",
+        "recordIntegrityValid": true
+      },
+      "action": {
+        "schema_version": 1,
+        "primary_type_ref": "synny://type/potbot-research-action",
+        "action_id": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "scope": {
+          "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390",
+          "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+          "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+          "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+          "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+          "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+          "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1"
+        },
+        "query": {
+          "category": "documentation",
+          "operation": "query_source",
+          "locator": "external-research",
+          "search_text": "Which value does the retained source report?",
+          "required_identifiers": [],
+          "expected_observation": "fetched source text and immutable byte citation",
+          "decision_effect": "Select a value supported by an exact source quote",
+          "evidence_requirement": "fetched source text and immutable byte citation",
+          "stopping_condition": "literal source agreement with explicit conflicts",
+          "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+          "target_version": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+          "freshness_seconds": 0,
+          "max_results": 3,
+          "max_source_bytes": 16384
+        },
+        "predecessor_id": null,
+        "identity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738"
+      },
+      "authorization": {
+        "schema": "potbot-external-research-authorization/v1",
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "actorPrincipalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+        "policy": {
+          "schema": "potbot-external-research-policy/v1",
+          "providers": [
+            {
+              "provider": "brave",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 3
+            },
+            {
+              "provider": "tavily",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 5
+            }
+          ],
+          "fetch_hosts": [
+            {
+              "host": "docs.example.com",
+              "terms_approved": true,
+              "minimum_interval_ms": 0
+            }
+          ],
+          "max_results": 3,
+          "max_requests": 6,
+          "max_documents": 2,
+          "timeout_seconds": 1,
+          "max_source_bytes": 16384,
+          "fallback_statuses": [
+            "rate_limited",
+            "quota_exhausted",
+            "unavailable"
+          ],
+          "allow_query_disclosure": true
+        },
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "pdfProfileSha256": null,
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "disclosureSha256": "56c17dd8d952e5ba449e2d61fee22c5d464dff6312ff5602c210c1192e95bd34",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "limits": {
+          "calls": 6,
+          "tool_ms": 16000,
+          "bytes_read": 98304,
+          "concurrency": 1,
+          "money_microunits": 30
+        },
+        "sourceArtifactId": "55af5133-e7e4-5e76-81c3-55b09e221763",
+        "sourceRevision": "36d8322d849d610c2eded654441c027a4424fcdb8c705ce6bd4771e12d68d84e",
+        "issuedAt": "2026-11-18T05:57:27.893190Z",
+        "visibility": "workspace",
+        "sha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+      },
+      "receipt": {
+        "schema": "potbot-external-research-receipt/v1",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "outputArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+        "outputSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+        "requestIds": [
+          "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+          "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+          "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+          "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5"
+        ],
+        "requestSha256s": [
+          "227c1dc1131ef2976afb87ac573868defc3f51748239305a638c548280d3fbcf",
+          "245162bace426ccacae846b68b6eac0dd5047f9e0fc88383794bf85506776778",
+          "f4e9e617b74fd0a5dee910505d671a9318ca420bbc66cdc167877e0021a7ac3c",
+          "583321e55369e7014a5d2034331b698b7cc4326b19669c7d8e1c214df7c9aaab"
+        ],
+        "responseSha256s": [
+          "0ac1cb4ffb1883a38ec4a72310234e82fc03ee63d1a0e895092c5b7ed9f7a84b",
+          "ad257728397e0097036427bad16c4bea3ef1b511ca7fd0e5d3799406a130385c",
+          "e915cee027a70632830a23eeaa4c469eed6b507c3f88b0698c178db1e97397bc",
+          "b521b0652e3f6e7f5dcc4b43a4576ebe3054e9b6b480616490403f14c42c1b7a"
+        ],
+        "usage": {
+          "calls": 4,
+          "tool_ms": 0,
+          "bytes_read": 359,
+          "money_microunits": 8
+        },
+        "usageOrigin": "synthetic",
+        "typedTransformation": {
+          "receipt": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "input_hash": "666095cd5beb6600a6230559845e4a468555b58fb8c9a2d7c22e17a5bffcfc1f",
+            "scope_hash": "53b9f81b25556a40e46f2b091ce83e5668735183e3b04012b08cef2e7eda69fe",
+            "output_hash": "40e40f504ffd4c56b19929fac0f9c264d5a1aa5eb868dd09545f69af86a7b478",
+            "binding_hash": "17616d4d75a380cc0d87441db66562df88b844b0d6104325282ba4b1866858f7",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "invocation_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "task_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+            "cog_snapshot_hash": "a7f070b4f4fb0f1c023aeba4877f5a4bb6b56a9f988b5229a8a9aeeb9159d1de",
+            "input_artifact_id": null,
+            "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+            "upstream_receipt_hash": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+          },
+          "signature": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "handler_ref": "potbot.cogs.external_research",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "implementation_revision": 1,
+            "requires_controller_scope": true
+          },
+          "receiptSha256": "cfa149151982d852790e17f809399ffb82378c1523f2e4336d147284c0b45397",
+          "synActivation": "not_qualified",
+          "implementationSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b"
+        },
+        "needResolved": false,
+        "grantsTaskCompletion": false
+      }
+    }
+  },
+  "events": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "execution": {
+      "schema": "potbot-external-research-run/v1",
+      "scope": {
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+      },
+      "run": {
+        "id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+        "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+        "needRevisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+        "state": "succeeded",
+        "revision": 11,
+        "createdAt": "2026-11-18T05:57:27.894795Z",
+        "startedAt": "2026-11-18T05:57:27.950255Z",
+        "finishedAt": "2026-11-18T05:57:28.314567Z",
+        "errorCode": null,
+        "cancelRequested": false,
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "resultArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+        "resultSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+        "receiptSha256": "f6dadeab8fe6ad1c84da93b060e547b396253c8cb3c0bc9b88acda813fb3d23a",
+        "requestCount": 4,
+        "usageOrigin": "synthetic",
+        "visibility": "workspace",
+        "recordIntegrityValid": true
+      },
+      "action": {
+        "schema_version": 1,
+        "primary_type_ref": "synny://type/potbot-research-action",
+        "action_id": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "scope": {
+          "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390",
+          "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+          "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+          "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+          "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+          "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+          "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1"
+        },
+        "query": {
+          "category": "documentation",
+          "operation": "query_source",
+          "locator": "external-research",
+          "search_text": "Which value does the retained source report?",
+          "required_identifiers": [],
+          "expected_observation": "fetched source text and immutable byte citation",
+          "decision_effect": "Select a value supported by an exact source quote",
+          "evidence_requirement": "fetched source text and immutable byte citation",
+          "stopping_condition": "literal source agreement with explicit conflicts",
+          "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+          "target_version": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+          "freshness_seconds": 0,
+          "max_results": 3,
+          "max_source_bytes": 16384
+        },
+        "predecessor_id": null,
+        "identity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738"
+      },
+      "authorization": {
+        "schema": "potbot-external-research-authorization/v1",
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "actorPrincipalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+        "policy": {
+          "schema": "potbot-external-research-policy/v1",
+          "providers": [
+            {
+              "provider": "brave",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 3
+            },
+            {
+              "provider": "tavily",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 5
+            }
+          ],
+          "fetch_hosts": [
+            {
+              "host": "docs.example.com",
+              "terms_approved": true,
+              "minimum_interval_ms": 0
+            }
+          ],
+          "max_results": 3,
+          "max_requests": 6,
+          "max_documents": 2,
+          "timeout_seconds": 1,
+          "max_source_bytes": 16384,
+          "fallback_statuses": [
+            "rate_limited",
+            "quota_exhausted",
+            "unavailable"
+          ],
+          "allow_query_disclosure": true
+        },
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "pdfProfileSha256": null,
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "disclosureSha256": "56c17dd8d952e5ba449e2d61fee22c5d464dff6312ff5602c210c1192e95bd34",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "limits": {
+          "calls": 6,
+          "tool_ms": 16000,
+          "bytes_read": 98304,
+          "concurrency": 1,
+          "money_microunits": 30
+        },
+        "sourceArtifactId": "55af5133-e7e4-5e76-81c3-55b09e221763",
+        "sourceRevision": "36d8322d849d610c2eded654441c027a4424fcdb8c705ce6bd4771e12d68d84e",
+        "issuedAt": "2026-11-18T05:57:27.893190Z",
+        "visibility": "workspace",
+        "sha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+      },
+      "receipt": {
+        "schema": "potbot-external-research-receipt/v1",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "outputArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+        "outputSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+        "requestIds": [
+          "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+          "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+          "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+          "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5"
+        ],
+        "requestSha256s": [
+          "227c1dc1131ef2976afb87ac573868defc3f51748239305a638c548280d3fbcf",
+          "245162bace426ccacae846b68b6eac0dd5047f9e0fc88383794bf85506776778",
+          "f4e9e617b74fd0a5dee910505d671a9318ca420bbc66cdc167877e0021a7ac3c",
+          "583321e55369e7014a5d2034331b698b7cc4326b19669c7d8e1c214df7c9aaab"
+        ],
+        "responseSha256s": [
+          "0ac1cb4ffb1883a38ec4a72310234e82fc03ee63d1a0e895092c5b7ed9f7a84b",
+          "ad257728397e0097036427bad16c4bea3ef1b511ca7fd0e5d3799406a130385c",
+          "e915cee027a70632830a23eeaa4c469eed6b507c3f88b0698c178db1e97397bc",
+          "b521b0652e3f6e7f5dcc4b43a4576ebe3054e9b6b480616490403f14c42c1b7a"
+        ],
+        "usage": {
+          "calls": 4,
+          "tool_ms": 0,
+          "bytes_read": 359,
+          "money_microunits": 8
+        },
+        "usageOrigin": "synthetic",
+        "typedTransformation": {
+          "receipt": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "input_hash": "666095cd5beb6600a6230559845e4a468555b58fb8c9a2d7c22e17a5bffcfc1f",
+            "scope_hash": "53b9f81b25556a40e46f2b091ce83e5668735183e3b04012b08cef2e7eda69fe",
+            "output_hash": "40e40f504ffd4c56b19929fac0f9c264d5a1aa5eb868dd09545f69af86a7b478",
+            "binding_hash": "17616d4d75a380cc0d87441db66562df88b844b0d6104325282ba4b1866858f7",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "invocation_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "task_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+            "cog_snapshot_hash": "a7f070b4f4fb0f1c023aeba4877f5a4bb6b56a9f988b5229a8a9aeeb9159d1de",
+            "input_artifact_id": null,
+            "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+            "upstream_receipt_hash": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+          },
+          "signature": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "handler_ref": "potbot.cogs.external_research",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "implementation_revision": 1,
+            "requires_controller_scope": true
+          },
+          "receiptSha256": "cfa149151982d852790e17f809399ffb82378c1523f2e4336d147284c0b45397",
+          "synActivation": "not_qualified",
+          "implementationSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b"
+        },
+        "needResolved": false,
+        "grantsTaskCompletion": false
+      }
+    },
+    "items": [
+      {
+        "schema_version": 1,
+        "sequence": 1,
+        "id": "572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "event_ref": "syn://event/572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "parent_run_id": null,
+        "parent_event_id": null,
+        "trigger_kind": "api_request",
+        "trigger_ref": "research://action/e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "stage": "started",
+        "input_artifact_ref": null,
+        "output_artifact_ref": null,
+        "output_sha256": null,
+        "elapsed_ms": null,
+        "recorded_at": "2026-11-18T05:57:27.954850+00:00",
+        "telemetry": {
+          "phase": "research_started",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "qualification": "not_qualified",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 2,
+        "id": "2ef3e730-c717-4f9b-ac9a-8fc85f4702de",
+        "event_ref": "syn://event/2ef3e730-c717-4f9b-ac9a-8fc85f4702de",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+        "parent_run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "parent_event_id": "572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+        "stage": "started",
+        "input_artifact_ref": null,
+        "output_artifact_ref": null,
+        "output_sha256": null,
+        "elapsed_ms": null,
+        "recorded_at": "2026-11-18T05:57:28.003043+00:00",
+        "telemetry": {
+          "kind": "search",
+          "phase": "request_dispatched",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "ordinal": 1,
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "provider": "brave",
+          "qualification": "not_qualified",
+          "requestSha256": "227c1dc1131ef2976afb87ac573868defc3f51748239305a638c548280d3fbcf",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 3,
+        "id": "806dfe84-f901-4d2d-b47a-8960e06b5a1a",
+        "event_ref": "syn://event/806dfe84-f901-4d2d-b47a-8960e06b5a1a",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+        "parent_run_id": "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+        "parent_event_id": "2ef3e730-c717-4f9b-ac9a-8fc85f4702de",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/2ef3e730-c717-4f9b-ac9a-8fc85f4702de",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+        "stage": "completed",
+        "input_artifact_ref": null,
+        "output_artifact_ref": "artifact://6a07a7ba-99ca-538e-845c-b4927e9944ba",
+        "output_sha256": "3b5e2a30688120ad0aec270e14d0e7e34ff6789a00a0b057e950e8253f754304",
+        "elapsed_ms": 0,
+        "recorded_at": "2026-11-18T05:57:28.025090+00:00",
+        "telemetry": {
+          "phase": "request_observed",
+          "status": "fetched",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "usageOrigin": "synthetic",
+          "qualification": "not_qualified",
+          "receivedBytes": 144,
+          "requestSha256": "227c1dc1131ef2976afb87ac573868defc3f51748239305a638c548280d3fbcf",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 4,
+        "id": "751e758e-d8d9-45fe-93c3-72e1ebc7d40d",
+        "event_ref": "syn://event/751e758e-d8d9-45fe-93c3-72e1ebc7d40d",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+        "parent_run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "parent_event_id": "572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+        "stage": "started",
+        "input_artifact_ref": null,
+        "output_artifact_ref": null,
+        "output_sha256": null,
+        "elapsed_ms": null,
+        "recorded_at": "2026-11-18T05:57:28.068769+00:00",
+        "telemetry": {
+          "kind": "search",
+          "phase": "request_dispatched",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "ordinal": 2,
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "provider": "tavily",
+          "qualification": "not_qualified",
+          "requestSha256": "245162bace426ccacae846b68b6eac0dd5047f9e0fc88383794bf85506776778",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 5,
+        "id": "4cacae19-4643-404e-9237-99a762c7bec0",
+        "event_ref": "syn://event/4cacae19-4643-404e-9237-99a762c7bec0",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+        "parent_run_id": "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+        "parent_event_id": "751e758e-d8d9-45fe-93c3-72e1ebc7d40d",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/751e758e-d8d9-45fe-93c3-72e1ebc7d40d",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+        "stage": "completed",
+        "input_artifact_ref": null,
+        "output_artifact_ref": "artifact://c228acdb-3fb4-5f3f-adf2-40d33196e115",
+        "output_sha256": "d690e33d889b6a1199a84eccd9f929da8b1c1635a33c2200d4fea4ead0659fa5",
+        "elapsed_ms": 0,
+        "recorded_at": "2026-11-18T05:57:28.090936+00:00",
+        "telemetry": {
+          "phase": "request_observed",
+          "status": "fetched",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "usageOrigin": "synthetic",
+          "qualification": "not_qualified",
+          "receivedBytes": 132,
+          "requestSha256": "245162bace426ccacae846b68b6eac0dd5047f9e0fc88383794bf85506776778",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 6,
+        "id": "2905fbfa-56bb-41a5-8733-5c74e42b3a22",
+        "event_ref": "syn://event/2905fbfa-56bb-41a5-8733-5c74e42b3a22",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+        "parent_run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "parent_event_id": "572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+        "stage": "started",
+        "input_artifact_ref": null,
+        "output_artifact_ref": null,
+        "output_sha256": null,
+        "elapsed_ms": null,
+        "recorded_at": "2026-11-18T05:57:28.136047+00:00",
+        "telemetry": {
+          "kind": "robots",
+          "phase": "request_dispatched",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "ordinal": 3,
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "provider": null,
+          "qualification": "not_qualified",
+          "requestSha256": "f4e9e617b74fd0a5dee910505d671a9318ca420bbc66cdc167877e0021a7ac3c",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 7,
+        "id": "61d40771-1569-4be5-98b4-b7ffc31f2f8c",
+        "event_ref": "syn://event/61d40771-1569-4be5-98b4-b7ffc31f2f8c",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+        "parent_run_id": "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+        "parent_event_id": "2905fbfa-56bb-41a5-8733-5c74e42b3a22",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/2905fbfa-56bb-41a5-8733-5c74e42b3a22",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+        "stage": "completed",
+        "input_artifact_ref": null,
+        "output_artifact_ref": "artifact://3633a585-0ad3-5ab3-90e9-8bc86e1f6e1d",
+        "output_sha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+        "elapsed_ms": 0,
+        "recorded_at": "2026-11-18T05:57:28.158661+00:00",
+        "telemetry": {
+          "phase": "request_observed",
+          "status": "fetched",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "usageOrigin": "synthetic",
+          "qualification": "not_qualified",
+          "receivedBytes": 23,
+          "requestSha256": "f4e9e617b74fd0a5dee910505d671a9318ca420bbc66cdc167877e0021a7ac3c",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 8,
+        "id": "2ce86af0-a054-427a-b027-b18071d6b33c",
+        "event_ref": "syn://event/2ce86af0-a054-427a-b027-b18071d6b33c",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5",
+        "parent_run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "parent_event_id": "572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5",
+        "stage": "started",
+        "input_artifact_ref": null,
+        "output_artifact_ref": null,
+        "output_sha256": null,
+        "elapsed_ms": null,
+        "recorded_at": "2026-11-18T05:57:28.205940+00:00",
+        "telemetry": {
+          "kind": "fetch",
+          "phase": "request_dispatched",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "ordinal": 4,
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "provider": null,
+          "qualification": "not_qualified",
+          "requestSha256": "583321e55369e7014a5d2034331b698b7cc4326b19669c7d8e1c214df7c9aaab",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 9,
+        "id": "548fd577-1bf6-4d5d-a1f0-e0c7cda1b563",
+        "event_ref": "syn://event/548fd577-1bf6-4d5d-a1f0-e0c7cda1b563",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5",
+        "parent_run_id": "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5",
+        "parent_event_id": "2ce86af0-a054-427a-b027-b18071d6b33c",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/2ce86af0-a054-427a-b027-b18071d6b33c",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5",
+        "stage": "completed",
+        "input_artifact_ref": null,
+        "output_artifact_ref": "artifact://08451c00-c06a-584b-8b59-ce4f53e307df",
+        "output_sha256": "c315d1ea23633616ae8cf2f853617f6d91d1e253fa81f758b357078452b00c63",
+        "elapsed_ms": 0,
+        "recorded_at": "2026-11-18T05:57:28.232008+00:00",
+        "telemetry": {
+          "phase": "request_observed",
+          "status": "fetched",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "usageOrigin": "synthetic",
+          "qualification": "not_qualified",
+          "receivedBytes": 60,
+          "requestSha256": "583321e55369e7014a5d2034331b698b7cc4326b19669c7d8e1c214df7c9aaab",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 10,
+        "id": "1aa8dc79-82f8-4041-8815-f4e779ff296d",
+        "event_ref": "syn://event/1aa8dc79-82f8-4041-8815-f4e779ff296d",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "parent_run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "parent_event_id": "572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/572696d7-3664-4f6e-abd4-d2b342fe366a",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "stage": "updated",
+        "input_artifact_ref": null,
+        "output_artifact_ref": null,
+        "output_sha256": null,
+        "elapsed_ms": null,
+        "recorded_at": "2026-11-18T05:57:28.261812+00:00",
+        "telemetry": {
+          "phase": "processing_started",
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "qualification": "not_qualified",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      },
+      {
+        "schema_version": 1,
+        "sequence": 11,
+        "id": "7232968e-4182-458f-9733-034e0100432b",
+        "event_ref": "syn://event/7232968e-4182-458f-9733-034e0100432b",
+        "event_type_ref": "synny://type/potbot-research-external-event",
+        "event_type_version": "1",
+        "subject_type_ref": "synny://type/potbot-research-external-cog",
+        "subject_version": "1",
+        "run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "parent_run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "parent_event_id": "1aa8dc79-82f8-4041-8815-f4e779ff296d",
+        "trigger_kind": "parent_event",
+        "trigger_ref": "syn://event/1aa8dc79-82f8-4041-8815-f4e779ff296d",
+        "trigger_input_sha256": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "emitter_run_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "stage": "completed",
+        "input_artifact_ref": null,
+        "output_artifact_ref": "artifact://1155c656-c5f3-5392-8d70-e863e84ea03f",
+        "output_sha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+        "elapsed_ms": 0,
+        "recorded_at": "2026-11-18T05:57:28.313578+00:00",
+        "telemetry": {
+          "phase": "research_completed",
+          "usage": {
+            "calls": 4,
+            "tool_ms": 0,
+            "bytes_read": 359,
+            "money_microunits": 8
+          },
+          "metrics": {
+            "cpuMs": null,
+            "memoryBytes": null
+          },
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "usageOrigin": "synthetic",
+          "qualification": "not_qualified",
+          "receiptSha256": "f6dadeab8fe6ad1c84da93b060e547b396253c8cb3c0bc9b88acda813fb3d23a",
+          "researchRunId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5"
+        }
+      }
+    ],
+    "nextCursor": null
+  },
+  "runs": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "items": [
+      {
+        "schema": "potbot-external-research-run/v1",
+        "scope": {
+          "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+          "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+        },
+        "run": {
+          "id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+          "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+          "needRevisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+          "state": "succeeded",
+          "revision": 11,
+          "createdAt": "2026-11-18T05:57:27.894795Z",
+          "startedAt": "2026-11-18T05:57:27.950255Z",
+          "finishedAt": "2026-11-18T05:57:28.314567Z",
+          "errorCode": null,
+          "cancelRequested": false,
+          "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+          "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+          "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+          "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+          "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+          "resultArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+          "resultSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+          "receiptSha256": "f6dadeab8fe6ad1c84da93b060e547b396253c8cb3c0bc9b88acda813fb3d23a",
+          "requestCount": 4,
+          "usageOrigin": "synthetic",
+          "visibility": "workspace",
+          "recordIntegrityValid": true
+        },
+        "action": {
+          "schema_version": 1,
+          "primary_type_ref": "synny://type/potbot-research-action",
+          "action_id": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "scope": {
+            "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390",
+            "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+            "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+            "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+            "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+            "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+            "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1"
+          },
+          "query": {
+            "category": "documentation",
+            "operation": "query_source",
+            "locator": "external-research",
+            "search_text": "Which value does the retained source report?",
+            "required_identifiers": [],
+            "expected_observation": "fetched source text and immutable byte citation",
+            "decision_effect": "Select a value supported by an exact source quote",
+            "evidence_requirement": "fetched source text and immutable byte citation",
+            "stopping_condition": "literal source agreement with explicit conflicts",
+            "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+            "target_version": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+            "freshness_seconds": 0,
+            "max_results": 3,
+            "max_source_bytes": 16384
+          },
+          "predecessor_id": null,
+          "identity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738"
+        },
+        "authorization": {
+          "schema": "potbot-external-research-authorization/v1",
+          "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+          "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+          "actorPrincipalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+          "policy": {
+            "schema": "potbot-external-research-policy/v1",
+            "providers": [
+              {
+                "provider": "brave",
+                "minimum_interval_ms": 0,
+                "cost_microunits_per_call": 3
+              },
+              {
+                "provider": "tavily",
+                "minimum_interval_ms": 0,
+                "cost_microunits_per_call": 5
+              }
+            ],
+            "fetch_hosts": [
+              {
+                "host": "docs.example.com",
+                "terms_approved": true,
+                "minimum_interval_ms": 0
+              }
+            ],
+            "max_results": 3,
+            "max_requests": 6,
+            "max_documents": 2,
+            "timeout_seconds": 1,
+            "max_source_bytes": 16384,
+            "fallback_statuses": [
+              "rate_limited",
+              "quota_exhausted",
+              "unavailable"
+            ],
+            "allow_query_disclosure": true
+          },
+          "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+          "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+          "pdfProfileSha256": null,
+          "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+          "disclosureSha256": "56c17dd8d952e5ba449e2d61fee22c5d464dff6312ff5602c210c1192e95bd34",
+          "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+          "limits": {
+            "calls": 6,
+            "tool_ms": 16000,
+            "bytes_read": 98304,
+            "concurrency": 1,
+            "money_microunits": 30
+          },
+          "sourceArtifactId": "55af5133-e7e4-5e76-81c3-55b09e221763",
+          "sourceRevision": "36d8322d849d610c2eded654441c027a4424fcdb8c705ce6bd4771e12d68d84e",
+          "issuedAt": "2026-11-18T05:57:27.893190Z",
+          "visibility": "workspace",
+          "sha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+        },
+        "receipt": {
+          "schema": "potbot-external-research-receipt/v1",
+          "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+          "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+          "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+          "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+          "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+          "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+          "outputArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+          "outputSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+          "requestIds": [
+            "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+            "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+            "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+            "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5"
+          ],
+          "requestSha256s": [
+            "227c1dc1131ef2976afb87ac573868defc3f51748239305a638c548280d3fbcf",
+            "245162bace426ccacae846b68b6eac0dd5047f9e0fc88383794bf85506776778",
+            "f4e9e617b74fd0a5dee910505d671a9318ca420bbc66cdc167877e0021a7ac3c",
+            "583321e55369e7014a5d2034331b698b7cc4326b19669c7d8e1c214df7c9aaab"
+          ],
+          "responseSha256s": [
+            "0ac1cb4ffb1883a38ec4a72310234e82fc03ee63d1a0e895092c5b7ed9f7a84b",
+            "ad257728397e0097036427bad16c4bea3ef1b511ca7fd0e5d3799406a130385c",
+            "e915cee027a70632830a23eeaa4c469eed6b507c3f88b0698c178db1e97397bc",
+            "b521b0652e3f6e7f5dcc4b43a4576ebe3054e9b6b480616490403f14c42c1b7a"
+          ],
+          "usage": {
+            "calls": 4,
+            "tool_ms": 0,
+            "bytes_read": 359,
+            "money_microunits": 8
+          },
+          "usageOrigin": "synthetic",
+          "typedTransformation": {
+            "receipt": {
+              "cog_ref": "syn://cog/potbot-research-external",
+              "input_hash": "666095cd5beb6600a6230559845e4a468555b58fb8c9a2d7c22e17a5bffcfc1f",
+              "scope_hash": "53b9f81b25556a40e46f2b091ce83e5668735183e3b04012b08cef2e7eda69fe",
+              "output_hash": "40e40f504ffd4c56b19929fac0f9c264d5a1aa5eb868dd09545f69af86a7b478",
+              "binding_hash": "17616d4d75a380cc0d87441db66562df88b844b0d6104325282ba4b1866858f7",
+              "cog_type_ref": "synny://type/potbot-research-external-cog",
+              "invocation_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+              "input_type_ref": "synny://type/potbot-research-action",
+              "schema_version": 1,
+              "output_type_ref": "synny://type/potbot-research-external-batch",
+              "task_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+              "cog_snapshot_hash": "a7f070b4f4fb0f1c023aeba4877f5a4bb6b56a9f988b5229a8a9aeeb9159d1de",
+              "input_artifact_id": null,
+              "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+              "upstream_receipt_hash": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+            },
+            "signature": {
+              "cog_ref": "syn://cog/potbot-research-external",
+              "handler_ref": "potbot.cogs.external_research",
+              "cog_type_ref": "synny://type/potbot-research-external-cog",
+              "input_type_ref": "synny://type/potbot-research-action",
+              "schema_version": 1,
+              "output_type_ref": "synny://type/potbot-research-external-batch",
+              "implementation_revision": 1,
+              "requires_controller_scope": true
+            },
+            "receiptSha256": "cfa149151982d852790e17f809399ffb82378c1523f2e4336d147284c0b45397",
+            "synActivation": "not_qualified",
+            "implementationSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b"
+          },
+          "needResolved": false,
+          "grantsTaskCompletion": false
+        }
+      }
+    ],
+    "nextCursor": null
+  },
+  "result": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "execution": {
+      "schema": "potbot-external-research-run/v1",
+      "scope": {
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+      },
+      "run": {
+        "id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+        "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+        "needRevisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+        "state": "succeeded",
+        "revision": 11,
+        "createdAt": "2026-11-18T05:57:27.894795Z",
+        "startedAt": "2026-11-18T05:57:27.950255Z",
+        "finishedAt": "2026-11-18T05:57:28.314567Z",
+        "errorCode": null,
+        "cancelRequested": false,
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "resultArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+        "resultSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+        "receiptSha256": "f6dadeab8fe6ad1c84da93b060e547b396253c8cb3c0bc9b88acda813fb3d23a",
+        "requestCount": 4,
+        "usageOrigin": "synthetic",
+        "visibility": "workspace",
+        "recordIntegrityValid": true
+      },
+      "action": {
+        "schema_version": 1,
+        "primary_type_ref": "synny://type/potbot-research-action",
+        "action_id": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "scope": {
+          "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390",
+          "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+          "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+          "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+          "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+          "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+          "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1"
+        },
+        "query": {
+          "category": "documentation",
+          "operation": "query_source",
+          "locator": "external-research",
+          "search_text": "Which value does the retained source report?",
+          "required_identifiers": [],
+          "expected_observation": "fetched source text and immutable byte citation",
+          "decision_effect": "Select a value supported by an exact source quote",
+          "evidence_requirement": "fetched source text and immutable byte citation",
+          "stopping_condition": "literal source agreement with explicit conflicts",
+          "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+          "target_version": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+          "freshness_seconds": 0,
+          "max_results": 3,
+          "max_source_bytes": 16384
+        },
+        "predecessor_id": null,
+        "identity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738"
+      },
+      "authorization": {
+        "schema": "potbot-external-research-authorization/v1",
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "actorPrincipalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+        "policy": {
+          "schema": "potbot-external-research-policy/v1",
+          "providers": [
+            {
+              "provider": "brave",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 3
+            },
+            {
+              "provider": "tavily",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 5
+            }
+          ],
+          "fetch_hosts": [
+            {
+              "host": "docs.example.com",
+              "terms_approved": true,
+              "minimum_interval_ms": 0
+            }
+          ],
+          "max_results": 3,
+          "max_requests": 6,
+          "max_documents": 2,
+          "timeout_seconds": 1,
+          "max_source_bytes": 16384,
+          "fallback_statuses": [
+            "rate_limited",
+            "quota_exhausted",
+            "unavailable"
+          ],
+          "allow_query_disclosure": true
+        },
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "pdfProfileSha256": null,
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "disclosureSha256": "56c17dd8d952e5ba449e2d61fee22c5d464dff6312ff5602c210c1192e95bd34",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "limits": {
+          "calls": 6,
+          "tool_ms": 16000,
+          "bytes_read": 98304,
+          "concurrency": 1,
+          "money_microunits": 30
+        },
+        "sourceArtifactId": "55af5133-e7e4-5e76-81c3-55b09e221763",
+        "sourceRevision": "36d8322d849d610c2eded654441c027a4424fcdb8c705ce6bd4771e12d68d84e",
+        "issuedAt": "2026-11-18T05:57:27.893190Z",
+        "visibility": "workspace",
+        "sha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+      },
+      "receipt": {
+        "schema": "potbot-external-research-receipt/v1",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "outputArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+        "outputSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+        "requestIds": [
+          "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+          "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+          "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+          "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5"
+        ],
+        "requestSha256s": [
+          "227c1dc1131ef2976afb87ac573868defc3f51748239305a638c548280d3fbcf",
+          "245162bace426ccacae846b68b6eac0dd5047f9e0fc88383794bf85506776778",
+          "f4e9e617b74fd0a5dee910505d671a9318ca420bbc66cdc167877e0021a7ac3c",
+          "583321e55369e7014a5d2034331b698b7cc4326b19669c7d8e1c214df7c9aaab"
+        ],
+        "responseSha256s": [
+          "0ac1cb4ffb1883a38ec4a72310234e82fc03ee63d1a0e895092c5b7ed9f7a84b",
+          "ad257728397e0097036427bad16c4bea3ef1b511ca7fd0e5d3799406a130385c",
+          "e915cee027a70632830a23eeaa4c469eed6b507c3f88b0698c178db1e97397bc",
+          "b521b0652e3f6e7f5dcc4b43a4576ebe3054e9b6b480616490403f14c42c1b7a"
+        ],
+        "usage": {
+          "calls": 4,
+          "tool_ms": 0,
+          "bytes_read": 359,
+          "money_microunits": 8
+        },
+        "usageOrigin": "synthetic",
+        "typedTransformation": {
+          "receipt": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "input_hash": "666095cd5beb6600a6230559845e4a468555b58fb8c9a2d7c22e17a5bffcfc1f",
+            "scope_hash": "53b9f81b25556a40e46f2b091ce83e5668735183e3b04012b08cef2e7eda69fe",
+            "output_hash": "40e40f504ffd4c56b19929fac0f9c264d5a1aa5eb868dd09545f69af86a7b478",
+            "binding_hash": "17616d4d75a380cc0d87441db66562df88b844b0d6104325282ba4b1866858f7",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "invocation_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "task_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+            "cog_snapshot_hash": "a7f070b4f4fb0f1c023aeba4877f5a4bb6b56a9f988b5229a8a9aeeb9159d1de",
+            "input_artifact_id": null,
+            "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+            "upstream_receipt_hash": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+          },
+          "signature": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "handler_ref": "potbot.cogs.external_research",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "implementation_revision": 1,
+            "requires_controller_scope": true
+          },
+          "receiptSha256": "cfa149151982d852790e17f809399ffb82378c1523f2e4336d147284c0b45397",
+          "synActivation": "not_qualified",
+          "implementationSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b"
+        },
+        "needResolved": false,
+        "grantsTaskCompletion": false
+      }
+    },
+    "batch": {
+      "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+      "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+      "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+      "complete": true,
+      "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+      "documents": [
+        {
+          "extractionArtifactId": "23d33e48-0ea5-5291-97b2-16d9088b463f",
+          "extractionSha256": "62438909387afc989bb68b4e5971284a44699f7f253eeabd697c829e54db9bfb",
+          "id": "5c85b930e03ffd040b337caa380f9be214cec9375a08f1980cb7c3cf56d9d911",
+          "rawArtifactId": "08451c00-c06a-584b-8b59-ce4f53e307df",
+          "rawSha256": "c315d1ea23633616ae8cf2f853617f6d91d1e253fa81f758b357078452b00c63",
+          "reasonCodes": [],
+          "requestedUrl": "https://docs.example.com/guide",
+          "resolvedUrl": "https://docs.example.com/guide",
+          "retrievedAt": "2026-11-18T05:57:28.209945Z",
+          "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+          "sourceId": "5c85b930e03ffd040b337caa380f9be214cec9375a08f1980cb7c3cf56d9d911",
+          "status": "extracted"
+        }
+      ],
+      "mergedResults": [
+        {
+          "canonicalUrl": "https://docs.example.com/guide",
+          "id": "15ae3143d81587bab466d7f84731274998069bab739a69a5a7922a3874e7d61f",
+          "lineage": [
+            {
+              "canonicalUrl": "https://docs.example.com/guide",
+              "provider": "brave",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T05:57:28.007093Z",
+              "snippet": "Search snippet is not source text",
+              "title": "Retained guide"
+            },
+            {
+              "canonicalUrl": "https://docs.example.com/guide",
+              "provider": "tavily",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T05:57:28.072765Z",
+              "snippet": "Independent engine, same publisher",
+              "title": "Retained guide"
+            }
+          ],
+          "snippet": "Search snippet is not source text",
+          "title": "Retained guide"
+        }
+      ],
+      "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+      "reasonCodes": [],
+      "requests": [
+        {
+          "id": "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+          "ordinal": 1,
+          "rawArtifactId": "6a07a7ba-99ca-538e-845c-b4927e9944ba",
+          "request": {
+            "bodySha256": "9406f0eda454200148ece61ae2ac201729b9e0831f715134bdd52e11b39edc6d",
+            "kind": "search",
+            "maxBytes": 16384,
+            "method": "POST",
+            "provider": "brave",
+            "schema": "potbot-external-research-request/v1",
+            "timeoutSeconds": 1,
+            "url": "https://api.search.brave.com/res/v1/web/search"
+          },
+          "requestSha256": "227c1dc1131ef2976afb87ac573868defc3f51748239305a638c548280d3fbcf",
+          "response": {
+            "elapsedMs": 0,
+            "httpStatus": 200,
+            "mediaType": "application/json",
+            "reasonCodes": [
+              "complete_response"
+            ],
+            "receivedBytes": 144,
+            "requestSent": true,
+            "requestSha256": "227c1dc1131ef2976afb87ac573868defc3f51748239305a638c548280d3fbcf",
+            "retrievedAt": "2026-11-18T05:57:28.007093Z",
+            "schema": "potbot-external-research-response/v1",
+            "sourceSha256": "3b5e2a30688120ad0aec270e14d0e7e34ff6789a00a0b057e950e8253f754304",
+            "status": "fetched"
+          },
+          "responseSha256": "0ac1cb4ffb1883a38ec4a72310234e82fc03ee63d1a0e895092c5b7ed9f7a84b",
+          "usageOrigin": "synthetic"
+        },
+        {
+          "id": "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+          "ordinal": 2,
+          "rawArtifactId": "c228acdb-3fb4-5f3f-adf2-40d33196e115",
+          "request": {
+            "bodySha256": "70766652cc2d2a90b174f8bad5f623ce677ed6496e9feaa8e31c54ec94a53909",
+            "kind": "search",
+            "maxBytes": 16384,
+            "method": "POST",
+            "provider": "tavily",
+            "schema": "potbot-external-research-request/v1",
+            "timeoutSeconds": 1,
+            "url": "https://api.tavily.com/search"
+          },
+          "requestSha256": "245162bace426ccacae846b68b6eac0dd5047f9e0fc88383794bf85506776778",
+          "response": {
+            "elapsedMs": 0,
+            "httpStatus": 200,
+            "mediaType": "application/json",
+            "reasonCodes": [
+              "complete_response"
+            ],
+            "receivedBytes": 132,
+            "requestSent": true,
+            "requestSha256": "245162bace426ccacae846b68b6eac0dd5047f9e0fc88383794bf85506776778",
+            "retrievedAt": "2026-11-18T05:57:28.072765Z",
+            "schema": "potbot-external-research-response/v1",
+            "sourceSha256": "d690e33d889b6a1199a84eccd9f929da8b1c1635a33c2200d4fea4ead0659fa5",
+            "status": "fetched"
+          },
+          "responseSha256": "ad257728397e0097036427bad16c4bea3ef1b511ca7fd0e5d3799406a130385c",
+          "usageOrigin": "synthetic"
+        },
+        {
+          "id": "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+          "ordinal": 3,
+          "rawArtifactId": "3633a585-0ad3-5ab3-90e9-8bc86e1f6e1d",
+          "request": {
+            "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "kind": "robots",
+            "maxBytes": 16384,
+            "method": "GET",
+            "provider": null,
+            "schema": "potbot-external-research-request/v1",
+            "timeoutSeconds": 1,
+            "url": "https://docs.example.com/robots.txt"
+          },
+          "requestSha256": "f4e9e617b74fd0a5dee910505d671a9318ca420bbc66cdc167877e0021a7ac3c",
+          "response": {
+            "elapsedMs": 0,
+            "httpStatus": 200,
+            "mediaType": "text/plain",
+            "reasonCodes": [
+              "complete_response"
+            ],
+            "receivedBytes": 23,
+            "requestSent": true,
+            "requestSha256": "f4e9e617b74fd0a5dee910505d671a9318ca420bbc66cdc167877e0021a7ac3c",
+            "retrievedAt": "2026-11-18T05:57:28.139746Z",
+            "schema": "potbot-external-research-response/v1",
+            "sourceSha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+            "status": "fetched"
+          },
+          "responseSha256": "e915cee027a70632830a23eeaa4c469eed6b507c3f88b0698c178db1e97397bc",
+          "usageOrigin": "synthetic"
+        },
+        {
+          "id": "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5",
+          "ordinal": 4,
+          "rawArtifactId": "08451c00-c06a-584b-8b59-ce4f53e307df",
+          "request": {
+            "bodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "kind": "fetch",
+            "maxBytes": 16384,
+            "method": "GET",
+            "provider": null,
+            "schema": "potbot-external-research-request/v1",
+            "timeoutSeconds": 1,
+            "url": "https://docs.example.com/guide"
+          },
+          "requestSha256": "583321e55369e7014a5d2034331b698b7cc4326b19669c7d8e1c214df7c9aaab",
+          "response": {
+            "elapsedMs": 0,
+            "httpStatus": 200,
+            "mediaType": "text/html; charset=utf-8",
+            "reasonCodes": [
+              "complete_response"
+            ],
+            "receivedBytes": 60,
+            "requestSent": true,
+            "requestSha256": "583321e55369e7014a5d2034331b698b7cc4326b19669c7d8e1c214df7c9aaab",
+            "retrievedAt": "2026-11-18T05:57:28.209945Z",
+            "schema": "potbot-external-research-response/v1",
+            "sourceSha256": "c315d1ea23633616ae8cf2f853617f6d91d1e253fa81f758b357078452b00c63",
+            "status": "fetched"
+          },
+          "responseSha256": "b521b0652e3f6e7f5dcc4b43a4576ebe3054e9b6b480616490403f14c42c1b7a",
+          "usageOrigin": "synthetic"
+        }
+      ],
+      "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+      "schema": "potbot-external-research-batch/v1",
+      "searchResults": [
+        {
+          "items": [
+            {
+              "canonicalUrl": "https://docs.example.com/guide",
+              "provider": "brave",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T05:57:28.007093Z",
+              "snippet": "Search snippet is not source text",
+              "title": "Retained guide"
+            }
+          ],
+          "provider": "brave",
+          "rejected": [],
+          "retrievedAt": "2026-11-18T05:57:28.007093Z"
+        },
+        {
+          "items": [
+            {
+              "canonicalUrl": "https://docs.example.com/guide",
+              "provider": "tavily",
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "rank": 1,
+              "retrievedAt": "2026-11-18T05:57:28.072765Z",
+              "snippet": "Independent engine, same publisher",
+              "title": "Retained guide"
+            }
+          ],
+          "provider": "tavily",
+          "rejected": [],
+          "retrievedAt": "2026-11-18T05:57:28.072765Z"
+        }
+      ],
+      "typedTransformation": {
+        "implementationSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "signature": {
+          "cog_ref": "syn://cog/potbot-research-external",
+          "cog_type_ref": "synny://type/potbot-research-external-cog",
+          "handler_ref": "potbot.cogs.external_research",
+          "implementation_revision": 1,
+          "input_type_ref": "synny://type/potbot-research-action",
+          "output_type_ref": "synny://type/potbot-research-external-batch",
+          "requires_controller_scope": true,
+          "schema_version": 1
+        },
+        "synActivation": "not_qualified"
+      },
+      "usage": {
+        "bytes_read": 359,
+        "calls": 4,
+        "money_microunits": 8,
+        "origin": "synthetic",
+        "tool_ms": 0
+      },
+      "visibility": "workspace"
+    },
+    "verification": "verified",
+    "reasonCodes": []
+  },
+  "source": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "execution": {
+      "schema": "potbot-external-research-run/v1",
+      "scope": {
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+      },
+      "run": {
+        "id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+        "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+        "needRevisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+        "state": "succeeded",
+        "revision": 11,
+        "createdAt": "2026-11-18T05:57:27.894795Z",
+        "startedAt": "2026-11-18T05:57:27.950255Z",
+        "finishedAt": "2026-11-18T05:57:28.314567Z",
+        "errorCode": null,
+        "cancelRequested": false,
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "resultArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+        "resultSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+        "receiptSha256": "f6dadeab8fe6ad1c84da93b060e547b396253c8cb3c0bc9b88acda813fb3d23a",
+        "requestCount": 4,
+        "usageOrigin": "synthetic",
+        "visibility": "workspace",
+        "recordIntegrityValid": true
+      },
+      "action": {
+        "schema_version": 1,
+        "primary_type_ref": "synny://type/potbot-research-action",
+        "action_id": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "scope": {
+          "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390",
+          "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+          "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+          "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+          "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+          "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+          "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1"
+        },
+        "query": {
+          "category": "documentation",
+          "operation": "query_source",
+          "locator": "external-research",
+          "search_text": "Which value does the retained source report?",
+          "required_identifiers": [],
+          "expected_observation": "fetched source text and immutable byte citation",
+          "decision_effect": "Select a value supported by an exact source quote",
+          "evidence_requirement": "fetched source text and immutable byte citation",
+          "stopping_condition": "literal source agreement with explicit conflicts",
+          "fallback": "Leave the need unresolved if authorized sources cannot supply the required evidence.",
+          "target_version": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+          "freshness_seconds": 0,
+          "max_results": 3,
+          "max_source_bytes": 16384
+        },
+        "predecessor_id": null,
+        "identity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738"
+      },
+      "authorization": {
+        "schema": "potbot-external-research-authorization/v1",
+        "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "actorPrincipalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1",
+        "policy": {
+          "schema": "potbot-external-research-policy/v1",
+          "providers": [
+            {
+              "provider": "brave",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 3
+            },
+            {
+              "provider": "tavily",
+              "minimum_interval_ms": 0,
+              "cost_microunits_per_call": 5
+            }
+          ],
+          "fetch_hosts": [
+            {
+              "host": "docs.example.com",
+              "terms_approved": true,
+              "minimum_interval_ms": 0
+            }
+          ],
+          "max_results": 3,
+          "max_requests": 6,
+          "max_documents": 2,
+          "timeout_seconds": 1,
+          "max_source_bytes": 16384,
+          "fallback_statuses": [
+            "rate_limited",
+            "quota_exhausted",
+            "unavailable"
+          ],
+          "allow_query_disclosure": true
+        },
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "pdfProfileSha256": null,
+        "disclosureDecisionId": "e137e32a-1954-4ab8-b62d-73965a19f267",
+        "disclosureSha256": "56c17dd8d952e5ba449e2d61fee22c5d464dff6312ff5602c210c1192e95bd34",
+        "reservationId": "bc6306d8-a298-4036-bb14-4db705c91133",
+        "limits": {
+          "calls": 6,
+          "tool_ms": 16000,
+          "bytes_read": 98304,
+          "concurrency": 1,
+          "money_microunits": 30
+        },
+        "sourceArtifactId": "55af5133-e7e4-5e76-81c3-55b09e221763",
+        "sourceRevision": "36d8322d849d610c2eded654441c027a4424fcdb8c705ce6bd4771e12d68d84e",
+        "issuedAt": "2026-11-18T05:57:27.893190Z",
+        "visibility": "workspace",
+        "sha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+      },
+      "receipt": {
+        "schema": "potbot-external-research-receipt/v1",
+        "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+        "actionId": "e08ab5c4-f058-5b87-96e8-b86f587c85e9",
+        "actionIdentity": "29a0e9724b7f59191d17d657909f3c4a15d64c3ede26b8643a2a85f716ce9738",
+        "authorizationSha256": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88",
+        "policySha256": "73037d57d8f7cc1e55033002e7dded30e40489f159e48c8c4306ec869a7be208",
+        "consumerSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b",
+        "outputArtifactId": "1155c656-c5f3-5392-8d70-e863e84ea03f",
+        "outputSha256": "0160f6031fabd7398fb04257e878217e85a8407698c4bccc5a1183f11970558f",
+        "requestIds": [
+          "ee3cd9b8-af2b-429b-9719-1bc3c5c2b5a6",
+          "3dc2920a-9727-4bfe-87ca-6a4ce5033987",
+          "2dfe524a-796f-4249-b448-b32b94d0d3dc",
+          "f798c4ef-0e14-4c46-9ffe-3c23f0a45ce5"
+        ],
+        "requestSha256s": [
+          "227c1dc1131ef2976afb87ac573868defc3f51748239305a638c548280d3fbcf",
+          "245162bace426ccacae846b68b6eac0dd5047f9e0fc88383794bf85506776778",
+          "f4e9e617b74fd0a5dee910505d671a9318ca420bbc66cdc167877e0021a7ac3c",
+          "583321e55369e7014a5d2034331b698b7cc4326b19669c7d8e1c214df7c9aaab"
+        ],
+        "responseSha256s": [
+          "0ac1cb4ffb1883a38ec4a72310234e82fc03ee63d1a0e895092c5b7ed9f7a84b",
+          "ad257728397e0097036427bad16c4bea3ef1b511ca7fd0e5d3799406a130385c",
+          "e915cee027a70632830a23eeaa4c469eed6b507c3f88b0698c178db1e97397bc",
+          "b521b0652e3f6e7f5dcc4b43a4576ebe3054e9b6b480616490403f14c42c1b7a"
+        ],
+        "usage": {
+          "calls": 4,
+          "tool_ms": 0,
+          "bytes_read": 359,
+          "money_microunits": 8
+        },
+        "usageOrigin": "synthetic",
+        "typedTransformation": {
+          "receipt": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "input_hash": "666095cd5beb6600a6230559845e4a468555b58fb8c9a2d7c22e17a5bffcfc1f",
+            "scope_hash": "53b9f81b25556a40e46f2b091ce83e5668735183e3b04012b08cef2e7eda69fe",
+            "output_hash": "40e40f504ffd4c56b19929fac0f9c264d5a1aa5eb868dd09545f69af86a7b478",
+            "binding_hash": "17616d4d75a380cc0d87441db66562df88b844b0d6104325282ba4b1866858f7",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "invocation_id": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "task_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+            "cog_snapshot_hash": "a7f070b4f4fb0f1c023aeba4877f5a4bb6b56a9f988b5229a8a9aeeb9159d1de",
+            "input_artifact_id": null,
+            "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+            "upstream_receipt_hash": "1a2fda2bccd2a8abf9ad3ced51d8a9333e3de52f69ae65262a2b82cfcfd92d88"
+          },
+          "signature": {
+            "cog_ref": "syn://cog/potbot-research-external",
+            "handler_ref": "potbot.cogs.external_research",
+            "cog_type_ref": "synny://type/potbot-research-external-cog",
+            "input_type_ref": "synny://type/potbot-research-action",
+            "schema_version": 1,
+            "output_type_ref": "synny://type/potbot-research-external-batch",
+            "implementation_revision": 1,
+            "requires_controller_scope": true
+          },
+          "receiptSha256": "cfa149151982d852790e17f809399ffb82378c1523f2e4336d147284c0b45397",
+          "synActivation": "not_qualified",
+          "implementationSha256": "e1bbcb19b9f20851307a26396a5f4c2a7762062f06b9f6db65e8ca87c4c7157b"
+        },
+        "needResolved": false,
+        "grantsTaskCompletion": false
+      }
+    },
+    "source": {
+      "extractionArtifactId": "23d33e48-0ea5-5291-97b2-16d9088b463f",
+      "extractionSha256": "62438909387afc989bb68b4e5971284a44699f7f253eeabd697c829e54db9bfb",
+      "id": "5c85b930e03ffd040b337caa380f9be214cec9375a08f1980cb7c3cf56d9d911",
+      "rawArtifactId": "08451c00-c06a-584b-8b59-ce4f53e307df",
+      "rawSha256": "c315d1ea23633616ae8cf2f853617f6d91d1e253fa81f758b357078452b00c63",
+      "reasonCodes": [],
+      "requestedUrl": "https://docs.example.com/guide",
+      "resolvedUrl": "https://docs.example.com/guide",
+      "retrievedAt": "2026-11-18T05:57:28.209945Z",
+      "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+      "sourceId": "5c85b930e03ffd040b337caa380f9be214cec9375a08f1980cb7c3cf56d9d911",
+      "status": "extracted"
+    },
+    "extraction": {
+      "complete": true,
+      "execution": null,
+      "extractorId": "potbot.html_text/v1",
+      "extractorSha256": "eacff20f0ca10379662c8c528e5038a5a9d0ef2b936e0f28ba80af4e0080a2c5",
+      "license": "unknown",
+      "mediaType": "text/html; charset=utf-8",
+      "metadata": {
+        "publicationProvenance": null,
+        "publishedAt": null,
+        "title": "Unicode guide"
+      },
+      "reasonCodes": [],
+      "schema": "potbot-extracted-source/v1",
+      "segments": [
+        {
+          "endByte": 25,
+          "kind": "html_element",
+          "locator": "/p[1]",
+          "page": null,
+          "startByte": 0
+        }
+      ],
+      "sourceSha256": "c315d1ea23633616ae8cf2f853617f6d91d1e253fa81f758b357078452b00c63",
+      "status": "extracted",
+      "text": "Alpha source says β🍀.",
+      "textSha256": "ff28bcea67ba0917a20d86a43ac91b3128d3c0b4b93c2bd051d937a6def4e240"
+    }
+  },
+  "citation": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "citation": {
+      "schema": "potbot-research-citation/v1",
+      "endByte": 24,
+      "quoteSha256": "1dad9480a4eb8f49abfdb892ca07add6fdfd6be63aa4b24073a9b573f6cef533",
+      "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+      "sourceId": "5c85b930e03ffd040b337caa380f9be214cec9375a08f1980cb7c3cf56d9d911",
+      "startByte": 18,
+      "rawSha256": "c315d1ea23633616ae8cf2f853617f6d91d1e253fa81f758b357078452b00c63",
+      "textSha256": "ff28bcea67ba0917a20d86a43ac91b3128d3c0b4b93c2bd051d937a6def4e240",
+      "receiptSha256": "f6dadeab8fe6ad1c84da93b060e547b396253c8cb3c0bc9b88acda813fb3d23a",
+      "quote": "β🍀",
+      "requestedUrl": "https://docs.example.com/guide",
+      "resolvedUrl": "https://docs.example.com/guide",
+      "retrievedAt": "2026-11-18T05:57:28.209945Z",
+      "publishedAt": null,
+      "publicationProvenance": null,
+      "license": "unknown",
+      "lineStart": 1,
+      "lineEnd": 1,
+      "segments": [
+        {
+          "endByte": 25,
+          "kind": "html_element",
+          "locator": "/p[1]",
+          "page": null,
+          "startByte": 0
+        }
+      ],
+      "researchScope": {
+        "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390",
+        "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+        "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+        "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+        "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+        "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+        "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1"
+      },
+      "freshnessSeconds": 0,
+      "sha256": "78d9887ccf2decc11ae313262405c3bf61d2bfc39a61d28fccc2a9a202485b87"
+    }
+  },
+  "comparison": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "evidenceId": "11e22a3f-7ab0-49a5-baca-8eff171c095d",
+    "report": {
+      "claims": [
+        {
+          "citations": [
+            {
+              "endByte": 24,
+              "freshnessSeconds": 0,
+              "license": "unknown",
+              "lineEnd": 1,
+              "lineStart": 1,
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "quote": "β🍀",
+              "quoteSha256": "1dad9480a4eb8f49abfdb892ca07add6fdfd6be63aa4b24073a9b573f6cef533",
+              "rawSha256": "c315d1ea23633616ae8cf2f853617f6d91d1e253fa81f758b357078452b00c63",
+              "receiptSha256": "f6dadeab8fe6ad1c84da93b060e547b396253c8cb3c0bc9b88acda813fb3d23a",
+              "requestedUrl": "https://docs.example.com/guide",
+              "researchScope": {
+                "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+                "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+                "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+                "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+                "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1",
+                "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+                "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390"
+              },
+              "resolvedUrl": "https://docs.example.com/guide",
+              "retrievedAt": "2026-11-18T05:57:28.209945Z",
+              "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+              "schema": "potbot-research-citation/v1",
+              "segments": [
+                {
+                  "endByte": 25,
+                  "kind": "html_element",
+                  "locator": "/p[1]",
+                  "page": null,
+                  "startByte": 0
+                }
+              ],
+              "sha256": "78d9887ccf2decc11ae313262405c3bf61d2bfc39a61d28fccc2a9a202485b87",
+              "sourceId": "5c85b930e03ffd040b337caa380f9be214cec9375a08f1980cb7c3cf56d9d911",
+              "startByte": 18,
+              "textSha256": "ff28bcea67ba0917a20d86a43ac91b3128d3c0b4b93c2bd051d937a6def4e240"
+            }
+          ],
+          "key": "reported-value",
+          "label": "Literal reported value",
+          "reasonCodes": [],
+          "status": "supported",
+          "unavailableCitationCount": 0,
+          "values": [
+            "β🍀"
+          ]
+        }
+      ],
+      "contextSha256": "735846a0671827158097d9205dcc2b48fe0788338af1365ccd837c6329df9cd6",
+      "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+      "evaluatedAt": "2026-11-18T05:57:28.595132+00:00",
+      "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+      "needResolved": false,
+      "needRevisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+      "qualification": "verified_cited_source_agreement_only",
+      "schema": "potbot-research-comparison/v1",
+      "sha256": "9974f4aba66d2a1cd8b0087909c372b9b2943e921906dbf930a033b3c86f8762",
+      "status": "supported",
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390"
+    }
+  },
+  "readComparison": {
+    "schema": "potbot-research-workbench/v1",
+    "scope": {
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390",
+      "principalId": "c73d61d8-6e01-4584-9cf1-7be1870746d1"
+    },
+    "evidenceId": "11e22a3f-7ab0-49a5-baca-8eff171c095d",
+    "report": {
+      "claims": [
+        {
+          "citations": [
+            {
+              "endByte": 24,
+              "freshnessSeconds": 0,
+              "license": "unknown",
+              "lineEnd": 1,
+              "lineStart": 1,
+              "publicationProvenance": null,
+              "publishedAt": null,
+              "quote": "β🍀",
+              "quoteSha256": "1dad9480a4eb8f49abfdb892ca07add6fdfd6be63aa4b24073a9b573f6cef533",
+              "rawSha256": "c315d1ea23633616ae8cf2f853617f6d91d1e253fa81f758b357078452b00c63",
+              "receiptSha256": "f6dadeab8fe6ad1c84da93b060e547b396253c8cb3c0bc9b88acda813fb3d23a",
+              "requestedUrl": "https://docs.example.com/guide",
+              "researchScope": {
+                "contract_revision_id": "9be0a007-26be-400a-9f50-1ad8240b93c9",
+                "need_id": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+                "need_revision_id": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+                "repository_state_id": "1058c1cd-c2c4-5abf-8fbb-bdba86a8c523",
+                "semantic_release_digest": "8522dde2440c2a33e99972e98e6ac80497c7e5d1bcd9fa8294ca4abf7bc494b1",
+                "task_id": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+                "workspace_id": "0963560a-ee39-4758-9b71-9bd9f8418390"
+              },
+              "resolvedUrl": "https://docs.example.com/guide",
+              "retrievedAt": "2026-11-18T05:57:28.209945Z",
+              "runId": "394ef64e-cdb7-4cd0-a012-c15ded9c48b5",
+              "schema": "potbot-research-citation/v1",
+              "segments": [
+                {
+                  "endByte": 25,
+                  "kind": "html_element",
+                  "locator": "/p[1]",
+                  "page": null,
+                  "startByte": 0
+                }
+              ],
+              "sha256": "78d9887ccf2decc11ae313262405c3bf61d2bfc39a61d28fccc2a9a202485b87",
+              "sourceId": "5c85b930e03ffd040b337caa380f9be214cec9375a08f1980cb7c3cf56d9d911",
+              "startByte": 18,
+              "textSha256": "ff28bcea67ba0917a20d86a43ac91b3128d3c0b4b93c2bd051d937a6def4e240"
+            }
+          ],
+          "key": "reported-value",
+          "label": "Literal reported value",
+          "reasonCodes": [],
+          "status": "supported",
+          "unavailableCitationCount": 0,
+          "values": [
+            "β🍀"
+          ]
+        }
+      ],
+      "contextSha256": "735846a0671827158097d9205dcc2b48fe0788338af1365ccd837c6329df9cd6",
+      "episodeId": "247e4ac6-69f3-4a7b-8d7d-603d43db6cfc",
+      "evaluatedAt": "2026-11-18T05:57:28.595132+00:00",
+      "needId": "1c9e9495-8331-4827-a4b7-318730d0b47a",
+      "needResolved": false,
+      "needRevisionId": "d58f566f-6c05-4c2d-9d8a-9b20f3bbb81b",
+      "qualification": "verified_cited_source_agreement_only",
+      "schema": "potbot-research-comparison/v1",
+      "sha256": "9974f4aba66d2a1cd8b0087909c372b9b2943e921906dbf930a033b3c86f8762",
+      "status": "supported",
+      "workspaceId": "0963560a-ee39-4758-9b71-9bd9f8418390"
+    }
+  }
+}

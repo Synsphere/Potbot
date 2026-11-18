@@ -1,5 +1,16 @@
 # Potbot plugin and capability discovery strategy
 
+**External research implementation, 18 November 2026:**
+[T05-A](t05-a-external-research.md) makes the existing admitted research action
+executable through configured search providers, exact approved-host fetches,
+immutable source extraction and cited-source comparisons. The worker binds
+query disclosure, task/need scope, resource reservation and native consumer to
+each request; complete signed artifacts and monitoring determine later citation
+availability. Browser/CLI/API share the same workspace research owner. Literal
+agreement is not task completion or live integration qualification. Specialist
+scientific/archive connectors, broad G07 formats, native PDF host and deployed
+SYN/provider qualification retain their separate gates.
+
 **Selected execution implementation, 18 November 2026:**
 [U04-T](u04-t-selected-task-execution.md) carries a retained operation selection
 through the existing worker check, explicit launch, owned progress/recovery and
