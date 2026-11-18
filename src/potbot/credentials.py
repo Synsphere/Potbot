@@ -45,6 +45,7 @@ SERVICE_CREDENTIAL_NAMES = (
     "api.setup_token",
     "ui.password",
     "ui.cookie_secret",
+    "ui.password_confirmed",
 )
 _NAMES = {"postgres.application", "postgres.admin", *SERVICE_CREDENTIAL_NAMES}
 _MCP_TOKEN_NAME = re.compile(r"mcp\.oauth\.[a-f0-9]{64}\Z")

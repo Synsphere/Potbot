@@ -279,6 +279,18 @@ def frontend_environment(config: ServiceConfig, store: CredentialStore | None = 
         "POTBOT_UI_WORKSPACE_NAME": "Potbot",
         "POTBOT_UI_MODEL": "potbot",
     })
+    # The supervisor supplies the mandatory Xpra bridge values in this child
+    # process environment. _safe_environment strips POTBOT_UI_*, so copy only
+    # this exact allowlist back into the Next.js server environment.
+    for name in (
+        "POTBOT_UI_XPRA_WORKSPACE_ID",
+        "POTBOT_UI_XPRA_BRIDGE_URL",
+        "POTBOT_UI_XPRA_BRIDGE_TOKEN",
+        "POTBOT_UI_XPRA_PUBLIC_WS_URL",
+    ):
+        value = os.environ.get(name)
+        if value:
+            env[name] = value
     env.pop("POTBOT_UI_SETUP_TOKEN", None)
     setup = store.get("api.setup_token")
     if setup:
@@ -291,6 +303,9 @@ def frontend_environment(config: ServiceConfig, store: CredentialStore | None = 
 
 def run_frontend(config: ServiceConfig) -> int:
     root = project_root()
+    from potbot.core_runtime import ensure_xpra_html5
+
+    ensure_xpra_html5(root)
     frontend = prepare_frontend(root)
     node, _npm, environment = ensure_node(root)
     environment.update(frontend_environment(config))

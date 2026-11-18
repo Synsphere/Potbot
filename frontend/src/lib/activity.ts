@@ -82,9 +82,10 @@ export function projectJobEvents(value: unknown, after: number): Pick<ActivityPa
 
 export function projectModels(value: unknown): ModelListing[] | null {
   const doc = unwrap(value);
-  if (!doc || !Array.isArray(doc.local) || doc.local.length > 120) return null;
+  const profiles = doc?.local_models ?? doc?.local;
+  if (!Array.isArray(profiles) || profiles.length > 120) return null;
   const result: ModelListing[] = [];
-  for (const item of doc.local) {
+  for (const item of profiles) {
     const model = object(item);
     if (!model || typeof model.canonical_model !== "string" || !MODEL.test(model.canonical_model)) return null;
     const role = bounded(model.role, 48) ?? "unspecified";

@@ -408,7 +408,7 @@ def install(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def _supervise(config: ServiceConfig) -> int:
-    """Keep API and worker alive under one native user-managed service process."""
+    """Keep every mandatory Potbot core component under one service owner."""
     if config.credential_profile != credential_profile():
         raise InvalidInputError("Service credential profile does not match the running user.")
     if config.frontend_enabled:
@@ -426,6 +426,14 @@ def _supervise(config: ServiceConfig) -> int:
         home.chmod(0o700)
     events = EventLogger(log_path=home / "supervisor.jsonl")
     policy = config.provider_policy
+    xpra_policy: Path | None = None
+    xpra_token: str | None = None
+    xpra_home: Path | None = None
+    if config.frontend_enabled:
+        from potbot.core_runtime import prepare_core_runtime
+
+        xpra_policy, xpra_home = prepare_core_runtime(config)
+        xpra_token = secrets.token_urlsafe(48)
     common = [
         "--workspace-id",
         config.workspace_id,
@@ -453,6 +461,11 @@ def _supervise(config: ServiceConfig) -> int:
         ],
         "worker": _service_command()[:2]
         + ["potbot.startup", "jobs", "worker", *common, "--provider-policy", policy],
+        "atomic-scheduler": _service_command()[:2]
+        + [
+            "potbot.startup", "atomic-graphs", *common, "worker",
+            "--interval", "2", "--graphs", "20", "--leaves", "8",
+        ],
     }
     if config.debugger_forwarding is not None:
         commands["debugger"] = _service_command()[:2] + [
@@ -462,8 +475,16 @@ def _supervise(config: ServiceConfig) -> int:
             config.debugger_forwarding,
         ]
     if config.frontend_enabled:
-        # One native supervisor owns API, worker and production Next.js GUI.
-        # The GUI child loads native-vault secrets; no keys enter command args.
+        # One native supervisor owns API, worker, atomic scheduler, Xpra and GUI.
+        assert xpra_policy is not None and xpra_token is not None and xpra_home is not None
+        commands["xpra"] = _service_command()[:2] + [
+            "potbot.tools.x11_workspace_server",
+            "--workspace-id", config.workspace_id,
+            "--sandbox-root", str(xpra_home),
+            "--browser-origin", "http://127.0.0.1:3100",
+            "--port", "8766",
+            "--apps-policy", str(xpra_policy),
+        ]
         commands["frontend"] = _service_command()[:2] + ["potbot.frontend_worker"]
     stopped = threading.Event()
 
@@ -482,6 +503,7 @@ def _supervise(config: ServiceConfig) -> int:
     env["POTBOT_PROJECT_ROOT"] = str(project_root())
     env["POTBOT_LOG_FILE"] = str(home / "worker.jsonl")
     env["POTBOT_LOG_CONTENT"] = "1" if config.log_content else "0"
+    child_envs: dict[str, dict[str, str]] = {}
     operator_attachment = None
     scoped_endpoint: Path | None = None
     if config.operator_manifest is not None:
@@ -548,6 +570,16 @@ def _supervise(config: ServiceConfig) -> int:
             ],
             **commands,
         }
+    if xpra_token is not None:
+        from potbot.core_runtime import frontend_bridge_environment
+
+        xpra_env = dict(env)
+        xpra_env["POTBOT_XPRA_BRIDGE_TOKEN"] = xpra_token
+        xpra_env["POTBOT_GUI_AUDIT_REQUIRED"] = "1"
+        child_envs["xpra"] = xpra_env
+        frontend_env = dict(env)
+        frontend_env.update(frontend_bridge_environment(config, xpra_token))
+        child_envs["frontend"] = frontend_env
     threads: list[threading.Thread] = []
 
     def watch(name: str, process: subprocess.Popen[str]) -> None:
@@ -596,7 +628,7 @@ def _supervise(config: ServiceConfig) -> int:
                 process = subprocess.Popen(
                     command,
                     cwd=project_root(),
-                    env=env,
+                    env=child_envs.get(name, env),
                     stdin=subprocess.DEVNULL,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,

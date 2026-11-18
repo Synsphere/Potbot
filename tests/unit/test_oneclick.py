@@ -37,10 +37,13 @@ def test_generated_credentials_are_reused_and_never_written_to_frontend(monkeypa
         def set(self, key, value):
             memory[key] = value
     monkeypatch.setattr(oneclick, "CredentialStore", Store)
-    assert oneclick._ensure_secrets() == memory["ui.password"]
-    assert oneclick._ensure_secrets() is None
-    assert {"api.access_token", "api.setup_token", "ui.password", "ui.cookie_secret"} == set(memory)
-    assert all(len(value) >= 32 for value in memory.values())
+    monkeypatch.setattr(oneclick, "_prompt_gui_password", lambda: "a passphrase I actually chose")
+    assert oneclick._ensure_secrets() is True
+    assert memory["ui.password"] == "a passphrase I actually chose"
+    assert memory["ui.password_confirmed"] == "operator-chosen-v1"
+    assert all(len(memory[key]) >= 32 for key in ("api.access_token", "api.setup_token", "ui.cookie_secret"))
+    assert oneclick._ensure_secrets() is False
+    assert len(memory) == 5
 
 
 def test_frontend_environment_uses_vault_not_checkout_files(monkeypatch):
@@ -248,3 +251,217 @@ def test_verified_application_role_rejects_privileged_identity_before_workspace_
     with pytest.raises(ScopeDeniedError):
         oneclick._verified_application_role("app-dsn", "admin-dsn", "potbot")
     assert validated == ["potbot_admin"]
+
+
+def test_existing_generated_gui_password_is_replaced_on_next_launch(monkeypatch):
+    memory = {"ui.password": "previous-random-string", "ui.cookie_secret": "prior-session-secret"}
+
+    class Store:
+        def __init__(self, _profile):
+            pass
+        def get(self, key):
+            return memory.get(key)
+        def set(self, key, value):
+            memory[key] = value
+
+    monkeypatch.setattr(oneclick, "CredentialStore", Store)
+    monkeypatch.setattr(oneclick, "_prompt_gui_password", lambda: "my chosen password is different")
+    assert oneclick._ensure_secrets() is True
+    assert memory["ui.password"] == "my chosen password is different"
+    assert memory["ui.cookie_secret"] != "prior-session-secret"
+    assert memory["ui.password_confirmed"] == "operator-chosen-v1"
+    assert oneclick._ensure_secrets() is False
+
+
+def test_password_prompt_requires_interactive_hidden_confirmation(monkeypatch):
+    from io import StringIO
+    from types import SimpleNamespace
+
+    std_in, std_err = StringIO(), StringIO()
+    std_in.isatty = lambda: True
+    std_err.isatty = lambda: True
+    monkeypatch.setattr(oneclick, "sys", SimpleNamespace(stdin=std_in, stderr=std_err))
+    values = iter(["my first secure password", "wrong confirmation", "my final secure password", "my final secure password"])
+    seen = []
+
+    def hidden(label):
+        seen.append(label)
+        return next(values)
+
+    monkeypatch.setattr(oneclick, "_hidden_prompt", hidden)
+    assert oneclick._prompt_gui_password() == "my final secure password"
+    assert seen == [
+        "New Potbot GUI password: ", "Confirm Potbot GUI password: ",
+        "New Potbot GUI password: ", "Confirm Potbot GUI password: ",
+    ]
+    assert "my first secure password" not in std_err.getvalue()
+    assert "my final secure password" not in std_err.getvalue()
+    assert "did not match" in std_err.getvalue()
+
+
+def test_no_gui_password_is_automatically_generated_in_headless_mode(monkeypatch):
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(oneclick, "sys", SimpleNamespace(
+        stdin=SimpleNamespace(isatty=lambda: False),
+        stderr=SimpleNamespace(isatty=lambda: False),
+    ))
+    monkeypatch.setattr(oneclick, "_hidden_prompt", lambda *_: pytest.fail("No hidden input on headless host"))
+    with pytest.raises(InvalidInputError, match="interactive terminal"):
+        oneclick._prompt_gui_password()
+
+
+def test_mismatched_passwords_do_not_change_the_native_vault(monkeypatch):
+    from io import StringIO
+    from types import SimpleNamespace
+
+    stdin, stderr = StringIO(), StringIO()
+    stdin.isatty = stderr.isatty = lambda: True
+    monkeypatch.setattr(oneclick, "sys", SimpleNamespace(stdin=stdin, stderr=stderr))
+    monkeypatch.setattr(oneclick, "_hidden_prompt", lambda label: "correct long string" if label.startswith("New") else "incorrect long string")
+    changes = []
+    with pytest.raises(InvalidInputError, match="not confirmed"):
+        oneclick._set_gui_password(SimpleNamespace(set=lambda *args: changes.append(args)))
+    assert changes == []
+
+
+def test_prompt_is_not_skipped_when_gui_is_already_healthy(monkeypatch, tmp_path):
+    from potbot import native_postgres, service
+
+    path = tmp_path / "service.json"
+    path.write_text("configured")
+    config = SimpleNamespace(frontend_enabled=True, scoped_worker_launcher=False)
+    seen = []
+    monkeypatch.setattr(oneclick, "project_root", lambda: tmp_path)
+    monkeypatch.setattr(native_postgres, "is_managed", lambda _: False)
+    monkeypatch.setattr(service, "config_path", lambda: path)
+    monkeypatch.setattr(service.ServiceConfig, "load", lambda _: config)
+    monkeypatch.setattr(oneclick, "_ensure_secrets", lambda: seen.append("prompt") or True)
+    monkeypatch.setattr(oneclick, "_healthy", lambda _: True)
+    monkeypatch.setattr(oneclick, "_gui_accepts_current_password", lambda: True)
+    monkeypatch.setattr(oneclick, "_install_or_upgrade", lambda _: (config, False, False))
+    monkeypatch.setattr(service, "manager_action", lambda action: seen.append(action))
+    monkeypatch.setattr(service, "install_manager", lambda **kw: seen.append("install"))
+    monkeypatch.setattr(oneclick.sys.stdout, "isatty", lambda: False)
+    assert oneclick._start() == 0
+    assert seen == ["prompt", "stop", "install", "start"]
+
+
+def test_change_password_command_restarts_native_service(monkeypatch, tmp_path):
+    from potbot import service
+
+    path = tmp_path / "config.json"
+    path.write_text("configured")
+    events = []
+    monkeypatch.setattr(service, "config_path", lambda: path)
+    monkeypatch.setattr(oneclick, "_set_gui_password", lambda store: events.append("chosen"))
+    monkeypatch.setattr(service, "manager_action", events.append)
+    monkeypatch.setattr(service.ServiceConfig, "load", lambda path: SimpleNamespace(frontend_enabled=True))
+    monkeypatch.setattr(oneclick, "_healthy", lambda config: True)
+    monkeypatch.setattr(oneclick, "_gui_accepts_current_password", lambda: True)
+    assert oneclick.main(["change-password"]) == 0
+    assert events == ["chosen", "stop", "start"]
+
+
+def test_password_change_route_is_forwarded_by_startup(monkeypatch):
+    calls = []
+    monkeypatch.setattr(oneclick, "main", lambda arguments: calls.append(arguments) or 0)
+    assert startup.main(["change-password"]) == 0
+    assert calls == [["change-password"]]
+
+
+def test_legacy_password_command_does_not_display_chosen_password(monkeypatch, capsys):
+    calls = []
+    monkeypatch.setattr(oneclick, "_change_password", lambda: calls.append("prompt") or 0)
+    assert oneclick.main(["ui-password"]) == 0
+    assert calls == ["prompt"]
+    assert capsys.readouterr().out == ""
+
+
+def test_gui_login_is_probed_on_loopback_using_vault_and_exact_origin(monkeypatch):
+    from types import SimpleNamespace
+    secret = "my chosen local-only password"
+    monkeypatch.setattr(oneclick, "CredentialStore", lambda profile: SimpleNamespace(get=lambda key: secret))
+    requests = []
+    class Response:
+        status = 200
+        def __enter__(self):return self
+        def __exit__(self, *args):return False
+        def read(self, maximum):
+            assert maximum == 4097
+            return b'{"authenticated":true}'
+    monkeypatch.setattr(oneclick.urllib.request, "build_opener", lambda *parts: SimpleNamespace(open=lambda req, timeout: (requests.append((req, timeout)), Response())[1]))
+    assert oneclick._gui_accepts_current_password() is True
+    assert len(requests) == 1
+    request, timeout = requests[0]
+    assert request.full_url == "http://127.0.0.1:3100/api/ui/auth/login"
+    assert request.get_method() == "POST"
+    assert request.get_header("Origin") == "http://127.0.0.1:3100"
+    assert json.loads(request.data)["password"] == secret
+
+
+def test_gui_login_rejects_stale_process_without_exposing_password(monkeypatch):
+    from types import SimpleNamespace
+    import urllib.error
+    secret = "another private passphrase"
+    monkeypatch.setattr(oneclick, "CredentialStore", lambda profile: SimpleNamespace(get=lambda key: secret))
+    def fail(*args, **kwargs):
+        raise urllib.error.HTTPError("http://127.0.0.1:3100/", 401, "invalid password", {}, None)
+    monkeypatch.setattr(oneclick.urllib.request, "build_opener", lambda *parts: SimpleNamespace(open=fail))
+    assert oneclick._gui_accepts_current_password() is False
+    with pytest.raises(CapabilityUnavailableError) as result:
+        oneclick._require_gui_login()
+    assert secret not in str(result.value)
+    assert "port 3100" in str(result.value)
+
+
+def test_confirmed_password_reused_without_prompt(monkeypatch):
+    secret = "operator-chosen-v1"
+    memory = {"api.access_token": "a" * 42, "api.setup_token": "s" * 42,
+              "ui.password": "my own chosen password", "ui.cookie_secret": "c" * 48,
+              "ui.password_confirmed": secret}
+    class Store:
+        def __init__(self, _profile): pass
+        def get(self, key): return memory.get(key)
+        def set(self, key, value): memory[key] = value
+    monkeypatch.setattr(oneclick, "CredentialStore", Store)
+    monkeypatch.setattr(oneclick, "_prompt_gui_password", lambda: pytest.fail("Must not re-prompt confirmed password"))
+    assert oneclick._ensure_secrets() is False
+    assert len(memory) == 5
+
+
+def test_interrupted_password_rotation_requires_fresh_prompt(monkeypatch):
+    memory = {
+        "api.access_token": "a" * 42,
+        "api.setup_token": "s" * 42,
+        "ui.password": "incomplete partially written password",
+        "ui.cookie_secret": "c" * 48,
+        "ui.password_confirmed": "operator-updating-v1",
+    }
+
+    class Store:
+        def __init__(self, _profile): pass
+        def get(self, key): return memory.get(key)
+        def set(self, key, value): memory[key] = value
+
+    monkeypatch.setattr(oneclick, "CredentialStore", Store)
+    monkeypatch.setattr(oneclick, "_prompt_gui_password", lambda: "new explicit choice here")
+    assert oneclick._ensure_secrets() is True
+    assert memory["ui.password"] == "new explicit choice here"
+    assert memory["ui.password_confirmed"] == "operator-chosen-v1"
+
+
+def test_failed_password_vault_write_cannot_leave_confirmed_marker(monkeypatch):
+    from types import SimpleNamespace
+    writes = []
+    secret = "new chosen password now"
+    monkeypatch.setattr(oneclick, "_prompt_gui_password", lambda: secret)
+
+    def write(key, value):
+        writes.append(key)
+        if key == "ui.password":
+            raise CapabilityUnavailableError("vault write failed")
+
+    with pytest.raises(CapabilityUnavailableError):
+        oneclick._set_gui_password(SimpleNamespace(set=write))
+    assert writes == ["ui.password_confirmed", "ui.cookie_secret", "ui.password"]

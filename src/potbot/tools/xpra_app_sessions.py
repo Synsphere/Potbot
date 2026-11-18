@@ -1136,14 +1136,9 @@ def load_operator_application_policy(path: Path, server: Any) -> XpraApplication
             or not any(recipe.kind == "controlled-browser" for recipe in recipes)
         ):
             raise ValueError("Syn browser RPC requires a private browser reservation policy")
-        if (
-            syn_rpc is None
-            and os.environ.get("POTBOT_OPERATOR_REQUIRED") == "1"
-            and any(recipe.kind == "controlled-browser" for recipe in recipes)
-        ):
-            raise ScopeDeniedError(
-                "Managed controlled-browser requires the pinned Syn RPC selection"
-            )
+        # Local operator browser control is a core Potbot capability and does
+        # not depend on an unreleased SYN browser route. When synRpc is present
+        # it remains independently pinned and validated for agent-facing routing.
         display_spec = data.get("agentDisplays")
         if display_spec is not None:
             if (

@@ -13,7 +13,8 @@ export async function GET(request: Request): Promise<Response> {
   const config = potbotConfigForRequest(request);
   if (!config) return safeError("Potbot backend not configured.", 503);
   try {
-    const upstreamResponse = await upstream(config, "/v1/models");
+    // Internal Potbot model catalogue, not the OpenAI-compatible /v1/models.
+    const upstreamResponse = await upstream(config, "/v1/potbot/models");
     if (!upstreamResponse.ok) return upstreamFailure(upstreamResponse);
     const bytes = await upstreamResponse.arrayBuffer();
     if (bytes.byteLength > 700_000) return safeError("Model catalogue too large.", 502);

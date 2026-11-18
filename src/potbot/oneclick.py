@@ -8,6 +8,7 @@ initialisation and unsupported host package installation are never guessed.
 
 from __future__ import annotations
 
+import hmac
 import json
 import os
 import secrets
@@ -23,8 +24,8 @@ from typing import Any
 from urllib.parse import quote, urlsplit, urlunsplit
 from uuid import UUID, uuid4
 
-from potbot.credentials import (CredentialStore, credential_profile, resolve_postgres_dsn,
-                                validate_connection)
+from potbot.credentials import (CredentialStore, _hidden_prompt, credential_profile,
+                                resolve_postgres_dsn, validate_connection)
 from potbot.dependencies import project_root
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import (
@@ -237,21 +238,63 @@ def _policy_path(root: Path) -> Path:
     return path
 
 
-def _ensure_secrets() -> str | None:
-    """Keep all operator and UI secrets in the native OS credential store."""
+def _prompt_gui_password() -> str:
+    """Ask at an interactive console; never display, log, or generate a GUI password."""
+    if not sys.stdin.isatty() or not sys.stderr.isatty():
+        raise InvalidInputError(
+            "Choose the Potbot GUI password in an interactive terminal: run start.bat "
+            "or start.ps1 without redirecting input (on Linux use start.sh)."
+        )
+    _notice("Choose a password for the Potbot GUI (12-256 characters)")
+    for _ in range(3):
+        first = _hidden_prompt("New Potbot GUI password: ")
+        second = _hidden_prompt("Confirm Potbot GUI password: ")
+        if (
+            not 12 <= len(first) <= 256
+            or not first.strip()
+            or any(char in first for char in ("\x00", "\n", "\r"))
+        ):
+            _notice("Password must contain 12-256 characters and no line breaks; try again")
+        elif not hmac.compare_digest(first.encode("utf-8"), second.encode("utf-8")):
+            _notice("Passwords did not match; try again")
+        else:
+            return first
+    raise InvalidInputError("GUI password was not confirmed; no password was changed")
+
+
+def _set_gui_password(store: CredentialStore) -> None:
+    """Persist an explicitly chosen password; rotate sessions on replacement."""
+    password = _prompt_gui_password()
+    # The OS vault is not a multi-key transaction. Fence partial writes so a
+    # crash between replacing the password and session key forces a fresh prompt
+    # rather than silently accepting an incompletely rotated login.
+    store.set("ui.password_confirmed", "operator-updating-v1")
+    # A new session signing key invalidates old logins when Next.js reloads.
+    store.set("ui.cookie_secret", secrets.token_urlsafe(48))
+    store.set("ui.password", password)
+    # Older automatic passwords have no marker, so the first upgraded launch
+    # asks the operator even when a password was previously generated.
+    store.set("ui.password_confirmed", "operator-chosen-v1")
+
+
+def _ensure_secrets() -> bool:
+    """Keep internal tokens automatic, but require a user-chosen GUI password."""
     store = CredentialStore(credential_profile())
-    generated_password: str | None = None
-    for key in ("api.access_token", "api.setup_token", "ui.password", "ui.cookie_secret"):
-        if store.get(key) is not None:
-            continue
-        value = secrets.token_urlsafe(38 if key != "ui.cookie_secret" else 48)
-        store.set(key, value)
-        if key == "ui.password":
-            generated_password = value
-    return generated_password
+    for key in ("api.access_token", "api.setup_token"):
+        if store.get(key) is None:
+            store.set(key, secrets.token_urlsafe(38))
+    confirmed = store.get("ui.password_confirmed")
+    if confirmed == "operator-chosen-v1" and store.get("ui.password") and store.get("ui.cookie_secret"):
+        return False
+    if confirmed not in (None, "operator-chosen-v1", "operator-updating-v1"):
+        raise InvalidInputError("Unknown GUI password confirmation marker in the OS vault")
+    if confirmed == "operator-updating-v1":
+        _notice("An earlier GUI password change was interrupted; choose a password again")
+    _set_gui_password(store)
+    return True
 
 
-def _install_or_upgrade(root: Path) -> tuple[Any, str | None, bool]:
+def _install_or_upgrade(root: Path) -> tuple[Any, bool, bool]:
     from potbot import service
     from potbot.frontend_worker import prepare_frontend
 
@@ -270,13 +313,13 @@ def _install_or_upgrade(root: Path) -> tuple[Any, str | None, bool]:
         # native Cog profiles. Preserve all those pins rather than reinstalling.
         if not config.frontend_enabled:
             config = replace(config, frontend_enabled=True)
-    password = _ensure_secrets()
+    password_chosen = _ensure_secrets()
     # This work happens before touching the existing service manager: a failed
     # Node download/npm build must not take down a working backend.
     prepare_frontend(root)
     if first_setup or not current.is_file() or not service.ServiceConfig.load(current).frontend_enabled:
         service._atomic_configuration(config)
-    return config, password, first_setup
+    return config, password_chosen, first_setup
 
 
 def _probe(url: str, *, json_key: str | None = None) -> bool:
@@ -314,6 +357,47 @@ def _healthy(config: Any) -> bool:
     return _probe(_GUI_URL + "/api/ui/auth/status", json_key="configured")
 
 
+def _gui_accepts_current_password() -> bool:
+    """One local end-to-end login probe, not a health check or retry loop.
+
+    /auth/status only establishes that some GUI is listening; an orphaned Next.js
+    process may still hold credentials from before the user's password change.
+    The existing login route verifies the actual in-memory password and origin.
+    Never print or log the password, response body, or returned session cookie.
+    """
+    password = CredentialStore(credential_profile()).get("ui.password")
+    if not password:
+        return False
+    payload = json.dumps({"password": password}).encode("utf-8")
+    request = urllib.request.Request(
+        _GUI_URL + "/api/ui/auth/login",
+        data=payload,
+        method="POST",
+        headers={"Content-Type": "application/json", "Origin": _GUI_URL},
+    )
+    try:
+        # Do not allow a machine-level HTTP proxy to observe the local password.
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with opener.open(request, timeout=3) as response:
+            data = response.read(4097)
+            return (
+                response.status == 200
+                and len(data) <= 4096
+                and json.loads(data).get("authenticated") is True
+            )
+    except (OSError, ValueError, json.JSONDecodeError):
+        return False
+
+
+def _require_gui_login() -> None:
+    if not _gui_accepts_current_password():
+        raise CapabilityUnavailableError(
+            "The GUI on port 3100 did not accept the password saved in the native vault. "
+            "Another or stale GUI process may still be running; close that process and "
+            "restart Potbot. Open http://127.0.0.1:3100 (not localhost)."
+        )
+
+
 def _open_browser() -> None:
     # WSL's preferred GUI browser is often the Windows host browser.
     if "microsoft" in platform_release().lower() or "WSL_INTEROP" in os.environ:
@@ -341,6 +425,7 @@ def _foreground(config: Any) -> int:
             if child.poll() is not None:
                 raise CapabilityUnavailableError("Backend or GUI supervisor exited; inspect logs")
             if _healthy(config):
+                _require_gui_login()
                 _notice("Potbot is running at " + _GUI_URL)
                 if sys.stdout.isatty():
                     _open_browser()
@@ -371,20 +456,22 @@ def _start() -> int:
     # Opening the app again must not run npm ci or replace a live Next.js
     # build. Explicit restart stops the managed service before rebuilding.
     saved = service.config_path()
+    password_chosen = False
     if saved.is_file():
+        # This must run BEFORE the already-healthy fast path: older launchers
+        # created random passwords without asking the operator.
+        password_chosen = _ensure_secrets()
         current = service.ServiceConfig.load(saved)
-        if current.frontend_enabled and _healthy(current):
+        if current.frontend_enabled and not password_chosen and _healthy(current) and _gui_accepts_current_password():
             _notice("Potbot is already running: " + _GUI_URL)
             if sys.stdout.isatty():
                 _open_browser()
             return 0
-    config, new_password, first_setup = _install_or_upgrade(root)
-    if new_password:
-        if sys.stdout.isatty():
-            print("\nPotbot GUI password (shown once): " + new_password + "\n", flush=True)
-        else:
-            _notice("New UI password saved in the OS vault; use an interactive terminal to reveal it")
-    if not first_setup and _healthy(config):
+    config, newly_chosen, first_setup = _install_or_upgrade(root)
+    password_chosen = password_chosen or newly_chosen
+    if password_chosen:
+        _notice("Your chosen GUI password is stored securely; restarting the GUI login service")
+    if not first_setup and not password_chosen and _healthy(config) and _gui_accepts_current_password():
         _notice("Potbot is already running: " + _GUI_URL)
         if sys.stdout.isatty():
             _open_browser()
@@ -403,6 +490,7 @@ def _start() -> int:
         return _foreground(config)
     for _ in range(90):
         if _healthy(config):
+            _require_gui_login()
             _notice("Backend and GUI are ready: " + _GUI_URL)
             if sys.stdout.isatty():
                 _open_browser()
@@ -411,9 +499,34 @@ def _start() -> int:
     raise CapabilityUnavailableError("Potbot service did not become healthy; run start.* logs")
 
 
+def _change_password() -> int:
+    from potbot import service
+
+    _set_gui_password(CredentialStore(credential_profile()))
+    _notice("Your chosen GUI password was saved in the OS vault")
+    if service.config_path().is_file():
+        config = service.ServiceConfig.load(service.config_path())
+        # The running Next.js process retains the old password in memory.
+        try:
+            service.manager_action("stop")
+            service.manager_action("start")
+        except (DomainError, OSError):
+            raise CapabilityUnavailableError(
+                "GUI password saved but the service could not restart; run start.bat restart"
+            ) from None
+        for _ in range(90):
+            if _healthy(config):
+                _require_gui_login()
+                _notice("Potbot GUI restarted; sign in with the password you chose")
+                return 0
+            time.sleep(1)
+        raise CapabilityUnavailableError("GUI password saved but the service did not become healthy")
+    return 0
+
+
 def main(arguments: list[str] | None = None) -> int:
     arguments = [] if arguments is None else arguments
-    if arguments not in ([], ["start"], ["stop"], ["restart"], ["status"], ["logs"], ["ui-password"]):
+    if arguments not in ([], ["start"], ["stop"], ["restart"], ["status"], ["logs"], ["ui-password"], ["change-password"]):
         raise InvalidInputError("Unsupported simple launch command")
     try:
         from potbot import service
@@ -430,14 +543,12 @@ def main(arguments: list[str] | None = None) -> int:
             return 0
         if action == "logs":
             return service.main(["logs"])
+        if action == "change-password":
+            return _change_password()
         if action == "ui-password":
-            if not sys.stdin.isatty() or not sys.stdout.isatty():
-                raise InvalidInputError("GUI password display requires an interactive terminal")
-            password = CredentialStore(credential_profile()).get("ui.password")
-            if not password:
-                raise CapabilityUnavailableError("No GUI password is configured")
-            print("Potbot GUI password: " + password)
-            return 0
+            # Legacy alias: the operator chooses a replacement; user-chosen
+            # passwords must never be printed by a diagnostic command.
+            return _change_password()
         if action in {"stop", "restart"}:
             if not service.config_path().is_file():
                 raise InvalidInputError("Potbot has not been configured")

@@ -10,16 +10,18 @@ export type AuthConfig = {
   publicOrigin: string;
 };
 
+const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
+
 export function authConfig(env: NodeJS.ProcessEnv = process.env): AuthConfig | null {
-  const password = env.POTBOT_UI_PASSWORD;
+  const password = env.POTBOT_UI_PASSWORD || "";
   const signingKey = env.POTBOT_UI_COOKIE_SECRET;
   const publicOrigin = env.POTBOT_UI_PUBLIC_ORIGIN;
-  if (!password || password.length < 12 || !signingKey || signingKey.length < 32 || !publicOrigin) return null;
+  if (!signingKey || signingKey.length < 32 || !publicOrigin) return null;
   try {
     const url = new URL(publicOrigin);
     if (url.username || url.password || url.pathname !== "/" || url.search || url.hash ||
         (url.protocol !== "https:" && !(url.protocol === "http:" &&
-        ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)))) return null;
+        LOOPBACK_HOSTS.has(url.hostname)))) return null;
     return { password, signingKey, publicOrigin: url.origin };
   } catch { return null; }
 }
@@ -60,9 +62,27 @@ export function authenticated(cookieHeader: string | null, config: AuthConfig, a
   return equalSecret(mac(segments.slice(0, 3).join("."), config.signingKey), segments[3]);
 }
 
+function loopbackUrl(value: string): URL | null {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "http:" || !LOOPBACK_HOSTS.has(url.hostname) ||
+        url.username || url.password) return null;
+    return url;
+  } catch { return null; }
+}
+
+export function localRequest(request: Request, config: AuthConfig): boolean {
+  const current = loopbackUrl(request.url), configured = loopbackUrl(config.publicOrigin);
+  return current !== null && configured !== null && current.port === configured.port;
+}
+
 export function validOrigin(request: Request, config: AuthConfig): boolean {
-  return request.headers.get("origin") === config.publicOrigin &&
-    request.headers.get("sec-fetch-site") !== "cross-site";
+  if (request.headers.get("sec-fetch-site") === "cross-site") return false;
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+  if (origin === config.publicOrigin) return true;
+  const supplied = loopbackUrl(origin), configured = loopbackUrl(config.publicOrigin);
+  return supplied !== null && configured !== null && supplied.port === configured.port;
 }
 
 /** Bound request bodies even when transfer encoding omits Content-Length. */
@@ -93,7 +113,8 @@ export function safeError(message: string, status: number): Response {
 export function requireOperator(request: Request): AuthConfig | Response {
   const config = authConfig();
   if (!config) return safeError("Operator UI access is not configured.", 503);
-  if (!authenticated(request.headers.get("cookie"), config)) return safeError("Log in to the operator workspace.", 401);
+  if (!localRequest(request, config))
+    return safeError("Operator UI is available only from this machine\'s loopback interface.", 403);
   return config;
 }
 

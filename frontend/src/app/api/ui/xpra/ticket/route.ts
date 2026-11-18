@@ -10,7 +10,8 @@ export async function POST(request: Request): Promise<Response> {
   if (operator instanceof Response) return operator;
   if (!validOrigin(request, operator)) return safeError("Untrusted Xpra session origin.", 403);
   const config = xpraBridgeConfigForWorkspace(request.headers.get("x-potbot-workspace"));
-  if (!config) return safeError("Workspace Xpra stream not configured.", 503);
+  // Absent optional Xpra is not a transient backend failure; the client stops retrying on 404.
+  if (!config) return safeError("Workspace Xpra stream not configured.", 404);
   if (request.headers.get("x-potbot-workspace") !== null && request.headers.get("x-potbot-workspace") !== config.workspaceId)
     return safeError("Xpra is not configured for the selected workspace.", 404);
   try {
