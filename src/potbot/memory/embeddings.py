@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
+import re
 import time
 from collections.abc import Callable
 from typing import Any, Literal
@@ -23,6 +25,8 @@ from potbot.domain.embeddings import (
 )
 from potbot.domain.errors import (
     InvalidInputError,
+    OperationCancelledError,
+    OperationTimeoutError,
     RevisionConflictError,
     ScopeDeniedError,
     StateMismatchError,
@@ -39,6 +43,50 @@ from potbot.persistence.artifacts import ArtifactStore
 from potbot.persistence.database import Database
 from potbot.persistence.embedding_sources import register_source_in_transaction
 from potbot.persistence.evidence import EvidenceStore
+
+
+def _transient_inputs(
+    query: str, candidates: tuple[tuple[str, str], ...]
+) -> tuple[tuple[str, str], ...]:
+    """Bound transient input before either database admission or model loading."""
+    if not isinstance(query, str) or not query.strip() or len(query) > 500:
+        raise InvalidInputError("transient ranking query must contain 1..500 characters")
+    if not isinstance(candidates, tuple) or not 1 <= len(candidates) <= 16:
+        raise InvalidInputError("transient ranking requires 1..16 candidate documents")
+    identities: set[str] = set()
+    total_bytes = 0
+    try:
+        total_bytes += len(query.encode("utf-8"))
+        for candidate in candidates:
+            if not isinstance(candidate, tuple) or len(candidate) != 2:
+                raise InvalidInputError("transient candidates must be identity/text pairs")
+            identity, text = candidate
+            if (
+                not isinstance(identity, str)
+                or re.fullmatch(r"[0-9a-f]{64}", identity) is None
+                or identity in identities
+            ):
+                raise InvalidInputError("transient candidate identities must be unique SHA256s")
+            identities.add(identity)
+            if not isinstance(text, str) or not text.strip() or len(text) > 4096:
+                raise InvalidInputError("transient document must contain 1..4096 characters")
+            total_bytes += len(text.encode("utf-8"))
+    except UnicodeError as error:
+        raise InvalidInputError("transient input must be valid UTF-8 text") from error
+    if total_bytes > 65_536:
+        raise InvalidInputError("transient ranking inputs exceed the 64 KiB byte limit")
+    return tuple(sorted(candidates))
+
+
+def _cosine_micros(query: tuple[float, ...], document: tuple[float, ...]) -> int:
+    """Return signed, normalized cosine without platform-dependent float output."""
+    query = validate_vector(query)
+    document = validate_vector(document)
+    numerator = math.fsum(a * b for a, b in zip(query, document, strict=True))
+    denominator = math.sqrt(math.fsum(a * a for a in query)) * math.sqrt(
+        math.fsum(b * b for b in document)
+    )
+    return round(max(-1.0, min(1.0, numerator / denominator)) * 1_000_000)
 
 
 class EmbeddingService:
@@ -350,6 +398,288 @@ class EmbeddingService:
         ).fetchone()
         if row is None or row["status"] != "running":
             raise StateMismatchError("embedding operation was fenced before publication")
+
+    @staticmethod
+    def _transient_task_binding(
+        conn: Any,
+        context: WorkspaceContext,
+        episode_id: UUID,
+        repository_id: UUID | None,
+    ) -> UUID:
+        row = conn.execute(
+            "SELECT repository_id,status FROM episodes WHERE workspace_id=%s AND id=%s FOR UPDATE",
+            (context.workspace_id, episode_id),
+        ).fetchone()
+        if row is None or (repository_id is not None and row["repository_id"] != repository_id):
+            raise ScopeDeniedError("transient ranking task repository is unavailable")
+        if row["status"] != "running":
+            raise StateMismatchError("transient ranking was fenced because the task is not running")
+        return UUID(str(row["repository_id"]))
+
+    def rank_transient(
+        self,
+        context: WorkspaceContext,
+        episode_id: UUID,
+        space_id: UUID,
+        query: str,
+        candidates: tuple[tuple[str, str], ...],
+        *,
+        embedding_name: str = DEFAULT_EMBEDDING_NAME,
+        runtime_budget_ms: int = 60_000,
+        repository_id: UUID | None = None,
+        request_binding_sha256: str | None = None,
+        cancelled: Callable[[], bool] | None = None,
+    ) -> dict[str, Any]:
+        """Rank an already authorized shortlist without publishing private text.
+
+        Query and document vectors exist only in this call's memory. The existing
+        named space, provider, task budget and supervised worker remain the only
+        owners. Retained accounting/evidence contain hashes and usage, never
+        texts, candidate vectors, sources, artifacts or a second search index.
+
+        A single reservation covers all texts before preparation can load a
+        tokenizer. Calls respect the exact registered profile's batch limit:
+        one query call and at most sixteen document calls under one deadline.
+        Unsupervised fixture providers must label their synthetic usage.
+        """
+        validate_embedding_name(embedding_name)
+        documents = _transient_inputs(query, candidates)
+        if (
+            not isinstance(episode_id, UUID)
+            or not isinstance(space_id, UUID)
+            or (repository_id is not None and not isinstance(repository_id, UUID))
+        ):
+            raise InvalidInputError("transient ranking requires UUID task, space and repository")
+        if type(runtime_budget_ms) is not int or not 1 <= runtime_budget_ms <= 120_000:
+            raise InvalidInputError("transient ranking runtime must be 1..120000 milliseconds")
+        if request_binding_sha256 is not None and (
+            not isinstance(request_binding_sha256, str)
+            or re.fullmatch(r"[0-9a-f]{64}", request_binding_sha256) is None
+        ):
+            raise InvalidInputError("transient ranking request binding must be lowercase SHA256")
+        provider = self.provider
+        profile = provider.profile
+        self._assert_provider(provider, profile)
+        profile.prepare(query, "query")
+        for _, text in documents:
+            profile.prepare(text, "document")
+        if cancelled is not None and cancelled():
+            raise OperationCancelledError("transient ranking was cancelled before admission")
+        batches: list[tuple[Literal["query", "document"], tuple[str, ...]]] = [("query", (query,))]
+        for offset in range(0, len(documents), profile.max_batch_size):
+            batches.append(
+                (
+                    "document",
+                    tuple(text for _, text in documents[offset : offset + profile.max_batch_size]),
+                )
+            )
+        query_hash = hashlib.sha256(query.encode("utf-8")).hexdigest()
+        documents_hash = content_hash([{"id": key, "text": text} for key, text in documents])
+        with self.database.transaction(context) as conn:
+            self._view(conn, context, space_id, embedding_name, profile)
+            repository_id = self._transient_task_binding(conn, context, episode_id, repository_id)
+            self._assert_provider(provider, profile)
+            reservation = self.budgets.reserve_in_transaction(
+                conn,
+                context,
+                episode_id,
+                {
+                    "tokens": (len(documents) + 1) * profile.max_input_tokens,
+                    "calls": len(batches),
+                    "tool_ms": runtime_budget_ms,
+                    "concurrency": 1,
+                },
+                f"embedding-transient-{uuid4()}",
+            )
+        reservation_id = UUID(str(reservation["id"]))
+        started = time.monotonic()
+        deadline = started + runtime_budget_ms / 1000
+        supervised = isinstance(provider, SupervisedEmbeddingProvider)
+        calls = input_tokens = reported_ms = 0
+        usage_origin: str | None = None
+        dispatched = False
+        vectors: list[tuple[float, ...]] = []
+
+        def elapsed() -> int:
+            return max(0, int((time.monotonic() - started) * 1000))
+
+        def fence() -> int:
+            self._assert_provider(provider, profile)
+            if cancelled is not None and cancelled():
+                raise OperationCancelledError("transient ranking was cancelled before return")
+            remaining = int((deadline - time.monotonic()) * 1000)
+            if remaining < 1:
+                raise OperationTimeoutError("transient ranking exceeded its total runtime")
+            with self.database.transaction(context) as conn:
+                self._transient_task_binding(conn, context, episode_id, repository_id)
+                self._view(conn, context, space_id, embedding_name, profile)
+            remaining = int((deadline - time.monotonic()) * 1000)
+            if remaining < 1:
+                raise OperationTimeoutError("transient ranking exceeded its total runtime")
+            return remaining
+
+        def should_cancel() -> bool:
+            if cancelled is not None and cancelled():
+                return True
+            if (
+                time.monotonic() >= deadline
+                or self.provider is not provider
+                or provider.profile.fingerprint != profile.fingerprint
+            ):
+                return True
+            with self.database.transaction(context) as conn:
+                row = conn.execute(
+                    "SELECT status,repository_id FROM episodes WHERE workspace_id=%s AND id=%s",
+                    (context.workspace_id, episode_id),
+                ).fetchone()
+                return (
+                    row is None
+                    or row["status"] != "running"
+                    or row["repository_id"] != repository_id
+                )
+
+        def settle_known() -> int:
+            accounted_ms = elapsed() if usage_origin in {None, "measured"} else reported_ms
+            self.budgets.settle(
+                context,
+                reservation_id,
+                {"tokens": input_tokens, "calls": calls, "tool_ms": accounted_ms},
+                origin=usage_origin or "measured",
+            )
+            return accounted_ms
+
+        def record(
+            outcome: str,
+            error: BaseException | None = None,
+            *,
+            scores_sha256: str | None = None,
+        ) -> None:
+            process_result = getattr(error, "result", None)
+            EvidenceStore(self.database).append(
+                context,
+                "embedding_transient_ranking",
+                episode_id=episode_id,
+                producer_id="potbot.local_embedding_supervisor"
+                if supervised
+                else "potbot.embedding",
+                details={
+                    "schema": "potbot-transient-ranking-evidence/v1",
+                    "reservation_id": str(reservation_id),
+                    "space_id": str(space_id),
+                    "embedding_name": embedding_name,
+                    "profile_hash": profile.fingerprint,
+                    "query_hash": query_hash,
+                    "documents_hash": documents_hash,
+                    "document_count": len(documents),
+                    "outcome": outcome,
+                    "known_calls": calls,
+                    "known_input_tokens": input_tokens,
+                    "usage_origin": usage_origin,
+                    "elapsed_ms": elapsed(),
+                    "supervised": supervised,
+                    "error_code": str(getattr(error, "code", "internal_error")) if error else None,
+                    "worker_outcome": getattr(process_result, "outcome", None),
+                    "dispatched": bool(calls or getattr(error, "dispatched", dispatched)),
+                    "processes_stopped": getattr(process_result, "processes_stopped", None),
+                    **({"scores_sha256": scores_sha256} if scores_sha256 is not None else {}),
+                    **(
+                        {"request_binding_sha256": request_binding_sha256}
+                        if request_binding_sha256 is not None
+                        else {}
+                    ),
+                },
+            )
+
+        try:
+            for kind, texts in batches:
+                remaining = fence()
+                if remaining < 1:
+                    raise OperationTimeoutError("transient ranking exceeded its total runtime")
+                if isinstance(provider, SupervisedEmbeddingProvider):
+                    dispatched = True
+                    result = provider.encode_supervised(
+                        texts, kind, timeout_ms=remaining, cancelled=should_cancel
+                    )
+                else:
+                    # This path supports explicit synthetic providers in offline
+                    # acceptance. Production selection uses the supervised owner.
+                    tokens = provider.count_tokens(texts, kind)
+                    self._assert_provider(provider, profile)
+                    if (
+                        type(tokens) is not int
+                        or not 0 < tokens <= len(texts) * profile.max_input_tokens
+                    ):
+                        raise InvalidInputError("provider input exceeds the registered token bound")
+                    fence()
+                    dispatched = True
+                    result = provider.encode(texts, kind)
+                if not isinstance(result, EmbeddingBatch):
+                    raise InvalidInputError("embedding provider returned an untyped result")
+                if usage_origin is not None and result.usage_origin != usage_origin:
+                    raise InvalidInputError("transient batches returned inconsistent usage origins")
+                usage_origin = result.usage_origin
+                input_tokens += result.input_tokens
+                reported_ms += result.elapsed_ms
+                calls += 1
+                dispatched = (
+                    False  # A typed result confirms usage even if its vectors are rejected.
+                )
+                if not 0 < result.input_tokens <= len(texts) * profile.max_input_tokens:
+                    raise InvalidInputError("embedding provider returned invalid input usage")
+                if len(result.vectors) != len(texts):
+                    raise InvalidInputError("embedding provider returned the wrong batch size")
+                vectors.extend(validate_vector(vector) for vector in result.vectors)
+                fence()
+            query_vector, *document_vectors = vectors
+            scored_documents = sorted(
+                (
+                    (_cosine_micros(query_vector, vector), identity)
+                    for (identity, _), vector in zip(documents, document_vectors, strict=True)
+                ),
+                key=lambda row: (-row[0], row[1]),
+            )
+            scores = [
+                {"id": identity, "scoreMicros": score} for score, identity in scored_documents
+            ]
+            fence()
+        except BaseException as error:
+            process_result = getattr(error, "result", None)
+            stop_uncertain = process_result is not None and not process_result.processes_stopped
+            if getattr(error, "dispatched", dispatched) or stop_uncertain:
+                self.budgets.mark_indeterminate(
+                    context, reservation_id, "transient encoding did not return confirmed usage"
+                )
+                error.embedding_usage_indeterminate = True  # type: ignore[attr-defined]
+                record("indeterminate", error)
+            else:
+                settle_known()
+                error.embedding_usage_indeterminate = False  # type: ignore[attr-defined]
+                record("rejected", error)
+            raise
+        accounted_ms = settle_known()
+        try:
+            # Settlement can exhaust a task. Neither a confirmed vector nor
+            # successful accounting permits a late result after revocation.
+            fence()
+        except BaseException as error:
+            error.embedding_usage_indeterminate = False  # type: ignore[attr-defined]
+            record("fenced", error)
+            raise
+        record("completed", scores_sha256=content_hash(sorted(scores, key=lambda item: item["id"])))
+        return {
+            "schema": "potbot-transient-ranking/v1",
+            "spaceId": str(space_id),
+            "embeddingName": embedding_name,
+            "profileSha256": profile.fingerprint,
+            "querySha256": query_hash,
+            "documentsSha256": documents_hash,
+            "scores": scores,
+            "calls": calls,
+            "inputTokens": input_tokens,
+            "elapsedMs": accounted_ms,
+            "reservationIds": [str(reservation_id)],
+            "usageOrigin": usage_origin,
+        }
 
     def index_source(
         self,

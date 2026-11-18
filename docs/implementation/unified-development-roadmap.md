@@ -6,6 +6,19 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**18 November 2026, after the task qualification merge:**
+[U04-S task-aware capability discovery](u04-s-task-aware-capability-discovery.md)
+implements the supported T04.3 task-to-selection lifecycle on merged main
+`d904442b7f08c3b7c6c975092327cc89646ae562`: complete bounded existing-owner
+collection, directional canonical SYN type checks, explained lexical ranking,
+optional supervised private transient embeddings, exact current-task U04-Q
+report joins, progressive inspection and revalidated handoffs. Migration 45,
+CLI/API and browser retain one scoped search/result/selection owner without a
+second scheduler or shared private-text index. The frozen forty-request gate
+retains at least 90% class recall@3. Actual model quality, installed host/vendor
+evidence and broader interoperability remain open; U04/M4/T04 stays partial and
+historical U00 qualification statuses are unchanged.
+
 **18 November 2026, after the live MCP merge:**
 [U04-Q installed MCP task qualification](u04-q-installed-mcp-qualification.md)
 implements reviewed private case suites and independent bounded result assertions

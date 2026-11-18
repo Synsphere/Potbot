@@ -7,6 +7,7 @@ import {
   type Operation, type OperationDetail, type OperationKind, type OperationListing, type OperationState,
 } from "../../lib/operation-catalogue.ts";
 import styles from "./tools.module.css";
+import { exactOwnerSelection } from "../../lib/task-discovery-client.ts";
 import OperationWorkbench from "./OperationWorkbench.tsx";
 
 type Workspace = { id: string; name: string };
@@ -118,6 +119,7 @@ export default function OperationCataloguePage() {
   const [notice, setNotice] = useState("Loading authorized workspaces…"), [detailNotice, setDetailNotice] = useState("");
   const listGeneration = useRef(0), detailGeneration = useRef(0), currentWorkspace = useRef("");
   const listRequest = useRef<AbortController | null>(null), detailRequest = useRef<AbortController | null>(null);
+  const directOperation = useRef<string | null>(null);
   const pageScope = useRef<{ principalId: string; snapshotSha256: string } | null>(null);
 
   const invalidate = useCallback(() => {
@@ -149,9 +151,9 @@ export default function OperationCataloguePage() {
         });
         if (new Set(known.map(entry => entry.id)).size !== known.length) throw new Error("invalid");
         setWorkspaces(known);
-        const requested = new URLSearchParams(window.location.search).get("workspace");
-        const selected = requested ? known.find(entry => entry.id === requested) : known[0];
-        if (selected) { currentWorkspace.current = selected.id; setWorkspaceId(selected.id); }
+        const params = new URLSearchParams(window.location.search), requested = params.get("workspace");
+        const selected = params.getAll("workspace").length > 1 ? undefined : requested ? known.find(entry => entry.id === requested) : known[0];
+        if (selected) { currentWorkspace.current = selected.id; directOperation.current = exactOwnerSelection(window.location.search, selected.id, "operation"); setWorkspaceId(selected.id); }
         else setNotice(known.length ? "Select an authorized workspace to inspect its operations." : "No authorized workspace is configured.");
       }).catch(() => { if (!request.signal.aborted) setNotice("Sign in to Potbot to load your authorized workspace catalogue."); });
     return () => request.abort();
@@ -175,7 +177,7 @@ export default function OperationCataloguePage() {
         if (!result) throw new Error("invalid");
         if (pageScope.current && (result.principalId !== pageScope.current.principalId || result.snapshotSha256 !== pageScope.current.snapshotSha256)) { changed(); return; }
         pageScope.current = { principalId: result.principalId, snapshotSha256: result.snapshotSha256 };
-        setListing(result); setNotice("");
+        setListing(result); setNotice(""); if (directOperation.current) setSelectedId(directOperation.current);
       } catch { if (!request.signal.aborted && generation === listGeneration.current) setNotice("Operations are unavailable. Refresh after checking the workspace connection. No readiness is inferred from missing data."); }
       finally { if (!request.signal.aborted && generation === listGeneration.current) setBusy(false); }
     })();
@@ -205,13 +207,14 @@ export default function OperationCataloguePage() {
   }, [selectedId, listing, workspaceId, paused, changed]);
 
   const selectWorkspace = (id: string) => {
-    currentWorkspace.current = id; restart(); setWorkspaceId(id);
-    const url = new URL(window.location.href); url.searchParams.set("workspace", id);
+    currentWorkspace.current = id; directOperation.current = null; restart(); setWorkspaceId(id);
+    const url = new URL(window.location.href); url.searchParams.set("workspace", id); url.searchParams.delete("operation");
     window.history.replaceState(null, "", url);
   };
   const selectOperation = (id: string) => {
     detailGeneration.current++; detailRequest.current?.abort(); setDetail(null); setDetailNotice(""); setDetailBusy(false);
-    setSelectedId(id === selectedId ? null : id);
+    const next = id === selectedId ? null : id; directOperation.current = next; setSelectedId(next);
+    const url = new URL(window.location.href); url.searchParams.set("workspace", workspaceId); url.searchParams.delete("operation"); if (next) url.searchParams.set("operation", next); window.history.replaceState(null, "", url);
   };
   const page = (cursor: string | null, previous: boolean) => {
     invalidate(); setHistory(values => previous ? values.slice(0, -1) : [...values, after]); setAfter(cursor);

@@ -1,0 +1,1691 @@
+{
+  "cancelledSearch": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "search": {
+      "actions": [],
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingSha256": "65507aefc3bbf789771098b06040f1ac95c00fcb48e8a6f8bc63d9de0e88ee0f",
+      "candidateCount": 14,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "createdAt": "2026-11-18T03:54:33.100360+00:00",
+      "embedding": {
+        "embeddingName": "general_text",
+        "maxCandidates": 16,
+        "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+        "runtimeBudgetMs": 60000,
+        "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+      },
+      "id": "626ed9e9-c7f2-4d05-815f-44e371eda31e",
+      "limit": 10,
+      "mode": "hybrid",
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCode": "search_cancelled",
+      "reasonCodes": [],
+      "resultId": null,
+      "resultSha256": null,
+      "revision": 2,
+      "selectedCandidateId": null,
+      "selectionId": null,
+      "status": "cancelled",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+      "updatedAt": "2026-11-18T03:54:33.326796+00:00"
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "context": {
+    "context": {
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "counts": {
+        "mcp": 0,
+        "operations": 13,
+        "registry": 1
+      },
+      "embeddingSpaces": [],
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "taskCapabilities": [
+        "test"
+      ],
+      "taskStatus": "running",
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956"
+    },
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "createdSearch": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "search": {
+      "actions": [
+        "select"
+      ],
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingSha256": "8c7ab10a620246cc3b2bdb5e0c4f86182b44ab0bf886506e645151200a8ef8a7",
+      "candidateCount": 14,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "createdAt": "2026-11-18T03:54:25.530104+00:00",
+      "embedding": null,
+      "id": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+      "limit": 10,
+      "mode": "lexical",
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCode": null,
+      "reasonCodes": [],
+      "resultId": "877626b9-329a-4a54-afb4-3a54da551db7",
+      "resultSha256": "0b0c199f15ae09805ca88c5228de1c58255ad71e4a2609a7e5f389fff8db5bc7",
+      "revision": 2,
+      "selectedCandidateId": null,
+      "selectionId": null,
+      "status": "completed",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+      "updatedAt": "2026-11-18T03:54:25.556345+00:00"
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "emptySearches": {
+    "items": [],
+    "nextCursor": null,
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "firstPage": {
+    "items": [
+      {
+        "actions": [
+          "select"
+        ],
+        "approvalValid": true,
+        "authorityCurrent": true,
+        "bindingSha256": "decea13e3fedf2ab976034ca33b2c29912a69cc0dac2519a8f0f2fc4471edae0",
+        "candidateCount": 14,
+        "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+        "constraints": {
+          "classes": [],
+          "inputTypes": [],
+          "outputTypes": [],
+          "permittedEffects": null,
+          "permittedScopes": null,
+          "platform": null,
+          "requireLocal": false,
+          "requireTaskEvidence": false
+        },
+        "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+        "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+        "createdAt": "2026-11-18T03:54:29.048039+00:00",
+        "embedding": {
+          "embeddingName": "general_text",
+          "maxCandidates": 16,
+          "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+          "runtimeBudgetMs": 60000,
+          "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+        },
+        "id": "37b9f77b-8780-470e-8f72-7c0b912887ee",
+        "limit": 10,
+        "mode": "hybrid",
+        "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+        "query": "inspect file",
+        "reasonCode": null,
+        "reasonCodes": [],
+        "resultId": "6cb32e61-1dfe-4119-accf-ffa56fc6c1b0",
+        "resultSha256": "1c54acc44d9dcc9e6537fd657525a2e0a1e2eb20a89edd710f4ecb96eb90af23",
+        "revision": 3,
+        "selectedCandidateId": null,
+        "selectionId": null,
+        "status": "completed",
+        "taskBinding": {
+          "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+          "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+          "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+          "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+          "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+          "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+          "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+        },
+        "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+        "updatedAt": "2026-11-18T03:54:32.119773+00:00"
+      }
+    ],
+    "nextCursor": "37b9f77b-8780-470e-8f72-7c0b912887ee",
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "hybridContext": {
+    "context": {
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "counts": {
+        "mcp": 0,
+        "operations": 13,
+        "registry": 1
+      },
+      "embeddingSpaces": [
+        {
+          "dimensions": 1024,
+          "embeddingName": "general_text",
+          "maxBatchSize": 2,
+          "maxInputTokens": 256,
+          "model": "Qwen/Qwen3-Embedding-0.6B",
+          "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+          "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+          "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+        }
+      ],
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "taskCapabilities": [
+        "test"
+      ],
+      "taskStatus": "running",
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956"
+    },
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "hybridResult": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "result": {
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "excluded": [
+        {
+          "id": "02effc0b40269ecc709feaa8c0061ee63490025df01f6832ac956992f1b52c6c",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "047d84ee2f331d2b0b180fc1abe30886f8ae89073621b941b766e5ca97dc417c",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "0b86548bc4c18006a5bc563f40018408df8520bfe7b0d5d9e5f9af44cb0ed3fe",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "0dc6b7add16cf424f4f71983dd1aa661b97019ee28406984314f0e93b0ad1517",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "58d49b994ffa62ddd87329454420822650b1d2096d3dabc703503ca960c78c48",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "7cebbcf5da46ec7d28a30e42d0eaa61f7beddcb65974b7ed11ff3184213ac86f",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "8fab63497130fea087a20b3a9cafbc0db8d2923ece1588b9a1756f24d6c9409d",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "9e6659cfe393a3d23d643014cf10cd72df742ff315989ccddfcecfb0bf3a91f4",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "cc5c1847944ef11f9893ad79c33ff7b12c2ecfd58647b1629c501d19fb01f83f",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "cf557487b922c3cc549354e3ad49766fc53ba7cd861005b200838cfa02f22326",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "e4e09684f3fa3a9c4397de0311e7bcb5708b16ad0df34683be80729243002c34",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "ef91f8774f4e8018c35853fffe63068f13cce7723435e60b8121a8a851a00f05",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "f8203f47b393b6bd639ba1f8e28a2129839a51c8d654f1498007a02519201ce3",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        }
+      ],
+      "id": "6cb32e61-1dfe-4119-accf-ffa56fc6c1b0",
+      "inferredClasses": [
+        "file_inspection"
+      ],
+      "items": [
+        {
+          "authorityCurrent": true,
+          "bindingId": null,
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "executable": false,
+          "features": {
+            "classes": 1000,
+            "evidence": 0,
+            "installed": 0,
+            "lexical": 0,
+            "semantic": 400,
+            "types": 0
+          },
+          "id": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+          "installed": false,
+          "kind": "registry",
+          "name": "Portable fixture",
+          "ownerId": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+          "ownerSha256": "d88aa08700499dfb1357ac85a8509601723ebe1c21f07caedbfbbeeefd7d43aa",
+          "reasonCodes": [
+            "task_capability_unknown",
+            "task_evidence_unavailable"
+          ],
+          "reasons": [
+            "bounded_transient_semantic_match",
+            "class_match_file_inspection",
+            "cost_latency_quality_unknown",
+            "runtime_and_task_admission_required",
+            "task_capability_unknown",
+            "task_evidence_unavailable",
+            "task_permission_unknown"
+          ],
+          "requiredTaskCapability": null,
+          "score": 1400,
+          "taskEvidence": {
+            "caseCount": 0,
+            "passedCases": 0,
+            "reportId": null,
+            "reportSha256": null,
+            "status": "none",
+            "suiteId": null
+          },
+          "taskPermission": "unknown",
+          "typeFit": "not_requested"
+        }
+      ],
+      "mode": "hybrid",
+      "noSuitableCandidate": false,
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCodes": [],
+      "recordedAt": "2026-11-18T03:54:32.117602+00:00",
+      "searchId": "37b9f77b-8780-470e-8f72-7c0b912887ee",
+      "semantic": {
+        "calls": 2,
+        "candidateCount": 1,
+        "documentsSha256": "2f974581bf3af02cd711c9c58f577262a5f081032e30c78b2a7031367870cc9f",
+        "elapsedMs": 6,
+        "embeddingName": "general_text",
+        "inputTokens": 6,
+        "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+        "querySha256": "df5cef8395dc0f554ac8ddbf7e33aebf3b380dec986b0ecb70e8ee93af9d5adc",
+        "reservationIds": [
+          "be13b669-1cd3-4b1f-acec-0dd4bf12946c"
+        ],
+        "spaceId": "11bef823-1767-439e-ba06-e579722b878b",
+        "usageOrigin": "synthetic"
+      },
+      "sha256": "1c54acc44d9dcc9e6537fd657525a2e0a1e2eb20a89edd710f4ecb96eb90af23",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "terms": [
+        "file",
+        "inspect"
+      ],
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956"
+    },
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "hybridSearch": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "search": {
+      "actions": [
+        "select"
+      ],
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingSha256": "decea13e3fedf2ab976034ca33b2c29912a69cc0dac2519a8f0f2fc4471edae0",
+      "candidateCount": 14,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "createdAt": "2026-11-18T03:54:29.048039+00:00",
+      "embedding": {
+        "embeddingName": "general_text",
+        "maxCandidates": 16,
+        "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+        "runtimeBudgetMs": 60000,
+        "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+      },
+      "id": "37b9f77b-8780-470e-8f72-7c0b912887ee",
+      "limit": 10,
+      "mode": "hybrid",
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCode": null,
+      "reasonCodes": [],
+      "resultId": "6cb32e61-1dfe-4119-accf-ffa56fc6c1b0",
+      "resultSha256": "1c54acc44d9dcc9e6537fd657525a2e0a1e2eb20a89edd710f4ecb96eb90af23",
+      "revision": 3,
+      "selectedCandidateId": null,
+      "selectionId": null,
+      "status": "completed",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+      "updatedAt": "2026-11-18T03:54:32.119773+00:00"
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "inspection": {
+    "candidate": {
+      "authorityCurrent": true,
+      "bindingId": null,
+      "capabilities": {
+        "classes": [
+          "file_inspection"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "inputTypes": [],
+        "outputTypes": [],
+        "platforms": [
+          "linux"
+        ],
+        "scopes": []
+      },
+      "description": "Explicit local discovery fixture",
+      "executable": false,
+      "features": {
+        "classes": 1000,
+        "evidence": 0,
+        "installed": 0,
+        "lexical": 0,
+        "semantic": 0,
+        "types": 0
+      },
+      "id": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+      "installed": false,
+      "kind": "registry",
+      "name": "Portable fixture",
+      "ownerId": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+      "ownerSha256": "d88aa08700499dfb1357ac85a8509601723ebe1c21f07caedbfbbeeefd7d43aa",
+      "reasonCodes": [
+        "task_capability_unknown",
+        "task_evidence_unavailable"
+      ],
+      "reasons": [
+        "class_match_file_inspection",
+        "cost_latency_quality_unknown",
+        "runtime_and_task_admission_required",
+        "task_capability_unknown",
+        "task_evidence_unavailable",
+        "task_permission_unknown"
+      ],
+      "requiredTaskCapability": null,
+      "score": 1000,
+      "taskEvidence": {
+        "caseCount": 0,
+        "passedCases": 0,
+        "reportId": null,
+        "reportSha256": null,
+        "status": "none",
+        "suiteId": null
+      },
+      "taskPermission": "unknown",
+      "typeFit": "not_requested"
+    },
+    "detail": {
+      "candidate": {
+        "canReview": true,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "a9f4b6f7-af6d-4b5e-9fbd-63f8d174cdad",
+        "publisherState": "approved",
+        "reasonCodes": [],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "02903618-4269-48cd-8697-f3c414ffe0de",
+        "sourceApprovalValid": true,
+        "sourceId": "b08e39df-c3a2-4932-938c-1da70d30df8d",
+        "sourceState": "active",
+        "stale": false
+      }
+    },
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "requestedSearch": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "search": {
+      "actions": [
+        "cancel"
+      ],
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingSha256": "c6185318a31e32fa761d809d14f0cb5500d5a25ec4b688ddf4ca435020efe4e7",
+      "candidateCount": 14,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "createdAt": "2026-11-18T03:54:29.048039+00:00",
+      "embedding": {
+        "embeddingName": "general_text",
+        "maxCandidates": 16,
+        "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+        "runtimeBudgetMs": 60000,
+        "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+      },
+      "id": "37b9f77b-8780-470e-8f72-7c0b912887ee",
+      "limit": 10,
+      "mode": "hybrid",
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCode": null,
+      "reasonCodes": [],
+      "resultId": null,
+      "resultSha256": null,
+      "revision": 1,
+      "selectedCandidateId": null,
+      "selectionId": null,
+      "status": "requested",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+      "updatedAt": "2026-11-18T03:54:29.048039+00:00"
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "requests": {
+    "cancel": {
+      "confirm": true,
+      "digest": "40794b80192de4ff8a717238c7bb52a7b7e8ca7c4633ee64c06f66905798960f",
+      "revision": 1
+    },
+    "create": {
+      "confirm": true,
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "embedding": null,
+      "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+      "limit": 10,
+      "mode": "lexical",
+      "query": "inspect file",
+      "stateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0"
+    },
+    "hybrid": {
+      "confirm": true,
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "embedding": {
+        "embeddingName": "general_text",
+        "maxCandidates": 16,
+        "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+        "runtimeBudgetMs": 60000,
+        "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+      },
+      "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+      "limit": 10,
+      "mode": "hybrid",
+      "query": "inspect file",
+      "stateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0"
+    },
+    "select": {
+      "candidateId": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+      "confirm": true,
+      "digest": "8c7ab10a620246cc3b2bdb5e0c4f86182b44ab0bf886506e645151200a8ef8a7",
+      "revision": 2
+    }
+  },
+  "result": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "result": {
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "excluded": [
+        {
+          "id": "02effc0b40269ecc709feaa8c0061ee63490025df01f6832ac956992f1b52c6c",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "047d84ee2f331d2b0b180fc1abe30886f8ae89073621b941b766e5ca97dc417c",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "0b86548bc4c18006a5bc563f40018408df8520bfe7b0d5d9e5f9af44cb0ed3fe",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "0dc6b7add16cf424f4f71983dd1aa661b97019ee28406984314f0e93b0ad1517",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "58d49b994ffa62ddd87329454420822650b1d2096d3dabc703503ca960c78c48",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "7cebbcf5da46ec7d28a30e42d0eaa61f7beddcb65974b7ed11ff3184213ac86f",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "8fab63497130fea087a20b3a9cafbc0db8d2923ece1588b9a1756f24d6c9409d",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "9e6659cfe393a3d23d643014cf10cd72df742ff315989ccddfcecfb0bf3a91f4",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "cc5c1847944ef11f9893ad79c33ff7b12c2ecfd58647b1629c501d19fb01f83f",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "cf557487b922c3cc549354e3ad49766fc53ba7cd861005b200838cfa02f22326",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "e4e09684f3fa3a9c4397de0311e7bcb5708b16ad0df34683be80729243002c34",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "ef91f8774f4e8018c35853fffe63068f13cce7723435e60b8121a8a851a00f05",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "f8203f47b393b6bd639ba1f8e28a2129839a51c8d654f1498007a02519201ce3",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        }
+      ],
+      "id": "877626b9-329a-4a54-afb4-3a54da551db7",
+      "inferredClasses": [
+        "file_inspection"
+      ],
+      "items": [
+        {
+          "authorityCurrent": true,
+          "bindingId": null,
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "executable": false,
+          "features": {
+            "classes": 1000,
+            "evidence": 0,
+            "installed": 0,
+            "lexical": 0,
+            "semantic": 0,
+            "types": 0
+          },
+          "id": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+          "installed": false,
+          "kind": "registry",
+          "name": "Portable fixture",
+          "ownerId": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+          "ownerSha256": "d88aa08700499dfb1357ac85a8509601723ebe1c21f07caedbfbbeeefd7d43aa",
+          "reasonCodes": [
+            "task_capability_unknown",
+            "task_evidence_unavailable"
+          ],
+          "reasons": [
+            "class_match_file_inspection",
+            "cost_latency_quality_unknown",
+            "runtime_and_task_admission_required",
+            "task_capability_unknown",
+            "task_evidence_unavailable",
+            "task_permission_unknown"
+          ],
+          "requiredTaskCapability": null,
+          "score": 1000,
+          "taskEvidence": {
+            "caseCount": 0,
+            "passedCases": 0,
+            "reportId": null,
+            "reportSha256": null,
+            "status": "none",
+            "suiteId": null
+          },
+          "taskPermission": "unknown",
+          "typeFit": "not_requested"
+        }
+      ],
+      "mode": "lexical",
+      "noSuitableCandidate": false,
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCodes": [],
+      "recordedAt": "2026-11-18T03:54:25.554391+00:00",
+      "searchId": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+      "semantic": null,
+      "sha256": "0b0c199f15ae09805ca88c5228de1c58255ad71e4a2609a7e5f389fff8db5bc7",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "terms": [
+        "file",
+        "inspect"
+      ],
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956"
+    },
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "runningSearch": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "search": {
+      "actions": [
+        "cancel"
+      ],
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingSha256": "28dc25bdf5ef4ad03c24a1fac83375d72f3021d58cb463a88fde3c042f154391",
+      "candidateCount": 14,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "createdAt": "2026-11-18T03:54:29.048039+00:00",
+      "embedding": {
+        "embeddingName": "general_text",
+        "maxCandidates": 16,
+        "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+        "runtimeBudgetMs": 60000,
+        "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+      },
+      "id": "37b9f77b-8780-470e-8f72-7c0b912887ee",
+      "limit": 10,
+      "mode": "hybrid",
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCode": null,
+      "reasonCodes": [],
+      "resultId": null,
+      "resultSha256": null,
+      "revision": 2,
+      "selectedCandidateId": null,
+      "selectionId": null,
+      "status": "running",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+      "updatedAt": "2026-11-18T03:54:29.501183+00:00"
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "search": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "search": {
+      "actions": [
+        "select"
+      ],
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingSha256": "8c7ab10a620246cc3b2bdb5e0c4f86182b44ab0bf886506e645151200a8ef8a7",
+      "candidateCount": 14,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "createdAt": "2026-11-18T03:54:25.530104+00:00",
+      "embedding": null,
+      "id": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+      "limit": 10,
+      "mode": "lexical",
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCode": null,
+      "reasonCodes": [],
+      "resultId": "877626b9-329a-4a54-afb4-3a54da551db7",
+      "resultSha256": "0b0c199f15ae09805ca88c5228de1c58255ad71e4a2609a7e5f389fff8db5bc7",
+      "revision": 2,
+      "selectedCandidateId": null,
+      "selectionId": null,
+      "status": "completed",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+      "updatedAt": "2026-11-18T03:54:25.556345+00:00"
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "searches": {
+    "items": [
+      {
+        "actions": [
+          "select"
+        ],
+        "approvalValid": true,
+        "authorityCurrent": true,
+        "bindingSha256": "decea13e3fedf2ab976034ca33b2c29912a69cc0dac2519a8f0f2fc4471edae0",
+        "candidateCount": 14,
+        "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+        "constraints": {
+          "classes": [],
+          "inputTypes": [],
+          "outputTypes": [],
+          "permittedEffects": null,
+          "permittedScopes": null,
+          "platform": null,
+          "requireLocal": false,
+          "requireTaskEvidence": false
+        },
+        "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+        "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+        "createdAt": "2026-11-18T03:54:29.048039+00:00",
+        "embedding": {
+          "embeddingName": "general_text",
+          "maxCandidates": 16,
+          "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+          "runtimeBudgetMs": 60000,
+          "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+        },
+        "id": "37b9f77b-8780-470e-8f72-7c0b912887ee",
+        "limit": 10,
+        "mode": "hybrid",
+        "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+        "query": "inspect file",
+        "reasonCode": null,
+        "reasonCodes": [],
+        "resultId": "6cb32e61-1dfe-4119-accf-ffa56fc6c1b0",
+        "resultSha256": "1c54acc44d9dcc9e6537fd657525a2e0a1e2eb20a89edd710f4ecb96eb90af23",
+        "revision": 3,
+        "selectedCandidateId": null,
+        "selectionId": null,
+        "status": "completed",
+        "taskBinding": {
+          "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+          "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+          "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+          "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+          "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+          "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+          "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+        },
+        "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+        "updatedAt": "2026-11-18T03:54:32.119773+00:00"
+      },
+      {
+        "actions": [],
+        "approvalValid": true,
+        "authorityCurrent": true,
+        "bindingSha256": "65507aefc3bbf789771098b06040f1ac95c00fcb48e8a6f8bc63d9de0e88ee0f",
+        "candidateCount": 14,
+        "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+        "constraints": {
+          "classes": [],
+          "inputTypes": [],
+          "outputTypes": [],
+          "permittedEffects": null,
+          "permittedScopes": null,
+          "platform": null,
+          "requireLocal": false,
+          "requireTaskEvidence": false
+        },
+        "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+        "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+        "createdAt": "2026-11-18T03:54:33.100360+00:00",
+        "embedding": {
+          "embeddingName": "general_text",
+          "maxCandidates": 16,
+          "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+          "runtimeBudgetMs": 60000,
+          "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+        },
+        "id": "626ed9e9-c7f2-4d05-815f-44e371eda31e",
+        "limit": 10,
+        "mode": "hybrid",
+        "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+        "query": "inspect file",
+        "reasonCode": "search_cancelled",
+        "reasonCodes": [],
+        "resultId": null,
+        "resultSha256": null,
+        "revision": 2,
+        "selectedCandidateId": null,
+        "selectionId": null,
+        "status": "cancelled",
+        "taskBinding": {
+          "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+          "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+          "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+          "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+          "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+          "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+          "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+        },
+        "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+        "updatedAt": "2026-11-18T03:54:33.326796+00:00"
+      },
+      {
+        "actions": [],
+        "approvalValid": true,
+        "authorityCurrent": true,
+        "bindingSha256": "4e8fa9b2bd37abf48c4b3e423661a2ff83c5196bee3f025d23b177d33dc07ba8",
+        "candidateCount": 14,
+        "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+        "constraints": {
+          "classes": [],
+          "inputTypes": [],
+          "outputTypes": [],
+          "permittedEffects": null,
+          "permittedScopes": null,
+          "platform": null,
+          "requireLocal": false,
+          "requireTaskEvidence": false
+        },
+        "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+        "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+        "createdAt": "2026-11-18T03:54:25.530104+00:00",
+        "embedding": null,
+        "id": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+        "limit": 10,
+        "mode": "lexical",
+        "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+        "query": "inspect file",
+        "reasonCode": null,
+        "reasonCodes": [],
+        "resultId": "877626b9-329a-4a54-afb4-3a54da551db7",
+        "resultSha256": "0b0c199f15ae09805ca88c5228de1c58255ad71e4a2609a7e5f389fff8db5bc7",
+        "revision": 3,
+        "selectedCandidateId": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+        "selectionId": "12e76481-33c4-4615-8e81-a35f1fcd8a22",
+        "status": "selected",
+        "taskBinding": {
+          "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+          "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+          "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+          "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+          "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+          "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+          "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+        },
+        "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+        "updatedAt": "2026-11-18T03:54:27.618630+00:00"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "secondPage": {
+    "items": [
+      {
+        "actions": [],
+        "approvalValid": true,
+        "authorityCurrent": true,
+        "bindingSha256": "65507aefc3bbf789771098b06040f1ac95c00fcb48e8a6f8bc63d9de0e88ee0f",
+        "candidateCount": 14,
+        "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+        "constraints": {
+          "classes": [],
+          "inputTypes": [],
+          "outputTypes": [],
+          "permittedEffects": null,
+          "permittedScopes": null,
+          "platform": null,
+          "requireLocal": false,
+          "requireTaskEvidence": false
+        },
+        "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+        "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+        "createdAt": "2026-11-18T03:54:33.100360+00:00",
+        "embedding": {
+          "embeddingName": "general_text",
+          "maxCandidates": 16,
+          "profileSha256": "a27eb30db7a6cc04e28dea90e78fad5d8a86012b8184c07d4d0caf69cf30ec6e",
+          "runtimeBudgetMs": 60000,
+          "spaceId": "11bef823-1767-439e-ba06-e579722b878b"
+        },
+        "id": "626ed9e9-c7f2-4d05-815f-44e371eda31e",
+        "limit": 10,
+        "mode": "hybrid",
+        "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+        "query": "inspect file",
+        "reasonCode": "search_cancelled",
+        "reasonCodes": [],
+        "resultId": null,
+        "resultSha256": null,
+        "revision": 2,
+        "selectedCandidateId": null,
+        "selectionId": null,
+        "status": "cancelled",
+        "taskBinding": {
+          "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+          "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+          "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+          "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+          "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+          "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+          "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+        },
+        "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+        "updatedAt": "2026-11-18T03:54:33.326796+00:00"
+      }
+    ],
+    "nextCursor": "626ed9e9-c7f2-4d05-815f-44e371eda31e",
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "selected": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "selection": {
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "candidateId": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+      "handoff": {
+        "bindingId": null,
+        "identity": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+        "kind": "registry"
+      },
+      "id": "12e76481-33c4-4615-8e81-a35f1fcd8a22",
+      "owner": {
+        "bindingId": null,
+        "kind": "registry",
+        "ownerId": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+        "ownerSha256": "d88aa08700499dfb1357ac85a8509601723ebe1c21f07caedbfbbeeefd7d43aa"
+      },
+      "reasonCodes": [],
+      "recordedAt": "2026-11-18T03:54:27.616543+00:00",
+      "resultId": "877626b9-329a-4a54-afb4-3a54da551db7",
+      "searchId": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+      "sha256": "148ac11f7fc7318ed3118dabe78ce581e8711522fac7797459cbe56cd9a4d3a4",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      }
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "selectedSearch": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "search": {
+      "actions": [],
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingSha256": "4e8fa9b2bd37abf48c4b3e423661a2ff83c5196bee3f025d23b177d33dc07ba8",
+      "candidateCount": 14,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "createdAt": "2026-11-18T03:54:25.530104+00:00",
+      "embedding": null,
+      "id": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+      "limit": 10,
+      "mode": "lexical",
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCode": null,
+      "reasonCodes": [],
+      "resultId": "877626b9-329a-4a54-afb4-3a54da551db7",
+      "resultSha256": "0b0c199f15ae09805ca88c5228de1c58255ad71e4a2609a7e5f389fff8db5bc7",
+      "revision": 3,
+      "selectedCandidateId": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+      "selectionId": "12e76481-33c4-4615-8e81-a35f1fcd8a22",
+      "status": "selected",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+      "updatedAt": "2026-11-18T03:54:27.618630+00:00"
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "selection": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "selection": {
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "candidateId": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+      "handoff": {
+        "bindingId": null,
+        "identity": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+        "kind": "registry"
+      },
+      "id": "12e76481-33c4-4615-8e81-a35f1fcd8a22",
+      "owner": {
+        "bindingId": null,
+        "kind": "registry",
+        "ownerId": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+        "ownerSha256": "d88aa08700499dfb1357ac85a8509601723ebe1c21f07caedbfbbeeefd7d43aa"
+      },
+      "reasonCodes": [],
+      "recordedAt": "2026-11-18T03:54:27.616543+00:00",
+      "resultId": "877626b9-329a-4a54-afb4-3a54da551db7",
+      "searchId": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+      "sha256": "148ac11f7fc7318ed3118dabe78ce581e8711522fac7797459cbe56cd9a4d3a4",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      }
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "staleResult": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "result": {
+      "approvalValid": true,
+      "authorityCurrent": false,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "excluded": [
+        {
+          "id": "02effc0b40269ecc709feaa8c0061ee63490025df01f6832ac956992f1b52c6c",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "047d84ee2f331d2b0b180fc1abe30886f8ae89073621b941b766e5ca97dc417c",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "0b86548bc4c18006a5bc563f40018408df8520bfe7b0d5d9e5f9af44cb0ed3fe",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "0dc6b7add16cf424f4f71983dd1aa661b97019ee28406984314f0e93b0ad1517",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "58d49b994ffa62ddd87329454420822650b1d2096d3dabc703503ca960c78c48",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "7cebbcf5da46ec7d28a30e42d0eaa61f7beddcb65974b7ed11ff3184213ac86f",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "8fab63497130fea087a20b3a9cafbc0db8d2923ece1588b9a1756f24d6c9409d",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "9e6659cfe393a3d23d643014cf10cd72df742ff315989ccddfcecfb0bf3a91f4",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "cc5c1847944ef11f9893ad79c33ff7b12c2ecfd58647b1629c501d19fb01f83f",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "cf557487b922c3cc549354e3ad49766fc53ba7cd861005b200838cfa02f22326",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "e4e09684f3fa3a9c4397de0311e7bcb5708b16ad0df34683be80729243002c34",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "ef91f8774f4e8018c35853fffe63068f13cce7723435e60b8121a8a851a00f05",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        },
+        {
+          "id": "f8203f47b393b6bd639ba1f8e28a2129839a51c8d654f1498007a02519201ce3",
+          "reasonCodes": [
+            "no_supported_task_match"
+          ]
+        }
+      ],
+      "id": "877626b9-329a-4a54-afb4-3a54da551db7",
+      "inferredClasses": [
+        "file_inspection"
+      ],
+      "items": [
+        {
+          "authorityCurrent": true,
+          "bindingId": null,
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "executable": false,
+          "features": {
+            "classes": 1000,
+            "evidence": 0,
+            "installed": 0,
+            "lexical": 0,
+            "semantic": 0,
+            "types": 0
+          },
+          "id": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+          "installed": false,
+          "kind": "registry",
+          "name": "Portable fixture",
+          "ownerId": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+          "ownerSha256": "d88aa08700499dfb1357ac85a8509601723ebe1c21f07caedbfbbeeefd7d43aa",
+          "reasonCodes": [
+            "task_capability_unknown",
+            "task_evidence_unavailable"
+          ],
+          "reasons": [
+            "class_match_file_inspection",
+            "cost_latency_quality_unknown",
+            "runtime_and_task_admission_required",
+            "task_capability_unknown",
+            "task_evidence_unavailable",
+            "task_permission_unknown"
+          ],
+          "requiredTaskCapability": null,
+          "score": 1000,
+          "taskEvidence": {
+            "caseCount": 0,
+            "passedCases": 0,
+            "reportId": null,
+            "reportSha256": null,
+            "status": "none",
+            "suiteId": null
+          },
+          "taskPermission": "unknown",
+          "typeFit": "not_requested"
+        }
+      ],
+      "mode": "lexical",
+      "noSuitableCandidate": false,
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCodes": [
+        "discovery_context_changed"
+      ],
+      "recordedAt": "2026-11-18T03:54:25.554391+00:00",
+      "searchId": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+      "semantic": null,
+      "sha256": "0b0c199f15ae09805ca88c5228de1c58255ad71e4a2609a7e5f389fff8db5bc7",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "terms": [
+        "file",
+        "inspect"
+      ],
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956"
+    },
+    "schema": "potbot-task-discovery/v1",
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "staleSearch": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "search": {
+      "actions": [],
+      "approvalValid": true,
+      "authorityCurrent": false,
+      "bindingSha256": "4e8fa9b2bd37abf48c4b3e423661a2ff83c5196bee3f025d23b177d33dc07ba8",
+      "candidateCount": 14,
+      "catalogueSha256": "87b5d9aaffd654f59fcca8b44fb4166c4c16560c5c57c6200127e9d7d96a4bbf",
+      "constraints": {
+        "classes": [],
+        "inputTypes": [],
+        "outputTypes": [],
+        "permittedEffects": null,
+        "permittedScopes": null,
+        "platform": null,
+        "requireLocal": false,
+        "requireTaskEvidence": false
+      },
+      "consumerSha256": "7455c6f530e33ecea1ef8938deb25197a254d09805271c077d3cd3306a6101fa",
+      "contextSha256": "0f74969b7a2b199ac728cf88c7239b5dae5c47417fa16af7b86ec67418cf840e",
+      "createdAt": "2026-11-18T03:54:25.530104+00:00",
+      "embedding": null,
+      "id": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+      "limit": 10,
+      "mode": "lexical",
+      "policySha256": "94940f2f9711c776ae234d3ec0e53d07e854d56e64a4a83e048c233fe9474737",
+      "query": "inspect file",
+      "reasonCode": null,
+      "reasonCodes": [
+        "discovery_context_changed"
+      ],
+      "resultId": "877626b9-329a-4a54-afb4-3a54da551db7",
+      "resultSha256": "0b0c199f15ae09805ca88c5228de1c58255ad71e4a2609a7e5f389fff8db5bc7",
+      "revision": 3,
+      "selectedCandidateId": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+      "selectionId": "12e76481-33c4-4615-8e81-a35f1fcd8a22",
+      "status": "selected",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "typesSha256": "c912d8a50675dfaabfa079118913b42f81de92153844b69db336a576246c9956",
+      "updatedAt": "2026-11-18T03:54:27.618630+00:00"
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  },
+  "staleSelection": {
+    "principalId": "716b8876-4265-48e5-abc0-cda45051675d",
+    "schema": "potbot-task-discovery/v1",
+    "selection": {
+      "approvalValid": true,
+      "authorityCurrent": false,
+      "candidateId": "a086c869678980855aa618d989e2c08b225ae9ba0f7abb9bd3aad3ab27cabe1c",
+      "handoff": {
+        "bindingId": null,
+        "identity": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+        "kind": "registry"
+      },
+      "id": "12e76481-33c4-4615-8e81-a35f1fcd8a22",
+      "owner": {
+        "bindingId": null,
+        "kind": "registry",
+        "ownerId": "c5db8ec6-26b0-5b69-9b09-69fe2474520b",
+        "ownerSha256": "d88aa08700499dfb1357ac85a8509601723ebe1c21f07caedbfbbeeefd7d43aa"
+      },
+      "reasonCodes": [
+        "discovery_context_changed"
+      ],
+      "recordedAt": "2026-11-18T03:54:27.616543+00:00",
+      "resultId": "877626b9-329a-4a54-afb4-3a54da551db7",
+      "searchId": "65e1bee8-3b5d-40a3-845a-4149df77479a",
+      "sha256": "148ac11f7fc7318ed3118dabe78ce581e8711522fac7797459cbe56cd9a4d3a4",
+      "taskBinding": {
+        "contractRevisionId": "c3a3cbce-b748-4e68-a6d6-53d582d4d497",
+        "contractSha256": "d93be800f7f6a13eb2ca10ad35bfe4f6f00a83695318dea522d26140b10262f5",
+        "episodeId": "6a72329c-87cb-4be4-a3dc-fb27b1aad561",
+        "repositorySha256": "fd2be3a0cc460885367ccd9403ac7cdab93d375e5ab5ea0f5e04396f83de0e2a",
+        "repositoryStateId": "aac20ccf-e799-5466-aa5f-abd0c44a23d0",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      }
+    },
+    "workspaceId": "c840e5a5-ddf7-4f7c-a8d7-ccbac6a5a617"
+  }
+}

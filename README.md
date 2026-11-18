@@ -148,6 +148,16 @@ historical runs from qualifying changed installations. The operator can now coll
 exact installed-host/vendor evidence; the controlled acceptance fixtures do not
 claim that production qualification has already occurred.
 
+The [U04-S task discovery workbench](docs/implementation/u04-s-task-aware-capability-discovery.md)
+adds complete task-bound typed shortlists, optional private transient semantic
+refinement, exact scoped qualification evidence and revalidated owner selection.
+`potbot task-discovery`, `/discover/tasks` and the authenticated API share additive
+migration 45. Hard constraints run before ranking; an explicit native CLI claim
+uses the existing supervised offline Qwen encoder and task budget without writing
+private descriptions into a shared vector index. Selection opens the existing
+review owner and grants no execution permission. Deployed model quality and
+installed host/vendor qualification remain separate evidence gates.
+
 ## Install and check
 
 Run the entry point for your platform from the extracted checkout:
@@ -394,9 +404,10 @@ worker cannot publish a late vector. Confirmed usage is charged, confirmed unuse
 is released, and uncertain usage remains held for reconciliation.
 
 The [embedding guide](docs/embeddings.md) explains source registration, budgeted indexing,
-exact filtered search, retirement, and the opt-in live SQL test. This first integration
-uses explicit sources and exact search; automatic repository chunking, hybrid ranking,
-ANN indexes, and custom learned embeddings are later work.
+exact filtered search, retirement, and the opt-in live SQL test. The source index
+uses explicit sources and exact search; automatic repository chunking, ANN indexes
+and custom learned embeddings remain later work. U04-S separately adds bounded
+task-aware hybrid capability ranking using private transient vectors.
 
 Vectors have **named representations**, starting with `general_text`. Indexing and
 search select both a name and an exact immutable space; artifacts expose a typed

@@ -511,7 +511,16 @@ class McpQualificationService:
     def _report_view(
         self, conn: Any, context: WorkspaceContext, row: dict[str, Any], token: str | None
     ) -> dict[str, Any]:
-        if content_hash(row["payload"]) != row["sha256"]:
+        payload = row["payload"]
+        if (
+            not isinstance(payload, dict)
+            or set(payload) != {"complete", "passed", "evidence", "cases"}
+            or type(payload["complete"]) is not bool
+            or type(payload["passed"]) is not bool
+            or not isinstance(payload["evidence"], dict)
+            or not isinstance(payload["cases"], list)
+            or content_hash(payload) != row["sha256"]
+        ):
             raise StateMismatchError("Retained qualification report integrity failed")
         suite = self._row(conn, context, "suite", row["suite_id"])
         valid = self._valid(conn, "report", row, token)
@@ -529,7 +538,10 @@ class McpQualificationService:
             "bindingId": str(suite["binding_id"]),
             "sha256": row["sha256"],
             "approvalValid": valid,
-            **row["payload"],
+            "complete": payload["complete"],
+            "passed": payload["passed"],
+            "evidence": payload["evidence"],
+            "cases": payload["cases"],
             "authorityCurrent": not reasons,
             "reasonCodes": reasons,
             "recordedAt": row["recorded_at"].isoformat(),

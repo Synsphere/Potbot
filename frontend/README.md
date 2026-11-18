@@ -419,6 +419,79 @@ pipeline export to check the current backend responses against
 explicit integration fixtures; real sandbox qualification retains its existing
 host acceptance gates.
 
+## U04-S — Task-aware typed and hybrid discovery
+
+Open **Task-aware capability shortlist** from the workspace menu, or visit
+`/discover/tasks?workspace=WORKSPACE_UUID`. Optional `episode=TASK_UUID`,
+`state=REPOSITORY_STATE_UUID` and `search=SEARCH_UUID` selectors identify exact
+existing records. Loading or refreshing the page performs only retained reads.
+
+Enter an existing running task and repository state, then **Read current task
+context**. The workbench displays the exact task contract, repository state,
+semantic release, task capabilities, catalogue/type/policy/consumer hashes,
+source counts and registered embedding profiles. Creating a search requires the
+reviewed context digest; source or task drift requires another context review.
+
+Lexical and typed matching is the default. Optional constraints cover capability
+classes, registered Syn/Synny input/output types, platform, permitted effects and
+canonical scopes, local evidence and matching task success evidence. Unspecified
+permissions differ from explicitly empty allowances. Constraints narrow the
+existing task contract. Supplied inputs must fit accepted inputs; produced
+outputs must fit required outputs. Unknown required evidence cannot prove a fit.
+
+**Review exact search request** displays the complete bounded request before
+confirmation. Lexical requests retain a completed shortlist. Hybrid requests
+retain a pending command for the configured native operator to refine explicitly
+with `potbot task-discovery … refine`. The browser never performs inference,
+model download, provider configuration, index publication or tool execution.
+A registered embedding profile is not proof of locally available model files.
+The native owner retains privacy, budget, runtime and accounting checks. An empty
+hard-eligible pool can complete without inference and has no semantic evidence.
+
+The shortlist displays hard constraints before scores, current owner reasons,
+installation observations, task capability requirements, exact qualification
+suite/report evidence, feature contributions and explanations. Excluded
+candidate identities retain their hard-filter reasons. Cost, latency and general
+quality remain unknown. A semantic score is a retrieval contribution; every
+candidate has `executable:false`. **Inspect current owner detail** lazily reads
+only the matching existing owner and renders provider content as plain text/JSON.
+An owner or task conflict requires refreshing the search before another decision.
+
+**Review selection** retains an exact handoff after current identities are
+rechecked. Selection grants no execution permission. Fixed scoped destinations
+select the actual operation in `/tools?workspace=…&operation=SHA256`, registry
+candidate in `/discover?workspace=…&candidate=UUID`, or MCP binding in
+`/discover/mcp?workspace=…&binding=UUID`. Matching qualification suites link to
+`/discover/mcp/qualification`. Historical evidence remains inspectable; a stale
+selection does not offer an active handoff. Existing acquisition, controlled
+checks, native qualification and execution owners remain authoritative.
+
+The fixed `/api/ui/task-discovery` BFF exposes context, bounded search history,
+exact searches/results/selections and progressive candidate reads, plus only
+create, cancel and select commands. It validates UUID/hash identities, duplicate
+JSON keys, nested DTO shapes, array/number bounds and exact receipt joins. Requests
+are capped at 8 KiB, public responses at 1.5 MiB and owner detail at 128 KiB.
+Mutations require the operator session, exact Origin, workspace bearer, the
+server-only setup capability, explicit confirmation and a stable idempotency key.
+Responses are private/no-store, and unsupported native/score-upload routes fail
+before contacting the backend.
+
+Commands are journaled before dispatch in the existing per-tab, workspace and
+principal recovery store. An uncertain command blocks replacement. **Retry exact
+command** recovers its original receipt with the same request bytes and key;
+opening the page never retries a command automatically. Verified receipts are
+followed by separate current reads. In-flight reads are aborted on task,
+selection or scope changes. Optional progress monitoring pauses in hidden tabs,
+after 30 reads or when reviewing a command; it only reads retained progress.
+
+Run `npm test`, `npm run typecheck` and `npm run build`. Task discovery tests cover
+strict DTOs, normalized constraints, fixed routes, authority/identity mismatches,
+recovery, bounded streams and exact destination links. The actual HTTP/PostgreSQL
+lifecycle export is consumed through `POTBOT_TASK_DISCOVERY_CONTRACT_OUTPUT`, with
+`tests/fixtures/task-discovery-http.json` retained for offline regression. Its
+synthetic embedding adapter tests lifecycle and accounting; it does not qualify
+a real embedding model or external provider.
+
 ## U04-Q — Installed MCP task qualification
 
 Open **MCP task qualification** from the workspace menu or the admitted MCP

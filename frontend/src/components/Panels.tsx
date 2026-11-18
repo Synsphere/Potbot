@@ -107,6 +107,7 @@ export function MenuPanel() {
     </div>)}
     {isLive && <div className="menu-section">
       <h2>OPERATOR SETUP</h2>
+      <a className="menu-item" href={`/discover/tasks?workspace=${encodeURIComponent(workspace.id)}`}><span>Task-aware capability shortlist</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href={`/discover?workspace=${encodeURIComponent(workspace.id)}`}><span>Capability discovery and source review</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href={`/discover/mcp?workspace=${encodeURIComponent(workspace.id)}`}><span>Admitted MCP catalogues and reconciliation</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href={`/discover/mcp/qualification?workspace=${encodeURIComponent(workspace.id)}`}><span>Installed MCP task qualification</span><span aria-hidden="true">↗</span></a>

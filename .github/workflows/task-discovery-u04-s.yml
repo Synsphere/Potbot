@@ -1,0 +1,118 @@
+name: U04-S task-aware capability discovery
+on:
+  push:
+    paths:
+      - 'src/potbot/controller/*discovery*.py'
+      - 'src/potbot/controller/mcp_qualification.py'
+      - 'src/potbot/controller/operation_catalogue.py'
+      - 'src/potbot/controller/tasks.py'
+      - 'src/potbot/controller/budgets.py'
+      - 'src/potbot/context/skill_acquisition.py'
+      - 'src/potbot/memory/**'
+      - 'src/potbot/semantics/catalog*'
+      - 'src/potbot/domain/syn.py'
+      - 'src/potbot/domain/discovery.py'
+      - 'src/potbot/api/*task_discovery*.py'
+      - 'src/potbot/api/server_cli.py'
+      - 'src/potbot/cli.py'
+      - 'src/potbot/persistence/task_discovery_schema.py'
+      - 'src/potbot/persistence/schema.py'
+      - 'frontend/src/app/api/ui/task-discovery/**'
+      - 'frontend/src/app/discover/**'
+      - 'frontend/src/app/tools/**'
+      - 'frontend/src/lib/task-discovery*.ts'
+      - 'frontend/src/lib/server/task-discovery.ts'
+      - 'frontend/tests/task-discovery*'
+      - 'frontend/tests/fixtures/task-discovery-http.json'
+      - 'tests/unit/test_task_discovery*.py'
+      - 'tests/unit/test_ui_task_discovery.py'
+      - 'tests/unit/test_transient_embeddings.py'
+      - 'tests/unit/test_discovery_ranking.py'
+      - 'tests/integration/test_task_discovery*.py'
+      - 'tests/integration/test_transient_embeddings.py'
+      - 'tests/integration/test_mcp_qualification_report_projection.py'
+      - 'tests/fixtures/discovery/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'compose.yaml'
+      - '.github/workflows/task-discovery-u04-s.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  task-discovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      UV_PYTHON: '3.12'
+      # Disposable fixture credentials; no live provider, model download or setup secret.
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+      POTBOT_TASK_DISCOVERY_CONTRACT_OUTPUT: artifacts/task-discovery-http.json
+      COMPOSE_PROJECT_NAME: potbot-task-discovery-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.23'
+      - name: Install locked application and test dependencies
+        run: uv sync --locked --extra postgres --extra credentials --extra web --dev
+      - name: Install existing Linux process isolation prerequisites
+        run: |
+          bash scripts/ci_prepare_ubuntu_mirror.sh
+          sudo apt-get update
+          sudo apt-get install --yes bubblewrap libseccomp2 apparmor-profiles
+      - name: Load the distribution Bubblewrap user-namespace profile
+        shell: bash
+        run: |
+          potbot_userns_restriction=/proc/sys/kernel/apparmor_restrict_unprivileged_userns
+          if [[ -r "$potbot_userns_restriction" ]] && [[ "$(cat "$potbot_userns_restriction")" == 1 ]]; then
+            potbot_bwrap_profile=/usr/share/apparmor/extra-profiles/bwrap-userns-restrict
+            test -r "$potbot_bwrap_profile"
+            sudo apparmor_parser --replace "$potbot_bwrap_profile"
+          fi
+      - name: Verify real process isolation before native evidence
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/integration/test_process_isolation.py
+          --junitxml=artifacts/task-discovery-isolation.xml
+      - name: Start the repository PostgreSQL and pgvector fixture
+        run: docker compose up --detach --wait --wait-timeout 90
+      - name: Verify typed selection, scoped evidence, recovery and private transient accounting
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_task_discovery_ranking.py
+          tests/unit/test_task_discovery_sources.py
+          tests/unit/test_task_discovery_cli.py
+          tests/unit/test_ui_task_discovery.py
+          tests/unit/test_transient_embeddings.py
+          tests/unit/test_discovery_ranking.py
+          tests/unit/test_discovery_installed.py
+          tests/integration/test_task_discovery.py
+          tests/integration/test_task_discovery_mcp.py
+          tests/integration/test_mcp_qualification_report_projection.py
+          tests/integration/test_transient_embeddings.py
+          --junitxml=artifacts/task-discovery-u04-s.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Consume actual HTTP responses and verify browser recovery
+        run: >-
+          node --experimental-strip-types --test
+          frontend/tests/task-discovery*.test.mjs
+      - name: Retain task discovery acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: task-discovery-u04-s
+          path: |
+            artifacts/task-discovery-isolation.xml
+            artifacts/task-discovery-u04-s.xml
+            artifacts/task-discovery-http.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Stop only this disposable database
+        if: always()
+        run: docker compose down --volumes --remove-orphans --timeout 10

@@ -18,7 +18,7 @@ type Selection = { kind: "candidate" | "check"; id: string };
 const LIST_KINDS: ListKind[] = ["sources", "publishers", "candidates", "checks"];
 const VISIBLE_RECORDS = 200;
 
-function WorkspaceDiscovery({ initial, initialCheckId, invalidateScope }: { initial: Initial; initialCheckId: string | null; invalidateScope: () => void }) {
+function WorkspaceDiscovery({ initial, initialCheckId, initialCandidateId, invalidateScope }: { initial: Initial; initialCheckId: string | null; initialCandidateId: string | null; invalidateScope: () => void }) {
   const scope: DiscoveryScope = initial.sources;
   const emptyPublishers: DiscoveryPage<DiscoveryPublisher> = { schema: scope.schema, workspaceId: scope.workspaceId, principalId: scope.principalId, items: [], nextCursor: null };
   const [sources, setSources] = useState(initial.sources), [candidates, setCandidates] = useState(initial.candidates), [checks, setChecks] = useState(initial.checks);
@@ -60,11 +60,12 @@ function WorkspaceDiscovery({ initial, initialCheckId, invalidateScope }: { init
   const select = useCallback((selection: Selection | null) => {
     details.current.reset(); selectedRef.current = selection; selectionGeneration.current++; pollCount.current = 0;
     setSelected(selection); setSelectionVersion(value => value + 1); setCandidate(null); setCheck(null); setDetailBusy(false); setDetailNotice(""); setPollNotice(""); setLive(true);
-    const url = new URL(window.location.href); url.searchParams.set("workspace", scope.workspaceId); url.searchParams.delete("check");
+    const url = new URL(window.location.href); url.searchParams.set("workspace", scope.workspaceId); url.searchParams.delete("check"); url.searchParams.delete("candidate");
+    if (selection?.kind === "candidate") url.searchParams.set("candidate", selection.id);
     if (selection?.kind === "check") { url.searchParams.set("check", selection.id); setReviewId(selection.id); }
     window.history.replaceState(null, "", url);
   }, [scope.workspaceId]);
-  useEffect(() => { if (initialCheckId) { setTab("checks"); select({ kind: "check", id: initialCheckId }); } }, [initialCheckId, select]);
+  useEffect(() => { if (initialCheckId && initialCandidateId) return; if (initialCheckId) { setTab("checks"); select({ kind: "check", id: initialCheckId }); } else if (initialCandidateId) { setTab("candidates"); select({ kind: "candidate", id: initialCandidateId }); } }, [initialCheckId, initialCandidateId, select]);
 
   const loadList = useCallback((kind: ListKind, append = false) => {
     if (kind === "candidates" && query.current === null) return;
@@ -209,7 +210,7 @@ function WorkspaceDiscovery({ initial, initialCheckId, invalidateScope }: { init
   </>;
 }
 
-export default function DiscoveryWorkbench({ workspaceId, initialCheckId = null }: { workspaceId: string; initialCheckId?: string | null }) {
+export default function DiscoveryWorkbench({ workspaceId, initialCheckId = null, initialCandidateId = null }: { workspaceId: string; initialCheckId?: string | null; initialCandidateId?: string | null }) {
   const [initial, setInitial] = useState<Initial | null>(null), [notice, setNotice] = useState("Reading retained discovery records…"), [version, setVersion] = useState(0);
   const invalidateScope = useCallback(() => { setInitial(null); setVersion(value => value + 1); }, []);
   useEffect(() => {
@@ -225,6 +226,6 @@ export default function DiscoveryWorkbench({ workspaceId, initialCheckId = null 
       } catch { if (!controller.signal.aborted) setNotice("Discovery records are unavailable. Check the operator session, matching backend migration and workspace connection, then reload."); }
     })(); return () => controller.abort();
   }, [workspaceId, version]);
-  return initial ? <WorkspaceDiscovery key={`${workspaceId}:${initial.sources.principalId}:${version}`} initial={initial} initialCheckId={initialCheckId} invalidateScope={invalidateScope} /> :
+  return initial ? <WorkspaceDiscovery key={`${workspaceId}:${initial.sources.principalId}:${version}`} initial={initial} initialCheckId={initialCheckId} initialCandidateId={initialCandidateId} invalidateScope={invalidateScope} /> :
     <section className={styles.notice}><p role="status">{notice}</p><button type="button" onClick={invalidateScope}>Reload discovery workbench</button></section>;
 }

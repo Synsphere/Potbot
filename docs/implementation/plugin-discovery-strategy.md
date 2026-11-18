@@ -1,5 +1,18 @@
 # Potbot plugin and capability discovery strategy
 
+**Task-aware retrieval implementation, 18 November 2026:**
+[U04-S](u04-s-task-aware-capability-discovery.md) implements bounded T04.3
+task-context collection, directional canonical type constraints, explained
+lexical scoring and optional supervised local semantic refinement. Existing
+registry, acquired-skill, operation and configured MCP owners supply exact
+identities; independently valid U04-Q results contribute only for the same
+current task and installed reference. Private transient vectors never enter a
+shared source index. CLI/API/browser support exact inspection, selection and
+lost-response recovery while every result remains non-executable. The original
+forty golden requests and at least 90% class recall@3 threshold remain frozen.
+Real-model ranking quality, installed host/vendor evidence and interoperability
+still need their separate acceptance records; canonical T04 statuses are unchanged.
+
 **Task evidence implementation, 18 November 2026:**
 [U04-Q](u04-q-installed-mcp-qualification.md) supplies reviewed private case
 suites, bounded independent result assertions, existing task/gateway/receipt

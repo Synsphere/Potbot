@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { UUID } from "../../lib/discovery.ts";
 import { acquisitionSelection } from "../../lib/acquisition-handoff.ts";
+import { exactOwnerSelection } from "../../lib/task-discovery-client.ts";
 import DiscoveryWorkbench from "./DiscoveryWorkbench.tsx";
 import styles from "../skills/skills.module.css";
 
 type Workspace = { id: string; name: string };
 export default function DiscoveryPage() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]), [workspaceId, setWorkspaceId] = useState(""), [initialCheckId, setInitialCheckId] = useState<string | null>(null);
+  const [initialCandidateId, setInitialCandidateId] = useState<string | null>(null);
   const [notice, setNotice] = useState("Loading authorized workspaces…");
   useEffect(() => {
     const controller = new AbortController();
@@ -22,7 +24,7 @@ export default function DiscoveryPage() {
       });
       if (new Set(known.map(item => item.id)).size !== known.length) throw new Error("invalid"); setWorkspaces(known);
       const params = new URLSearchParams(window.location.search), requested = params.get("workspace"), selected = params.getAll("workspace").length > 1 ? undefined : requested ? known.find(item => item.id === requested) : known[0];
-      if (selected) { setWorkspaceId(selected.id); setInitialCheckId(acquisitionSelection(window.location.search, selected.id, "check")); setNotice(""); }
+      if (selected) { setWorkspaceId(selected.id); setInitialCheckId(acquisitionSelection(window.location.search, selected.id, "check")); setInitialCandidateId(exactOwnerSelection(window.location.search, selected.id, "candidate")); setNotice(""); }
       else setNotice(known.length ? "Select an authorized workspace to inspect discovery records." : "No authorized workspace is configured.");
     }).catch(() => { if (!controller.signal.aborted) setNotice("Sign in to Potbot to open capability discovery."); });
     return () => controller.abort();
@@ -31,11 +33,11 @@ export default function DiscoveryPage() {
   return <main className={styles.shell}><header className={styles.header}><a className={styles.back} href={`/${query}`}>← Workspace</a>
     <div className={styles.eyebrow}>POTBOT / CAPABILITY DISCOVERY</div><h1>Find, review and acquire a capability</h1>
     <p>Inspect retained registry observations, admit their sources and publishers, and review an exact version against measured sandbox prerequisites. Continue through the existing skill or executable acquisition workflow.</p>
-    <nav className={styles.links} aria-label="Related workspace controls"><a href={`/discover/mcp${query}`}>Admitted MCP catalogues ↗</a><a href={`/tools${query}`}>Operations and controlled checks ↗</a><a href={`/skills${query}`}>Portable skill workshop ↗</a><a href={`/setup/tools${query}`}>Executable acquisition and release ↗</a><a href="/setup/operator">Operator health ↗</a></nav></header>
+    <nav className={styles.links} aria-label="Related workspace controls"><a href={`/discover/tasks${query}`}>Task-aware shortlist ↗</a><a href={`/discover/mcp${query}`}>Admitted MCP catalogues ↗</a><a href={`/tools${query}`}>Operations and controlled checks ↗</a><a href={`/skills${query}`}>Portable skill workshop ↗</a><a href={`/setup/tools${query}`}>Executable acquisition and release ↗</a><a href="/setup/operator">Operator health ↗</a></nav></header>
     <div className={styles.toolbar}><label>Workspace<select value={workspaceId} onChange={event => {
-      setWorkspaceId(event.target.value); setInitialCheckId(null); setNotice(""); const url = new URL(window.location.href); url.searchParams.set("workspace", event.target.value); url.searchParams.delete("check"); window.history.replaceState(null, "", url);
+      setWorkspaceId(event.target.value); setInitialCheckId(null); setInitialCandidateId(null); setNotice(""); const url = new URL(window.location.href); url.searchParams.set("workspace", event.target.value); url.searchParams.delete("check"); url.searchParams.delete("candidate"); window.history.replaceState(null, "", url);
     }}><option value="" disabled>Select workspace</option>{workspaces.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><span className={styles.help}>Exact reviews and acquisition targets belong to this workspace and authenticated principal.</span></div>
-    {notice && <p className={styles.status} role="status">{notice}</p>}{workspaceId && <DiscoveryWorkbench key={workspaceId} workspaceId={workspaceId} initialCheckId={initialCheckId} />}
+    {notice && <p className={styles.status} role="status">{notice}</p>}{workspaceId && <DiscoveryWorkbench key={workspaceId} workspaceId={workspaceId} initialCheckId={initialCheckId} initialCandidateId={initialCandidateId} />}
     <footer className={styles.footer}><span>Discovery observations and prerequisite measurements grant no execution authority.</span><a href={`/tools${query}`}>Inspect installed operation eligibility ↗</a></footer>
   </main>;
 }
