@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { acquisitionSelection } from "../../lib/acquisition-handoff.ts";
 import {
   MAX_ARCHIVE_BYTES, UUID, projectPackage, projectPackageList, projectSkill, projectSkillList, projectSkillMutation, validateSkillMutation,
   type AcquiredSkill, type PackageEnvelope, type PackageList, type SkillList, type SkillPackage,
@@ -59,7 +60,7 @@ function ImportForm({ disabled, mutate }: { disabled: boolean; mutate: Mutate })
   </section>;
 }
 
-function Workshop({ scope, initialSkills, initialPackages, invalidateScope }: { scope: WorkshopScope; initialSkills: SkillList; initialPackages: PackageList; invalidateScope: () => void }) {
+function Workshop({ scope, initialSkills, initialPackages, initialPackageId, invalidateScope }: { scope: WorkshopScope; initialSkills: SkillList; initialPackages: PackageList; initialPackageId: string | null; invalidateScope: () => void }) {
   const [skills, setSkills] = useState(initialSkills), [packages, setPackages] = useState(initialPackages);
   const [selection, setSelection] = useState<Selection | null>(null), [selectedPackage, setSelectedPackage] = useState<PackageEnvelope | null>(null), [selectedSkill, setSelectedSkill] = useState<AcquiredSkill | null>(null);
   const [notice, setNotice] = useState(""), [detailNotice, setDetailNotice] = useState(""), [listsBusy, setListsBusy] = useState(false), [detailBusy, setDetailBusy] = useState(false);
@@ -83,6 +84,7 @@ function Workshop({ scope, initialSkills, initialPackages, invalidateScope }: { 
     selectionRequests.current.reset(); setSelectedPackage(null); setSelectedSkill(null); setDetailNotice("");
     setSelection(prior => ({ kind, id, generation: (prior?.generation ?? 0) + 1 }));
   }, []);
+  useEffect(() => { if (initialPackageId) { setTab("packages"); select("package", initialPackageId); } }, [initialPackageId, select]);
 
   const refresh = useCallback(() => {
     listRequests.current.reset(); const ticket = listRequests.current.open(); setListsBusy(true); setNotice("Refreshing authorized packages and skills…");
@@ -208,7 +210,7 @@ function Workshop({ scope, initialSkills, initialPackages, invalidateScope }: { 
   </>;
 }
 
-function WorkspaceWorkshop({ workspaceId }: { workspaceId: string }) {
+function WorkspaceWorkshop({ workspaceId, initialPackageId }: { workspaceId: string; initialPackageId: string | null }) {
   const [initial, setInitial] = useState<{ skills: SkillList; packages: PackageList } | null>(null), [notice, setNotice] = useState("Loading scoped skill records…"), [refresh, setRefresh] = useState(0);
   const invalidate = useCallback(() => { setInitial(null); setRefresh(value => value + 1); }, []);
   useEffect(() => {
@@ -224,12 +226,13 @@ function WorkspaceWorkshop({ workspaceId }: { workspaceId: string }) {
       } catch { if (!controller.signal.aborted) setNotice("The skill workshop is unavailable. Check the operator session and workspace backend, then reload."); }
     })(); return () => controller.abort();
   }, [workspaceId, refresh]);
-  return initial ? <Workshop key={`${workspaceId}:${initial.skills.principalId}:${refresh}`} scope={{ workspaceId, principalId: initial.skills.principalId }} initialSkills={initial.skills} initialPackages={initial.packages} invalidateScope={invalidate} /> :
+  return initial ? <Workshop key={`${workspaceId}:${initial.skills.principalId}:${refresh}`} scope={{ workspaceId, principalId: initial.skills.principalId }} initialSkills={initial.skills} initialPackages={initial.packages} initialPackageId={initialPackageId} invalidateScope={invalidate} /> :
     <div className={styles.notice}><p role="status">{notice}</p><button type="button" onClick={invalidate}>Reload workshop</button></div>;
 }
 
 export default function SkillWorkshopPage() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]), [workspaceId, setWorkspaceId] = useState(""), [notice, setNotice] = useState("Loading authorized workspaces…");
+  const [initialPackageId, setInitialPackageId] = useState<string | null>(null);
   useEffect(() => {
     const controller = new AbortController();
     void fetch("/api/ui/bootstrap", { credentials: "same-origin", cache: "no-store", signal: controller.signal }).then(async response => {
@@ -242,17 +245,17 @@ export default function SkillWorkshopPage() {
       });
       if (new Set(known.map(item => item.id)).size !== known.length) throw new Error("invalid");
       setWorkspaces(known); const requested = new URLSearchParams(window.location.search).get("workspace"), selected = requested ? known.find(item => item.id === requested) : known[0];
-      if (selected) { setWorkspaceId(selected.id); setNotice(""); } else setNotice(known.length ? "Select an authorized workspace to open the skill workshop." : "No authorized workspace is configured.");
+      if (selected) { setWorkspaceId(selected.id); setInitialPackageId(acquisitionSelection(window.location.search, selected.id, "package")); setNotice(""); } else setNotice(known.length ? "Select an authorized workspace to open the skill workshop." : "No authorized workspace is configured.");
     }).catch(() => { if (!controller.signal.aborted) setNotice("Sign in to Potbot to load the authorized skill workshop."); });
     return () => controller.abort();
   }, []);
   const query = workspaceId ? `?workspace=${encodeURIComponent(workspaceId)}` : "";
   return <main className={styles.shell}><header className={styles.header}><a className={styles.back} href={`/${query}`}>← Workspace</a><div className={styles.eyebrow}>POTBOT / SKILL WORKSHOP</div><h1>Bring a skill into your workspace</h1>
     <p>Import an exact source, review its complete package and approve a retained release. Control which instructions and resources authorized agents can load, with an auditable update and rollback history.</p>
-    <nav className={styles.links} aria-label="Related workspace tools"><a href={`/tools${query}`}>Operations catalogue ↗</a><a href={`/setup/tools${query}`}>Executable tool upgrades ↗</a><a href="/setup/operator">Operator health ↗</a></nav></header>
-    <div className={styles.toolbar}><label>Workspace<select value={workspaceId} onChange={event => { setWorkspaceId(event.target.value); setNotice(""); }}><option value="" disabled>Select workspace</option>{workspaces.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+    <nav className={styles.links} aria-label="Related workspace tools"><a href={`/discover${query}`}>Discover and review capabilities ↗</a><a href={`/tools${query}`}>Operations catalogue ↗</a><a href={`/setup/tools${query}`}>Executable tool upgrades ↗</a><a href="/setup/operator">Operator health ↗</a></nav></header>
+    <div className={styles.toolbar}><label>Workspace<select value={workspaceId} onChange={event => { setWorkspaceId(event.target.value); setInitialPackageId(null); setNotice(""); const url = new URL(window.location.href); url.searchParams.set("workspace", event.target.value); url.searchParams.delete("package"); window.history.replaceState(null, "", url); }}><option value="" disabled>Select workspace</option>{workspaces.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
       <span className={styles.help}>Every import, approval and resource read stays within this workspace and authenticated principal.</span></div>
-    {notice && <p className={styles.status} role="status">{notice}</p>}{workspaceId && <WorkspaceWorkshop key={workspaceId} workspaceId={workspaceId} />}
+    {notice && <p className={styles.status} role="status">{notice}</p>}{workspaceId && <WorkspaceWorkshop key={workspaceId} workspaceId={workspaceId} initialPackageId={initialPackageId} />}
     <footer className={styles.footer}><span>Skill packages provide instructions and data. Activation grants data availability.</span><a href={`/setup/tools${query}`}>Manage executable dependencies ↗</a></footer>
   </main>;
 }

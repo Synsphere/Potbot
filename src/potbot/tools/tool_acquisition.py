@@ -12,6 +12,7 @@ import hmac
 import json
 import re
 from collections.abc import Callable
+from contextlib import nullcontext
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -644,13 +645,24 @@ class ToolAcquisitionService:
             }
 
     def request(
-        self, context: WorkspaceContext, recipe_id: UUID, commit: str, key: str, *, setup_token: str
+        self,
+        context: WorkspaceContext,
+        recipe_id: UUID,
+        commit: str,
+        key: str,
+        *,
+        setup_token: str,
+        connection: Any = None,
     ) -> dict[str, Any]:
         from psycopg.types.json import Jsonb
 
         token = self._authorized(setup_token)
         _uuid(recipe_id)
-        with self.database.transaction(context) as conn:
+        with (
+            self.database.transaction(context)
+            if connection is None
+            else nullcontext(connection) as conn
+        ):
             recipe_row = _recipe_row(conn, context, recipe_id)
             recipe = ToolRecipe.from_dict(recipe_row["content"])
             source_identity(recipe.repository, commit)

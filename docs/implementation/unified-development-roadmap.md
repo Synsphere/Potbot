@@ -6,6 +6,17 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**18 November 2026, after the executable acquisition merge:**
+[U04-D curated discovery](u04-d-curated-discovery.md) completes the supported
+source-to-acquisition review on merged main
+`a701eb68523767ddaf685a7cc6e991a896f21b66`: bounded curated/ClawHub/skills.sh/MCP
+registry observations, independently signed source and publisher decisions,
+explained task ranking and exact installed-skill preference, actual package
+inspection, measured sandbox prerequisites and atomic handoff to U04-A/U04-X.
+Migration 42 retains scoped immutable evidence and signed reviews. Registry
+claims do not grant execution. Live MCP reconciliation, broader interoperability
+and installed-host/task qualification remain open; U04/M4/T04 stays partial.
+
 **17 November 2026, after the portable skill merge:**
 [U04-X executable tool acquisition](u04-x-executable-tool-acquisition.md) completes
 the supported executable lifecycle on merged main
@@ -235,6 +246,7 @@ These suffixes identify work within existing U packages. They do not renumber th
 | U04-E | U04/U05/U07/U13/U16 | Complete the [controlled operation workbench](u04-e-operation-workbench.md): worker eligibility, explicit checked launch, owned monitoring/cancellation and verified results for existing native Cog/hosted routes. Qualify the installed host and chosen provider without promoting the wider U04/M4/T04 programme; RD18/RD23. |
 | U04-A | U04/U05/U13/U16 | Complete the [portable skill lifecycle](u04-a-portable-skill-acquisition.md): immutable package acquisition, review, operator-approved installation, Context resource reads, update/rollback/disable/revoke. Keep registry search, executable dependency admission, native skill interoperability and deployed-host qualification as independent remaining work. |
 | U04-X | U04/U05/U11/U13/U16 | Complete the [executable acquisition lifecycle](u04-x-executable-tool-acquisition.md): pinned source, operator recipes, exact build approval, measured tests, first installation, upgrades, S12 release, rollback/withdrawal and signed recovery. Qualify the actual installed host and extend curated registry/publisher/dependency breadth through these owners. |
+| U04-D | U04/U05/U11/U13/U16 | Complete [curated discovery and measured prerequisites](u04-d-curated-discovery.md): bounded registry snapshots, signed source/publisher admission, explained task ranking, exact package/recipe review, current sandbox measurements and existing-owner handoffs. Next reconcile admitted live MCP interfaces and qualify actual installed host/vendor/task profiles; retain independent execution grants. |
 | U07-Q | U02/U05/U07/U13/U16 | Native service/vault, provider and inbound API matrix, model downloads/cache paths and installed/runnable/qualified readiness; RD01–RD04. |
 | U08-T | U01/U04/U08/U14 | Existing fenced reasoning/accounting plus ensemble verification, temporal steering, atomic leaf scheduling and active research; RD05–RD09. |
 | U09-C | U06/U09/U11/U13 | Preserve data-only state/history and Stage 10D integration; close constructor/protocol, semantic-reconciliation and authored-skill gaps; RD26–RD29. |

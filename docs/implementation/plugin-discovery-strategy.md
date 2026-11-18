@@ -1,5 +1,16 @@
 # Potbot plugin and capability discovery strategy
 
+**Implementation follow-on, 18 November 2026:**
+[U04-D](u04-d-curated-discovery.md) now implements bounded registry source
+snapshots, independently signed source/publisher decisions, deterministic task
+ranking with explicit hard constraints, verified installed-skill preference,
+exact package/recipe inspection and measured sandbox prerequisites. It hands
+the exact reviewed record to the existing U04-A/U04-X owners. The 20 inspection
+profiles and 40 golden task cases establish source/ranking contract evidence,
+not installed integrations or task success. Live MCP reconciliation, broader
+semantic retrieval, native vendor interoperability and deployed-host qualification
+remain open. Existing canonical T04 stage statuses are preserved.
+
 Strategy update: 23 October 2026. Baseline inspected: `e2f7b2e423ceb7360df76b18b076de09bf39936a`. This document extends the [universal tool plan](../potbot-tool-mcp-implementation-bundle/potbot-universal-tool-mcp-implementation-plan.md), especially T04.1–T04.4. It is proposed implementation and evaluation work, not a claim of a running discovery service or qualified automatic installation.
 
 **Implementation follow-on, 17 November 2026:**

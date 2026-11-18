@@ -1,0 +1,103 @@
+name: U04-D curated discovery and measured prerequisites
+on:
+  push:
+    paths:
+      - 'src/potbot/controller/*discovery*.py'
+      - 'src/potbot/controller/registry_sources.py'
+      - 'src/potbot/domain/discovery.py'
+      - 'src/potbot/context/skill_*.py'
+      - 'src/potbot/tools/skill_dependency_probe.py'
+      - 'src/potbot/tools/tool_acquisition.py'
+      - 'src/potbot/api/*discovery*.py'
+      - 'src/potbot/api/server_cli.py'
+      - 'src/potbot/cli.py'
+      - 'src/potbot/persistence/discovery_schema.py'
+      - 'src/potbot/persistence/schema.py'
+      - 'frontend/src/app/api/ui/discovery/**'
+      - 'frontend/src/app/discover/**'
+      - 'frontend/src/app/skills/**'
+      - 'frontend/src/app/setup/tools/**'
+      - 'frontend/src/lib/*discovery*.ts'
+      - 'frontend/src/lib/server/discovery.ts'
+      - 'frontend/src/lib/acquisition-handoff.ts'
+      - 'frontend/src/lib/skill-acquisition.ts'
+      - 'frontend/tests/discovery*'
+      - 'frontend/tests/acquisition-handoff.test.mjs'
+      - 'frontend/tests/fixtures/discovery-http.json'
+      - 'tests/unit/test_discovery*.py'
+      - 'tests/unit/test_ui_discovery.py'
+      - 'tests/unit/test_registry_sources.py'
+      - 'tests/unit/test_skill_eligibility.py'
+      - 'tests/unit/test_skill_dependency_probe.py'
+      - 'tests/integration/test_discovery.py'
+      - 'tests/fixtures/discovery/**'
+      - 'examples/registry/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'compose.yaml'
+      - '.github/workflows/discovery-u04-d.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      # Disposable fixture credentials, never a production database.
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+      POTBOT_DISCOVERY_CONTRACT_OUTPUT: artifacts/discovery-http.json
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.23'
+      - name: Install the locked application and test environment
+        run: uv sync --locked --extra postgres --extra credentials --extra web --dev
+      - name: Start real PostgreSQL and pgvector
+        run: docker compose up --detach --wait --wait-timeout 90
+      - name: Verify discovery, signed admission, exact handoff and existing owners
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_registry_sources.py
+          tests/unit/test_discovery_ranking.py
+          tests/unit/test_discovery_installed.py
+          tests/unit/test_skill_eligibility.py
+          tests/unit/test_skill_dependency_probe.py
+          tests/unit/test_ui_discovery.py
+          tests/unit/test_discovery_cli.py
+          tests/integration/test_discovery.py
+          tests/integration/test_skill_acquisition.py
+          tests/integration/test_skill_acquisition_api.py
+          tests/integration/test_tool_acquisition.py
+          tests/integration/test_tool_acquisition_pipeline.py
+          tests/integration/test_operation_catalogue.py
+          --junitxml=artifacts/discovery-u04-d.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify actual HTTP projections, browser controls and recovery
+        run: >-
+          node --experimental-strip-types --test
+          frontend/tests/discovery-contract.test.mjs
+          frontend/tests/discovery.test.mjs
+          frontend/tests/discovery-routes.test.mjs
+          frontend/tests/discovery-recovery.test.mjs
+          frontend/tests/discovery-skill-handoff.test.mjs
+          frontend/tests/acquisition-handoff.test.mjs
+      - name: Retain discovery evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: discovery-u04-d
+          path: |
+            artifacts/discovery-u04-d.xml
+            artifacts/discovery-http.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Stop disposable database
+        if: always()
+        run: docker compose down --volumes --remove-orphans --timeout 10

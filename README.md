@@ -119,6 +119,15 @@ repin and installed postflight; first-install rollback restores verified absence
 Signed recovery fences delayed workers and preserves uncertain outcomes. Native
 host qualification and broader registry discovery remain separate evidence gates.
 
+The [U04-D discovery workbench](docs/implementation/u04-d-curated-discovery.md)
+connects curated, ClawHub, skills.sh and official MCP Registry observations to
+task search, independent source/publisher admission, exact package review and
+measured sandbox prerequisites. `/discover`, `potbot discovery` and the scoped
+API use migration 42, then hand the exact reviewed record to the existing skill
+or executable acquisition owner. Installed-skill preference uses current signed
+controls. Registry metadata and prerequisite reports grant no execution authority;
+live MCP reconciliation and installed-host/task qualification remain open.
+
 ## Install and check
 
 Run the entry point for your platform from the extracted checkout:

@@ -1,5 +1,16 @@
 # Potbot external skill ecosystem integration
 
+**Implementation follow-on, 18 November 2026:**
+[U04-D](u04-d-curated-discovery.md) connects documented ClawHub and skills.sh
+metadata to exact verified package snapshots, scoped source/publisher admission,
+task search, actual package requirements and a fixed probe in the selected
+existing sandbox. The API, CLI and `/discover` workbench retain the exact review
+and hand off to the existing U04-A/U04-X acquisition owners. skills.sh snapshot
+identity is explicitly distinct from a Git commit; unsupported aliases,
+configuration and host requirements stay visible. Native vendor compatibility,
+Cog substitution, dependency installation policy, credential injection, hooks,
+turn snapshots and real package task qualification remain partial or planned.
+
 Status: proposed research-driven plan, 2026-11-01. Complements `unified-development-roadmap.md`, `cross-agent-compatibility.md`, and `plugin-discovery-strategy.md`. No claim that a third-party skill was installed, executed, or qualified. The independent ClawSkills directory advertises 5,705+ indexed entries but exposes 71 named curated listings; listing descriptions are not executable package audits.
 
 **Implementation follow-on, 17 November 2026:**

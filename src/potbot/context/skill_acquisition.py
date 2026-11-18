@@ -12,6 +12,7 @@ import hashlib
 import hmac
 import re
 from collections.abc import Callable
+from contextlib import nullcontext
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
@@ -389,6 +390,8 @@ class SkillAcquisition:
         request: dict[str, Any],
         key: str,
         loader: Callable[[], SkillPackage],
+        *,
+        connection: Any = None,
     ) -> dict[str, Any]:
         from psycopg.types.json import Jsonb
 
@@ -398,7 +401,13 @@ class SkillAcquisition:
             or not callable(loader)
         ):
             raise InvalidInputError("A bounded exact package source is required")
-        with self.database.transaction(context) as conn:
+        # The discovery handoff shares this owner's transaction so a revoked
+        # source cannot race its exact package receipt into another registry.
+        with (
+            self.database.transaction(context)
+            if connection is None
+            else nullcontext(connection) as conn
+        ):
 
             def create() -> dict[str, Any]:
                 loaded = loader()

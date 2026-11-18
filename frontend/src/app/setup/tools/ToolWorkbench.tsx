@@ -11,7 +11,7 @@ import styles from "../../skills/skills.module.css";
 const headers = (workspaceId: string) => ({ "X-Potbot-Workspace": workspaceId });
 type Scope = { workspaceId: string; principalId: string };
 
-function WorkspaceTools({ scope, initialOperations, initialRecipes, invalidateScope }: { scope: Scope; initialOperations: AcquisitionList; initialRecipes: RecipeList; invalidateScope: () => void }) {
+function WorkspaceTools({ scope, initialOperations, initialRecipes, initialOperationId, invalidateScope }: { scope: Scope; initialOperations: AcquisitionList; initialRecipes: RecipeList; initialOperationId: string | null; invalidateScope: () => void }) {
   const [operations, setOperations] = useState(initialOperations), [recipes, setRecipes] = useState(initialRecipes), [listBusy, setListBusy] = useState(false);
   const [selected, setSelected] = useState(""), [selectionVersion, setSelectionVersion] = useState(0), [operation, setOperation] = useState<ToolOperation | null>(null);
   const [detailBusy, setDetailBusy] = useState(false), [detailNotice, setDetailNotice] = useState(""), [notice, setNotice] = useState("");
@@ -32,6 +32,7 @@ function WorkspaceTools({ scope, initialOperations, initialRecipes, invalidateSc
     details.current.reset(); events.current.reset(); selectedRef.current = id; selectionGeneration.current++; eventCursor.current = 0; historyRef.current = null; droppedEvents.current = 0; pollCount.current = 0;
     setSelected(id); setSelectionVersion(value => value + 1); setOperation(null); setHistory(null); setDetailNotice(""); setHistoryNotice(""); setPollNotice(""); setLive(true);
   }, []);
+  useEffect(() => { if (initialOperationId) select(initialOperationId); }, [initialOperationId, select]);
   const refreshLists = useCallback(() => {
     lists.current.reset(); const ticket = lists.current.open(); listBusyRef.current = true; setListBusy(true); setNotice("Refreshing acquisition records and published recipes…");
     void (async () => {
@@ -173,7 +174,7 @@ function WorkspaceTools({ scope, initialOperations, initialRecipes, invalidateSc
   </>;
 }
 
-export default function ToolWorkbench({ workspaceId }: { workspaceId: string }) {
+export default function ToolWorkbench({ workspaceId, initialOperationId = null }: { workspaceId: string; initialOperationId?: string | null }) {
   const [initial, setInitial] = useState<{ operations: AcquisitionList; recipes: RecipeList } | null>(null), [notice, setNotice] = useState("Loading scoped acquisition records…"), [version, setVersion] = useState(0);
   const invalidate = useCallback(() => { setInitial(null); setVersion(value => value + 1); }, []);
   useEffect(() => {
@@ -189,6 +190,6 @@ export default function ToolWorkbench({ workspaceId }: { workspaceId: string }) 
       } catch { if (!controller.signal.aborted) setNotice("The acquisition workbench is unavailable. Check the operator session, matching backend migration and workspace connection. Existing tested approvals remain accessible in their tab."); }
     })(); return () => controller.abort();
   }, [workspaceId, version]);
-  return initial ? <WorkspaceTools key={`${workspaceId}:${initial.operations.principalId}:${version}`} scope={{ workspaceId, principalId: initial.operations.principalId }} initialOperations={initial.operations} initialRecipes={initial.recipes} invalidateScope={invalidate} /> :
+  return initial ? <WorkspaceTools key={`${workspaceId}:${initial.operations.principalId}:${version}`} scope={{ workspaceId, principalId: initial.operations.principalId }} initialOperations={initial.operations} initialRecipes={initial.recipes} initialOperationId={initialOperationId} invalidateScope={invalidate} /> :
     <section className={styles.notice}><p role="status">{notice}</p><button type="button" onClick={invalidate}>Reload acquisition workbench</button></section>;
 }

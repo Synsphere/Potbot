@@ -8,7 +8,8 @@ const NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const ACTIONS = ["activate", "disable", "rollback", "revoke"] as const;
 export type SkillAction = typeof ACTIONS[number];
 export type SkillScope = { schema: typeof SKILL_SCHEMA; workspaceId: string; principalId: string };
-export type SkillSource = { kind: string; archive_sha256?: string; path?: string; verification?: string; url?: string; commit?: string; requested_path?: string; releaseSha256?: string };
+export type SkillSource = { kind: string; archive_sha256?: string; path?: string; verification?: string; url?: string; commit?: string; requested_path?: string; releaseSha256?: string;
+  adapter?: string; identity?: string; version?: string; candidate_sha256?: string; registry_adapter?: string; registry_identity?: string; registry_version?: string; registry_candidate_sha256?: string; registry_source_sha256?: string };
 export type SkillFile = { path: string; sha256: string; size: number; media_type: string; executable_hint: boolean };
 export type SkillManifest = { schema: "potbot-skill-package/v1"; name: string; description: string; content_sha256: string;
   files: SkillFile[]; metadata: Record<string, unknown>; requirements: { kind: string; name: string; status: "unverified" }[];
@@ -68,7 +69,7 @@ function metadata(value: unknown, depth = 0): boolean {
   const row = object(value); return row !== null && Object.keys(row).length <= 256 && Object.entries(row).every(([key, item]) => text(key, 128) && key.length > 0 && metadata(item, depth + 1));
 }
 export function projectSource(value: unknown): SkillSource | null {
-  const row = object(value); if (!row || !["zip", "github", "directory", "local"].includes(String(row.kind))) return null;
+  const row = object(value); if (!row || !["zip", "github", "directory", "local", "registry"].includes(String(row.kind))) return null;
   const source: SkillSource = { kind: row.kind as string };
   if (row.kind === "zip" || row.kind === "github") {
     if (!digest(row.archive_sha256) || !resourcePath(row.path, true) || row.verification !== "content-integrity-only") return null;
@@ -77,6 +78,21 @@ export function projectSource(value: unknown): SkillSource | null {
   if (row.kind === "github") {
     if (!githubRepository(row.url) || !id(row.commit, COMMIT) || !resourcePath(row.requested_path, true)) return null;
     Object.assign(source, { url: row.url, commit: row.commit, requested_path: row.requested_path });
+  }
+  const registryFields = ["registry_adapter", "registry_identity", "registry_version", "registry_candidate_sha256", "registry_source_sha256"] as const;
+  const registryText = (value: unknown, max: number): value is string => text(value, max) && value.length > 0 && !/[\x00-\x1f\x7f]/.test(value);
+  if (row.kind === "registry" || registryFields.some(key => row[key] !== undefined)) {
+    if (!["curated", "clawhub", "skills_sh"].includes(String(row.registry_adapter)) || !registryText(row.registry_identity, 320) || !registryText(row.registry_version, 128) ||
+        ["latest", "main", "master", "head", "*"].includes(row.registry_version.toLowerCase()) || !digest(row.registry_candidate_sha256) || !digest(row.registry_source_sha256)) return null;
+    for (const key of registryFields) source[key] = row[key] as string;
+  }
+  if (row.kind === "registry") {
+    if (!["clawhub", "skills_sh"].includes(String(row.adapter)) || row.adapter !== source.registry_adapter || row.identity !== source.registry_identity || row.verification !== "content-integrity-only") return null;
+    Object.assign(source, { adapter: row.adapter, identity: row.identity, verification: row.verification });
+    if (row.adapter === "clawhub") {
+      if (row.version !== source.registry_version || row.candidate_sha256 !== source.registry_candidate_sha256 || !digest(row.archive_sha256) || !resourcePath(row.path, true)) return null;
+      Object.assign(source, { version: row.version, candidate_sha256: row.candidate_sha256, archive_sha256: row.archive_sha256, path: row.path });
+    } else if (!/^snapshot:[a-f0-9]{64}$/.test(source.registry_version!) || row.archive_sha256 !== undefined || row.path !== undefined || row.version !== undefined || row.candidate_sha256 !== undefined) return null;
   }
   if (row.releaseSha256 !== undefined) { if (!digest(row.releaseSha256)) return null; source.releaseSha256 = row.releaseSha256; }
   return source;

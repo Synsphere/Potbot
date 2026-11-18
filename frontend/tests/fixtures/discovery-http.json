@@ -1,0 +1,2068 @@
+{
+  "approvedPublisher": {
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "publisher": {
+      "actions": [
+        "block",
+        "revoke"
+      ],
+      "approvalValid": true,
+      "bindingSha256": "fd1e318608886328443a5560162a6c3ded0ff682cce264fb0d77f7fcefe1f3d0",
+      "evidence": "operator_claim",
+      "id": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+      "name": "fixture",
+      "revision": 1,
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "state": "approved",
+      "updatedAt": "2026-11-18T01:09:41.516980+00:00"
+    },
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "blockedPublisher": {
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "publisher": {
+      "actions": [
+        "approve",
+        "revoke"
+      ],
+      "approvalValid": true,
+      "bindingSha256": "de149466b35d6aea6157daa7c73966d607242fb1ffdd25e05318244f577369a1",
+      "evidence": "operator_claim",
+      "id": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+      "name": "fixture",
+      "revision": 2,
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "state": "blocked",
+      "updatedAt": "2026-11-18T01:09:42.275444+00:00"
+    },
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "cancelledCheck": {
+    "check": {
+      "actions": [],
+      "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+      "bindingSha256": "c1623d009bcfc6d9d1f41f48d7212ec436c42337bfa93ed88840a38696031bae",
+      "candidate": {
+        "canReview": true,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "34430960-6dcc-5baf-918a-55688749f202",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "publisherState": "approved",
+        "reasonCodes": [],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceApprovalValid": true,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "sourceState": "active",
+        "stale": false
+      },
+      "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+      "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "createdAt": "2026-11-18T01:09:41.802612+00:00",
+      "id": "6420678e-b491-43c6-bc45-1a05bbf186ce",
+      "measurement": null,
+      "measurementCurrent": false,
+      "packageId": "91998142-3067-4ac6-b256-4e7d4df2856e",
+      "reasonCodes": [
+        "measurement_cancelled"
+      ],
+      "recipeId": null,
+      "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "requirements": [
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "curl"
+        },
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "unavailable"
+        },
+        {
+          "kind": "binary",
+          "name": "python3"
+        },
+        {
+          "kind": "environment",
+          "name": "PATH"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "darwin"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "linux"
+        }
+      ],
+      "revision": 2,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "status": "cancelled",
+      "target": null,
+      "updatedAt": "2026-11-18T01:09:41.827354+00:00"
+    },
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "candidate": {
+    "candidate": {
+      "canReview": true,
+      "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "executable": false,
+      "id": "34430960-6dcc-5baf-918a-55688749f202",
+      "observation": {
+        "adapter": "curated",
+        "canonicalId": "fixture/portable-fixture",
+        "capabilities": {
+          "classes": [
+            "file_inspection"
+          ],
+          "effects": [
+            "read_only"
+          ],
+          "inputTypes": [],
+          "outputTypes": [],
+          "platforms": [
+            "linux"
+          ],
+          "scopes": []
+        },
+        "description": "Explicit local discovery fixture",
+        "distribution": {
+          "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "kind": "github_skill",
+          "path": "skills/portable-fixture",
+          "repository": "https://github.com/fixture/skills"
+        },
+        "kind": "skill",
+        "manifest": {
+          "fixture": true,
+          "numeric": {
+            "fractional": 1.25e-07,
+            "zero": 0
+          }
+        },
+        "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+        "name": "Portable fixture",
+        "publisher": {
+          "evidence": "operator_claim",
+          "id": "fixture"
+        },
+        "requirements": [
+          {
+            "kind": "binary",
+            "name": "python3"
+          }
+        ],
+        "schema": "potbot-registry-candidate/v1",
+        "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+        "sourceUrl": "https://github.com/fixture/skills",
+        "status": "active",
+        "unsupported": [],
+        "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "publisherApprovalValid": true,
+      "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+      "publisherState": "approved",
+      "reasonCodes": [],
+      "score": null,
+      "scoreReasons": [],
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "sourceApprovalValid": true,
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "sourceState": "active",
+      "stale": false
+    },
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "candidates": {
+    "items": [
+      {
+        "canReview": true,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "34430960-6dcc-5baf-918a-55688749f202",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "publisherState": "approved",
+        "reasonCodes": [],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceApprovalValid": true,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "sourceState": "active",
+        "stale": false
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "checks": {
+    "items": [
+      {
+        "actions": [
+          "cancel"
+        ],
+        "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+        "bindingSha256": "3dd24a7e36b5d896ab2f8e44723221704bf2b3a3925115ade26d9db035c8e069",
+        "candidate": {
+          "canReview": true,
+          "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+          "executable": false,
+          "id": "34430960-6dcc-5baf-918a-55688749f202",
+          "observation": {
+            "adapter": "curated",
+            "canonicalId": "fixture/portable-fixture",
+            "capabilities": {
+              "classes": [
+                "file_inspection"
+              ],
+              "effects": [
+                "read_only"
+              ],
+              "inputTypes": [],
+              "outputTypes": [],
+              "platforms": [
+                "linux"
+              ],
+              "scopes": []
+            },
+            "description": "Explicit local discovery fixture",
+            "distribution": {
+              "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "kind": "github_skill",
+              "path": "skills/portable-fixture",
+              "repository": "https://github.com/fixture/skills"
+            },
+            "kind": "skill",
+            "manifest": {
+              "fixture": true,
+              "numeric": {
+                "fractional": 1.25e-07,
+                "zero": 0
+              }
+            },
+            "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+            "name": "Portable fixture",
+            "publisher": {
+              "evidence": "operator_claim",
+              "id": "fixture"
+            },
+            "requirements": [
+              {
+                "kind": "binary",
+                "name": "python3"
+              }
+            ],
+            "schema": "potbot-registry-candidate/v1",
+            "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+            "sourceUrl": "https://github.com/fixture/skills",
+            "status": "active",
+            "unsupported": [],
+            "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "publisherApprovalValid": true,
+          "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+          "publisherState": "approved",
+          "reasonCodes": [],
+          "score": null,
+          "scoreReasons": [],
+          "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+          "sourceApprovalValid": true,
+          "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+          "sourceState": "active",
+          "stale": false
+        },
+        "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "createdAt": "2026-11-18T01:09:41.872809+00:00",
+        "id": "118c6888-01f5-43e7-826a-2938c57b05f0",
+        "measurement": {
+          "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+          "bindings": {
+            "agentHomeRevision": 1,
+            "imageSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "interpreterSha256": "4ed59d53077018a0144b9f9d35dcd5ec5ce6f3ea3fef59c187cadae4f7e38a33",
+            "isolationSha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "observationSha256": "67b22395eb1c4dd73f866be718ef8992cf2deac9a60441589ee695c63959ae41",
+            "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+            "probeSha256": "fc7c930784f34a1dd2a0ed5c78cc6dadc09f9892f774035df5dd6af8d9719152",
+            "qualificationSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "runtimeSha256": "86a0c5b031539e52172f5e73fff3c67256db40f405635e7d2fcad159cfa4051a",
+            "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+          },
+          "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+          "checkId": "118c6888-01f5-43e7-826a-2938c57b05f0",
+          "checkedAt": "2026-11-18T00:00:00+00:00",
+          "checks": [
+            {
+              "kind": "runtime",
+              "name": "selected agent sandbox",
+              "reasonCode": "sandbox_probe_completed",
+              "status": "passed"
+            },
+            {
+              "kind": "binary",
+              "name": "python3",
+              "reasonCode": "binary_available",
+              "status": "passed"
+            },
+            {
+              "kind": "environment",
+              "name": "PATH",
+              "reasonCode": "environment_present",
+              "status": "passed"
+            },
+            {
+              "kind": "any_binary",
+              "name": "any declared binary",
+              "reasonCode": "any_binary_available",
+              "status": "passed"
+            },
+            {
+              "kind": "operating_system",
+              "name": "any declared operating system",
+              "reasonCode": "operating_system_matches",
+              "status": "passed"
+            }
+          ],
+          "eligible": true,
+          "expiresAt": "2026-11-18T00:02:00+00:00",
+          "requirementsSha256": "ddc0822a5624cb45eefd341048c6dd6acabf8db9882bc8bc89a349cd71ceaa7e",
+          "schema": "potbot-skill-eligibility/v1",
+          "sourceBindingSha256": "2022006c2e85e0846408ffb1e7acd0f66770d4b414dbedd3a334b39f36ce6b66"
+        },
+        "measurementCurrent": false,
+        "packageId": "2913df47-44ec-44d4-abd3-8f57a69ea7e2",
+        "reasonCodes": [
+          "measurement_expired"
+        ],
+        "recipeId": null,
+        "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "requirements": [
+          {
+            "group": "any_binary",
+            "kind": "any_binary",
+            "name": "curl"
+          },
+          {
+            "group": "any_binary",
+            "kind": "any_binary",
+            "name": "unavailable"
+          },
+          {
+            "kind": "binary",
+            "name": "python3"
+          },
+          {
+            "kind": "environment",
+            "name": "PATH"
+          },
+          {
+            "group": "operating_system",
+            "kind": "operating_system",
+            "name": "darwin"
+          },
+          {
+            "group": "operating_system",
+            "kind": "operating_system",
+            "name": "linux"
+          }
+        ],
+        "revision": 3,
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "status": "measured",
+        "target": null,
+        "updatedAt": "2026-11-18T01:09:42.037652+00:00"
+      },
+      {
+        "actions": [],
+        "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+        "bindingSha256": "c1623d009bcfc6d9d1f41f48d7212ec436c42337bfa93ed88840a38696031bae",
+        "candidate": {
+          "canReview": true,
+          "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+          "executable": false,
+          "id": "34430960-6dcc-5baf-918a-55688749f202",
+          "observation": {
+            "adapter": "curated",
+            "canonicalId": "fixture/portable-fixture",
+            "capabilities": {
+              "classes": [
+                "file_inspection"
+              ],
+              "effects": [
+                "read_only"
+              ],
+              "inputTypes": [],
+              "outputTypes": [],
+              "platforms": [
+                "linux"
+              ],
+              "scopes": []
+            },
+            "description": "Explicit local discovery fixture",
+            "distribution": {
+              "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "kind": "github_skill",
+              "path": "skills/portable-fixture",
+              "repository": "https://github.com/fixture/skills"
+            },
+            "kind": "skill",
+            "manifest": {
+              "fixture": true,
+              "numeric": {
+                "fractional": 1.25e-07,
+                "zero": 0
+              }
+            },
+            "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+            "name": "Portable fixture",
+            "publisher": {
+              "evidence": "operator_claim",
+              "id": "fixture"
+            },
+            "requirements": [
+              {
+                "kind": "binary",
+                "name": "python3"
+              }
+            ],
+            "schema": "potbot-registry-candidate/v1",
+            "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+            "sourceUrl": "https://github.com/fixture/skills",
+            "status": "active",
+            "unsupported": [],
+            "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "publisherApprovalValid": true,
+          "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+          "publisherState": "approved",
+          "reasonCodes": [],
+          "score": null,
+          "scoreReasons": [],
+          "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+          "sourceApprovalValid": true,
+          "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+          "sourceState": "active",
+          "stale": false
+        },
+        "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "createdAt": "2026-11-18T01:09:41.802612+00:00",
+        "id": "6420678e-b491-43c6-bc45-1a05bbf186ce",
+        "measurement": null,
+        "measurementCurrent": false,
+        "packageId": "91998142-3067-4ac6-b256-4e7d4df2856e",
+        "reasonCodes": [
+          "measurement_cancelled"
+        ],
+        "recipeId": null,
+        "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "requirements": [
+          {
+            "group": "any_binary",
+            "kind": "any_binary",
+            "name": "curl"
+          },
+          {
+            "group": "any_binary",
+            "kind": "any_binary",
+            "name": "unavailable"
+          },
+          {
+            "kind": "binary",
+            "name": "python3"
+          },
+          {
+            "kind": "environment",
+            "name": "PATH"
+          },
+          {
+            "group": "operating_system",
+            "kind": "operating_system",
+            "name": "darwin"
+          },
+          {
+            "group": "operating_system",
+            "kind": "operating_system",
+            "name": "linux"
+          }
+        ],
+        "revision": 2,
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "status": "cancelled",
+        "target": null,
+        "updatedAt": "2026-11-18T01:09:41.827354+00:00"
+      },
+      {
+        "actions": [],
+        "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+        "bindingSha256": "a5c835a9f80412e83b2686abbe3a1681bc23f70147d3994757d655ad85a33434",
+        "candidate": {
+          "canReview": true,
+          "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+          "executable": false,
+          "id": "34430960-6dcc-5baf-918a-55688749f202",
+          "observation": {
+            "adapter": "curated",
+            "canonicalId": "fixture/portable-fixture",
+            "capabilities": {
+              "classes": [
+                "file_inspection"
+              ],
+              "effects": [
+                "read_only"
+              ],
+              "inputTypes": [],
+              "outputTypes": [],
+              "platforms": [
+                "linux"
+              ],
+              "scopes": []
+            },
+            "description": "Explicit local discovery fixture",
+            "distribution": {
+              "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "kind": "github_skill",
+              "path": "skills/portable-fixture",
+              "repository": "https://github.com/fixture/skills"
+            },
+            "kind": "skill",
+            "manifest": {
+              "fixture": true,
+              "numeric": {
+                "fractional": 1.25e-07,
+                "zero": 0
+              }
+            },
+            "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+            "name": "Portable fixture",
+            "publisher": {
+              "evidence": "operator_claim",
+              "id": "fixture"
+            },
+            "requirements": [
+              {
+                "kind": "binary",
+                "name": "python3"
+              }
+            ],
+            "schema": "potbot-registry-candidate/v1",
+            "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+            "sourceUrl": "https://github.com/fixture/skills",
+            "status": "active",
+            "unsupported": [],
+            "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "publisherApprovalValid": true,
+          "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+          "publisherState": "approved",
+          "reasonCodes": [],
+          "score": null,
+          "scoreReasons": [],
+          "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+          "sourceApprovalValid": true,
+          "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+          "sourceState": "active",
+          "stale": false
+        },
+        "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "createdAt": "2026-11-18T01:09:41.576830+00:00",
+        "id": "796f0b19-7390-4de8-a737-58e06393c194",
+        "measurement": {
+          "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+          "bindings": {
+            "agentHomeRevision": 1,
+            "imageSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "interpreterSha256": "4ed59d53077018a0144b9f9d35dcd5ec5ce6f3ea3fef59c187cadae4f7e38a33",
+            "isolationSha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "observationSha256": "67b22395eb1c4dd73f866be718ef8992cf2deac9a60441589ee695c63959ae41",
+            "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+            "probeSha256": "fc7c930784f34a1dd2a0ed5c78cc6dadc09f9892f774035df5dd6af8d9719152",
+            "qualificationSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "runtimeSha256": "86a0c5b031539e52172f5e73fff3c67256db40f405635e7d2fcad159cfa4051a",
+            "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+          },
+          "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+          "checkId": "796f0b19-7390-4de8-a737-58e06393c194",
+          "checkedAt": "2026-11-18T00:00:00+00:00",
+          "checks": [
+            {
+              "kind": "runtime",
+              "name": "selected agent sandbox",
+              "reasonCode": "sandbox_probe_completed",
+              "status": "passed"
+            },
+            {
+              "kind": "binary",
+              "name": "python3",
+              "reasonCode": "binary_available",
+              "status": "passed"
+            },
+            {
+              "kind": "environment",
+              "name": "PATH",
+              "reasonCode": "environment_present",
+              "status": "passed"
+            },
+            {
+              "kind": "any_binary",
+              "name": "any declared binary",
+              "reasonCode": "any_binary_available",
+              "status": "passed"
+            },
+            {
+              "kind": "operating_system",
+              "name": "any declared operating system",
+              "reasonCode": "operating_system_matches",
+              "status": "passed"
+            }
+          ],
+          "eligible": true,
+          "expiresAt": "2026-11-18T00:02:00+00:00",
+          "requirementsSha256": "ddc0822a5624cb45eefd341048c6dd6acabf8db9882bc8bc89a349cd71ceaa7e",
+          "schema": "potbot-skill-eligibility/v1",
+          "sourceBindingSha256": "2022006c2e85e0846408ffb1e7acd0f66770d4b414dbedd3a334b39f36ce6b66"
+        },
+        "measurementCurrent": false,
+        "packageId": "7695e742-73c3-450a-81a1-627518447f0a",
+        "reasonCodes": [
+          "measurement_expired"
+        ],
+        "recipeId": null,
+        "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "requirements": [
+          {
+            "group": "any_binary",
+            "kind": "any_binary",
+            "name": "curl"
+          },
+          {
+            "group": "any_binary",
+            "kind": "any_binary",
+            "name": "unavailable"
+          },
+          {
+            "kind": "binary",
+            "name": "python3"
+          },
+          {
+            "kind": "environment",
+            "name": "PATH"
+          },
+          {
+            "group": "operating_system",
+            "kind": "operating_system",
+            "name": "darwin"
+          },
+          {
+            "group": "operating_system",
+            "kind": "operating_system",
+            "name": "linux"
+          }
+        ],
+        "revision": 4,
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "status": "handed_off",
+        "target": {
+          "id": "7695e742-73c3-450a-81a1-627518447f0a",
+          "kind": "skill_package"
+        },
+        "updatedAt": "2026-11-18T01:09:41.748968+00:00"
+      },
+      {
+        "actions": [
+          "cancel"
+        ],
+        "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+        "bindingSha256": "25210ec3b8a2ac33b092072f8e984f7165b27e7b51e300e238cb5c567a1e8e7e",
+        "candidate": {
+          "canReview": true,
+          "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+          "executable": false,
+          "id": "34430960-6dcc-5baf-918a-55688749f202",
+          "observation": {
+            "adapter": "curated",
+            "canonicalId": "fixture/portable-fixture",
+            "capabilities": {
+              "classes": [
+                "file_inspection"
+              ],
+              "effects": [
+                "read_only"
+              ],
+              "inputTypes": [],
+              "outputTypes": [],
+              "platforms": [
+                "linux"
+              ],
+              "scopes": []
+            },
+            "description": "Explicit local discovery fixture",
+            "distribution": {
+              "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "kind": "github_skill",
+              "path": "skills/portable-fixture",
+              "repository": "https://github.com/fixture/skills"
+            },
+            "kind": "skill",
+            "manifest": {
+              "fixture": true,
+              "numeric": {
+                "fractional": 1.25e-07,
+                "zero": 0
+              }
+            },
+            "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+            "name": "Portable fixture",
+            "publisher": {
+              "evidence": "operator_claim",
+              "id": "fixture"
+            },
+            "requirements": [
+              {
+                "kind": "binary",
+                "name": "python3"
+              }
+            ],
+            "schema": "potbot-registry-candidate/v1",
+            "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+            "sourceUrl": "https://github.com/fixture/skills",
+            "status": "active",
+            "unsupported": [],
+            "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "publisherApprovalValid": true,
+          "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+          "publisherState": "approved",
+          "reasonCodes": [],
+          "score": null,
+          "scoreReasons": [],
+          "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+          "sourceApprovalValid": true,
+          "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+          "sourceState": "active",
+          "stale": false
+        },
+        "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "createdAt": "2026-11-18T01:09:42.090636+00:00",
+        "id": "db8c1358-3968-4bc1-a606-457c0231a791",
+        "measurement": null,
+        "measurementCurrent": false,
+        "packageId": "d6efb00d-f6cf-4991-b022-b9b3ec31c2eb",
+        "reasonCodes": [
+          "measurement_failed"
+        ],
+        "recipeId": null,
+        "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "requirements": [
+          {
+            "group": "any_binary",
+            "kind": "any_binary",
+            "name": "curl"
+          },
+          {
+            "group": "any_binary",
+            "kind": "any_binary",
+            "name": "unavailable"
+          },
+          {
+            "kind": "binary",
+            "name": "python3"
+          },
+          {
+            "kind": "environment",
+            "name": "PATH"
+          },
+          {
+            "group": "operating_system",
+            "kind": "operating_system",
+            "name": "darwin"
+          },
+          {
+            "group": "operating_system",
+            "kind": "operating_system",
+            "name": "linux"
+          }
+        ],
+        "revision": 3,
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "status": "failed",
+        "target": null,
+        "updatedAt": "2026-11-18T01:09:42.129205+00:00"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "disabledSource": {
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "source": {
+      "actions": [
+        "enable",
+        "revoke"
+      ],
+      "adapter": "curated",
+      "approvalValid": true,
+      "bindingSha256": "b7c29256a4e0101ba8b7b3e79eafb46b9a69a64345719921fd87154195d75a29",
+      "configSha256": "03683a45dcd926b8c6aea3bdbbb6a61c485827b5bda8168b8b7cac8c07697bdf",
+      "createdAt": "2026-11-18T01:09:41.391048+00:00",
+      "expiresAt": "2026-11-18T00:15:00+00:00",
+      "fetchedAt": "2026-11-18T00:00:00+00:00",
+      "id": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "lastErrorCode": null,
+      "name": "Fixture registry",
+      "query": "",
+      "revision": 3,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "snapshotSha256": "130209b341b88f00c84a5e2600f31cb33314019d9ab323e1b3014449ce5244f7",
+      "state": "disabled",
+      "updatedAt": "2026-11-18T01:09:42.235629+00:00"
+    },
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "emptyChecks": {
+    "items": [],
+    "nextCursor": null,
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "enabledSource": {
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "source": {
+      "actions": [
+        "disable",
+        "revoke"
+      ],
+      "adapter": "curated",
+      "approvalValid": true,
+      "bindingSha256": "7c11866ef3fd1cecd60d0f46cacd791e80997a09054945a1b3fafa6f724cd88f",
+      "configSha256": "03683a45dcd926b8c6aea3bdbbb6a61c485827b5bda8168b8b7cac8c07697bdf",
+      "createdAt": "2026-11-18T01:09:41.391048+00:00",
+      "expiresAt": "2026-11-18T00:15:00+00:00",
+      "fetchedAt": "2026-11-18T00:00:00+00:00",
+      "id": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "lastErrorCode": null,
+      "name": "Fixture registry",
+      "query": "",
+      "revision": 4,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "snapshotSha256": "130209b341b88f00c84a5e2600f31cb33314019d9ab323e1b3014449ce5244f7",
+      "state": "active",
+      "updatedAt": "2026-11-18T01:09:42.255800+00:00"
+    },
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "expiredCheck": {
+    "check": {
+      "actions": [
+        "cancel"
+      ],
+      "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+      "bindingSha256": "3dd24a7e36b5d896ab2f8e44723221704bf2b3a3925115ade26d9db035c8e069",
+      "candidate": {
+        "canReview": true,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "34430960-6dcc-5baf-918a-55688749f202",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "publisherState": "approved",
+        "reasonCodes": [],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceApprovalValid": true,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "sourceState": "active",
+        "stale": false
+      },
+      "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+      "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "createdAt": "2026-11-18T01:09:41.872809+00:00",
+      "id": "118c6888-01f5-43e7-826a-2938c57b05f0",
+      "measurement": {
+        "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+        "bindings": {
+          "agentHomeRevision": 1,
+          "imageSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "interpreterSha256": "4ed59d53077018a0144b9f9d35dcd5ec5ce6f3ea3fef59c187cadae4f7e38a33",
+          "isolationSha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "observationSha256": "67b22395eb1c4dd73f866be718ef8992cf2deac9a60441589ee695c63959ae41",
+          "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+          "probeSha256": "fc7c930784f34a1dd2a0ed5c78cc6dadc09f9892f774035df5dd6af8d9719152",
+          "qualificationSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "runtimeSha256": "86a0c5b031539e52172f5e73fff3c67256db40f405635e7d2fcad159cfa4051a",
+          "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+        },
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "checkId": "118c6888-01f5-43e7-826a-2938c57b05f0",
+        "checkedAt": "2026-11-18T00:00:00+00:00",
+        "checks": [
+          {
+            "kind": "runtime",
+            "name": "selected agent sandbox",
+            "reasonCode": "sandbox_probe_completed",
+            "status": "passed"
+          },
+          {
+            "kind": "binary",
+            "name": "python3",
+            "reasonCode": "binary_available",
+            "status": "passed"
+          },
+          {
+            "kind": "environment",
+            "name": "PATH",
+            "reasonCode": "environment_present",
+            "status": "passed"
+          },
+          {
+            "kind": "any_binary",
+            "name": "any declared binary",
+            "reasonCode": "any_binary_available",
+            "status": "passed"
+          },
+          {
+            "kind": "operating_system",
+            "name": "any declared operating system",
+            "reasonCode": "operating_system_matches",
+            "status": "passed"
+          }
+        ],
+        "eligible": true,
+        "expiresAt": "2026-11-18T00:02:00+00:00",
+        "requirementsSha256": "ddc0822a5624cb45eefd341048c6dd6acabf8db9882bc8bc89a349cd71ceaa7e",
+        "schema": "potbot-skill-eligibility/v1",
+        "sourceBindingSha256": "2022006c2e85e0846408ffb1e7acd0f66770d4b414dbedd3a334b39f36ce6b66"
+      },
+      "measurementCurrent": false,
+      "packageId": "2913df47-44ec-44d4-abd3-8f57a69ea7e2",
+      "reasonCodes": [
+        "measurement_expired"
+      ],
+      "recipeId": null,
+      "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "requirements": [
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "curl"
+        },
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "unavailable"
+        },
+        {
+          "kind": "binary",
+          "name": "python3"
+        },
+        {
+          "kind": "environment",
+          "name": "PATH"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "darwin"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "linux"
+        }
+      ],
+      "revision": 3,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "status": "measured",
+      "target": null,
+      "updatedAt": "2026-11-18T01:09:42.037652+00:00"
+    },
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "failedCheck": {
+    "check": {
+      "actions": [
+        "cancel"
+      ],
+      "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+      "bindingSha256": "25210ec3b8a2ac33b092072f8e984f7165b27e7b51e300e238cb5c567a1e8e7e",
+      "candidate": {
+        "canReview": true,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "34430960-6dcc-5baf-918a-55688749f202",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "publisherState": "approved",
+        "reasonCodes": [],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceApprovalValid": true,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "sourceState": "active",
+        "stale": false
+      },
+      "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+      "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "createdAt": "2026-11-18T01:09:42.090636+00:00",
+      "id": "db8c1358-3968-4bc1-a606-457c0231a791",
+      "measurement": null,
+      "measurementCurrent": false,
+      "packageId": "d6efb00d-f6cf-4991-b022-b9b3ec31c2eb",
+      "reasonCodes": [
+        "measurement_failed"
+      ],
+      "recipeId": null,
+      "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "requirements": [
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "curl"
+        },
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "unavailable"
+        },
+        {
+          "kind": "binary",
+          "name": "python3"
+        },
+        {
+          "kind": "environment",
+          "name": "PATH"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "darwin"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "linux"
+        }
+      ],
+      "revision": 3,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "status": "failed",
+      "target": null,
+      "updatedAt": "2026-11-18T01:09:42.129205+00:00"
+    },
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "handedOffCheck": {
+    "check": {
+      "actions": [],
+      "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+      "bindingSha256": "a5c835a9f80412e83b2686abbe3a1681bc23f70147d3994757d655ad85a33434",
+      "candidate": {
+        "canReview": true,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "34430960-6dcc-5baf-918a-55688749f202",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "publisherState": "approved",
+        "reasonCodes": [],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceApprovalValid": true,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "sourceState": "active",
+        "stale": false
+      },
+      "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+      "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "createdAt": "2026-11-18T01:09:41.576830+00:00",
+      "id": "796f0b19-7390-4de8-a737-58e06393c194",
+      "measurement": {
+        "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+        "bindings": {
+          "agentHomeRevision": 1,
+          "imageSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "interpreterSha256": "4ed59d53077018a0144b9f9d35dcd5ec5ce6f3ea3fef59c187cadae4f7e38a33",
+          "isolationSha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "observationSha256": "67b22395eb1c4dd73f866be718ef8992cf2deac9a60441589ee695c63959ae41",
+          "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+          "probeSha256": "fc7c930784f34a1dd2a0ed5c78cc6dadc09f9892f774035df5dd6af8d9719152",
+          "qualificationSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "runtimeSha256": "86a0c5b031539e52172f5e73fff3c67256db40f405635e7d2fcad159cfa4051a",
+          "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+        },
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "checkId": "796f0b19-7390-4de8-a737-58e06393c194",
+        "checkedAt": "2026-11-18T00:00:00+00:00",
+        "checks": [
+          {
+            "kind": "runtime",
+            "name": "selected agent sandbox",
+            "reasonCode": "sandbox_probe_completed",
+            "status": "passed"
+          },
+          {
+            "kind": "binary",
+            "name": "python3",
+            "reasonCode": "binary_available",
+            "status": "passed"
+          },
+          {
+            "kind": "environment",
+            "name": "PATH",
+            "reasonCode": "environment_present",
+            "status": "passed"
+          },
+          {
+            "kind": "any_binary",
+            "name": "any declared binary",
+            "reasonCode": "any_binary_available",
+            "status": "passed"
+          },
+          {
+            "kind": "operating_system",
+            "name": "any declared operating system",
+            "reasonCode": "operating_system_matches",
+            "status": "passed"
+          }
+        ],
+        "eligible": true,
+        "expiresAt": "2026-11-18T00:02:00+00:00",
+        "requirementsSha256": "ddc0822a5624cb45eefd341048c6dd6acabf8db9882bc8bc89a349cd71ceaa7e",
+        "schema": "potbot-skill-eligibility/v1",
+        "sourceBindingSha256": "2022006c2e85e0846408ffb1e7acd0f66770d4b414dbedd3a334b39f36ce6b66"
+      },
+      "measurementCurrent": true,
+      "packageId": "7695e742-73c3-450a-81a1-627518447f0a",
+      "reasonCodes": [],
+      "recipeId": null,
+      "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "requirements": [
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "curl"
+        },
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "unavailable"
+        },
+        {
+          "kind": "binary",
+          "name": "python3"
+        },
+        {
+          "kind": "environment",
+          "name": "PATH"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "darwin"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "linux"
+        }
+      ],
+      "revision": 4,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "status": "handed_off",
+      "target": {
+        "id": "7695e742-73c3-450a-81a1-627518447f0a",
+        "kind": "skill_package"
+      },
+      "updatedAt": "2026-11-18T01:09:41.748968+00:00"
+    },
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "measuredCheck": {
+    "check": {
+      "actions": [
+        "cancel",
+        "handoff"
+      ],
+      "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+      "bindingSha256": "010f0bf60b5fc007b914461e3bec574981ed946ef32819c38e2efef3008fbcb1",
+      "candidate": {
+        "canReview": true,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "34430960-6dcc-5baf-918a-55688749f202",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "publisherState": "approved",
+        "reasonCodes": [],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceApprovalValid": true,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "sourceState": "active",
+        "stale": false
+      },
+      "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+      "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "createdAt": "2026-11-18T01:09:41.576830+00:00",
+      "id": "796f0b19-7390-4de8-a737-58e06393c194",
+      "measurement": {
+        "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+        "bindings": {
+          "agentHomeRevision": 1,
+          "imageSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "interpreterSha256": "4ed59d53077018a0144b9f9d35dcd5ec5ce6f3ea3fef59c187cadae4f7e38a33",
+          "isolationSha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "observationSha256": "67b22395eb1c4dd73f866be718ef8992cf2deac9a60441589ee695c63959ae41",
+          "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+          "probeSha256": "fc7c930784f34a1dd2a0ed5c78cc6dadc09f9892f774035df5dd6af8d9719152",
+          "qualificationSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "runtimeSha256": "86a0c5b031539e52172f5e73fff3c67256db40f405635e7d2fcad159cfa4051a",
+          "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+        },
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "checkId": "796f0b19-7390-4de8-a737-58e06393c194",
+        "checkedAt": "2026-11-18T00:00:00+00:00",
+        "checks": [
+          {
+            "kind": "runtime",
+            "name": "selected agent sandbox",
+            "reasonCode": "sandbox_probe_completed",
+            "status": "passed"
+          },
+          {
+            "kind": "binary",
+            "name": "python3",
+            "reasonCode": "binary_available",
+            "status": "passed"
+          },
+          {
+            "kind": "environment",
+            "name": "PATH",
+            "reasonCode": "environment_present",
+            "status": "passed"
+          },
+          {
+            "kind": "any_binary",
+            "name": "any declared binary",
+            "reasonCode": "any_binary_available",
+            "status": "passed"
+          },
+          {
+            "kind": "operating_system",
+            "name": "any declared operating system",
+            "reasonCode": "operating_system_matches",
+            "status": "passed"
+          }
+        ],
+        "eligible": true,
+        "expiresAt": "2026-11-18T00:02:00+00:00",
+        "requirementsSha256": "ddc0822a5624cb45eefd341048c6dd6acabf8db9882bc8bc89a349cd71ceaa7e",
+        "schema": "potbot-skill-eligibility/v1",
+        "sourceBindingSha256": "2022006c2e85e0846408ffb1e7acd0f66770d4b414dbedd3a334b39f36ce6b66"
+      },
+      "measurementCurrent": true,
+      "packageId": "7695e742-73c3-450a-81a1-627518447f0a",
+      "reasonCodes": [],
+      "recipeId": null,
+      "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "requirements": [
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "curl"
+        },
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "unavailable"
+        },
+        {
+          "kind": "binary",
+          "name": "python3"
+        },
+        {
+          "kind": "environment",
+          "name": "PATH"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "darwin"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "linux"
+        }
+      ],
+      "revision": 3,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "status": "measured",
+      "target": null,
+      "updatedAt": "2026-11-18T01:09:41.695440+00:00"
+    },
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "measuringCheck": {
+    "check": {
+      "actions": [
+        "cancel"
+      ],
+      "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+      "bindingSha256": "2a600cbb458677dfd25cc4d6b39a859ae0adda355cf7ed26bf813f57312871f6",
+      "candidate": {
+        "canReview": true,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "34430960-6dcc-5baf-918a-55688749f202",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "publisherState": "approved",
+        "reasonCodes": [],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceApprovalValid": true,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "sourceState": "active",
+        "stale": false
+      },
+      "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+      "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "createdAt": "2026-11-18T01:09:41.576830+00:00",
+      "id": "796f0b19-7390-4de8-a737-58e06393c194",
+      "measurement": null,
+      "measurementCurrent": false,
+      "packageId": "7695e742-73c3-450a-81a1-627518447f0a",
+      "reasonCodes": [],
+      "recipeId": null,
+      "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "requirements": [
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "curl"
+        },
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "unavailable"
+        },
+        {
+          "kind": "binary",
+          "name": "python3"
+        },
+        {
+          "kind": "environment",
+          "name": "PATH"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "darwin"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "linux"
+        }
+      ],
+      "revision": 2,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "status": "measuring",
+      "target": null,
+      "updatedAt": "2026-11-18T01:09:41.611986+00:00"
+    },
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "pendingCheck": {
+    "check": {
+      "actions": [
+        "cancel"
+      ],
+      "agentId": "9f6bc13c-edab-495b-a6b6-a44de0dc99a0",
+      "bindingSha256": "675a1e6ffd4f2a64224fbd31d557a0631e587ab7747f8ace80993b2a55b36d42",
+      "candidate": {
+        "canReview": true,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "34430960-6dcc-5baf-918a-55688749f202",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "publisherState": "approved",
+        "reasonCodes": [],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceApprovalValid": true,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "sourceState": "active",
+        "stale": false
+      },
+      "candidateId": "34430960-6dcc-5baf-918a-55688749f202",
+      "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "createdAt": "2026-11-18T01:09:41.576830+00:00",
+      "id": "796f0b19-7390-4de8-a737-58e06393c194",
+      "measurement": null,
+      "measurementCurrent": false,
+      "packageId": "7695e742-73c3-450a-81a1-627518447f0a",
+      "reasonCodes": [],
+      "recipeId": null,
+      "requestedCandidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+      "requirements": [
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "curl"
+        },
+        {
+          "group": "any_binary",
+          "kind": "any_binary",
+          "name": "unavailable"
+        },
+        {
+          "kind": "binary",
+          "name": "python3"
+        },
+        {
+          "kind": "environment",
+          "name": "PATH"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "darwin"
+        },
+        {
+          "group": "operating_system",
+          "kind": "operating_system",
+          "name": "linux"
+        }
+      ],
+      "revision": 1,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "status": "awaiting_measurement",
+      "target": null,
+      "updatedAt": "2026-11-18T01:09:41.576830+00:00"
+    },
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "publishers": {
+    "items": [
+      {
+        "actions": [
+          "approve",
+          "block",
+          "revoke"
+        ],
+        "approvalValid": true,
+        "bindingSha256": "ed9c8f66a5a39811e3c93de16d17aa48f74e064eab3eb3de6296334acfddfdc3",
+        "evidence": "operator_claim",
+        "id": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "name": "fixture",
+        "revision": 0,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "state": "unreviewed",
+        "updatedAt": "2026-11-18T01:09:41.406905+00:00"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "source": {
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "source": {
+      "actions": [
+        "disable",
+        "revoke"
+      ],
+      "adapter": "curated",
+      "approvalValid": true,
+      "bindingSha256": "4166f6b5d0f616f4caa76d7dc1b804ea2a3683a80dcbb5f91bc7bd2be12e7560",
+      "configSha256": "03683a45dcd926b8c6aea3bdbbb6a61c485827b5bda8168b8b7cac8c07697bdf",
+      "createdAt": "2026-11-18T01:09:41.391048+00:00",
+      "expiresAt": "2026-11-18T00:15:00+00:00",
+      "fetchedAt": "2026-11-18T00:00:00+00:00",
+      "id": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+      "lastErrorCode": null,
+      "name": "Fixture registry",
+      "query": "",
+      "revision": 2,
+      "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+      "snapshotSha256": "130209b341b88f00c84a5e2600f31cb33314019d9ab323e1b3014449ce5244f7",
+      "state": "active",
+      "updatedAt": "2026-11-18T01:09:41.408480+00:00"
+    },
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "sources": {
+    "items": [
+      {
+        "actions": [
+          "disable",
+          "revoke"
+        ],
+        "adapter": "curated",
+        "approvalValid": true,
+        "bindingSha256": "4166f6b5d0f616f4caa76d7dc1b804ea2a3683a80dcbb5f91bc7bd2be12e7560",
+        "configSha256": "03683a45dcd926b8c6aea3bdbbb6a61c485827b5bda8168b8b7cac8c07697bdf",
+        "createdAt": "2026-11-18T01:09:41.391048+00:00",
+        "expiresAt": "2026-11-18T00:15:00+00:00",
+        "fetchedAt": "2026-11-18T00:00:00+00:00",
+        "id": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "lastErrorCode": null,
+        "name": "Fixture registry",
+        "query": "",
+        "revision": 2,
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "snapshotSha256": "130209b341b88f00c84a5e2600f31cb33314019d9ab323e1b3014449ce5244f7",
+        "state": "active",
+        "updatedAt": "2026-11-18T01:09:41.408480+00:00"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  },
+  "unreviewedCandidates": {
+    "items": [
+      {
+        "canReview": false,
+        "candidateSha256": "56fe1b4439de988ba2dcd2dcddb0385673c66fa319f6a83e075454095030b4dc",
+        "executable": false,
+        "id": "34430960-6dcc-5baf-918a-55688749f202",
+        "observation": {
+          "adapter": "curated",
+          "canonicalId": "fixture/portable-fixture",
+          "capabilities": {
+            "classes": [
+              "file_inspection"
+            ],
+            "effects": [
+              "read_only"
+            ],
+            "inputTypes": [],
+            "outputTypes": [],
+            "platforms": [
+              "linux"
+            ],
+            "scopes": []
+          },
+          "description": "Explicit local discovery fixture",
+          "distribution": {
+            "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "kind": "github_skill",
+            "path": "skills/portable-fixture",
+            "repository": "https://github.com/fixture/skills"
+          },
+          "kind": "skill",
+          "manifest": {
+            "fixture": true,
+            "numeric": {
+              "fractional": 1.25e-07,
+              "zero": 0
+            }
+          },
+          "manifestSha256": "d311b2d958de465a3aded5722272e4a5152188203ac0ef1e2371b64dfbb538bf",
+          "name": "Portable fixture",
+          "publisher": {
+            "evidence": "operator_claim",
+            "id": "fixture"
+          },
+          "requirements": [
+            {
+              "kind": "binary",
+              "name": "python3"
+            }
+          ],
+          "schema": "potbot-registry-candidate/v1",
+          "sourceSha256": "42944ce69b9b6bdc13785dd77957414dbe1927089de570d4e7a882d3a380af57",
+          "sourceUrl": "https://github.com/fixture/skills",
+          "status": "active",
+          "unsupported": [],
+          "version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "publisherApprovalValid": true,
+        "publisherId": "460925e9-a6a7-4ec1-8d07-eb575e3b1b21",
+        "publisherState": "unreviewed",
+        "reasonCodes": [
+          "publisher_not_admitted"
+        ],
+        "score": null,
+        "scoreReasons": [],
+        "snapshotId": "4e9205f7-5806-47ca-9dd2-fa4c563ac567",
+        "sourceApprovalValid": true,
+        "sourceId": "b230dd2e-0333-4e79-b2ee-339670e5e5ee",
+        "sourceState": "active",
+        "stale": false
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "a8021d48-8789-40fc-a6c6-73371fe334af",
+    "schema": "potbot-discovery/v1",
+    "workspaceId": "ded296ca-ebf7-44eb-a0f9-bae0d467e462"
+  }
+}

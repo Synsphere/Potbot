@@ -1,0 +1,205 @@
+{
+  "schema": "potbot-discovery-golden/v1",
+  "cases": [
+    {
+      "query": "Inspect the commit history",
+      "expectedClass": "repository_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Show the git diff and changed files",
+      "expectedClass": "repository_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Find the function definition",
+      "expectedClass": "code_search",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Locate a call site for this symbol",
+      "expectedClass": "code_search",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Read file contents",
+      "expectedClass": "file_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Show a directory listing",
+      "expectedClass": "file_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Search text for a literal phrase",
+      "expectedClass": "text_search",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Find phrase occurrences",
+      "expectedClass": "text_search",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect this screenshot",
+      "expectedClass": "image_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Explain the image contents",
+      "expectedClass": "image_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Extract pages from a PDF",
+      "expectedClass": "document_analysis",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect the Word file",
+      "expectedClass": "document_analysis",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect the spreadsheet",
+      "expectedClass": "spreadsheet_analysis",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Review workbook table formulas",
+      "expectedClass": "spreadsheet_analysis",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect web page elements",
+      "expectedClass": "browser_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Review the browser DOM",
+      "expectedClass": "browser_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Find online sources",
+      "expectedClass": "web_retrieval",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Retrieve a public article",
+      "expectedClass": "web_retrieval",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect the API response",
+      "expectedClass": "structured_api_read",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Read a REST endpoint",
+      "expectedClass": "structured_api_read",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect SQL query rows",
+      "expectedClass": "database_query",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Read records from a relational table",
+      "expectedClass": "database_query",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Check satisfiability of logical constraints",
+      "expectedClass": "satisfiability",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect an SMT result",
+      "expectedClass": "satisfiability",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect a Python breakpoint",
+      "expectedClass": "python_debugging",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Show the Python stack and Python variables",
+      "expectedClass": "python_debugging",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect a remote process",
+      "expectedClass": "remote_debugging",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Review a remote breakpoint",
+      "expectedClass": "remote_debugging",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect a board probe",
+      "expectedClass": "hardware_debugging",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Review JTAG firmware debugging",
+      "expectedClass": "hardware_debugging",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect the Android screen",
+      "expectedClass": "android_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Review ADB mobile emulator requirements",
+      "expectedClass": "android_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect the iPhone requirements",
+      "expectedClass": "apple_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Review the Apple host and Xcode requirements",
+      "expectedClass": "apple_inspection",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect a CPU profile",
+      "expectedClass": "profiling",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Find the performance trace bottleneck",
+      "expectedClass": "profiling",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Author skill resources",
+      "expectedClass": "skill_authoring",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Create skill package metadata",
+      "expectedClass": "skill_authoring",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Review this repeatable process",
+      "expectedClass": "workflow_guidance",
+      "runtimeQualified": false
+    },
+    {
+      "query": "Inspect the workflow checklist",
+      "expectedClass": "workflow_guidance",
+      "runtimeQualified": false
+    }
+  ]
+}

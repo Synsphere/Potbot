@@ -1,0 +1,1041 @@
+{
+  "schema": "potbot-curated-registry/v1",
+  "entries": [
+    {
+      "canonicalId": "potbot.repository_inspection",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Repository history inspection",
+      "description": "Inspect commit history, git diff and changed files in a repository.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/repository_inspection",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "repository_inspection"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "repository_inspection",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/repository_snapshot.py",
+            "sha256": "e1dc62d99cd8e3fc61cb7aabefb0b87e25a119ca3b50492657463bef46d92bb1"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.code_search",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Source symbol inspection",
+      "description": "Find a function definition, symbol, call site or implementation in source code.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/code_search",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "code_search"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "code_search",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/repository.py",
+            "sha256": "300edde12beec8c87e3200270470e6dc513a6231615e0c29190a4637756aeef4"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.file_inspection",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Artifact file inspection",
+      "description": "Read file contents and inspect file bytes or a directory listing.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/file_inspection",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "file_inspection"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "file_inspection",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/artifact_ranges.py",
+            "sha256": "2283d224d1bfb7529f4f3ca472df355368a5c3a91bd6a5151f9daa4cda54d642"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.text_search",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Literal text search",
+      "description": "Search text for literal phrase occurrences and find phrase matches.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/text_search",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "text_search"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "text_search",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/repository.py",
+            "sha256": "300edde12beec8c87e3200270470e6dc513a6231615e0c29190a4637756aeef4"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.image_inspection",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Image evidence inspection",
+      "description": "Inspect image contents, a screenshot, picture and visual inspection evidence.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/image_inspection",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "image_inspection"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "image_inspection",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/browser_evidence.py",
+            "sha256": "50633510a0a403e8c8f0a724c184cbb849d730cce8cdcf3e4d5d1d7699fb5fe8"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.document_analysis",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Document evidence inspection",
+      "description": "Inspect a document, PDF, Word file or extract pages from report paragraphs.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/document_analysis",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "document_analysis"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "document_analysis",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/artifact_ranges.py",
+            "sha256": "2283d224d1bfb7529f4f3ca472df355368a5c3a91bd6a5151f9daa4cda54d642"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.spreadsheet_analysis",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Tabular evidence inspection",
+      "description": "Inspect spreadsheet or workbook evidence, Excel, CSV and table formulas.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/spreadsheet_analysis",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "spreadsheet_analysis"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "spreadsheet_analysis",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/artifact_ranges.py",
+            "sha256": "2283d224d1bfb7529f4f3ca472df355368a5c3a91bd6a5151f9daa4cda54d642"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.browser_inspection",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Browser evidence inspection",
+      "description": "Inspect a browser web page, DOM, page elements and website layout.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/browser_inspection",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "browser_inspection"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "browser_inspection",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/browser_cog_contracts.py",
+            "sha256": "c5e637721b4769282e6c98c112da6c05cda5c08ba120b2d7548c6b3ee6d48f93"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.web_retrieval",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Public source retrieval",
+      "description": "Retrieve web search evidence, online sources and public article material for internet research.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/web_retrieval",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "web_retrieval"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "web_retrieval",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/research/http_transport.py",
+            "sha256": "3afd937d996fd2dc1e20f60e51e7e417cb3fd3172d28f3a11598c619133fb34c"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.structured_api_read",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Structured API read",
+      "description": "Inspect an API response, REST endpoint, GraphQL or structured API service endpoint.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/structured_api_read",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "structured_api_read"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "structured_api_read",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/api_contracts.py",
+            "sha256": "62619bcd9836505e53209f9225b85df8dc4476748b9a5976d2904a30e8e221e6"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.database_query",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Database result inspection",
+      "description": "Inspect SQL database query rows and relational table read records.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/database_query",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "database_query"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "database_query",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/capability_contracts.py",
+            "sha256": "e62376cf27435b29d59c560781a54154e52219653f1ca5186250b1f1fb7119cf"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.satisfiability",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Constraint solver inspection",
+      "description": "Inspect satisfiability, SAT and SMT results for logical constraints and whether constraints are satisfiable.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/satisfiability",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "satisfiability"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "satisfiability",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/capability_contracts.py",
+            "sha256": "e62376cf27435b29d59c560781a54154e52219653f1ca5186250b1f1fb7119cf"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.python_debugging",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Python debug profile",
+      "description": "Inspect a Python breakpoint, Python stack and Python variables through a Python debugger.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/python_debugging",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "python_debugging"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "python_debugging",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/debugging/python.py",
+            "sha256": "366a9335f4502aee74145c1cca23ce1e16bd69b650b4f2a4152df84ba4095d00"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.remote_debugging",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Remote debug profile",
+      "description": "Inspect a remote process, remote breakpoint or remote Python debugger and gdbserver compatibility.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/remote_debugging",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "remote_debugging"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": []
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "remote_debugging",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/inventory.py",
+            "sha256": "67f3218d14e95a772c65556c6a4acc5408ebe422c026063ac9da70b5f8630ce6"
+          }
+        ],
+        "profileState": "planned_unavailable",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution",
+        "optional_runtime_unavailable"
+      ]
+    },
+    {
+      "canonicalId": "potbot.hardware_debugging",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Hardware debug profile",
+      "description": "Inspect hardware breakpoint, board probe, JTAG, SWD and firmware debugging requirements.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/hardware_debugging",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "hardware_debugging"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": []
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "hardware_debugging",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/inventory.py",
+            "sha256": "67f3218d14e95a772c65556c6a4acc5408ebe422c026063ac9da70b5f8630ce6"
+          }
+        ],
+        "profileState": "planned_unavailable",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution",
+        "optional_runtime_unavailable"
+      ]
+    },
+    {
+      "canonicalId": "potbot.android_inspection",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Android inspection profile",
+      "description": "Inspect Android screen, ADB and mobile emulator or Android application requirements.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/android_inspection",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "android_inspection"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": []
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "android_inspection",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/inventory.py",
+            "sha256": "67f3218d14e95a772c65556c6a4acc5408ebe422c026063ac9da70b5f8630ce6"
+          }
+        ],
+        "profileState": "planned_unavailable",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution",
+        "optional_runtime_unavailable"
+      ]
+    },
+    {
+      "canonicalId": "potbot.apple_inspection",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Apple inspection profile",
+      "description": "Inspect iOS, iPhone, Apple host, macOS application and Xcode requirements.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/apple_inspection",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "apple_inspection"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": []
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "apple_inspection",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/inventory.py",
+            "sha256": "67f3218d14e95a772c65556c6a4acc5408ebe422c026063ac9da70b5f8630ce6"
+          }
+        ],
+        "profileState": "planned_unavailable",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution",
+        "optional_runtime_unavailable"
+      ]
+    },
+    {
+      "canonicalId": "potbot.profiling",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Python profiling profile",
+      "description": "Inspect a CPU profile, profiling, memory allocation or performance trace bottleneck.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/profiling",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "profiling"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "profiling",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/tools/python_profile.py",
+            "sha256": "23d868fa0905f67a9cc0cc7d006ac5a0031816940fa26aa8a4e44d1a921c505a"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.skill_authoring",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Skill package authoring",
+      "description": "Write skill or author skill metadata, inspect SKILL.md and create skill package resources.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/skill_authoring",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "skill_authoring"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "skill_authoring",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/context/skill_packages.py",
+            "sha256": "a3bb2ca54a181729b46042075d9c7d2e0c4ce01d4c587e26266b8997511a1b46"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    },
+    {
+      "canonicalId": "potbot.workflow_guidance",
+      "kind": "tool",
+      "version": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+      "name": "Workflow guidance",
+      "description": "Inspect a repeatable process, workflow, procedure, checklist or step by step guidance.",
+      "publisher": {
+        "id": "potbot-source-profiles",
+        "evidence": "operator_claim"
+      },
+      "sourceUrl": "potbot://curated/workflow_guidance",
+      "status": "active",
+      "capabilities": {
+        "classes": [
+          "workflow_guidance"
+        ],
+        "inputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "outputTypes": [
+          "syn://type/potbot-data-record"
+        ],
+        "effects": [
+          "read_only"
+        ],
+        "scopes": [],
+        "platforms": [
+          "linux"
+        ]
+      },
+      "requirements": [],
+      "distribution": {
+        "kind": "inspect_only"
+      },
+      "manifest": {
+        "profile": "workflow_guidance",
+        "sourceCommit": "a701eb68523767ddaf685a7cc6e991a896f21b66",
+        "sourceEvidence": [
+          {
+            "path": "src/potbot/context/skill_catalogue.py",
+            "sha256": "dac1039ceada4a6698af38de4f5bab43d4c72682f393545ebaea44cc129bfa20"
+          }
+        ],
+        "profileState": "source_only",
+        "runtimeQualified": false,
+        "notes": "Source declarations describe inspection and prerequisites. They neither establish an installed Cog nor qualify a host or completed task."
+      },
+      "unsupported": [
+        "runtime_qualification_not_established",
+        "no_executable_distribution"
+      ]
+    }
+  ]
+}

@@ -418,3 +418,57 @@ pipeline export to check the current backend responses against
 `tests/tool-acquisitions-contract.test.mjs`. Its sandbox process outcomes are
 explicit integration fixtures; real sandbox qualification retains its existing
 host acceptance gates.
+
+## U04-D — Capability discovery and exact acquisition review
+
+Open **Capability discovery and source review** from the workspace menu, or
+visit `/discover?workspace=<authorized-workspace-id>`. Search retained registry
+observations by task, package kind, source and platform, with explicit local,
+effect, scope, capability-class and canonical Type constraints. Empty permitted
+effect or scope lists permit none; omitted constraints leave that dimension
+unconstrained. Ranked pagination preserves the complete query and its opaque
+source-bound cursor. Changes to source heads require restarting that search.
+
+The **Sources and publishers** tab shows exact admission bindings, snapshot
+freshness and namespace claims. A source or publisher decision applies to future
+discovery reviews and handoffs. Source creation and bounded remote refresh remain
+operator CLI actions; registry claims do not establish publisher signatures,
+package safety or executable readiness. Source or publisher revocation does not
+silently alter packages already controlled by the existing acquisition owners.
+
+Select a candidate, review its provenance and declarations, and supply an exact
+enrolled agent UUID. **Create exact review** resolves the retained selection and
+inspects the private portable package, where applicable. A configured host then
+runs `potbot discovery measure CHECK_UUID` with its normal operator/native
+configuration. This explicitly selected measurement uses the existing supervisor
+and workspace lease. It does not start a second worker queue, execute the package
+or invoke its dependency programs. Reports bind the selected agent, runtime,
+source and actual package requirements; they expire within 120 seconds. Missing
+and unsupported prerequisites stay visible and may continue into explicit
+acquisition review when the server offers that action.
+
+**My exact reviews** reopens retained checks by list or UUID. Monitoring reads a
+selected pending review every five seconds, pauses in hidden tabs and stops after
+60 reads until resumed. Expired or invalidated evidence requires a fresh review
+and measurement. Explicit handoff selects the same private package at
+`/skills?workspace=UUID&package=UUID`, or the existing executable source request
+at `/setup/tools?workspace=UUID&operation=UUID`. Links only select records under a
+matching explicit workspace. Discovery never imports on page load, installs,
+builds, activates or runs a package. Registry skill source bindings remain visible
+through the existing skill package, plan, release and history projections.
+
+Deploy the discovery migration/API with this frontend. Reads use the authenticated
+operator session and allowlisted workspace backend bearer. All mutations require
+the server-only `POTBOT_UI_SETUP_TOKEN` and exact origin. The BFF forwards fixed
+routes, limits mutation JSON to 8 KiB and public responses to 1.5 MiB, and strips
+private signatures, host locations and credentials. Exact request bodies and keys
+use a separate discovery/tab/workspace/principal IndexedDB journal. Recovery never
+automatically replays; an authorization rejection on retry retains the earlier
+uncertain receipt. If durable storage is unavailable or a duplicated tab owns the
+slot, recovery is limited to the open tab. Keep that tab open until confirmed.
+
+Run `npm test`, `npm run typecheck` and `npm run build`. Set
+`POTBOT_DISCOVERY_CONTRACT_OUTPUT` to the actual HTTP/PostgreSQL export to verify
+the current backend responses with `tests/discovery-contract.test.mjs`. The saved
+fixture includes explicit runtime/provider test outcomes; live sandbox and remote
+provider qualification retain their separate host gates.
