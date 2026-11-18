@@ -129,7 +129,7 @@ def ensure_node(root: Path | None = None) -> tuple[Path, Path, dict[str, str]]:
     for executable in (shutil.which("node"),):
         if executable and _checked_version(Path(executable)):
             npm = shutil.which("npm.cmd" if os.name == "nt" else "npm")
-            if npm:
+            if npm and (os.name != "nt" or _npm_cli(Path(executable), Path(npm)) is not None):
                 return Path(executable), Path(npm), _safe_environment()
     release = _node_release_name()
     location = root / ".potbot" / "runtime" / "node" / _NODE_VERSION
@@ -137,7 +137,9 @@ def ensure_node(root: Path | None = None) -> tuple[Path, Path, dict[str, str]]:
     npm = location / ("npm.cmd" if os.name == "nt" else "bin/npm")
     env = _safe_environment()
     env["PATH"] = str(binary.parent) + os.pathsep + env.get("PATH", "")
-    if _checked_version(binary) and npm.exists():
+    if _checked_version(binary) and npm.exists() and (
+        os.name != "nt" or _npm_cli(binary, npm) is not None
+    ):
         return binary, npm, env
     _report("Installing verified Node.js " + _NODE_VERSION)
     listing = _download(_NODE_ROOT + "SHASUMS256.txt", maximum=100_000).decode("ascii")
@@ -159,12 +161,14 @@ def ensure_node(root: Path | None = None) -> tuple[Path, Path, dict[str, str]]:
             raise CapabilityUnavailableError("Downloaded Node.js executable failed its version check")
         if location.exists():
             # A concurrent installer may have completed; never overlay a live tree.
-            if _checked_version(binary) and npm.exists():
+            if _checked_version(binary) and npm.exists() and (
+                os.name != "nt" or _npm_cli(binary, npm) is not None
+            ):
                 return binary, npm, env
             raise CapabilityUnavailableError("Incomplete Node.js installation requires manual repair")
         extracted.rename(location)
-    if not npm.exists():
-        raise CapabilityUnavailableError("Node.js installation lacks npm")
+    if not npm.exists() or (os.name == "nt" and _npm_cli(binary, npm) is None):
+        raise CapabilityUnavailableError("Node.js installation lacks npm's JavaScript CLI")
     return binary, npm, env
 
 
@@ -190,13 +194,39 @@ def _frontend_fingerprint(frontend: Path) -> str:
     return h.hexdigest()
 
 
-def _run_npm(npm: Path, args: list[str], *, cwd: Path, env: dict[str, str]) -> None:
-    # Windows .cmd is explicitly invoked through cmd.exe, not shell=True with
-    # caller-controlled text. Only fixed npm subcommands reach this boundary.
-    command = (["cmd.exe", "/d", "/s", "/c", str(npm)] if os.name == "nt" else [str(npm)]) + args
+def _npm_cli(node: Path, npm: Path) -> Path | None:
+    """Find npm's CLI beside an installed Node, never parse or execute npm.cmd.
+
+    On Windows, passing a spaced npm.cmd path as separate arguments to
+    ``cmd.exe /c`` loses the quoting and runs ``C:\\Program``. Launching
+    node.exe with npm-cli.js avoids all cmd.exe batch parsing and retains
+    correct argv quoting through subprocess's Windows argument encoder.
+    """
+    for prefix in dict.fromkeys((node.parent, npm.parent)):
+        candidate = prefix / "node_modules" / "npm" / "bin" / "npm-cli.js"
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def _run_npm(
+    npm: Path, args: list[str], *, cwd: Path, env: dict[str, str], node: Path | None = None
+) -> None:
+    if os.name == "nt":
+        # Do not invoke npm.cmd using cmd.exe: it breaks on Program Files paths.
+        cli = _npm_cli(node, npm) if node is not None else None
+        if cli is None:
+            raise CapabilityUnavailableError(
+                "The Node.js installation has no usable npm-cli.js; repair Node.js and retry"
+            )
+        command = [str(node), str(cli), *args]
+    else:
+        command = [str(npm), *args]
     result = subprocess.run(command, cwd=cwd, env=env, check=False)
     if result.returncode:
-        raise CapabilityUnavailableError("GUI dependency installation/build failed; inspect the log")
+        raise CapabilityUnavailableError(
+            "GUI dependency installation/build failed; see npm output above"
+        )
 
 
 def prepare_frontend(root: Path | None = None) -> Path:
@@ -204,7 +234,7 @@ def prepare_frontend(root: Path | None = None) -> Path:
     frontend = root / "frontend"
     if not (frontend / "package-lock.json").is_file():
         raise CapabilityUnavailableError("Potbot frontend source or npm lockfile is missing")
-    _node, npm, env = ensure_node(root)
+    node, npm, env = ensure_node(root)
     marker = root / ".potbot" / "service" / "frontend-build.json"
     fingerprint = _frontend_fingerprint(frontend)
     try:
@@ -218,9 +248,9 @@ def prepare_frontend(root: Path | None = None) -> Path:
     ):
         return frontend
     _report("Installing pinned UI packages (first start or source update)")
-    _run_npm(npm, ["ci", "--no-audit", "--no-fund"], cwd=frontend, env=env)
+    _run_npm(npm, ["ci", "--no-audit", "--no-fund"], cwd=frontend, env=env, node=node)
     _report("Building the Potbot GUI")
-    _run_npm(npm, ["run", "build"], cwd=frontend, env=env)
+    _run_npm(npm, ["run", "build"], cwd=frontend, env=env, node=node)
     if not (frontend / ".next" / "BUILD_ID").is_file():
         raise CapabilityUnavailableError("The GUI build did not produce a production output")
     marker.parent.mkdir(parents=True, exist_ok=True)
