@@ -22,7 +22,7 @@ from potbot.tools.scoped_launcher import DEFAULT_SOCKET
 SOCKET = "potbot-scoped-worker.socket"
 BROKER = "potbot-scoped-worker@.service"
 KEEPER = "potbot-scoped-worker-cgroups.service"
-CGROUP = Path("/sys/fs/cgroup/system.slice") / KEEPER
+CGROUP_ROOT = Path("/sys/fs/cgroup")
 CONTROLLERS = ("cpu", "io", "memory", "pids")
 UNIT_DIR = Path("/etc/systemd/system")
 ENV_FILE = Path("/etc/potbot-scoped-worker/monitor.env")
@@ -63,16 +63,7 @@ def _executable(path: Path, digest: str | None = None) -> None:
                 raise CapabilityUnavailableError("A monitoring executable differs from its pin.")
 
 
-def _units(
-    python: Path,
-    join: Path,
-    tracer: Path,
-    join_sha: str,
-    tracer_sha: str,
-    uid: int,
-    gid: int,
-    auditor: int,
-) -> dict[Path, str]:
+def _keeper_unit(python: Path, uid: int, gid: int) -> dict[Path, str]:
     return {
         UNIT_DIR / KEEPER: (
             "[Unit]\nDescription=Potbot scoped worker accounting subtree\n"
@@ -81,12 +72,28 @@ def _units(
             f"Delegate={' '.join(CONTROLLERS)}\nDelegateSubgroup=keeper\n"
             f"ExecStart={python} -I -m {MODULE} hold\n"
             "NoNewPrivileges=yes\nTimeoutStartSec=15\n"
-        ),
+        )
+    }
+
+
+def _runtime_units(
+    python: Path,
+    join: Path,
+    tracer: Path,
+    join_sha: str,
+    tracer_sha: str,
+    uid: int,
+    gid: int,
+    auditor_uid: int,
+    auditor_gid: int,
+    cgroup: Path,
+) -> dict[Path, str]:
+    return {
         UNIT_DIR / BROKER: (
             "[Unit]\nDescription=Potbot scoped worker launcher instance\n"
             "[Service]\nType=simple\nStandardInput=socket\nStandardOutput=journal\n"
             f"ExecStart={python} -I -m potbot.tools.scoped_launcher "
-            f"accept {CGROUP} {join} {uid} {gid} {auditor}\n"
+            f"accept {cgroup} {join} {uid} {gid} {auditor_uid} {auditor_gid}\n"
             "KillMode=control-group\nTimeoutStopSec=10\n"
         ),
         UNIT_DIR / SOCKET: (
@@ -99,11 +106,47 @@ def _units(
         ),
         ENV_FILE: (
             f"POTBOT_OPERATOR_AUDIT_ROOT={AUDIT}\n"
-            f"POTBOT_OPERATOR_CGROUP_ROOT={CGROUP}\n"
+            f"POTBOT_OPERATOR_CGROUP_ROOT={cgroup}\n"
             f"POTBOT_OPERATOR_STRACE={tracer}\nPOTBOT_OPERATOR_STRACE_SHA256={tracer_sha}\n"
             f"POTBOT_OPERATOR_CGROUP_JOIN={join}\nPOTBOT_OPERATOR_CGROUP_JOIN_SHA256={join_sha}\n"
         ),
     }
+
+
+def _bounded_diagnostic(value: str, maximum: int = 16384) -> str:
+    value = value.replace("\x00", "?")
+    return value if len(value) <= maximum else "[older output truncated]\n" + value[-maximum:]
+
+
+def _systemd_diagnostics(args: tuple[str, ...], result: subprocess.CompletedProcess[str]) -> None:
+    print("POTBOT_SYSTEMD_FAILED_COMMAND=" + json.dumps([SYSTEMCTL, *args]), file=sys.stderr)
+    for label, value in (("stdout", result.stdout), ("stderr", result.stderr)):
+        if value:
+            print(f"--- systemctl {label} ---", file=sys.stderr)
+            print(_bounded_diagnostic(value), file=sys.stderr)
+    try:
+        journal = subprocess.run(
+            [
+                "/usr/bin/journalctl",
+                "--no-pager",
+                "--output=short-monotonic",
+                "--lines=80",
+                "-u",
+                KEEPER,
+                "-u",
+                SOCKET,
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            env={"PATH": "/usr/sbin:/usr/bin", "LANG": "C"},
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return
+    if journal.stdout:
+        print("--- scoped launcher journal ---", file=sys.stderr)
+        print(_bounded_diagnostic(journal.stdout, 32768), file=sys.stderr)
 
 
 def _manager(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -116,10 +159,59 @@ def _manager(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]
         env={"PATH": "/usr/sbin:/usr/bin", "LANG": "C"},
     )
     if check and result.returncode:
+        _systemd_diagnostics(args, result)
+        operation = args[0] if args else "unknown"
         raise CapabilityUnavailableError(
-            "systemd refused launcher provisioning; inspect its journal."
+            f"systemd refused scoped launcher provisioning during systemctl {operation}"
         )
     return result
+
+
+def _preflight_unit(name: str) -> None:
+    instance = name.replace("@.", "@provision-check.")
+    enablement = _manager("is-enabled", instance, check=False)
+    unit_state = enablement.stdout.strip()
+    if unit_state == "not-found":
+        return
+    if not unit_state:
+        raise CapabilityUnavailableError(
+            "systemd could not inspect existing launcher configuration."
+        )
+    props = _manager("show", "-p", "FragmentPath", "-p", "DropInPaths", instance).stdout
+    values = dict(line.split("=", 1) for line in props.splitlines() if "=" in line)
+    if values.get("FragmentPath", "") not in ("", str(UNIT_DIR / name)) or values.get(
+        "DropInPaths"
+    ):
+        raise CapabilityUnavailableError("Existing systemd launcher configuration was kept.")
+
+
+def _keeper_cgroup() -> Path:
+    value = _manager("show", "--property=ControlGroup", "--value", KEEPER).stdout.strip()
+    if not value.startswith("/") or value == "/" or "\n" in value or "\r" in value:
+        raise CapabilityUnavailableError("systemd returned an invalid scoped launcher cgroup")
+    path = CGROUP_ROOT / value.lstrip("/")
+    try:
+        resolved = path.resolve(strict=True)
+    except OSError:
+        raise CapabilityUnavailableError("systemd scoped launcher cgroup is unavailable") from None
+    if (
+        resolved != path
+        or path.name != KEEPER
+        or not path.is_relative_to(CGROUP_ROOT)
+        or CGROUP_ROOT.resolve(strict=True) != CGROUP_ROOT
+    ):
+        raise CapabilityUnavailableError("systemd scoped launcher cgroup escaped its hierarchy")
+    return path
+
+
+def _delegated_cgroup_from_membership(value: str) -> Path:
+    rows = [row for row in value.splitlines() if row]
+    if len(rows) != 1 or not rows[0].startswith("0::/"):
+        raise CapabilityUnavailableError("Scoped launcher requires the unified cgroup hierarchy")
+    process_cgroup = CGROUP_ROOT / rows[0][3:].lstrip("/")
+    if process_cgroup.name != "keeper" or process_cgroup.parent.name != KEEPER:
+        raise CapabilityUnavailableError("Scoped launcher process is outside its delegated subgroup")
+    return process_cgroup.parent
 
 
 def _inspect(path: Path, content: str) -> bool:
@@ -177,24 +269,19 @@ def _audit_directory(uid: int, gid: int) -> bool:
     return True
 
 
-def _apply(files: dict[Path, str], uid: int, gid: int) -> None:
-    pending = {path: data for path, data in files.items() if not _inspect(path, data)}
+def _apply(
+    python: Path,
+    join: Path,
+    tracer: Path,
+    join_sha: str,
+    tracer_sha: str,
+    uid: int,
+    gid: int,
+    auditor_uid: int,
+    auditor_gid: int,
+) -> None:
     for name in (KEEPER, BROKER, SOCKET):
-        instance = name.replace("@.", "@provision-check.")
-        enablement = _manager("is-enabled", instance, check=False)
-        unit_state = enablement.stdout.strip()
-        if unit_state == "not-found":
-            continue
-        if not unit_state:
-            raise CapabilityUnavailableError(
-                "systemd could not inspect existing launcher configuration."
-            )
-        props = _manager("show", "-p", "FragmentPath", "-p", "DropInPaths", instance).stdout
-        values = dict(line.split("=", 1) for line in props.splitlines() if "=" in line)
-        if values.get("FragmentPath", "") not in ("", str(UNIT_DIR / name)) or values.get(
-            "DropInPaths"
-        ):
-            raise CapabilityUnavailableError("Existing systemd launcher configuration was kept.")
+        _preflight_unit(name)
 
     active = _manager("is-active", "--quiet", SOCKET, check=False).returncode == 0
     keeper_active = _manager("is-active", "--quiet", KEEPER, check=False).returncode == 0
@@ -208,17 +295,26 @@ def _apply(files: dict[Path, str], uid: int, gid: int) -> None:
         raise CapabilityUnavailableError(
             "An existing socket enablement needs administrator review."
         )
-    if (pending and (active or keeper_active or enabled)) or (
-        (DEFAULT_SOCKET.exists() or DEFAULT_SOCKET.is_symlink()) and not active
-    ):
+    if active and not keeper_active:
+        raise CapabilityUnavailableError("Scoped launcher socket is active without its keeper")
+    if (DEFAULT_SOCKET.exists() or DEFAULT_SOCKET.is_symlink()) and not active:
         raise CapabilityUnavailableError(
-            "An existing launcher is in use or needs administrator review."
+            "An existing launcher socket needs administrator review."
+        )
+
+    keeper_files = _keeper_unit(python, uid, gid)
+    keeper_pending = {
+        path: data for path, data in keeper_files.items() if not _inspect(path, data)
+    }
+    if keeper_pending and keeper_active:
+        raise CapabilityUnavailableError(
+            "The active scoped launcher keeper differs from the managed unit."
         )
 
     created: list[Path] = []
     directories: list[Path] = []
     made_audit = False
-    enabling = starting = False
+    enabling = starting_socket = starting_keeper = False
     try:
         for directory in (ENV_FILE.parent, AUDIT.parent):
             if not directory.exists() and not directory.is_symlink():
@@ -230,34 +326,68 @@ def _apply(files: dict[Path, str], uid: int, gid: int) -> None:
                     "A launcher directory must not be a symbolic link."
                 )
         made_audit = _audit_directory(uid, gid)
-        for path, data in pending.items():
+
+        for path, data in keeper_pending.items():
             _write(path, data)
             created.append(path)
-        if created:
+        if keeper_pending:
             _manager("daemon-reload")
+        if not keeper_active:
+            starting_keeper = True
+            _manager("start", KEEPER)
+
+        cgroup = _keeper_cgroup()
+        runtime_files = _runtime_units(
+            python,
+            join,
+            tracer,
+            join_sha,
+            tracer_sha,
+            uid,
+            gid,
+            auditor_uid,
+            auditor_gid,
+            cgroup,
+        )
+        runtime_pending = {
+            path: data for path, data in runtime_files.items() if not _inspect(path, data)
+        }
+        if runtime_pending and (active or enabled):
+            raise CapabilityUnavailableError(
+                "An active scoped launcher differs from the managed configuration."
+            )
+        for path, data in runtime_pending.items():
+            _write(path, data)
+            created.append(path)
+        if runtime_pending:
+            _manager("daemon-reload")
+
         if not enabled:
             enabling = True
             _manager("enable", SOCKET)
         if not active:
-            starting = True
+            starting_socket = True
             _manager("start", SOCKET)
+
         info = DEFAULT_SOCKET.lstat()
         if (
             not stat.S_ISSOCK(info.st_mode)
             or (info.st_uid, info.st_gid, stat.S_IMODE(info.st_mode)) != (0, gid, 0o660)
-            or CGROUP.stat().st_uid != uid
-            or not set(CONTROLLERS) <= set((CGROUP / "cgroup.subtree_control").read_text().split())
+            or cgroup.stat().st_uid != uid
+            or not set(CONTROLLERS)
+            <= set((cgroup / "cgroup.subtree_control").read_text().split())
         ):
             raise CapabilityUnavailableError(
                 "Installed launcher or delegated controllers failed readback."
             )
     except (CapabilityUnavailableError, OSError, subprocess.TimeoutExpired):
-        # Never stop an already active launcher or remove a pre-existing file.
         try:
-            if starting:
-                _manager("stop", SOCKET, *([] if keeper_active else [KEEPER]))
+            if starting_socket:
+                _manager("stop", SOCKET)
             if enabling:
                 _manager("disable", SOCKET)
+            if starting_keeper:
+                _manager("stop", KEEPER)
             for path in reversed(created):
                 path.unlink()
             if created:
@@ -303,34 +433,48 @@ def provision(args: argparse.Namespace) -> None:
             raise CapabilityUnavailableError("Provisioning lock is untrusted.")
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         _apply(
-            _units(
-                python,
-                args.join,
-                args.strace,
-                args.join_sha256,
-                args.strace_sha256,
-                uid,
-                gid,
-                auditor.pw_uid,
-            ),
+            python,
+            args.join,
+            args.strace,
+            args.join_sha256,
+            args.strace_sha256,
             uid,
             gid,
+            auditor.pw_uid,
+            auditor.pw_gid,
         )
 
 
 def _hold() -> None:
-    expected = "0::" + str(CGROUP / "keeper").removeprefix("/sys/fs/cgroup")
+    cgroup = _delegated_cgroup_from_membership(
+        Path("/proc/self/cgroup").read_text(encoding="ascii")
+    )
+    try:
+        resolved = cgroup.resolve(strict=True)
+    except OSError:
+        raise CapabilityUnavailableError("Delegated worker cgroup disappeared") from None
     if (
         os.geteuid() == 0
-        or Path("/proc/self/cgroup").read_text().splitlines() != [expected]
-        or not set(CONTROLLERS) <= set((CGROUP / "cgroup.controllers").read_text().split())
-        or (CGROUP / "cgroup.procs").read_text().strip()
+        or resolved != cgroup
+        or not cgroup.is_relative_to(CGROUP_ROOT)
+        or not set(CONTROLLERS)
+        <= set((cgroup / "cgroup.controllers").read_text().split())
+        or (cgroup / "cgroup.procs").read_text().strip()
     ):
         raise CapabilityUnavailableError("systemd did not delegate the required worker cgroup.")
-    (CGROUP / "cgroup.subtree_control").write_text(" ".join("+" + name for name in CONTROLLERS))
+    (cgroup / "cgroup.subtree_control").write_text(
+        " ".join("+" + name for name in CONTROLLERS)
+    )
+    if not set(CONTROLLERS) <= set(
+        (cgroup / "cgroup.subtree_control").read_text().split()
+    ):
+        raise CapabilityUnavailableError("systemd did not enable the delegated controllers.")
     notify = os.environ["NOTIFY_SOCKET"]
     with socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM) as channel:
-        channel.sendto(b"READY=1", "\x00" + notify[1:] if notify.startswith("@") else notify)
+        channel.sendto(
+            b"READY=1",
+            "\x00" + notify[1:] if notify.startswith("@") else notify,
+        )
     while True:
         signal.pause()
 

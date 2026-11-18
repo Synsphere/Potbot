@@ -220,6 +220,7 @@ def _scope(
     uid: int,
     gid: int,
     auditor_uid: int,
+    auditor_gid: int,
     join: Path,
     parent_namespaces: tuple[str, str],
     *,
@@ -250,7 +251,7 @@ def _scope(
         try:
             auditor = subprocess.Popen(
                 [
-                    *_credentials(auditor_uid, auditor_uid, "-all,+net_admin"),
+                    *_credentials(auditor_uid, auditor_gid, "-all,+net_admin"),
                     sys.executable,
                     "-I",
                     "-m",
@@ -339,8 +340,20 @@ def _scope(
                 auditor.wait(timeout=5)
 
 
-def _accept(root: Path, join: Path, uid: int, gid: int, auditor_uid: int) -> int:
-    if os.geteuid() != 0 or not 0 < uid != auditor_uid or auditor_uid <= 0 or gid <= 0:
+def _accept(
+    root: Path,
+    join: Path,
+    uid: int,
+    gid: int,
+    auditor_uid: int,
+    auditor_gid: int,
+) -> int:
+    if (
+        os.geteuid() != 0
+        or min(uid, gid, auditor_uid, auditor_gid) <= 0
+        or uid == auditor_uid
+        or gid == auditor_gid
+    ):
         raise CapabilityUnavailableError("Invalid privileged launcher configuration")
     if (
         not root.is_relative_to("/sys/fs/cgroup")
@@ -388,6 +401,7 @@ def _accept(root: Path, join: Path, uid: int, gid: int, auditor_uid: int) -> int
                 str(uid),
                 str(gid),
                 str(auditor_uid),
+                str(auditor_gid),
                 str(join),
                 os.readlink("/proc/self/ns/pid"),
                 os.readlink("/proc/self/ns/net"),
@@ -407,7 +421,9 @@ def main() -> int:
                 return _proxy(int(fd), [int(x) for x in raw_fds.split(",") if x], argv)
             case ["exec", fd, *received]:
                 _worker_exec(int(fd), [int(x) for x in received])
-            case ["scope", fd, leaf, uid, gid, auditor, join, pid_ns, net_ns, *mode] if mode in (
+            case [
+                "scope", fd, leaf, uid, gid, auditor_uid, auditor_gid, join, pid_ns, net_ns, *mode
+            ] if mode in (
                 [],
                 ["probe"],
             ):
@@ -417,7 +433,8 @@ def main() -> int:
                         Path(leaf),
                         int(uid),
                         int(gid),
-                        int(auditor),
+                        int(auditor_uid),
+                        int(auditor_gid),
                         Path(join),
                         (pid_ns, net_ns),
                         probe=bool(mode),
@@ -432,8 +449,15 @@ def main() -> int:
                     parent_namespaces=(pid_ns, net_ns),
                 )
                 return 0
-            case ["accept", root, join, uid, gid, auditor]:
-                return _accept(Path(root), Path(join), int(uid), int(gid), int(auditor))
+            case ["accept", root, join, uid, gid, auditor_uid, auditor_gid]:
+                return _accept(
+                    Path(root),
+                    Path(join),
+                    int(uid),
+                    int(gid),
+                    int(auditor_uid),
+                    int(auditor_gid),
+                )
             case _:
                 raise CapabilityUnavailableError("Invalid scoped launcher operation")
     except CapabilityUnavailableError as error:

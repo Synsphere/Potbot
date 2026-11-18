@@ -68,6 +68,14 @@ requires a complete audited process tree on the selected image. The
 summary records the selected collector mode. Keep the registered Cog,
 Context RPC and collector-loss checks as separate release evidence.
 
+The launcher must resolve its delegated cgroup from the live systemd unit rather
+than assuming it is directly below `/sys/fs/cgroup/system.slice`. WSL may add a
+per-distribution cgroup prefix, and other qualified hosts may also place system
+units below a host-specific hierarchy. The keeper derives its own parent from
+`/proc/self/cgroup`; provisioning reads systemd's `ControlGroup` property and
+pins that canonical path into the broker unit and monitor environment. A moved
+or redirected cgroup still fails closed.
+
 ## U03-Q completion evidence
 
 The worker tracer keeps the terminal line for each task. A process tree is
