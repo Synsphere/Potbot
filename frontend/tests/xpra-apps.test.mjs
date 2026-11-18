@@ -92,37 +92,3 @@ test('different operator-authorized workspaces select their own private Xpra rel
   ])};
   assert.equal(xpraBridgeConfigForWorkspace(workspaceId,bad),null);
 });
-
-
-test('missing optional Xpra bridge returns empty passive inventories instead of workspace errors', async t=>{
-  const touched=[...Object.keys(env),'POTBOT_UI_XPRA_WORKSPACE_ID','POTBOT_UI_XPRA_BRIDGES_JSON'];
-  const old=Object.fromEntries(touched.map(key=>[key,process.env[key]]));
-  for(const [key,value] of Object.entries(env)) process.env[key]=value;
-  for(const key of ['POTBOT_UI_XPRA_BRIDGE_URL','POTBOT_UI_XPRA_BRIDGE_TOKEN',
-                    'POTBOT_UI_XPRA_PUBLIC_WS_URL','POTBOT_UI_XPRA_WORKSPACE_ID',
-                    'POTBOT_UI_XPRA_BRIDGES_JSON']) delete process.env[key];
-  const original=globalThis.fetch;
-  globalThis.fetch=async()=>{ throw Error('optional Xpra inventory must not use the network'); };
-  t.after(()=>{globalThis.fetch=original;for(const [key,value] of Object.entries(old)){
-    if(value===undefined) delete process.env[key]; else process.env[key]=value;
-  }});
-  const { POST: login }=await import('../src/app/api/ui/auth/login/route.ts');
-  const { GET: agents }=await import('../src/app/api/ui/xpra/agent-sessions/route.ts');
-  const auth=await login(new Request(origin+'/api/ui/auth/login',{method:'POST',
-    headers:{origin,'Content-Type':'application/json'},body:JSON.stringify({password:env.POTBOT_UI_PASSWORD})}));
-  assert.equal(auth.status,200);
-  const cookie=auth.headers.get('set-cookie').split(';')[0];
-  const headers={cookie,'x-potbot-workspace':workspaceId,origin};
-
-  const apps=await GET(new Request(origin+'/api/ui/xpra/apps',{headers}));
-  assert.equal(apps.status,200);
-  assert.deepEqual(await apps.json(),{workspaceId,configured:false,choices:[],sessions:[]});
-
-  const inventory=await agents(new Request(origin+'/api/ui/xpra/agent-sessions',{headers}));
-  assert.equal(inventory.status,200);
-  assert.deepEqual(await inventory.json(),{workspaceId,viewOnly:true,sessions:[]});
-
-  const launch=await POST(new Request(origin+'/api/ui/xpra/apps',{method:'POST',headers,
-    body:'{"kind":"terminal"}'}));
-  assert.equal(launch.status,503,'mutations remain fail-closed without a bridge');
-});

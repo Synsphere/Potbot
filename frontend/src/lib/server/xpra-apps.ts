@@ -1,27 +1,16 @@
 import { xpraBridgeConfigForWorkspace } from "./xpra.ts";
-import type { XpraBridgeConfig } from "./xpra.ts";
-import { workspaceConnections } from "./potbot.ts";
 import { projectAppInventory, projectAppSession, validAppKind, appSessionId } from "../xpra-apps.ts";
 import { requireOperator, safeError, validOrigin, boundedJSON } from "./security.ts";
 
-export type UnavailableXpraScope = { workspaceId: string; unavailable: true };
-
-export function xpraAppScope(request: Request, write = false):
-    XpraBridgeConfig | UnavailableXpraScope | Response {
+export function xpraAppScope(request: Request, write = false) {
   const operator = requireOperator(request);
   if (operator instanceof Response) return operator;
   if (write && !validOrigin(request, operator)) return safeError("Untrusted application request.", 403);
   const selected = request.headers.get("x-potbot-workspace");
-  if (!selected || !workspaceConnections().some(item => item.workspaceId === selected))
+  const config = xpraBridgeConfigForWorkspace(selected);
+  if (!config || selected !== config.workspaceId)
     return safeError("No application service for this workspace.", 404);
   if (new URL(request.url).search) return safeError("Unexpected application query.", 400);
-  const config = xpraBridgeConfigForWorkspace(selected);
-  if (!config) {
-    // Xpra is optional display capability. Passive inventory must not make an
-    // otherwise healthy workspace fail to render. Mutations remain fail-closed.
-    return write ? safeError("Application service is not configured for this workspace.", 503) :
-      { workspaceId: selected, unavailable: true };
-  }
   return config;
 }
 
@@ -37,11 +26,6 @@ export async function appProxy(request: Request, op: "list" | "start" | "attach"
                                sessionId?: string): Promise<Response> {
   const config = xpraAppScope(request, op !== "list");
   if (config instanceof Response) return config;
-  if ("unavailable" in config) {
-    if (op !== "list") return safeError("Application service is not configured for this workspace.", 503);
-    return Response.json({workspaceId:config.workspaceId, configured:false, choices:[], sessions:[]},
-      {headers:{"Cache-Control":"private, no-store"}});
-  }
   if (sessionId !== undefined && !appSessionId(sessionId)) return safeError("Invalid application session.", 400);
   let kind: string | undefined;
   if (op === "start") {
