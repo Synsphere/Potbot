@@ -157,6 +157,7 @@ def application(args: argparse.Namespace) -> FastAPI:
         settings=settings,
         mcp_oauth=mcp_oauth,
     )
+    from potbot.api.ui_atomic_graphs import register_atomic_graph_routes
     from potbot.api.ui_api_setup import register_api_setup_routes
     from potbot.api.ui_context import register_context_routes
     from potbot.api.ui_discovery import register_discovery_routes
@@ -263,6 +264,14 @@ def application(args: argparse.Namespace) -> FastAPI:
         setup_authorizer,
     )
     register_task_execution_routes(
+        app,
+        database,
+        authenticate,
+        settings.allowed_origins,
+        context.workspace_id,
+        setup_authorizer,
+    )
+    register_atomic_graph_routes(
         app,
         database,
         authenticate,

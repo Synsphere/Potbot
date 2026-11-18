@@ -231,6 +231,7 @@ export default function OperationCataloguePage() {
   return <main className={styles.shell}>
     <header className={styles.header}>
       <a className={styles.back} href="/">← Workspace</a>
+      <a href="/atomic-graphs">Atomic graph scheduler ↗</a>
       <div className={styles.titleLine}><div><span className={styles.eyebrow}>POTBOT / OPERATIONS</span><h1>Inspect, check and run.</h1></div><span className={styles.readOnly}>Operation workbench</span></div>
       <p>Explore tools, models and workflows together. Check an exact task request on its worker, explicitly launch supported operations, and follow their durable results.</p>
     </header>
