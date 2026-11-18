@@ -35,6 +35,7 @@ _SOURCE_TOP = (
     "sandbox/clients",
     "sandbox/qualification",
     "native/potbot-cgroup-join",
+    "native/potbot-identity",
     "vocab",
 )
 _SKIP_NAMES = {

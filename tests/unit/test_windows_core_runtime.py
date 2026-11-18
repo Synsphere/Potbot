@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import subprocess
+import tomllib
+from pathlib import Path
 
 import pytest
 
+from potbot.dependencies import project_root
 from potbot.windows_core_runtime import (
     _MAX_PROCESS_LOG_BYTES,
     _ROOT_BOOTSTRAP,
+    _SOURCE_TOP,
     _failed_bootstrap_stage,
     _write_process_log,
     _wsl_environment,
@@ -40,6 +44,23 @@ def test_root_bootstrap_enables_universe_and_marks_failure_stages() -> None:
     ):
         assert f'stage="{stage}"' in _ROOT_BOOTSTRAP
     assert "POTBOT_BOOTSTRAP_FAILED_STAGE=%s" in _ROOT_BOOTSTRAP
+
+
+def test_wsl_source_bundle_covers_all_wheel_force_includes() -> None:
+    root = project_root()
+    document = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    forced = document["tool"]["hatch"]["build"]["targets"]["wheel"]["force-include"]
+    staged = tuple(Path(item) for item in _SOURCE_TOP)
+
+    missing = [
+        source
+        for source in forced
+        if not any(
+            Path(source) == candidate or candidate in Path(source).parents
+            for candidate in staged
+        )
+    ]
+    assert missing == []
 
 
 def test_failed_bootstrap_stage_uses_last_marker() -> None:

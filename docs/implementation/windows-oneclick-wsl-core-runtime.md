@@ -5,7 +5,10 @@ Potbot's mandatory operator, scoped sandbox and Xpra bridge run inside the
 existing owned `Potbot-SynOperator` WSL2 distribution.
 
 The first start (and source changes) stages the current source tree by digest,
-installs SHA-256-pinned uv and Cosign, synchronizes the existing lockfile,
+including every source path required by the wheel build (`src`, vocabulary,
+the cgroup helper and the native identity provider). A regression test keeps
+the explicit staging allow-list aligned with Hatch's `force-include` inputs.
+It installs SHA-256-pinned uv and Cosign, synchronizes the existing lockfile,
 and explicitly enables Ubuntu's `universe` repository before installing the
 Xpra/Bubblewrap/OCI prerequisites. It then verifies the pinned signed sandbox
 image, runs the repository's existing published-image host smoke, provisions
