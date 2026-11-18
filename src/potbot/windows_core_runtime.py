@@ -25,6 +25,7 @@ from potbot.domain.errors import CapabilityUnavailableError, StateMismatchError
 
 if TYPE_CHECKING:
     from potbot.service import ServiceConfig
+    from potbot.syn_release.host import WslOperatorHost
 
 _SOURCE_TOP = (
     "README.md",
@@ -47,6 +48,7 @@ _MAX_PROCESS_LOG_BYTES = 128 * 1024
 _HEX = re.compile(r"[0-9a-f]{64}\Z")
 _COMMIT = re.compile(r"[0-9a-f]{40}\Z")
 _BOOTSTRAP_FAILED_STAGE = re.compile(r"^POTBOT_BOOTSTRAP_FAILED_STAGE=([a-z0-9-]+)$", re.MULTILINE)
+_QUALIFICATION_STAGE = re.compile(r"^POTBOT_QUALIFICATION_STAGE=([a-z0-9-]+)$", re.MULTILINE)
 
 UV_VERSION = "0.12.23"
 UV_URL = (
@@ -59,6 +61,12 @@ COSIGN_URL = (
     "https://github.com/sigstore/cosign/releases/download/v3.1.3/cosign-linux-amd64"
 )
 COSIGN_SHA256 = "4629c757b7618056f8ddd7e2625ae9fdd94c0372a65049520bc7d9df9efc7f71"
+
+WSL_KERNEL_TAG = "v0.5.0.dev13"
+WSL_KERNEL_RELEASE = "6.18.54.1-microsoft-standard-WSL2-potbot-ns-taskstats"
+WSL_KERNEL_ARCHIVE_SHA256 = "b814f2e50df83aa7fd0c5b7ca7ea8df3fa0b8694bb62ef8b8721033f1788f0c4"
+WSL_KERNEL_MANIFEST_SHA256 = "7da3d6b6bbc778df001f557107c66d377c676a1e1d2410043ac843cebf81554e"
+WSL_KERNEL_PUBLIC_KEY = "945786a5587110a061a6b73a02057b327f1ce819db4b0b5850201fbca41149cb"
 
 _ROOT_BOOTSTRAP = r"""
 set -eu
@@ -292,6 +300,63 @@ def _failed_bootstrap_stage(stderr: str) -> str:
     return matches[-1] if matches else "unknown"
 
 
+def _failed_qualification_stage(stderr: str) -> str:
+    matches = _QUALIFICATION_STAGE.findall(stderr)
+    return matches[-1] if matches else "unknown"
+
+
+def _ensure_required_wsl_kernel(manager: "WslOperatorHost") -> None:
+    """Boot the owned WSL runtime on Potbot's signed TASKSTATS kernel."""
+    from potbot.syn_release.host import DISTRO, run_host
+    from potbot.wsl_kernel import download_bundle, verify_bundle
+    from potbot.wsl_kernel_activation import WslKernelActivation
+
+    current = run_host(manager.command("/usr/bin/uname", ["-r"])).strip()
+    if not current or "\n" in current or "\r" in current:
+        raise CapabilityUnavailableError("Managed WSL kernel identity is invalid")
+    if current == WSL_KERNEL_RELEASE:
+        return
+
+    # Kernel selection is global to the WSL2 VM. Stop only Potbot's owned distro;
+    # WslKernelActivation will refuse to proceed if any unrelated distro remains
+    # active rather than silently terminating somebody else's work.
+    run_host([manager.wsl, "--terminate", DISTRO], timeout=90)
+
+    release_root = manager.root / "wsl-kernel-release"
+    release_root.mkdir(parents=True, exist_ok=True)
+    bundle = release_root / WSL_KERNEL_MANIFEST_SHA256
+    if bundle.exists() or bundle.is_symlink():
+        verify_bundle(
+            bundle,
+            manifest_sha256=WSL_KERNEL_MANIFEST_SHA256,
+            public_key=WSL_KERNEL_PUBLIC_KEY,
+        )
+    else:
+        download_bundle(
+            bundle,
+            tag=WSL_KERNEL_TAG,
+            kernel_release=WSL_KERNEL_RELEASE,
+            archive_sha256=WSL_KERNEL_ARCHIVE_SHA256,
+            manifest_sha256=WSL_KERNEL_MANIFEST_SHA256,
+            public_key=WSL_KERNEL_PUBLIC_KEY,
+        )
+
+    activated = WslKernelActivation(manager).activate(
+        bundle,
+        manifest_sha256=WSL_KERNEL_MANIFEST_SHA256,
+        public_key=WSL_KERNEL_PUBLIC_KEY,
+    )
+    if (
+        activated.get("activation") != "boot_verified"
+        or activated.get("kernel_release") != WSL_KERNEL_RELEASE
+    ):
+        raise CapabilityUnavailableError("Managed WSL TASKSTATS kernel did not verify after boot")
+
+    # Activation intentionally terminates the probe distro after boot evidence.
+    # Restore the managed user session before the ordinary core bootstrap starts.
+    manager.start_keystore()
+
+
 def _head(root: Path) -> str:
     result = subprocess.run(
         ["git", "-C", str(root), "rev-parse", "HEAD"],
@@ -327,6 +392,7 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
         raise AssertionError("source digest is not canonical")
     manager = WslOperatorHost()
     manager.setup()
+    _ensure_required_wsl_kernel(manager)
 
     staging = manager.root / "core-runtime" / source_sha
     bundle = staging / "source.tar.gz"
@@ -370,9 +436,9 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
     )
     qualification_log = _write_process_log(root, "wsl-core-qualification.log", prepare)
     if prepare.returncode:
+        stage = _failed_qualification_stage(prepare.stderr or "")
         raise CapabilityUnavailableError(
-            "Managed WSL sandbox image, accounting or Xpra qualification failed; "
-            f"inspect {qualification_log}"
+            f"Managed WSL core qualification failed during {stage}; inspect {qualification_log}"
         )
     try:
         import json

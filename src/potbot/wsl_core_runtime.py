@@ -333,20 +333,32 @@ def _finalize(args: argparse.Namespace) -> int:
     return 0
 
 
+def _qualification_stage(name: str) -> None:
+    print(f"POTBOT_QUALIFICATION_STAGE={name}", file=sys.stderr, flush=True)
+
+
 def _prepare(args: argparse.Namespace) -> int:
+    _qualification_stage("runtime-preflight")
     if not sys.platform.startswith("linux") or os.geteuid() != 0 or not sys.flags.isolated:
         raise CapabilityUnavailableError("Core runtime preparation requires isolated root Python in WSL")
     if _HEX.fullmatch(args.source_sha256) is None or _COMMIT.fullmatch(args.consumer_commit) is None:
         raise InvalidInputError("Core source identity is invalid")
     source = _protected_root(Path(args.source_root))
     os.environ["POTBOT_CORE_CONSUMER_COMMIT"] = args.consumer_commit
+
+    _qualification_stage("service-identities")
     service, auditor = _ensure_user()
     python = source / ".venv/bin/python"
     if not python.is_file():
         raise CapabilityUnavailableError("Core runtime virtual environment is missing")
+
+    _qualification_stage("scoped-launcher")
     _ensure_scoped_launcher(source, python, service, auditor)
+
+    _qualification_stage("sandbox-image")
     rootfs, image = _verify_image(source, args.source_sha256)
 
+    _qualification_stage("workspace-state")
     base = Path("/home") / service.pw_name / ".local/share/potbot/core" / args.workspace_id
     private = base / "private"
     home = base / "home"
@@ -362,6 +374,7 @@ def _prepare(args: argparse.Namespace) -> int:
         _ensure_directory(path, service.pw_uid, service.pw_gid, mode)
     _ensure_directory(home / ".tmp", service.pw_uid, service.pw_gid, 0o700)
 
+    _qualification_stage("finalize")
     command = [
         "/usr/sbin/runuser", "-u", service.pw_name, "--",
         str(python), "-I", "-B", "-m", "potbot.wsl_core_runtime", "finalize",
@@ -378,6 +391,7 @@ def _prepare(args: argparse.Namespace) -> int:
         "--ai-past", str(past),
     ]
     result = _run(command, timeout=120)
+    _qualification_stage("complete")
     print(result.stdout.strip())
     return 0
 

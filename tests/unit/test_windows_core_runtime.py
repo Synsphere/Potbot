@@ -11,7 +11,14 @@ from potbot.windows_core_runtime import (
     _MAX_PROCESS_LOG_BYTES,
     _ROOT_BOOTSTRAP,
     _SOURCE_TOP,
+    WSL_KERNEL_ARCHIVE_SHA256,
+    WSL_KERNEL_MANIFEST_SHA256,
+    WSL_KERNEL_PUBLIC_KEY,
+    WSL_KERNEL_RELEASE,
+    WSL_KERNEL_TAG,
+    _ensure_required_wsl_kernel,
     _failed_bootstrap_stage,
+    _failed_qualification_stage,
     _write_process_log,
     _wsl_environment,
 )
@@ -82,3 +89,33 @@ def test_process_log_is_bounded_and_retained_under_service_home(tmp_path) -> Non
     assert len(payload) <= _MAX_PROCESS_LOG_BYTES
     assert payload.startswith(b"[older diagnostic output truncated]\n")
     assert b"e" * 1024 in payload
+
+def test_windows_core_pins_the_signed_taskstats_kernel_release() -> None:
+    assert WSL_KERNEL_TAG == "v0.5.0.dev13"
+    assert WSL_KERNEL_RELEASE.endswith("-potbot-ns-taskstats")
+    assert WSL_KERNEL_ARCHIVE_SHA256 == "b814f2e50df83aa7fd0c5b7ca7ea8df3fa0b8694bb62ef8b8721033f1788f0c4"
+    assert WSL_KERNEL_MANIFEST_SHA256 == "7da3d6b6bbc778df001f557107c66d377c676a1e1d2410043ac843cebf81554e"
+    assert WSL_KERNEL_PUBLIC_KEY == "945786a5587110a061a6b73a02057b327f1ce819db4b0b5850201fbca41149cb"
+
+
+def test_failed_qualification_stage_uses_last_marker() -> None:
+    stderr = (
+        "POTBOT_QUALIFICATION_STAGE=scoped-launcher\n"
+        "POTBOT_QUALIFICATION_STAGE=sandbox-image\n"
+    )
+    assert _failed_qualification_stage(stderr) == "sandbox-image"
+    assert _failed_qualification_stage("ordinary error") == "unknown"
+
+
+def test_wsl_qualifier_emits_named_stage_markers() -> None:
+    source = (project_root() / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
+    for stage in (
+        "runtime-preflight",
+        "service-identities",
+        "scoped-launcher",
+        "sandbox-image",
+        "workspace-state",
+        "finalize",
+        "complete",
+    ):
+        assert f'_qualification_stage("{stage}")' in source

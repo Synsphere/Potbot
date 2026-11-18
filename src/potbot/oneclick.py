@@ -33,6 +33,7 @@ from potbot.domain.errors import (
 )
 
 _GUI_URL = "http://127.0.0.1:3100"
+_STARTUP_HEALTH_ATTEMPTS = 1800
 
 
 def _notice(value: str) -> None:
@@ -421,7 +422,7 @@ def _foreground(config: Any) -> int:
     _notice("Native service manager unavailable; supervising Potbot in this terminal")
     child = subprocess.Popen([sys.executable, "-m", "potbot.startup", "service", "run"])
     try:
-        for _ in range(90):
+        for _ in range(_STARTUP_HEALTH_ATTEMPTS):
             if child.poll() is not None:
                 raise CapabilityUnavailableError("Backend or GUI supervisor exited; inspect logs")
             if _healthy(config):
@@ -488,7 +489,7 @@ def _start() -> int:
         service.manager_action("start")
     except (OSError, DomainError):
         return _foreground(config)
-    for _ in range(90):
+    for _ in range(_STARTUP_HEALTH_ATTEMPTS):
         if _healthy(config):
             _require_gui_login()
             _notice("Backend and GUI are ready: " + _GUI_URL)
