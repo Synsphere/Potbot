@@ -97,7 +97,7 @@ test "$VERSION_ID" = 24.04
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install --yes --no-install-recommends ca-certificates python3.12 python3.12-venv python3.12-dev \
-    gnome-keyring dbus-user-session libsecret-tools build-essential libgmp-dev
+    dbus-user-session build-essential libgmp-dev
 if ! id synoperator >/dev/null 2>&1; then
     useradd --create-home --shell /bin/bash synoperator
 fi
@@ -105,7 +105,6 @@ test "$(id -u synoperator)" -ne 0
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share/potbot
-command -v gnome-keyring-daemon >/dev/null
 command -v dbus-run-session >/dev/null
 loginctl enable-linger synoperator
 printf 'syn-native-prerequisites-ready\n'
@@ -401,14 +400,13 @@ class WslOperatorHost:
             )
             if confirmation.splitlines()[-1:] != ["syn-native-prerequisites-ready"]:
                 raise CapabilityUnavailableError("Native prerequisites did not confirm completion")
-            record = self._checkpoint(record, "native-keystore", prerequisite_revision=3)
-        self.start_keystore()
+            record = self._checkpoint(record, "native-prerequisites", prerequisite_revision=3)
         ready = {
             **record,
             "state": "ready",
             "registration_id": registration.identifier,
             "prerequisite_revision": 3,
-            "custody": "linux-secret-service",
+            "custody": "windows-dpapi-host",
             "keystore_unlocked": False,
             "operator_identity_created": False,
         }
@@ -417,22 +415,6 @@ class WslOperatorHost:
         if ready != record:
             self._write_receipt(ready)
         return ready
-
-    def start_keystore(self) -> None:
-        run_host(
-            [
-                self.wsl,
-                "--distribution",
-                DISTRO,
-                "--user",
-                OPERATOR_USER,
-                "--exec",
-                "/usr/bin/systemctl",
-                "--user",
-                "start",
-                "gnome-keyring-daemon.service",
-            ]
-        )
 
     def command(self, executable: str, arguments: list[str]) -> list[str]:
         if not executable.startswith("/") or "\0" in executable:

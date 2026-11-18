@@ -353,8 +353,8 @@ def _ensure_required_wsl_kernel(manager: "WslOperatorHost") -> None:
         raise CapabilityUnavailableError("Managed WSL TASKSTATS kernel did not verify after boot")
 
     # Activation intentionally terminates the probe distro after boot evidence.
-    # Restore the managed user session before the ordinary core bootstrap starts.
-    manager.start_keystore()
+    # The next owned WSL command boots it again. Do not start a Linux credential
+    # service here: Windows operator custody remains in the DPAPI host broker.
 
 
 def _head(root: Path) -> str:
