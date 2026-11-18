@@ -81,6 +81,7 @@ class ToolGateway:
         host_agent_id: UUID | None = None,
         mcp_installations: tuple[InstalledMcpTool, ...] = (),
         mcp_routes: tuple[SynMcpRoute, ...] = (),
+        mcp_authorize: Callable[[], None] | None = None,
     ) -> None:
         self.database, self.artifacts, self.candidates = database, artifacts, candidates
         self.registry, self.capabilities, self.receipts = registry, capabilities, receipts
@@ -123,6 +124,9 @@ class ToolGateway:
         self.read_only_roots = read_only_roots
         self.workspace_sandbox = workspace_sandbox
         self.instance_id = uuid4()
+        if mcp_authorize is not None and not callable(mcp_authorize):
+            raise InvalidInputError("MCP authority must be a trusted callable")
+        self.mcp_authorize = mcp_authorize
         self.store = ExecutionStore(database, registry)
         self.budgets = BudgetLedger(database)
         self._mcp_installations: dict[tuple[UUID, str], InstalledMcpTool] = {}

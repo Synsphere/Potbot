@@ -419,6 +419,69 @@ pipeline export to check the current backend responses against
 explicit integration fixtures; real sandbox qualification retains its existing
 host acceptance gates.
 
+## U04-Q — Installed MCP task qualification
+
+Open **MCP task qualification** from the workspace menu or the admitted MCP
+catalogue, or visit `/discover/mcp/qualification?workspace=WORKSPACE_UUID`.
+An optional `suite=SUITE_UUID` opens one retained suite, and
+`binding=BINDING_UUID` filters suites to an existing discovery binding. Deep
+links require one explicit, matching authorized workspace. The page also opens
+an exact suite UUID and pages retained suites and attempts, keeping at most
+200 records in each list.
+
+The configured host admits one private, bounded task suite for an existing
+installed MCP tool. The browser displays its name, ordered safe case summaries,
+assertion counts, argument and oracle digests, exact task contract, repository
+state, semantic release, installation and configuration identities. Arguments,
+expected values, native paths, provider credentials and process commands remain
+private. Provider-authored descriptions are rendered as text.
+
+**Request one qualification attempt** records one signed attempt for that exact suite
+revision and digest. The configured host explicitly executes its retained ID
+through the existing budgeted gateway. Page loads and monitoring issue GET
+requests only. Automatic status reads pause in hidden tabs and after thirty
+checks; the operator can pause or resume them. The UI shows prepared cases,
+verified stopped results, per-assertion booleans and safe failure reason codes,
+with their gateway run, artifact and receipt identities. It does not show raw
+actual or expected values. Cancellation fences future work without claiming
+that an already running native process has stopped.
+
+Reports distinguish passed, failed and incomplete cases, retained signature
+validity and current stored authority. A historical report remains inspectable
+after a newer attempt, task drift, disabled suite or invalidated source.
+Currentness requires an exact match to the suite's latest attempt and report,
+ordered case identities and task/source bindings. Native runtime and profile
+readback remain mandatory at execution time. A passing report is scoped task
+evidence; it supplies no installation or execution permission. Native receipt
+recovery is shown as an informational host action with no browser dispatch.
+
+The fixed `/api/ui/mcp-qualification` BFF exposes retained suite, attempt and
+report reads, plus reviewed qualify, enable, disable, revoke and cancel
+decisions. It forwards no admission, native execution, recovery or report upload
+route. Mutations require the authenticated operator, exact allowed origin,
+scoped backend bearer and independent server-only `POTBOT_UI_SETUP_TOKEN`.
+Requests are bounded to 8 KiB and public responses to 1.5 MiB. Strict projections
+validate case evidence, scope, pagination, original receipts and exact native
+report identities before anything reaches the page.
+
+Each decision is stored before dispatch in a qualification-specific per-tab,
+workspace-and-principal journal. Reloading recovers the original path, JSON
+bytes and key without submitting it. **Retry the identical request** explicitly
+recovers its original receipt, then reads current state. An uncertain request
+locks subsequent writes, and a rejected recovery does not erase its earlier
+uncertain outcome. Scope changes hide private records, and request generations
+abort late responses after selection or filter changes. If durable storage is
+unavailable, preserve the displayed request while the tab retains its temporary
+copy.
+
+Run `npm test`, `npm run typecheck` and `npm run build`. The qualification DTO,
+route and recovery suites cover fixed routes, authority, evidence coherence,
+native-field rejection and exact request recovery. The contract test consumes
+real HTTP/PostgreSQL lifecycle output through
+`POTBOT_MCP_QUALIFICATION_CONTRACT_OUTPUT`, with a checked-in export for offline
+checks. Its native process and provider outcomes come from the integration
+harness; it does not qualify an external vendor or a rendered browser session.
+
 ## U04-M — Admitted MCP catalogues and reconciliation
 
 Open **Admitted MCP catalogues and reconciliation** from the workspace menu, or

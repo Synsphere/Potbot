@@ -6,6 +6,17 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**18 November 2026, after the live MCP merge:**
+[U04-Q installed MCP task qualification](u04-q-installed-mcp-qualification.md)
+implements reviewed private case suites and independent bounded result assertions
+on merged main `2ef29e3141a581bec4fd6d7daf5d98f828d1d9df`. Existing task,
+candidate, budget, gateway, artifact and stopped-receipt owners supply durable
+evidence; original native pins and receipt-only recovery prevent repeat calls
+or relabelling a historical run under changed runtime identity. Migration 44,
+CLI/API and browser review complete this supported qualification workflow.
+The installed host/vendor matrix still needs actual operator evidence; controlled
+fixtures do not qualify production. U04/M4/T04 and historical U00 statuses remain.
+
 **18 November 2026, after the discovery merge:**
 [U04-M live MCP reconciliation](u04-m-live-mcp-reconciliation.md) completes the
 supported installed-interface observation lifecycle on merged main
@@ -259,6 +270,7 @@ These suffixes identify work within existing U packages. They do not renumber th
 | U04-X | U04/U05/U11/U13/U16 | Complete the [executable acquisition lifecycle](u04-x-executable-tool-acquisition.md): pinned source, operator recipes, exact build approval, measured tests, first installation, upgrades, S12 release, rollback/withdrawal and signed recovery. Qualify the actual installed host and extend curated registry/publisher/dependency breadth through these owners. |
 | U04-D | U04/U05/U11/U13/U16 | Complete [curated discovery and measured prerequisites](u04-d-curated-discovery.md): bounded registry snapshots, signed source/publisher admission, explained task ranking, exact package/recipe review, current sandbox measurements and existing-owner handoffs. U04-M supplies admitted live MCP reconciliation; actual installed host/vendor/task profiles retain independent qualification and execution grants. |
 | U04-M | U04/U11/U13/U16 | Complete [live MCP reconciliation](u04-m-live-mcp-reconciliation.md): complete interface snapshots, signed native lifetime/claims, current exact references, gateway enforcement and operator recovery. Qualify installed hosts and exact vendor/task profiles next; metadata and controlled fixtures grant no production authority. |
+| U04-Q | U04/U11/U13/U16 | Complete the [installed MCP task qualification workflow](u04-q-installed-mcp-qualification.md): private reviewed suites, independent result assertions, existing gateway evidence, original runtime pins and receipt-only recovery with CLI/API/UI review. Collect and review actual selected host/vendor/task reports next; broader semantic retrieval and interoperability remain open. |
 | U07-Q | U02/U05/U07/U13/U16 | Native service/vault, provider and inbound API matrix, model downloads/cache paths and installed/runnable/qualified readiness; RD01–RD04. |
 | U08-T | U01/U04/U08/U14 | Existing fenced reasoning/accounting plus ensemble verification, temporal steering, atomic leaf scheduling and active research; RD05–RD09. |
 | U09-C | U06/U09/U11/U13 | Preserve data-only state/history and Stage 10D integration; close constructor/protocol, semantic-reconciliation and authored-skill gaps; RD26–RD29. |

@@ -1,5 +1,15 @@
 # Potbot external skill ecosystem integration
 
+**Task qualification follow-on, 18 November 2026:**
+[U04-Q](u04-q-installed-mcp-qualification.md) implements one exact installed MCP
+tool's reviewed task cases through existing execution owners, verifies retained
+outputs against independent assertions, and recovers stopped receipts without
+repeating tool calls. CLI/API/UI retain scoped signed evidence and original
+runtime/source pins. [Pinned vendor cases](u04-q-mcp-vendor-cases.md) record
+DanceFlow, WordPress and IBM compatibility boundaries. Actual selected vendor
+and installed-host reports remain required; native skill interoperability and
+other ecosystem gates are unchanged.
+
 **Live MCP follow-on, 18 November 2026:**
 [U04-M](u04-m-live-mcp-reconciliation.md) extends the registry/acquisition path
 with complete installed MCP interface observations and exact current gateway

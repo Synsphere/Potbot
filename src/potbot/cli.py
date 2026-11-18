@@ -125,6 +125,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         return mcp_discovery_main(args[1:])
 
+    if args and args[0] == "mcp-qualification":
+        from potbot.api.mcp_qualification_cli import main as mcp_qualification_main
+
+        return mcp_qualification_main(args[1:])
+
     parser = argparse.ArgumentParser(
         prog="potbot",
         description="Foundation for an evidence-driven, multi-model coding agent.",
@@ -143,6 +148,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     commands.add_parser("skills", help="import, review, install and manage portable skill releases")
     commands.add_parser("discovery", help="discover, review and measure curated capabilities")
     commands.add_parser("mcp-discovery", help="review and reconcile installed MCP catalogues")
+    commands.add_parser(
+        "mcp-qualification", help="qualify MCP task cases and recover native receipts"
+    )
     commands.add_parser(
         "tool-acquisition", help="review, build, qualify and release executable tools"
     )

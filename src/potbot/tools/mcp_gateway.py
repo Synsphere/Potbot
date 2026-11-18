@@ -325,6 +325,9 @@ async def execute_mcp_action(
     reference = frozen_input.get("mcp_reference")
 
     def validate_discovery() -> None:
+        if gateway.mcp_authorize is not None:
+            if gateway.mcp_authorize() is not None:
+                raise ScopeDeniedError("MCP controller authority must raise on denial")
         if binding.discovery_binding_id is not None:
             if not isinstance(reference, dict):
                 raise ScopeDeniedError("An exact retained MCP discovery reference is required")

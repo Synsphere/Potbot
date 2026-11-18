@@ -1,0 +1,1682 @@
+{
+  "attempts": {
+    "items": [
+      {
+        "actions": [],
+        "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+        "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+        "bindingSha256": "13e985cf6517dbeff87e3388a8d73844b0d5cfca927c23fcef31f4fd78197255",
+        "caseCount": 2,
+        "cases": [
+          {
+            "actionId": "50fea9ae-a24b-4fb0-be00-8bbf5ff002f8",
+            "candidateId": "a5e10e02-33b9-4cdb-baf3-8a1300871d22",
+            "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+            "checks": [
+              {
+                "index": 0,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 1,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 2,
+                "passed": true,
+                "reasonCode": null
+              }
+            ],
+            "elapsedMs": 305,
+            "id": "search-1",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "reasonCode": null,
+            "receiptSha256": "6efb0dbd05aefe84cb61f5bb35c9e48c16a9770c365a0101527a926fe814bffc",
+            "reservationId": "fdd19955-d989-4d29-bf64-d22dccf80818",
+            "resultArtifactId": "b35e1ed8-c4a7-501b-a1e2-7976c5bec87f",
+            "resultSha256": "b5c78f56d3ff76d1f4293d3d5f72226f180d8a839fda312f8d90230f4519ab81",
+            "runId": "3aff45d9-d2aa-4569-a04b-b9c15f666a09",
+            "status": "passed",
+            "title": "Fixture search case 1"
+          },
+          {
+            "actionId": "7f65b902-f298-4aa2-90ac-be570fb1b4c9",
+            "candidateId": "79816c6a-a341-47ab-96ae-aaf93dae4464",
+            "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+            "checks": [
+              {
+                "index": 0,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 1,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 2,
+                "passed": true,
+                "reasonCode": null
+              }
+            ],
+            "elapsedMs": 291,
+            "id": "search-2",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "reasonCode": null,
+            "receiptSha256": "1da192e13106c1ab0d14f1ab34c9965ac8e7628440d9872369815ced16233fcb",
+            "reservationId": "6fe91ee4-7f35-421f-9f60-c9476c84528f",
+            "resultArtifactId": "e3d110e1-6291-545e-a5b9-999a3457da66",
+            "resultSha256": "a908ead4f62602996f96d936c96003708c5ed68df3c8e4461ad2ae9365c7b79b",
+            "runId": "198828a6-098c-4a8b-98f4-5f1ec4fe67b8",
+            "status": "passed",
+            "title": "Fixture search case 2"
+          }
+        ],
+        "completedCases": 2,
+        "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+        "createdAt": "2026-11-18T02:51:45.084504+00:00",
+        "failedCases": 0,
+        "id": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+        "passedCases": 2,
+        "reasonCode": null,
+        "recoveryAvailable": false,
+        "reportId": "b4c2d464-4401-4eaa-9dff-579609a3c57c",
+        "reportSha256": "74915b9c3f1192c3ec05e058418e173f7cbc85c2dea542196c25b6282355341c",
+        "requestedSuiteSha256": "8a903f3fd13310611338bf6dbe7ee24b29175ba662e4bec5dd519ee0c76754d1",
+        "revision": 7,
+        "status": "succeeded",
+        "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+        "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "updatedAt": "2026-11-18T02:51:48.658494+00:00"
+      },
+      {
+        "actions": [],
+        "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+        "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+        "bindingSha256": "992a42c7331b0f47c52bce3c77a8cbc99a70a3aca77d2da7ce8a1b38fc2f1ffe",
+        "caseCount": 2,
+        "cases": [
+          {
+            "actionId": "76e38dcf-34ff-43e2-bcb5-251a6b322541",
+            "candidateId": "b3fcf454-c05d-4e53-b6c3-21e0b5a18bd6",
+            "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+            "checks": [
+              {
+                "index": 0,
+                "passed": false,
+                "reasonCode": "value_mismatch"
+              },
+              {
+                "index": 1,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 2,
+                "passed": true,
+                "reasonCode": null
+              }
+            ],
+            "elapsedMs": 409,
+            "id": "search-1",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "reasonCode": "assertion_mismatch",
+            "receiptSha256": "1fd50d0a7ffd81c53023f72a6887d25ccecda06766745cf558828e341528edf7",
+            "reservationId": "e6c4a470-9e33-4ac5-a37c-459d277b652b",
+            "resultArtifactId": "44af63a3-7fa3-574f-9984-3d8bbd4a6d21",
+            "resultSha256": "7489fbcb104eb117e7b8bf6354e0121cd38e834f45a12a0427cba59444a535a9",
+            "runId": "71cbca9f-90c4-42b6-b06a-4aed7fe38510",
+            "status": "failed",
+            "title": "Fixture search case 1"
+          },
+          {
+            "actionId": "2b156207-7b2a-44ce-b85f-a1472d5e5b80",
+            "candidateId": "fecd7b7d-02db-4d01-9e58-07bed6908721",
+            "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+            "checks": [
+              {
+                "index": 0,
+                "passed": false,
+                "reasonCode": "value_mismatch"
+              },
+              {
+                "index": 1,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 2,
+                "passed": true,
+                "reasonCode": null
+              }
+            ],
+            "elapsedMs": 355,
+            "id": "search-2",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "reasonCode": "assertion_mismatch",
+            "receiptSha256": "a8f98a7afd46fd586a7f23787c3dc0d98712a4bc36dd62b4cb76003f822275f1",
+            "reservationId": "3ad32ed3-3534-4f86-a50b-b4a7da159344",
+            "resultArtifactId": "dbee92e7-806d-5701-b49d-acd48afec45a",
+            "resultSha256": "dc771b64d3f4a4cfb2cb69f34c3de909975a9f5b280b35b7f573346cb00aa0c8",
+            "runId": "6ab1556e-fcb8-4f2d-abbd-138229b9d0d5",
+            "status": "failed",
+            "title": "Fixture search case 2"
+          }
+        ],
+        "completedCases": 2,
+        "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+        "createdAt": "2026-11-18T02:51:48.909955+00:00",
+        "failedCases": 2,
+        "id": "982d6269-03e8-471f-8e52-687c285c0c5d",
+        "passedCases": 0,
+        "reasonCode": "assertion_mismatch",
+        "recoveryAvailable": false,
+        "reportId": "0a3a54c7-868e-451f-8787-158179d21340",
+        "reportSha256": "1b8d72f4e7444a66a477c4c234f9bf4cc93d8f499c0665babf677e568571faea",
+        "requestedSuiteSha256": "169e56385af0048a57f7205707a65bc526c930e52823c416f850f84662de442c",
+        "revision": 7,
+        "status": "failed",
+        "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+        "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "updatedAt": "2026-11-18T02:51:52.893138+00:00"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "cancelledAttempt": {
+    "attempt": {
+      "actions": [],
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "147906a1e05308ab6871d84f3bf389a2c5bf3eeb7b536bb20c0eca45bf60a0a9",
+      "caseCount": 2,
+      "cases": [
+        {
+          "actionId": null,
+          "candidateId": null,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "checks": null,
+          "elapsedMs": null,
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": "case_not_run",
+          "receiptSha256": null,
+          "reservationId": null,
+          "resultArtifactId": null,
+          "resultSha256": null,
+          "runId": null,
+          "status": "not_run",
+          "title": "Fixture search case 1"
+        },
+        {
+          "actionId": null,
+          "candidateId": null,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "checks": null,
+          "elapsedMs": null,
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": "case_not_run",
+          "receiptSha256": null,
+          "reservationId": null,
+          "resultArtifactId": null,
+          "resultSha256": null,
+          "runId": null,
+          "status": "not_run",
+          "title": "Fixture search case 2"
+        }
+      ],
+      "completedCases": 0,
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "createdAt": "2026-11-18T02:51:53.309202+00:00",
+      "failedCases": 0,
+      "id": "029c2ab8-0026-4030-a947-37c17e6dd36f",
+      "passedCases": 0,
+      "reasonCode": "qualification_cancelled",
+      "recoveryAvailable": false,
+      "reportId": null,
+      "reportSha256": null,
+      "requestedSuiteSha256": "1d988d45b08ed5eb8e93527c59addb73c46bb7dc2a2816d0cf883ef1735b22cb",
+      "revision": 2,
+      "status": "cancelled",
+      "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "updatedAt": "2026-11-18T02:51:53.354089+00:00"
+    },
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "disabledSuite": {
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "suite": {
+      "actions": [
+        "enable",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "approvalValid": true,
+      "authorityCurrent": false,
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "93e4d0bd73e239efb4ba5302eabed2835732165e11fbf7c9ecf4e87cae6b02b0",
+      "cases": [
+        {
+          "argumentsSha256": "44ca8c5fa85bc61c011f750b59c629af409b59fe17d7c17d005bd167fa0d1910",
+          "assertionCount": 3,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 1",
+          "toolName": "search"
+        },
+        {
+          "argumentsSha256": "1d9c424bce2dc6071791b213ec4d9a43d394a92d0aa9e0db67d396078b351a30",
+          "assertionCount": 3,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 2",
+          "toolName": "search"
+        }
+      ],
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+      "createdAt": "2026-11-18T02:51:44.883438+00:00",
+      "description": "Exercises actual task owners against explicit local peer outcomes.",
+      "id": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+      "lastAttemptId": "029c2ab8-0026-4030-a947-37c17e6dd36f",
+      "lastReportId": "0a3a54c7-868e-451f-8787-158179d21340",
+      "name": "Marked native fixture cases",
+      "reasonCodes": [
+        "suite_disabled"
+      ],
+      "revision": 8,
+      "state": "disabled",
+      "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "taskBinding": {
+        "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+        "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+        "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+        "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+        "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "toolName": "search",
+      "transport": "stdio",
+      "updatedAt": "2026-11-18T02:51:53.434991+00:00"
+    },
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "emptyAttempts": {
+    "items": [],
+    "nextCursor": null,
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "enabledSuite": {
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "suite": {
+      "actions": [
+        "disable",
+        "qualify",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "ebb9439bd70d3f90e7538b51cee40319aecf21438250d4601d6313a22c7e3d0e",
+      "cases": [
+        {
+          "argumentsSha256": "44ca8c5fa85bc61c011f750b59c629af409b59fe17d7c17d005bd167fa0d1910",
+          "assertionCount": 3,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 1",
+          "toolName": "search"
+        },
+        {
+          "argumentsSha256": "1d9c424bce2dc6071791b213ec4d9a43d394a92d0aa9e0db67d396078b351a30",
+          "assertionCount": 3,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 2",
+          "toolName": "search"
+        }
+      ],
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+      "createdAt": "2026-11-18T02:51:44.883438+00:00",
+      "description": "Exercises actual task owners against explicit local peer outcomes.",
+      "id": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+      "lastAttemptId": "029c2ab8-0026-4030-a947-37c17e6dd36f",
+      "lastReportId": "0a3a54c7-868e-451f-8787-158179d21340",
+      "name": "Marked native fixture cases",
+      "reasonCodes": [],
+      "revision": 9,
+      "state": "enabled",
+      "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "taskBinding": {
+        "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+        "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+        "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+        "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+        "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "toolName": "search",
+      "transport": "stdio",
+      "updatedAt": "2026-11-18T02:51:53.497740+00:00"
+    },
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "failedAttempt": {
+    "attempt": {
+      "actions": [],
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "992a42c7331b0f47c52bce3c77a8cbc99a70a3aca77d2da7ce8a1b38fc2f1ffe",
+      "caseCount": 2,
+      "cases": [
+        {
+          "actionId": "76e38dcf-34ff-43e2-bcb5-251a6b322541",
+          "candidateId": "b3fcf454-c05d-4e53-b6c3-21e0b5a18bd6",
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "checks": [
+            {
+              "index": 0,
+              "passed": false,
+              "reasonCode": "value_mismatch"
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 409,
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": "assertion_mismatch",
+          "receiptSha256": "1fd50d0a7ffd81c53023f72a6887d25ccecda06766745cf558828e341528edf7",
+          "reservationId": "e6c4a470-9e33-4ac5-a37c-459d277b652b",
+          "resultArtifactId": "44af63a3-7fa3-574f-9984-3d8bbd4a6d21",
+          "resultSha256": "7489fbcb104eb117e7b8bf6354e0121cd38e834f45a12a0427cba59444a535a9",
+          "runId": "71cbca9f-90c4-42b6-b06a-4aed7fe38510",
+          "status": "failed",
+          "title": "Fixture search case 1"
+        },
+        {
+          "actionId": "2b156207-7b2a-44ce-b85f-a1472d5e5b80",
+          "candidateId": "fecd7b7d-02db-4d01-9e58-07bed6908721",
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "checks": [
+            {
+              "index": 0,
+              "passed": false,
+              "reasonCode": "value_mismatch"
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 355,
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": "assertion_mismatch",
+          "receiptSha256": "a8f98a7afd46fd586a7f23787c3dc0d98712a4bc36dd62b4cb76003f822275f1",
+          "reservationId": "3ad32ed3-3534-4f86-a50b-b4a7da159344",
+          "resultArtifactId": "dbee92e7-806d-5701-b49d-acd48afec45a",
+          "resultSha256": "dc771b64d3f4a4cfb2cb69f34c3de909975a9f5b280b35b7f573346cb00aa0c8",
+          "runId": "6ab1556e-fcb8-4f2d-abbd-138229b9d0d5",
+          "status": "failed",
+          "title": "Fixture search case 2"
+        }
+      ],
+      "completedCases": 2,
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "createdAt": "2026-11-18T02:51:48.909955+00:00",
+      "failedCases": 2,
+      "id": "982d6269-03e8-471f-8e52-687c285c0c5d",
+      "passedCases": 0,
+      "reasonCode": "assertion_mismatch",
+      "recoveryAvailable": false,
+      "reportId": "0a3a54c7-868e-451f-8787-158179d21340",
+      "reportSha256": "1b8d72f4e7444a66a477c4c234f9bf4cc93d8f499c0665babf677e568571faea",
+      "requestedSuiteSha256": "169e56385af0048a57f7205707a65bc526c930e52823c416f850f84662de442c",
+      "revision": 7,
+      "status": "failed",
+      "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "updatedAt": "2026-11-18T02:51:52.893138+00:00"
+    },
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "failedReport": {
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "report": {
+      "approvalValid": true,
+      "attemptId": "982d6269-03e8-471f-8e52-687c285c0c5d",
+      "authorityCurrent": true,
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "cases": [
+        {
+          "actionId": "76e38dcf-34ff-43e2-bcb5-251a6b322541",
+          "candidateId": "b3fcf454-c05d-4e53-b6c3-21e0b5a18bd6",
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "checks": [
+            {
+              "index": 0,
+              "passed": false,
+              "reasonCode": "value_mismatch"
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 409,
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": "assertion_mismatch",
+          "receiptSha256": "1fd50d0a7ffd81c53023f72a6887d25ccecda06766745cf558828e341528edf7",
+          "reservationId": "e6c4a470-9e33-4ac5-a37c-459d277b652b",
+          "resultArtifactId": "44af63a3-7fa3-574f-9984-3d8bbd4a6d21",
+          "resultSha256": "7489fbcb104eb117e7b8bf6354e0121cd38e834f45a12a0427cba59444a535a9",
+          "runId": "71cbca9f-90c4-42b6-b06a-4aed7fe38510",
+          "status": "failed",
+          "title": "Fixture search case 1"
+        },
+        {
+          "actionId": "2b156207-7b2a-44ce-b85f-a1472d5e5b80",
+          "candidateId": "fecd7b7d-02db-4d01-9e58-07bed6908721",
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "checks": [
+            {
+              "index": 0,
+              "passed": false,
+              "reasonCode": "value_mismatch"
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 355,
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": "assertion_mismatch",
+          "receiptSha256": "a8f98a7afd46fd586a7f23787c3dc0d98712a4bc36dd62b4cb76003f822275f1",
+          "reservationId": "3ad32ed3-3534-4f86-a50b-b4a7da159344",
+          "resultArtifactId": "dbee92e7-806d-5701-b49d-acd48afec45a",
+          "resultSha256": "dc771b64d3f4a4cfb2cb69f34c3de909975a9f5b280b35b7f573346cb00aa0c8",
+          "runId": "6ab1556e-fcb8-4f2d-abbd-138229b9d0d5",
+          "status": "failed",
+          "title": "Fixture search case 2"
+        }
+      ],
+      "complete": true,
+      "evidence": {
+        "agentHomeRevision": 1,
+        "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+        "attemptId": "982d6269-03e8-471f-8e52-687c285c0c5d",
+        "casesSha256": "0adb8578ef6c529351901904d835a348ae78e2d75112b4f91fbbed6c5c7a44d0",
+        "completedAt": "2026-11-18T02:51:43.939019+00:00",
+        "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+        "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+        "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+        "imageSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+        "observedAt": "2026-11-18T02:51:43.939019+00:00",
+        "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+        "qualificationSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "referenceSha256": "e95f5bc9b4e1ce2d607f8e30db9668bb4adc7f4170aacadb35c55d4b6d2f3a5c",
+        "runtimeSha256": "801ccc1c403f5f52c2b03e38c50c4d9973e8eb64d20a839de844a8702cb4197b",
+        "schema": "potbot-mcp-qualification-report/v1",
+        "storageSha256": "ab6c2b0644548fd52c45669df1b5eefa65ff3b83628ee3ca7297be5d0d109ea2",
+        "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "taskBinding": {
+          "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+          "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+          "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+          "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+          "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+          "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+          "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+        },
+        "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+      },
+      "id": "0a3a54c7-868e-451f-8787-158179d21340",
+      "passed": false,
+      "reasonCodes": [],
+      "recordedAt": "2026-11-18T02:51:52.891228+00:00",
+      "sha256": "1b8d72f4e7444a66a477c4c234f9bf4cc93d8f499c0665babf677e568571faea",
+      "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95"
+    },
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "firstPage": {
+    "items": [
+      {
+        "actions": [],
+        "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+        "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+        "bindingSha256": "13e985cf6517dbeff87e3388a8d73844b0d5cfca927c23fcef31f4fd78197255",
+        "caseCount": 2,
+        "cases": [
+          {
+            "actionId": "50fea9ae-a24b-4fb0-be00-8bbf5ff002f8",
+            "candidateId": "a5e10e02-33b9-4cdb-baf3-8a1300871d22",
+            "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+            "checks": [
+              {
+                "index": 0,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 1,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 2,
+                "passed": true,
+                "reasonCode": null
+              }
+            ],
+            "elapsedMs": 305,
+            "id": "search-1",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "reasonCode": null,
+            "receiptSha256": "6efb0dbd05aefe84cb61f5bb35c9e48c16a9770c365a0101527a926fe814bffc",
+            "reservationId": "fdd19955-d989-4d29-bf64-d22dccf80818",
+            "resultArtifactId": "b35e1ed8-c4a7-501b-a1e2-7976c5bec87f",
+            "resultSha256": "b5c78f56d3ff76d1f4293d3d5f72226f180d8a839fda312f8d90230f4519ab81",
+            "runId": "3aff45d9-d2aa-4569-a04b-b9c15f666a09",
+            "status": "passed",
+            "title": "Fixture search case 1"
+          },
+          {
+            "actionId": "7f65b902-f298-4aa2-90ac-be570fb1b4c9",
+            "candidateId": "79816c6a-a341-47ab-96ae-aaf93dae4464",
+            "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+            "checks": [
+              {
+                "index": 0,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 1,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 2,
+                "passed": true,
+                "reasonCode": null
+              }
+            ],
+            "elapsedMs": 291,
+            "id": "search-2",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "reasonCode": null,
+            "receiptSha256": "1da192e13106c1ab0d14f1ab34c9965ac8e7628440d9872369815ced16233fcb",
+            "reservationId": "6fe91ee4-7f35-421f-9f60-c9476c84528f",
+            "resultArtifactId": "e3d110e1-6291-545e-a5b9-999a3457da66",
+            "resultSha256": "a908ead4f62602996f96d936c96003708c5ed68df3c8e4461ad2ae9365c7b79b",
+            "runId": "198828a6-098c-4a8b-98f4-5f1ec4fe67b8",
+            "status": "passed",
+            "title": "Fixture search case 2"
+          }
+        ],
+        "completedCases": 2,
+        "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+        "createdAt": "2026-11-18T02:51:45.084504+00:00",
+        "failedCases": 0,
+        "id": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+        "passedCases": 2,
+        "reasonCode": null,
+        "recoveryAvailable": false,
+        "reportId": "b4c2d464-4401-4eaa-9dff-579609a3c57c",
+        "reportSha256": "74915b9c3f1192c3ec05e058418e173f7cbc85c2dea542196c25b6282355341c",
+        "requestedSuiteSha256": "8a903f3fd13310611338bf6dbe7ee24b29175ba662e4bec5dd519ee0c76754d1",
+        "revision": 7,
+        "status": "succeeded",
+        "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+        "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "updatedAt": "2026-11-18T02:51:48.658494+00:00"
+      }
+    ],
+    "nextCursor": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "freshSuite": {
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "suite": {
+      "actions": [
+        "disable",
+        "qualify",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "169e56385af0048a57f7205707a65bc526c930e52823c416f850f84662de442c",
+      "cases": [
+        {
+          "argumentsSha256": "44ca8c5fa85bc61c011f750b59c629af409b59fe17d7c17d005bd167fa0d1910",
+          "assertionCount": 3,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 1",
+          "toolName": "search"
+        },
+        {
+          "argumentsSha256": "1d9c424bce2dc6071791b213ec4d9a43d394a92d0aa9e0db67d396078b351a30",
+          "assertionCount": 3,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 2",
+          "toolName": "search"
+        }
+      ],
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+      "createdAt": "2026-11-18T02:51:44.883438+00:00",
+      "description": "Exercises actual task owners against explicit local peer outcomes.",
+      "id": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+      "lastAttemptId": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+      "lastReportId": "b4c2d464-4401-4eaa-9dff-579609a3c57c",
+      "name": "Marked native fixture cases",
+      "reasonCodes": [],
+      "revision": 3,
+      "state": "enabled",
+      "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "taskBinding": {
+        "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+        "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+        "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+        "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+        "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "toolName": "search",
+      "transport": "stdio",
+      "updatedAt": "2026-11-18T02:51:48.660395+00:00"
+    },
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "report": {
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "report": {
+      "approvalValid": true,
+      "attemptId": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+      "authorityCurrent": true,
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "cases": [
+        {
+          "actionId": "50fea9ae-a24b-4fb0-be00-8bbf5ff002f8",
+          "candidateId": "a5e10e02-33b9-4cdb-baf3-8a1300871d22",
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "checks": [
+            {
+              "index": 0,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 305,
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": "6efb0dbd05aefe84cb61f5bb35c9e48c16a9770c365a0101527a926fe814bffc",
+          "reservationId": "fdd19955-d989-4d29-bf64-d22dccf80818",
+          "resultArtifactId": "b35e1ed8-c4a7-501b-a1e2-7976c5bec87f",
+          "resultSha256": "b5c78f56d3ff76d1f4293d3d5f72226f180d8a839fda312f8d90230f4519ab81",
+          "runId": "3aff45d9-d2aa-4569-a04b-b9c15f666a09",
+          "status": "passed",
+          "title": "Fixture search case 1"
+        },
+        {
+          "actionId": "7f65b902-f298-4aa2-90ac-be570fb1b4c9",
+          "candidateId": "79816c6a-a341-47ab-96ae-aaf93dae4464",
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "checks": [
+            {
+              "index": 0,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 291,
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": "1da192e13106c1ab0d14f1ab34c9965ac8e7628440d9872369815ced16233fcb",
+          "reservationId": "6fe91ee4-7f35-421f-9f60-c9476c84528f",
+          "resultArtifactId": "e3d110e1-6291-545e-a5b9-999a3457da66",
+          "resultSha256": "a908ead4f62602996f96d936c96003708c5ed68df3c8e4461ad2ae9365c7b79b",
+          "runId": "198828a6-098c-4a8b-98f4-5f1ec4fe67b8",
+          "status": "passed",
+          "title": "Fixture search case 2"
+        }
+      ],
+      "complete": true,
+      "evidence": {
+        "agentHomeRevision": 1,
+        "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+        "attemptId": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+        "casesSha256": "879219554baac58d7987bfb18eeddb76526bd3c005cc8bdbb11045fbbd53b4a1",
+        "completedAt": "2026-11-18T02:51:43.939019+00:00",
+        "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+        "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+        "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+        "imageSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+        "observedAt": "2026-11-18T02:51:43.939019+00:00",
+        "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+        "qualificationSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "referenceSha256": "e95f5bc9b4e1ce2d607f8e30db9668bb4adc7f4170aacadb35c55d4b6d2f3a5c",
+        "runtimeSha256": "801ccc1c403f5f52c2b03e38c50c4d9973e8eb64d20a839de844a8702cb4197b",
+        "schema": "potbot-mcp-qualification-report/v1",
+        "storageSha256": "ab6c2b0644548fd52c45669df1b5eefa65ff3b83628ee3ca7297be5d0d109ea2",
+        "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "taskBinding": {
+          "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+          "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+          "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+          "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+          "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+          "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+          "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+        },
+        "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+      },
+      "id": "b4c2d464-4401-4eaa-9dff-579609a3c57c",
+      "passed": true,
+      "reasonCodes": [],
+      "recordedAt": "2026-11-18T02:51:48.656673+00:00",
+      "sha256": "74915b9c3f1192c3ec05e058418e173f7cbc85c2dea542196c25b6282355341c",
+      "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95"
+    },
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "requestedAttempt": {
+    "attempt": {
+      "actions": [
+        "cancel"
+      ],
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "4ca93c0d514b35a2f9f8f3f036059668542e02ef9bbe19a9901cd59f04e88861",
+      "caseCount": 2,
+      "cases": [
+        {
+          "actionId": null,
+          "candidateId": null,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "checks": null,
+          "elapsedMs": null,
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": null,
+          "reservationId": null,
+          "resultArtifactId": null,
+          "resultSha256": null,
+          "runId": null,
+          "status": "pending",
+          "title": "Fixture search case 1"
+        },
+        {
+          "actionId": null,
+          "candidateId": null,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "checks": null,
+          "elapsedMs": null,
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": null,
+          "reservationId": null,
+          "resultArtifactId": null,
+          "resultSha256": null,
+          "runId": null,
+          "status": "pending",
+          "title": "Fixture search case 2"
+        }
+      ],
+      "completedCases": 0,
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "createdAt": "2026-11-18T02:51:45.084504+00:00",
+      "failedCases": 0,
+      "id": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+      "passedCases": 0,
+      "reasonCode": null,
+      "recoveryAvailable": false,
+      "reportId": null,
+      "reportSha256": null,
+      "requestedSuiteSha256": "8a903f3fd13310611338bf6dbe7ee24b29175ba662e4bec5dd519ee0c76754d1",
+      "revision": 1,
+      "status": "requested",
+      "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "updatedAt": "2026-11-18T02:51:45.084504+00:00"
+    },
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "requests": {
+    "cancel": {
+      "confirm": true,
+      "digest": "0ccde5653d153731d6d9e003231af6f7e49f9e67f378f31374c82d634996e047",
+      "revision": 1
+    },
+    "disable": {
+      "confirm": true,
+      "digest": "186a329ac44d2b39448fbbde0b5881b35e877955447478c14f240e87db457b50",
+      "revision": 7
+    },
+    "enable": {
+      "confirm": true,
+      "digest": "93e4d0bd73e239efb4ba5302eabed2835732165e11fbf7c9ecf4e87cae6b02b0",
+      "revision": 8
+    },
+    "qualify": {
+      "confirm": true,
+      "digest": "8a903f3fd13310611338bf6dbe7ee24b29175ba662e4bec5dd519ee0c76754d1",
+      "revision": 1
+    },
+    "revoke": {
+      "confirm": true,
+      "digest": "ebb9439bd70d3f90e7538b51cee40319aecf21438250d4601d6313a22c7e3d0e",
+      "revision": 9
+    }
+  },
+  "revokedSuite": {
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "suite": {
+      "actions": [],
+      "activeAttemptId": null,
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "approvalValid": true,
+      "authorityCurrent": false,
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "4d66ae213d74da003d9ed21db607872af7be54e20bf132f052e0108d9dcb999d",
+      "cases": [
+        {
+          "argumentsSha256": "44ca8c5fa85bc61c011f750b59c629af409b59fe17d7c17d005bd167fa0d1910",
+          "assertionCount": 3,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 1",
+          "toolName": "search"
+        },
+        {
+          "argumentsSha256": "1d9c424bce2dc6071791b213ec4d9a43d394a92d0aa9e0db67d396078b351a30",
+          "assertionCount": 3,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 2",
+          "toolName": "search"
+        }
+      ],
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+      "createdAt": "2026-11-18T02:51:44.883438+00:00",
+      "description": "Exercises actual task owners against explicit local peer outcomes.",
+      "id": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+      "lastAttemptId": "029c2ab8-0026-4030-a947-37c17e6dd36f",
+      "lastReportId": "0a3a54c7-868e-451f-8787-158179d21340",
+      "name": "Marked native fixture cases",
+      "reasonCodes": [
+        "suite_revoked",
+        "discovery_not_current"
+      ],
+      "revision": 10,
+      "state": "revoked",
+      "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "taskBinding": {
+        "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+        "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+        "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+        "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+        "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "toolName": "search",
+      "transport": "stdio",
+      "updatedAt": "2026-11-18T02:51:53.664245+00:00"
+    },
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "runningAttempt": {
+    "attempt": {
+      "actions": [
+        "cancel"
+      ],
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "39c0e9e6fe0ebb5d5352cf9e04e086bdc6f60f8a227cb833206d11af1ff5796c",
+      "caseCount": 2,
+      "cases": [
+        {
+          "actionId": null,
+          "candidateId": null,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "checks": null,
+          "elapsedMs": null,
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": null,
+          "reservationId": null,
+          "resultArtifactId": null,
+          "resultSha256": null,
+          "runId": null,
+          "status": "pending",
+          "title": "Fixture search case 1"
+        },
+        {
+          "actionId": null,
+          "candidateId": null,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "checks": null,
+          "elapsedMs": null,
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": null,
+          "reservationId": null,
+          "resultArtifactId": null,
+          "resultSha256": null,
+          "runId": null,
+          "status": "pending",
+          "title": "Fixture search case 2"
+        }
+      ],
+      "completedCases": 0,
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "createdAt": "2026-11-18T02:51:45.084504+00:00",
+      "failedCases": 0,
+      "id": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+      "passedCases": 0,
+      "reasonCode": null,
+      "recoveryAvailable": false,
+      "reportId": null,
+      "reportSha256": null,
+      "requestedSuiteSha256": "8a903f3fd13310611338bf6dbe7ee24b29175ba662e4bec5dd519ee0c76754d1",
+      "revision": 2,
+      "status": "running",
+      "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "updatedAt": "2026-11-18T02:51:45.142251+00:00"
+    },
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "secondPage": {
+    "items": [
+      {
+        "actions": [],
+        "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+        "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+        "bindingSha256": "992a42c7331b0f47c52bce3c77a8cbc99a70a3aca77d2da7ce8a1b38fc2f1ffe",
+        "caseCount": 2,
+        "cases": [
+          {
+            "actionId": "76e38dcf-34ff-43e2-bcb5-251a6b322541",
+            "candidateId": "b3fcf454-c05d-4e53-b6c3-21e0b5a18bd6",
+            "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+            "checks": [
+              {
+                "index": 0,
+                "passed": false,
+                "reasonCode": "value_mismatch"
+              },
+              {
+                "index": 1,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 2,
+                "passed": true,
+                "reasonCode": null
+              }
+            ],
+            "elapsedMs": 409,
+            "id": "search-1",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "reasonCode": "assertion_mismatch",
+            "receiptSha256": "1fd50d0a7ffd81c53023f72a6887d25ccecda06766745cf558828e341528edf7",
+            "reservationId": "e6c4a470-9e33-4ac5-a37c-459d277b652b",
+            "resultArtifactId": "44af63a3-7fa3-574f-9984-3d8bbd4a6d21",
+            "resultSha256": "7489fbcb104eb117e7b8bf6354e0121cd38e834f45a12a0427cba59444a535a9",
+            "runId": "71cbca9f-90c4-42b6-b06a-4aed7fe38510",
+            "status": "failed",
+            "title": "Fixture search case 1"
+          },
+          {
+            "actionId": "2b156207-7b2a-44ce-b85f-a1472d5e5b80",
+            "candidateId": "fecd7b7d-02db-4d01-9e58-07bed6908721",
+            "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+            "checks": [
+              {
+                "index": 0,
+                "passed": false,
+                "reasonCode": "value_mismatch"
+              },
+              {
+                "index": 1,
+                "passed": true,
+                "reasonCode": null
+              },
+              {
+                "index": 2,
+                "passed": true,
+                "reasonCode": null
+              }
+            ],
+            "elapsedMs": 355,
+            "id": "search-2",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "reasonCode": "assertion_mismatch",
+            "receiptSha256": "a8f98a7afd46fd586a7f23787c3dc0d98712a4bc36dd62b4cb76003f822275f1",
+            "reservationId": "3ad32ed3-3534-4f86-a50b-b4a7da159344",
+            "resultArtifactId": "dbee92e7-806d-5701-b49d-acd48afec45a",
+            "resultSha256": "dc771b64d3f4a4cfb2cb69f34c3de909975a9f5b280b35b7f573346cb00aa0c8",
+            "runId": "6ab1556e-fcb8-4f2d-abbd-138229b9d0d5",
+            "status": "failed",
+            "title": "Fixture search case 2"
+          }
+        ],
+        "completedCases": 2,
+        "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+        "createdAt": "2026-11-18T02:51:48.909955+00:00",
+        "failedCases": 2,
+        "id": "982d6269-03e8-471f-8e52-687c285c0c5d",
+        "passedCases": 0,
+        "reasonCode": "assertion_mismatch",
+        "recoveryAvailable": false,
+        "reportId": "0a3a54c7-868e-451f-8787-158179d21340",
+        "reportSha256": "1b8d72f4e7444a66a477c4c234f9bf4cc93d8f499c0665babf677e568571faea",
+        "requestedSuiteSha256": "169e56385af0048a57f7205707a65bc526c930e52823c416f850f84662de442c",
+        "revision": 7,
+        "status": "failed",
+        "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+        "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "updatedAt": "2026-11-18T02:51:52.893138+00:00"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "staleReport": {
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "report": {
+      "approvalValid": true,
+      "attemptId": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+      "authorityCurrent": false,
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "cases": [
+        {
+          "actionId": "50fea9ae-a24b-4fb0-be00-8bbf5ff002f8",
+          "candidateId": "a5e10e02-33b9-4cdb-baf3-8a1300871d22",
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "checks": [
+            {
+              "index": 0,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 305,
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": "6efb0dbd05aefe84cb61f5bb35c9e48c16a9770c365a0101527a926fe814bffc",
+          "reservationId": "fdd19955-d989-4d29-bf64-d22dccf80818",
+          "resultArtifactId": "b35e1ed8-c4a7-501b-a1e2-7976c5bec87f",
+          "resultSha256": "b5c78f56d3ff76d1f4293d3d5f72226f180d8a839fda312f8d90230f4519ab81",
+          "runId": "3aff45d9-d2aa-4569-a04b-b9c15f666a09",
+          "status": "passed",
+          "title": "Fixture search case 1"
+        },
+        {
+          "actionId": "7f65b902-f298-4aa2-90ac-be570fb1b4c9",
+          "candidateId": "79816c6a-a341-47ab-96ae-aaf93dae4464",
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "checks": [
+            {
+              "index": 0,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 291,
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": "1da192e13106c1ab0d14f1ab34c9965ac8e7628440d9872369815ced16233fcb",
+          "reservationId": "6fe91ee4-7f35-421f-9f60-c9476c84528f",
+          "resultArtifactId": "e3d110e1-6291-545e-a5b9-999a3457da66",
+          "resultSha256": "a908ead4f62602996f96d936c96003708c5ed68df3c8e4461ad2ae9365c7b79b",
+          "runId": "198828a6-098c-4a8b-98f4-5f1ec4fe67b8",
+          "status": "passed",
+          "title": "Fixture search case 2"
+        }
+      ],
+      "complete": true,
+      "evidence": {
+        "agentHomeRevision": 1,
+        "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+        "attemptId": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+        "casesSha256": "879219554baac58d7987bfb18eeddb76526bd3c005cc8bdbb11045fbbd53b4a1",
+        "completedAt": "2026-11-18T02:51:43.939019+00:00",
+        "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+        "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+        "definitionSha256": "121223c05b68a052586aa4aa9bab2508f15b76fa90eb60a8a983fd07d7f135f6",
+        "imageSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+        "observedAt": "2026-11-18T02:51:43.939019+00:00",
+        "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+        "qualificationSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "referenceSha256": "e95f5bc9b4e1ce2d607f8e30db9668bb4adc7f4170aacadb35c55d4b6d2f3a5c",
+        "runtimeSha256": "801ccc1c403f5f52c2b03e38c50c4d9973e8eb64d20a839de844a8702cb4197b",
+        "schema": "potbot-mcp-qualification-report/v1",
+        "storageSha256": "ab6c2b0644548fd52c45669df1b5eefa65ff3b83628ee3ca7297be5d0d109ea2",
+        "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "taskBinding": {
+          "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+          "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+          "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+          "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+          "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+          "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+          "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+        },
+        "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+      },
+      "id": "b4c2d464-4401-4eaa-9dff-579609a3c57c",
+      "passed": true,
+      "reasonCodes": [
+        "discovery_not_current",
+        "report_superseded"
+      ],
+      "recordedAt": "2026-11-18T02:51:48.656673+00:00",
+      "sha256": "74915b9c3f1192c3ec05e058418e173f7cbc85c2dea542196c25b6282355341c",
+      "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95"
+    },
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "staleSuite": {
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "suite": {
+      "actions": [
+        "disable",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "approvalValid": true,
+      "authorityCurrent": false,
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "ebb9439bd70d3f90e7538b51cee40319aecf21438250d4601d6313a22c7e3d0e",
+      "cases": [
+        {
+          "argumentsSha256": "44ca8c5fa85bc61c011f750b59c629af409b59fe17d7c17d005bd167fa0d1910",
+          "assertionCount": 3,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 1",
+          "toolName": "search"
+        },
+        {
+          "argumentsSha256": "1d9c424bce2dc6071791b213ec4d9a43d394a92d0aa9e0db67d396078b351a30",
+          "assertionCount": 3,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 2",
+          "toolName": "search"
+        }
+      ],
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+      "createdAt": "2026-11-18T02:51:44.883438+00:00",
+      "description": "Exercises actual task owners against explicit local peer outcomes.",
+      "id": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+      "lastAttemptId": "029c2ab8-0026-4030-a947-37c17e6dd36f",
+      "lastReportId": "0a3a54c7-868e-451f-8787-158179d21340",
+      "name": "Marked native fixture cases",
+      "reasonCodes": [
+        "discovery_not_current"
+      ],
+      "revision": 9,
+      "state": "enabled",
+      "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "taskBinding": {
+        "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+        "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+        "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+        "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+        "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "toolName": "search",
+      "transport": "stdio",
+      "updatedAt": "2026-11-18T02:51:53.497740+00:00"
+    },
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "succeededAttempt": {
+    "attempt": {
+      "actions": [],
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "13e985cf6517dbeff87e3388a8d73844b0d5cfca927c23fcef31f4fd78197255",
+      "caseCount": 2,
+      "cases": [
+        {
+          "actionId": "50fea9ae-a24b-4fb0-be00-8bbf5ff002f8",
+          "candidateId": "a5e10e02-33b9-4cdb-baf3-8a1300871d22",
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "checks": [
+            {
+              "index": 0,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 305,
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": "6efb0dbd05aefe84cb61f5bb35c9e48c16a9770c365a0101527a926fe814bffc",
+          "reservationId": "fdd19955-d989-4d29-bf64-d22dccf80818",
+          "resultArtifactId": "b35e1ed8-c4a7-501b-a1e2-7976c5bec87f",
+          "resultSha256": "b5c78f56d3ff76d1f4293d3d5f72226f180d8a839fda312f8d90230f4519ab81",
+          "runId": "3aff45d9-d2aa-4569-a04b-b9c15f666a09",
+          "status": "passed",
+          "title": "Fixture search case 1"
+        },
+        {
+          "actionId": "7f65b902-f298-4aa2-90ac-be570fb1b4c9",
+          "candidateId": "79816c6a-a341-47ab-96ae-aaf93dae4464",
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "checks": [
+            {
+              "index": 0,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 1,
+              "passed": true,
+              "reasonCode": null
+            },
+            {
+              "index": 2,
+              "passed": true,
+              "reasonCode": null
+            }
+          ],
+          "elapsedMs": 291,
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": null,
+          "receiptSha256": "1da192e13106c1ab0d14f1ab34c9965ac8e7628440d9872369815ced16233fcb",
+          "reservationId": "6fe91ee4-7f35-421f-9f60-c9476c84528f",
+          "resultArtifactId": "e3d110e1-6291-545e-a5b9-999a3457da66",
+          "resultSha256": "a908ead4f62602996f96d936c96003708c5ed68df3c8e4461ad2ae9365c7b79b",
+          "runId": "198828a6-098c-4a8b-98f4-5f1ec4fe67b8",
+          "status": "passed",
+          "title": "Fixture search case 2"
+        }
+      ],
+      "completedCases": 2,
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "createdAt": "2026-11-18T02:51:45.084504+00:00",
+      "failedCases": 0,
+      "id": "6acc1e84-1c37-4d4d-aa39-ed412c89ca49",
+      "passedCases": 2,
+      "reasonCode": null,
+      "recoveryAvailable": false,
+      "reportId": "b4c2d464-4401-4eaa-9dff-579609a3c57c",
+      "reportSha256": "74915b9c3f1192c3ec05e058418e173f7cbc85c2dea542196c25b6282355341c",
+      "requestedSuiteSha256": "8a903f3fd13310611338bf6dbe7ee24b29175ba662e4bec5dd519ee0c76754d1",
+      "revision": 7,
+      "status": "succeeded",
+      "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "updatedAt": "2026-11-18T02:51:48.658494+00:00"
+    },
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "suite": {
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "suite": {
+      "actions": [
+        "disable",
+        "qualify",
+        "revoke"
+      ],
+      "activeAttemptId": null,
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "approvalValid": true,
+      "authorityCurrent": true,
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "8a903f3fd13310611338bf6dbe7ee24b29175ba662e4bec5dd519ee0c76754d1",
+      "cases": [
+        {
+          "argumentsSha256": "44ca8c5fa85bc61c011f750b59c629af409b59fe17d7c17d005bd167fa0d1910",
+          "assertionCount": 3,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 1",
+          "toolName": "search"
+        },
+        {
+          "argumentsSha256": "1d9c424bce2dc6071791b213ec4d9a43d394a92d0aa9e0db67d396078b351a30",
+          "assertionCount": 3,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "title": "Fixture search case 2",
+          "toolName": "search"
+        }
+      ],
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+      "createdAt": "2026-11-18T02:51:44.883438+00:00",
+      "description": "Exercises actual task owners against explicit local peer outcomes.",
+      "id": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+      "lastAttemptId": null,
+      "lastReportId": null,
+      "name": "Marked native fixture cases",
+      "reasonCodes": [],
+      "revision": 1,
+      "state": "enabled",
+      "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "taskBinding": {
+        "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+        "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+        "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+        "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+        "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+        "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+        "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+      },
+      "toolName": "search",
+      "transport": "stdio",
+      "updatedAt": "2026-11-18T02:51:44.883438+00:00"
+    },
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "suites": {
+    "items": [
+      {
+        "actions": [
+          "disable",
+          "qualify",
+          "revoke"
+        ],
+        "activeAttemptId": null,
+        "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+        "approvalValid": true,
+        "authorityCurrent": true,
+        "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+        "bindingSha256": "8a903f3fd13310611338bf6dbe7ee24b29175ba662e4bec5dd519ee0c76754d1",
+        "cases": [
+          {
+            "argumentsSha256": "44ca8c5fa85bc61c011f750b59c629af409b59fe17d7c17d005bd167fa0d1910",
+            "assertionCount": 3,
+            "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+            "id": "search-1",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "title": "Fixture search case 1",
+            "toolName": "search"
+          },
+          {
+            "argumentsSha256": "1d9c424bce2dc6071791b213ec4d9a43d394a92d0aa9e0db67d396078b351a30",
+            "assertionCount": 3,
+            "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+            "id": "search-2",
+            "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+            "title": "Fixture search case 2",
+            "toolName": "search"
+          }
+        ],
+        "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+        "consumerSha256": "f7afb58503a4e1b029d3aaa47562771594ca40b1cd8ab289cde32952312d135b",
+        "createdAt": "2026-11-18T02:51:44.883438+00:00",
+        "description": "Exercises actual task owners against explicit local peer outcomes.",
+        "id": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+        "installationSha256": "1ac673072850d234f2d9bc7f5e286affd72bbdfa2a2cfe7ef6e67ad7bfe6675c",
+        "lastAttemptId": null,
+        "lastReportId": null,
+        "name": "Marked native fixture cases",
+        "reasonCodes": [],
+        "revision": 1,
+        "state": "enabled",
+        "suiteFileSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+        "taskBinding": {
+          "contractRevisionId": "dbb26a13-f445-4bdb-b1fd-f4d78c65eb68",
+          "contractSha256": "38c91a43b93a29b9d2c94adce0cd77be417dae5e2e9545a667980e544a7c8284",
+          "episodeId": "f221d46e-d3ca-4225-bb04-05c19c77f454",
+          "repositorySha256": "4d2e43adb86230bf31c8d774ac28b053080cc68350129cbd0d7b283cbb1bed96",
+          "repositoryStateId": "834c11f9-57cd-53de-b3e6-4d3231944458",
+          "semanticReleaseId": "45249d44-7547-5df5-b44a-dd102d6f8afb",
+          "semanticReleaseSha256": "9bded975111802be1f24eb625957e7864ef9c77a8af4c569c33ee39e78de83be"
+        },
+        "toolName": "search",
+        "transport": "stdio",
+        "updatedAt": "2026-11-18T02:51:44.883438+00:00"
+      }
+    ],
+    "nextCursor": null,
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  },
+  "untrustedAttempt": {
+    "attempt": {
+      "actions": [],
+      "agentId": "221e96e7-d40d-4ff3-a72d-4f7b6c466915",
+      "bindingId": "402fbc01-1b92-4b31-a33e-9f923be971f1",
+      "bindingSha256": "6e9a6811cbc4186fe3ff1538e60799e91f0685db7cc90b6f6ef979757af69485",
+      "caseCount": 2,
+      "cases": [
+        {
+          "actionId": null,
+          "candidateId": null,
+          "caseSha256": "ab4ae63555a437badb4528030aca4ea62b674b39255eb2095b13676535ffb5a4",
+          "checks": null,
+          "elapsedMs": null,
+          "id": "search-1",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": "admission_invalid",
+          "receiptSha256": null,
+          "reservationId": null,
+          "resultArtifactId": null,
+          "resultSha256": null,
+          "runId": null,
+          "status": "indeterminate",
+          "title": "Fixture search case 1"
+        },
+        {
+          "actionId": null,
+          "candidateId": null,
+          "caseSha256": "4eb6905659b4344e26a2e353e48504b7a57fef26f132cba7a5e0e733780ae805",
+          "checks": null,
+          "elapsedMs": null,
+          "id": "search-2",
+          "oracleSha256": "2d502a5293ea24203d189dae3ca8ba7a8be06d05cef675479a2d203ebae8fa95",
+          "reasonCode": "admission_invalid",
+          "receiptSha256": null,
+          "reservationId": null,
+          "resultArtifactId": null,
+          "resultSha256": null,
+          "runId": null,
+          "status": "indeterminate",
+          "title": "Fixture search case 2"
+        }
+      ],
+      "completedCases": 0,
+      "configurationSha256": "d12d0a3860b8e4a35eae616fbebf02cfdc0b7a63b79582c03c6c85a191c5ec82",
+      "createdAt": "2026-11-18T02:51:48.909955+00:00",
+      "failedCases": 0,
+      "id": "982d6269-03e8-471f-8e52-687c285c0c5d",
+      "passedCases": 0,
+      "reasonCode": "admission_invalid",
+      "recoveryAvailable": false,
+      "reportId": null,
+      "reportSha256": null,
+      "requestedSuiteSha256": "169e56385af0048a57f7205707a65bc526c930e52823c416f850f84662de442c",
+      "revision": 7,
+      "status": "indeterminate",
+      "suiteId": "bc75ca51-ee2d-4816-a38b-6f298afcec95",
+      "suiteSha256": "ec99b0d4e079814b9fe6cf2c45d3355840d69e230f4579ad8bca7e0958555810",
+      "updatedAt": "2026-11-18T02:51:52.893138+00:00"
+    },
+    "principalId": "bc679a26-732b-413c-9067-e6fcc03afbdf",
+    "schema": "potbot-mcp-qualification/v1",
+    "workspaceId": "4ab0ef2a-5fc9-405c-8268-77c26c65f114"
+  }
+}

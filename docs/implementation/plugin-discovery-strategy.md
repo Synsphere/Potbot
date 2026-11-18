@@ -1,5 +1,15 @@
 # Potbot plugin and capability discovery strategy
 
+**Task evidence implementation, 18 November 2026:**
+[U04-Q](u04-q-installed-mcp-qualification.md) supplies reviewed private case
+suites, bounded independent result assertions, existing task/gateway/receipt
+evidence and explicit recovery without another invocation. Signed reports pin
+the original installed/native/source identities. The operator workflow can
+collect exact host/vendor task evidence; controlled acceptance fixtures do not
+close production qualification or the broader T04 retrieval/interoperability
+gates. The source-pinned [vendor review](u04-q-mcp-vendor-cases.md) distinguishes
+implementable cases from unresolved deployment/authentication compatibility.
+
 **Live interface implementation, 18 November 2026:**
 [U04-M](u04-m-live-mcp-reconciliation.md) now supplies the bounded T04.2
 observation lifecycle for existing admitted MCP installations: complete tool,

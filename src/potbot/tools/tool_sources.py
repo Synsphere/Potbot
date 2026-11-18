@@ -232,7 +232,13 @@ class GitToolSourceStore:
         for directory, dirs, files in os.walk(root, followlinks=False):
             for name in dirs + files:
                 count += 1
-                info = (Path(directory) / name).lstat()
+                try:
+                    info = (Path(directory) / name).lstat()
+                except FileNotFoundError:
+                    # This scan also runs while Git owns the directory. Its
+                    # transient lock files can disappear after os.walk lists
+                    # them; they no longer consume the live storage budget.
+                    continue
                 if stat.S_ISLNK(info.st_mode) or not (
                     stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)
                 ):

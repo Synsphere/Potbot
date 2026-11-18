@@ -269,7 +269,8 @@ def pipeline(app_env, source, tmp_path, monkeypatch):
 def build_tested(r, *, commit=None):
     operation = r.request_source(commit or r.commit)
     assert r.current(operation)["phase"] == "source_queued"
-    assert r.worker.run_once("source")["operation"]["phase"] == "review"
+    sourced = r.worker.run_once("source")
+    assert sourced["operation"]["phase"] == "review", sourced
     reviewed = r.current(operation)
     r.responses["reviewed"] = r.service.inspect(r.actor, operation)
     assert reviewed["review"]["newCommit"] == (commit or r.commit)

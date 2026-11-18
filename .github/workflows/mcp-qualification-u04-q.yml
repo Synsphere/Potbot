@@ -1,0 +1,99 @@
+name: U04-Q installed MCP task qualification
+on:
+  push:
+    paths:
+      - 'src/potbot/tools/mcp*.py'
+      - 'src/potbot/tools/gateway.py'
+      - 'src/potbot/tools/receipts.py'
+      - 'src/potbot/tools/repository.py'
+      - 'src/potbot/tools/interactive_supervisor.py'
+      - 'src/potbot/tools/shared_workspace_isolation.py'
+      - 'src/potbot/tools/workspace_concurrency.py'
+      - 'src/potbot/tools/workspace_supervision.py'
+      - 'src/potbot/controller/mcp*.py'
+      - 'src/potbot/controller/execution.py'
+      - 'src/potbot/controller/budgets.py'
+      - 'src/potbot/controller/tasks.py'
+      - 'src/potbot/api/*mcp*.py'
+      - 'src/potbot/api/server_cli.py'
+      - 'src/potbot/cli.py'
+      - 'src/potbot/persistence/mcp*schema.py'
+      - 'src/potbot/persistence/schema.py'
+      - 'frontend/src/app/api/ui/mcp-qualification/**'
+      - 'frontend/src/app/discover/mcp/**'
+      - 'frontend/src/lib/mcp-qualification*.ts'
+      - 'frontend/src/lib/server/mcp-qualification.ts'
+      - 'frontend/tests/mcp-qualification*'
+      - 'frontend/tests/fixtures/mcp-qualification-http.json'
+      - 'tests/unit/test_mcp*.py'
+      - 'tests/unit/test_ui_mcp_qualification.py'
+      - 'tests/integration/test_mcp*.py'
+      - 'tests/integration/test_execution_gateway.py'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'compose.yaml'
+      - '.github/workflows/mcp-qualification-u04-q.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mcp-qualification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      # Disposable fixture credentials; no production provider or setup secret.
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+      POTBOT_MCP_QUALIFICATION_CONTRACT_OUTPUT: artifacts/mcp-qualification-http.json
+      POTBOT_MCP_DISCOVERY_CONTRACT_OUTPUT: artifacts/inherited/mcp-discovery-http.json
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.23'
+      - name: Install the locked application and test environment
+        run: uv sync --locked --extra postgres --extra credentials --extra web --dev
+      - name: Start real PostgreSQL and pgvector
+        run: docker compose up --detach --wait --wait-timeout 90
+      - name: Verify independent task results and receipt-only recovery
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_mcp_qualification_oracle.py
+          tests/unit/test_mcp_qualification_host.py
+          tests/unit/test_mcp_qualification_cli.py
+          tests/unit/test_mcp_qualification_cli_execution.py
+          tests/unit/test_ui_mcp_qualification.py
+          tests/unit/test_mcp_discovery_host.py
+          tests/unit/test_mcp_discovery_gateway.py
+          tests/unit/test_mcp_protocol.py
+          tests/unit/test_mcp_sandbox.py
+          tests/unit/test_mcp_http_broker.py
+          tests/integration/test_mcp_qualification.py
+          tests/integration/test_mcp_discovery.py
+          tests/integration/test_mcp_discovery_gateway.py
+          tests/integration/test_execution_gateway.py::test_mcp_gateway_pins_intent_and_settles_or_fences_without_replay
+          --junitxml=artifacts/mcp-qualification-u04-q.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify actual HTTP contracts and operator recovery
+        run: >-
+          node --experimental-strip-types --test
+          frontend/tests/mcp-qualification*.test.mjs
+          frontend/tests/mcp-discovery*.test.mjs
+      - name: Retain task qualification evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mcp-qualification-u04-q
+          path: |
+            artifacts/mcp-qualification-u04-q.xml
+            artifacts/mcp-qualification-http.json
+            artifacts/inherited/mcp-discovery-http.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Stop disposable database
+        if: always()
+        run: docker compose down --volumes --remove-orphans --timeout 10

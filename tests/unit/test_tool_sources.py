@@ -188,6 +188,39 @@ def test_source_file_limits_before_checkout(source, monkeypatch):
     assert not (store.root / operation.hex / "tree/checkout/README.md").exists()
 
 
+def test_live_git_budget_tolerates_removed_lock_and_preserves_remaining_limits(
+    tmp_path, monkeypatch
+):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    lock = checkout / "index.lock"
+    retained = checkout / "retained"
+    retained.write_bytes(b"retained source bytes")
+    original_walk = os.walk
+
+    def concurrent_walk(*args, **kwargs):
+        for directory, dirs, files in original_walk(*args, **kwargs):
+            if "index.lock" in files:
+                lock.unlink()
+            yield directory, dirs, files
+
+    monkeypatch.setattr(tool_sources.os, "walk", concurrent_walk)
+    lock.write_bytes(b"temporary Git lock")
+    GitToolSourceStore._budget(checkout)
+    assert not lock.exists() and retained.exists()
+
+    lock.write_bytes(b"temporary Git lock")
+    monkeypatch.setattr(tool_sources, "MAX_STORAGE_BYTES", 1)
+    with pytest.raises(ScopeDeniedError, match="storage allowance"):
+        GitToolSourceStore._budget(checkout)
+
+    monkeypatch.setattr(tool_sources, "MAX_STORAGE_BYTES", 384 * 1024**2)
+    retained.unlink()
+    retained.symlink_to(tmp_path)
+    with pytest.raises(ScopeDeniedError, match="redirected entry"):
+        GitToolSourceStore._budget(checkout)
+
+
 def test_partial_attempt_is_never_overwritten(source):
     store, _, commit = source
     operation = uuid4()

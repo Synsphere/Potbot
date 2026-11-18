@@ -1,5 +1,13 @@
 # Universal Tool Platform — MCP Transport Increment T02.1/T02.2
 
+**18 November 2026 task evidence follow-on:**
+[U04-Q installed task qualification](u04-q-installed-mcp-qualification.md)
+reuses both approved transport profiles through the existing gateway, verifies
+actual result artifacts against independent task assertions and reconciles
+retained stopped receipts without redispatch. It introduces no authentication
+protocol or automatic provider compatibility. Exact installed/vendor reports
+remain independent of the controlled transport/native fixtures.
+
 **18 November 2026 follow-on:**
 [U04-M live MCP reconciliation](u04-m-live-mcp-reconciliation.md) adds complete
 bounded tools/resources/templates/prompts collection, in-band change detection

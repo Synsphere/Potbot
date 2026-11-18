@@ -139,6 +139,15 @@ Failed or interrupted refreshes retain readable stale data, and retries recover
 existing attempts without redispatch. Installed-host and actual vendor/task
 qualification remain separate from these implementation and fixture results.
 
+The [U04-Q task qualification workbench](docs/implementation/u04-q-installed-mcp-qualification.md)
+adds independently reviewed case suites, actual gateway runs and result assertions,
+signed reports and receipt-only recovery. `potbot mcp-qualification` and
+`/discover/mcp/qualification` share migration 44 and the existing task, candidate,
+budget, artifact and stopped-receipt owners. Original runtime/source pins prevent
+historical runs from qualifying changed installations. The operator can now collect
+exact installed-host/vendor evidence; the controlled acceptance fixtures do not
+claim that production qualification has already occurred.
+
 ## Install and check
 
 Run the entry point for your platform from the extracted checkout:
