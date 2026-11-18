@@ -15,6 +15,7 @@ import os
 import re
 import stat
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -95,7 +96,7 @@ class ToolBuildPlan:
     slug: str
     build_argv: tuple[str, ...]
     approved_argv_sha256: str
-    expected_old_commit: str
+    expected_old_commit: str | None
     source_commit: str
     timeout_ms: int = 600_000
 
@@ -104,10 +105,10 @@ class ToolBuildPlan:
             isinstance(x, UUID) for x in (self.workspace_id, self.agent_id, self.operation_id)
         ) or not _SLUG.fullmatch(self.slug):
             raise InvalidInputError("S10 requires trusted operation identities")
-        if not all(
-            isinstance(x, str) and re.fullmatch(r"[a-f0-9]{40}", x)
-            for x in (self.expected_old_commit, self.source_commit)
-        ):
+        revisions = (self.source_commit,) + (
+            (self.expected_old_commit,) if self.expected_old_commit is not None else ()
+        )
+        if not all(isinstance(x, str) and re.fullmatch(r"[a-f0-9]{40}", x) for x in revisions):
             raise InvalidInputError("S10 requires exact Git revisions")
         if (
             not isinstance(self.approved_argv_sha256, str)
@@ -202,14 +203,16 @@ class _SafeCopy:
                     or self.bytes + info.st_size > _MAX_BYTES
                 ):
                     raise ScopeDeniedError("S10 source file exceeds bounds or is hardlinked")
-                from_fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=source_fd)
+                from_fd = os.open(
+                    name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=source_fd
+                )
                 try:
                     before = os.fstat(from_fd)
-                    if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns) != (
-                        info.st_dev,
-                        info.st_ino,
-                        info.st_size,
-                        info.st_mtime_ns,
+                    if (
+                        not stat.S_ISREG(before.st_mode)
+                        or before.st_nlink != 1
+                        or (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
+                        != (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns)
                     ):
                         raise StateMismatchError("S10 file changed before transfer")
                     to_fd = os.open(
@@ -385,11 +388,15 @@ def build_and_stage(
     homes: AgentHomeRegistry,
     evidence_dir: Path,
     built_tree: Path,
+    authorize_attempt: Callable[[], None] | None = None,
+    prepare_tree: Callable[[], Path] | None = None,
 ) -> dict[str, Any]:
     """Run one pinned offline builder under the operator, then stage its output.
 
-    Caller MUST supply an already-provisioned, agent-owned build directory;
-    external source acquisition and model downloads are never inferred.
+    Caller supplies an already-provisioned, agent-owned build directory or a
+    trusted source materializer. Materialization and its independent source
+    verification occur under this same writer lease before dispatch. External
+    source acquisition and model downloads are never inferred here.
     """
     from potbot.tools.supervisor import ProcessRequest
     from potbot.tools.workspace_concurrency import AccessRequest, AccessResource
@@ -406,8 +413,12 @@ def build_and_stage(
     agent_home = runtime.home / agent.directory
     # Require caller-supplied output underneath the real agent home, not
     # mutable checkout aliases or any other agent's directories.
-    build_root = _directory(built_tree)
-    if agent_home.is_symlink() or not build_root.is_relative_to(agent_home):
+    if (
+        not built_tree.is_absolute()
+        or agent_home.is_symlink()
+        or built_tree == agent_home
+        or not built_tree.is_relative_to(agent_home)
+    ):
         raise ScopeDeniedError("S10 build output must be inside approved agent home")
     if runtime.ai_config_dir is None or runtime.ai_history_dir is None:
         raise CapabilityUnavailableError("S10 requires the managed S7 AI history watcher")
@@ -428,8 +439,19 @@ def build_and_stage(
         ),
     )
     guard.start()
-    uncertain = True
+    uncertain = False
     try:
+        if authorize_attempt is not None:
+            authorize_attempt()
+        guard.ensure_live()
+        if prepare_tree is not None and prepare_tree() != built_tree:
+            raise StateMismatchError("S10 source materializer returned a different build tree")
+        build_root = _directory(built_tree)
+        if not build_root.is_relative_to(agent_home):
+            raise ScopeDeniedError("S10 materialized source escaped the approved agent home")
+        if authorize_attempt is not None:
+            authorize_attempt()
+        guard.ensure_live()
         request = ProcessRequest(
             argv=plan.build_argv,
             cwd=build_root,
@@ -444,9 +466,15 @@ def build_and_stage(
             telemetry_workspace_id=plan.workspace_id,
             telemetry_agent_id=plan.agent_id,
         )
+        uncertain = True
         result = operator.supervisor.run(request, cancelled=lambda: guard.fenced)
+        if getattr(result, "processes_stopped", None) is True:
+            uncertain = False
+        if authorize_attempt is not None:
+            authorize_attempt()
         guard.ensure_live()
         stager = OfflineToolStager(shared_tools=store.root, evidence_dir=evidence_dir)
+        uncertain = True
         record = stager.stage(
             plan=plan,
             built_tree=build_root,
@@ -458,11 +486,11 @@ def build_and_stage(
         )
         uncertain = False
         return record
-    finally:
-        if uncertain:
-            try:
-                guard.finish(
-                    evidence_sha256=admission_digest("s10-staging-uncertain"), uncertain=True
-                )
-            except StateMismatchError:
-                guard.abandon()
+    except BaseException:
+        try:
+            guard.finish(
+                evidence_sha256=admission_digest("s10-staging-rejected"), uncertain=uncertain
+            )
+        except StateMismatchError:
+            guard.abandon()
+        raise

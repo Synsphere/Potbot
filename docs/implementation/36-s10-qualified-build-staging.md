@@ -1,5 +1,12 @@
 # S10 — Approved sandbox builds and independent staged-test admission
 
+**U04-X follow-through, 17 November 2026:** the
+[executable acquisition lifecycle](u04-x-executable-tool-acquisition.md) now
+supplies pinned source and a signed prebuild review. Its worker materializes and
+verifies the exact source inside the same S10 writer lease as dispatch. This
+standalone S10 command still accepts an operator-preprovisioned tree; both paths
+retain the existing monitored sandbox, descriptor-safe transfer and S9 tests.
+
 **Baseline:** `kieransimkin/potbot` S9, Git commit `4899ec6f8b1770098c80aa83eae41e9fb6270864` (and inspected subsequent `428d397a`).
 
 This increment **does not alter a live shared-tool checkout while compiling**. The operator starts a pinned executable inside the existing S7-monitored Bubblewrap namespace, with the selected enrolled agent's `/home/<agent>/...` as its working directory. The guest sees `/usr/local/tools` read-only; it may populate an operator-preprovisioned build tree below its home. A separate host-side data mover copies that completed build into the private S9 candidate slot, then invokes the existing S9 suite and clean probe.

@@ -6,6 +6,17 @@ the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 32 CI workflows. The separately authored review and drift checks close the audit;
 runtime qualification remains false. U01-A was the first implementation milestone from this audit.
 
+**17 November 2026, after the portable skill merge:**
+[U04-X executable tool acquisition](u04-x-executable-tool-acquisition.md) completes
+the supported executable lifecycle on merged main
+`7fd1c9349c3ae7feb8d52e23701d1d26a4a01bc4`: pinned public Git source, private
+operator recipes, exact prebuild review, S10 sandbox staging, independent S9
+tests, first installation or upgrade, S11 promotion, S12 repin/postflight and
+rollback to a predecessor or verified absence. Migration 41 extends the same
+approval owner; signed recovery fences delayed workers without replaying unknown
+process outcomes. Registry/publisher breadth and installed-host qualification
+retain independent gates; the wider U04/M4/T04 programme remains partial.
+
 **17 November 2026, after the workbench merge:**
 [U04-A portable skill acquisition](u04-a-portable-skill-acquisition.md) completes
 the bounded package lifecycle on merged main
@@ -223,6 +234,7 @@ These suffixes identify work within existing U packages. They do not renumber th
 | U04-C | U04/U05/U11/U13 | The merged [operation/readiness/accounting catalogue](u04-c-operation-catalogue.md) now feeds U04-E; retain its conservative source observations and partial linked accounting. Acquisition lifecycle, concurrency and actual connector/KeywordMoves coverage remain open; RD12/RD18/RD19. |
 | U04-E | U04/U05/U07/U13/U16 | Complete the [controlled operation workbench](u04-e-operation-workbench.md): worker eligibility, explicit checked launch, owned monitoring/cancellation and verified results for existing native Cog/hosted routes. Qualify the installed host and chosen provider without promoting the wider U04/M4/T04 programme; RD18/RD23. |
 | U04-A | U04/U05/U13/U16 | Complete the [portable skill lifecycle](u04-a-portable-skill-acquisition.md): immutable package acquisition, review, operator-approved installation, Context resource reads, update/rollback/disable/revoke. Keep registry search, executable dependency admission, native skill interoperability and deployed-host qualification as independent remaining work. |
+| U04-X | U04/U05/U11/U13/U16 | Complete the [executable acquisition lifecycle](u04-x-executable-tool-acquisition.md): pinned source, operator recipes, exact build approval, measured tests, first installation, upgrades, S12 release, rollback/withdrawal and signed recovery. Qualify the actual installed host and extend curated registry/publisher/dependency breadth through these owners. |
 | U07-Q | U02/U05/U07/U13/U16 | Native service/vault, provider and inbound API matrix, model downloads/cache paths and installed/runnable/qualified readiness; RD01–RD04. |
 | U08-T | U01/U04/U08/U14 | Existing fenced reasoning/accounting plus ensemble verification, temporal steering, atomic leaf scheduling and active research; RD05–RD09. |
 | U09-C | U06/U09/U11/U13 | Preserve data-only state/history and Stage 10D integration; close constructor/protocol, semantic-reconciliation and authored-skill gaps; RD26–RD29. |

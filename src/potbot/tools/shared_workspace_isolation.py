@@ -619,7 +619,15 @@ class SharedWorkspaceBubblewrapBackend(BubblewrapBackend):
                 "/usr/local/tools",
                 # Hide held source and environments from image interpreters too.
                 # A per-tool maintenance probe is the only pre-release exception.
-                *[arg for name in held_tools for arg in ("--tmpfs", "/usr/local/tools/" + name)],
+                *[
+                    arg
+                    for name in held_tools
+                    # A withdrawn first installation has no mountpoint. Keep
+                    # its admission deny, but do not try to create a directory
+                    # inside the read-only shared-tools bind.
+                    if (tools / name).exists() or (tools / name).is_symlink()
+                    for arg in ("--tmpfs", "/usr/local/tools/" + name)
+                ],
                 *(
                     (
                         "--bind",

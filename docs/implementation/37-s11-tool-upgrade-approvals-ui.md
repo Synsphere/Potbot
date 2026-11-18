@@ -1,5 +1,11 @@
 # S11 — Durable tested-tool approval UI, host worker and runtime repin
 
+**U04-X follow-through, 17 November 2026:** migration 41 extends this same
+operation owner with the [complete executable acquisition workflow](u04-x-executable-tool-acquisition.md).
+The workbench now includes source/build review and first installation with an
+explicit absent predecessor. Tested promotion still uses S11; delayed claims
+are revalidated inside S9's existing lease. S12 remains the release authority.
+
 **Baseline:** S9 + S10; registered, operator-owned native credential vault from S8 and S7 `/etc/ai` history watch. Migration **28** is additive: two workspace-RLS tables (`ui_tool_upgrade_approvals`, `ui_tool_upgrade_audit`), a single active approval, CAS revisions, state fencing, and append-only audit evidence. Original migration checksums are unchanged.
 
 **17 November 2026 follow-through:** migration **38** adds the

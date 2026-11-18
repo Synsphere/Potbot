@@ -41,7 +41,7 @@ pytestmark = pytest.mark.postgres
 
 
 @pytest.fixture
-def release_rig(app_env, tmp_path):
+def release_rig(app_env, tmp_path, request):
     actor, agent, operation = app_env.context, uuid4(), uuid4()
     rootfs, home, tools, private = [
         tmp_path / name for name in ("rootfs", "home", "tools", "private")
@@ -65,13 +65,18 @@ def release_rig(app_env, tmp_path):
         return (w, a) == (actor.workspace_id, agent)
 
     store = SharedToolStore(ledger=ledger, shared_root=tools, authorize=authorized)
-    old = install(tools / "stemlab", "v1")
+    old = (
+        None
+        if getattr(request, "param", None) == "first_install"
+        else install(tools / "stemlab", "v1")
+    )
     new = install(tools / stage_name("stemlab", operation), "v2")
-    with ledger._connect() as conn:
-        conn.execute(
-            "INSERT INTO trusted_shared_tools VALUES(?,?,?)",
-            (str(actor.workspace_id), "stemlab", json.dumps(old.to_dict(), sort_keys=True)),
-        )
+    if old is not None:
+        with ledger._connect() as conn:
+            conn.execute(
+                "INSERT INTO trusted_shared_tools VALUES(?,?,?)",
+                (str(actor.workspace_id), "stemlab", json.dumps(old.to_dict(), sort_keys=True)),
+            )
     runtime = SharedWorkspaceRuntime("a" * 64, rootfs, home, "b" * 64, shared_tools=tools)
     manager = SharedToolUpgradeManager(
         store=store,
@@ -90,7 +95,7 @@ def release_rig(app_env, tmp_path):
         workspace_id=actor.workspace_id,
         agent_id=agent,
         operation_id=operation,
-        expected_old_commit=old.commit,
+        expected_old_commit=old.commit if old is not None else None,
         replacement=new,
         suite=suite,
     )

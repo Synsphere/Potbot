@@ -62,6 +62,12 @@ test('malformed release evidence cannot be presented as a released installation'
   ]) assert.equal(projectOperation({...operation(),release:changed}),null);
   assert.ok(projectOperation({...operation(),release:{...release,releaseState:'none',generation:null,bindingSha256:null,evidenceSha256:null}}));
 });
+test('withdrawn first-install evidence remains visible without implying a usable installation',()=>{
+  const release={operationId:workspaceId,state:'rolled_back',releaseState:'withdrawn',generation:2,bindingSha256:'e'.repeat(64),evidenceSha256:'f'.repeat(64)};
+  assert.deepEqual(projectOperation({...operation(),state:'source_only',release}).release,release);
+  assert.equal(projectOperation({...operation(),state:'qualified',release}),null);
+  assert.equal(projectOperation({...operation(),release:{...release,evidenceSha256:null}}),null);
+});
 
 test('rejects unbounded, private-shaped or misleading invocation and accounting fields', () => {
   const row=operation();

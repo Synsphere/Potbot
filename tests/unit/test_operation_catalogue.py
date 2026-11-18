@@ -138,6 +138,7 @@ def test_source_runtime_release_and_model_claims_never_become_current_qualificat
         ("awaiting_repin", "testing", "policy_disabled", "postflight_running"),
         ("awaiting_repin", "failed", "degraded", "postflight_failed"),
         ("indeterminate", "none", "indeterminate", "release_indeterminate"),
+        ("rolled_back", "withdrawn", "policy_disabled", "installation_withdrawn"),
     ],
 )
 def test_release_records_keep_specific_blockers(state, phase, expected, reason):

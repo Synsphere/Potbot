@@ -4,12 +4,12 @@ const SHA = /^[a-f0-9]{64}$/;
 const COMMIT = /^[a-f0-9]{40}$/;
 const SLUG = /^[a-z][a-z0-9-]{1,62}$/;
 const STATES = new Set(["awaiting_approval", "approved", "rejected", "executing", "awaiting_repin", "active", "indeterminate", "rolled_back"]);
-const RELEASE_STATES = new Set(["none", "repinned", "testing", "failed", "indeterminate", "released"]);
+const RELEASE_STATES = new Set(["none", "repinned", "testing", "failed", "indeterminate", "released", "withdrawn"]);
 
-export type ReleaseState = "none" | "repinned" | "testing" | "failed" | "indeterminate" | "released";
+export type ReleaseState = "none" | "repinned" | "testing" | "failed" | "indeterminate" | "released" | "withdrawn";
 
 export type UpgradeRecord = {
-  id: string; workspaceId: string; slug: string; oldCommit: string; newCommit: string;
+  id: string; workspaceId: string; slug: string; oldCommit: string | null; newCommit: string;
   suiteSha256: string; evidenceSha256: string; passedTests: number;
   tests: { name: string; kind: string; elapsedMs: number; passed: true }[]; revision: number;
   state: string; updatedAt: string;
@@ -26,7 +26,7 @@ export function upgradeRecord(value: unknown, workspaceId: string): UpgradeRecor
   if (!data || !UUID.test(workspaceId) || data.workspaceId !== workspaceId ||
       typeof data.id !== "string" || !UUID.test(data.id) ||
       typeof data.slug !== "string" || !SLUG.test(data.slug) ||
-      typeof data.oldCommit !== "string" || !COMMIT.test(data.oldCommit) ||
+      !(data.oldCommit === null || (typeof data.oldCommit === "string" && COMMIT.test(data.oldCommit))) ||
       typeof data.newCommit !== "string" || !COMMIT.test(data.newCommit) ||
       data.newCommit === data.oldCommit ||
       typeof data.suiteSha256 !== "string" || !SHA.test(data.suiteSha256) ||
@@ -52,7 +52,8 @@ export function upgradeRecord(value: unknown, workspaceId: string): UpgradeRecor
       typeof data.releaseState !== "string" || !RELEASE_STATES.has(data.releaseState) ||
       !(data.releaseGeneration === null || (Number.isSafeInteger(data.releaseGeneration) && Number(data.releaseGeneration) >= 0)) ||
       ![data.releaseBindingSha256, data.releaseEvidenceSha256].every(value => value === null || (typeof value === "string" && SHA.test(value))) ||
-      (data.releaseState === "released" && (data.releaseGeneration === null || data.releaseBindingSha256 === null || data.releaseEvidenceSha256 === null))
+      (["released", "withdrawn"].includes(data.releaseState) && (data.releaseGeneration === null || data.releaseBindingSha256 === null || data.releaseEvidenceSha256 === null)) ||
+      (data.releaseState === "withdrawn" && (data.oldCommit !== null || data.state !== "rolled_back"))
   )) return null;
   return { id: data.id, workspaceId, slug: data.slug, oldCommit: data.oldCommit, newCommit: data.newCommit,
     suiteSha256: data.suiteSha256, evidenceSha256: data.evidenceSha256,
@@ -78,6 +79,7 @@ export function releaseStatus(record: UpgradeRecord): { label: string; detail: s
     case "failed": return { label: "Postflight failed", detail: "The updated tool is unavailable. Review the host's postflight result before continuing.", attention: true };
     case "indeterminate": return { label: "Release unresolved", detail: "The tool remains unavailable while the operator reconciles the interrupted release.", attention: true };
     case "released": return { label: "Released", detail: "The approved version passed postflight and was released for use. Normal execution permissions still apply.", attention: false };
+    case "withdrawn": return { label: "Installation removed", detail: "The host verified rollback of the first installation to absence. The tool is unavailable.", attention: false };
     default: return { label: "Release not established", detail: "This record does not establish a postflight release for the updated tool.", attention: false };
   }
 }

@@ -12,6 +12,7 @@ import hashlib
 import hmac
 import logging
 import re
+from collections.abc import Callable
 from dataclasses import replace
 from typing import TYPE_CHECKING, Any
 from uuid import UUID, uuid4
@@ -116,13 +117,20 @@ class ToolReleaseAuthority:
             "id": hold["operation_id"],
             "agent_id": hold["agent_id"],
             "slug": hold["slug"],
-            "old_commit": old.commit,
+            "old_commit": old.commit if old is not None else None,
             "new_commit": new.commit,
             "evidence_sha256": hold["test_evidence_sha256"],
             "suite_sha256": hold["suite_sha256"],
         }
-        if any(str(row[field]) != value for field, value in expected.items()) or (
-            hold["commit"] != (new.commit if hold["direction"] == "activate" else old.commit)
+        target = new if hold["direction"] in {"activate", "withdraw"} else old
+        if (
+            any(
+                (str(row[field]) if row[field] is not None else None) != value
+                for field, value in expected.items()
+            )
+            or target is None
+            or (hold["direction"] == "withdraw" and old is not None)
+            or hold["commit"] != target.commit
         ):
             raise ScopeDeniedError("S12 installed binding differs from signed operator approval")
 
@@ -141,7 +149,13 @@ class ToolReleaseAuthority:
             self._setup_token.encode("ascii"), canonical(value).encode(), hashlib.sha256
         ).hexdigest()
 
-    def _readback(self, hold: dict[str, Any], runtime: SharedWorkspaceRuntime) -> None:
+    def _readback(
+        self,
+        hold: dict[str, Any],
+        runtime: SharedWorkspaceRuntime,
+        *,
+        require_pins: bool = True,
+    ) -> None:
         manager = self.manager
         workspace = self.context.workspace_id
         agent = self.agent_id or UUID(hold["agent_id"])
@@ -162,7 +176,31 @@ class ToolReleaseAuthority:
             hold["slug"],
             allowed={"active"} if hold["direction"] == "activate" else {"rolled_back"},
         )
+        if hold["direction"] == "withdraw":
+            if old is not None:
+                raise StateMismatchError("S12 withdrawal requires an absent predecessor")
+            manager._require_absent(workspace, hold["slug"])
+            if (
+                content_hash(new.to_dict()) != hold["definition_sha256"]
+                or row["evidence_sha256"] != hold["test_evidence_sha256"]
+                or row["suite_sha256"] != hold["suite_sha256"]
+                or content_hash(
+                    manager._verify_at(manager._location(new.slug, UUID(row["operation_id"])), new)
+                )
+                != hold["identity_sha256"]
+                or (
+                    require_pins
+                    and any(
+                        path.startswith(f"/usr/local/tools/{hold['slug']}/")
+                        for path, _ in runtime.tool_entrypoints
+                    )
+                )
+            ):
+                raise StateMismatchError("S12 withdrawal bytes or retired executable pins changed")
+            return
         definition = new if hold["direction"] == "activate" else old
+        if definition is None:
+            raise StateMismatchError("S12 absent predecessor cannot authorize a restored release")
         registered = manager.store.definition(workspace, hold["slug"])
         if (
             registered != definition
@@ -177,13 +215,18 @@ class ToolReleaseAuthority:
         actual_pins = {
             path: digest for path, digest in runtime.tool_entrypoints if path.startswith(prefix)
         }
-        if len(actual_pins) != sum(
-            path.startswith(prefix) for path, _ in runtime.tool_entrypoints
-        ) or (actual_pins != hold["entrypoints"]):
+        if require_pins and (
+            len(actual_pins) != sum(path.startswith(prefix) for path, _ in runtime.tool_entrypoints)
+            or actual_pins != hold["entrypoints"]
+        ):
             raise StateMismatchError("S12 independently loaded executable pins do not match")
 
     def admits(self, hold: dict[str, Any], runtime: SharedWorkspaceRuntime) -> bool:
         """Read-only launch check; a missing row, changed revision or DB outage denies."""
+        if hold["direction"] == "withdraw":
+            raise StateMismatchError(
+                "S12 withdrawal is an absence receipt, never execution authority"
+            )
         self._readback(hold, runtime)
         with self.approvals.database.transaction(self.context) as conn:
             row = self._record(conn, UUID(hold["operation_id"]), binding=hold)
@@ -201,7 +244,13 @@ class ToolReleaseAuthority:
             raise StateMismatchError("S12 tool has no matching completed postflight release")
         return True
 
-    def record_repin(self, *, operation: UUID) -> dict[str, object]:
+    def record_repin(
+        self,
+        *,
+        operation: UUID,
+        authorize_attempt: Callable[[], None] | None = None,
+        authorize_commit: Callable[[Any], None] | None = None,
+    ) -> dict[str, object]:
         """Independent host readback; this prepares postflight, never releases a tool."""
         if self.agent_id is None:
             raise ScopeDeniedError("Installed S12 admission reader cannot release a tool")
@@ -221,10 +270,18 @@ class ToolReleaseAuthority:
             "tool.release_repin",
         )
         try:
+            if authorize_attempt is not None:
+                authorize_attempt()
             self._readback(hold, manager.runtime)
+            if authorize_attempt is not None:
+                authorize_attempt()
             guard.ensure_live()
             with self.approvals.database.transaction(self.context) as conn:
                 row = self._record(conn, operation, lock=True, binding=hold)
+                if authorize_commit is not None:
+                    authorize_commit(conn)
+                if hold["direction"] == "withdraw":
+                    return self._record_withdrawal(conn, operation, row, hold)
                 if row["release_binding"] == hold and row["release_phase"] in {
                     "repinned",
                     "released",
@@ -272,7 +329,134 @@ class ToolReleaseAuthority:
             except StateMismatchError:
                 guard.abandon()
 
-    def reconcile_activation(self, *, operation: UUID, confirm: bool) -> dict[str, object]:
+    def _record_withdrawal(
+        self,
+        conn: Any,
+        operation: UUID,
+        row: dict[str, Any],
+        hold: dict[str, Any],
+    ) -> dict[str, object]:
+        """A signed verified absence closes rollback without running a fake test.
+
+        The owning per-tool lease and exact readback are held by record_repin.
+        Retaining the denial marker prevents an unregistered replacement from
+        becoming visible under the previously admitted executable pathname.
+        """
+        if row["release_phase"] == "withdrawn":
+            if (
+                row["state"] != "rolled_back"
+                or row["release_binding"] != hold
+                or not isinstance(row["release_evidence"], dict)
+                or not isinstance(row["release_mac"], str)
+                or not hmac.compare_digest(
+                    row["release_mac"], self._mac(row, hold, row["release_evidence"])
+                )
+            ):
+                raise StateMismatchError("S12 retained withdrawal evidence changed")
+            return {"id": str(operation), "state": "rolled_back", "releaseState": "withdrawn"}
+        evidence = {
+            "schema": "potbot-tool-withdrawal/1",
+            "binding_sha256": content_hash(hold),
+            "installation_state": "absent",
+            "retained_identity_sha256": hold["identity_sha256"],
+            "executable_pins_removed": True,
+        }
+        next_row = dict(row)
+        next_row["release_generation"] += 1
+        updated = conn.execute(
+            "UPDATE ui_tool_upgrade_approvals SET state='rolled_back',worker_token=NULL,"
+            "release_phase='withdrawn',release_binding=%s::jsonb,release_evidence=%s::jsonb,"
+            "release_mac=%s,postflight_token=NULL,release_generation=release_generation+1,"
+            "revision=revision+1,updated_at=clock_timestamp() WHERE workspace_id=%s AND id=%s RETURNING *",
+            (
+                canonical(hold),
+                canonical(evidence),
+                self._mac(next_row, hold, evidence),
+                self.context.workspace_id,
+                operation,
+            ),
+        ).fetchone()
+        self.approvals._audit(
+            conn,
+            self.context,
+            operation,
+            "withdrawn",
+            row["state"],
+            "rolled_back",
+            updated["revision"],
+            content_hash(evidence),
+        )
+        return {"id": str(operation), "state": "rolled_back", "releaseState": "withdrawn"}
+
+    def read_held(
+        self,
+        *,
+        operation: UUID,
+        authorize_attempt: Callable[[], None] | None = None,
+        authorize_commit: Callable[[Any], None] | None = None,
+    ) -> dict[str, object]:
+        """Acknowledge an unchanged failed/uncertain release without replaying it.
+
+        This is only a verified held-state observation after a separately
+        authorized host-action recovery. It does not reset postflight, remove
+        its failure evidence, assert process termination, or require new pins.
+        A live/uncertain host lease still blocks the readback guard.
+        """
+        if self.agent_id is None:
+            raise ScopeDeniedError("Installed admission readers cannot reconcile held releases")
+        manager = self.manager
+        inspected = manager.inspect(
+            workspace_id=self.context.workspace_id,
+            agent_id=self.agent_id,
+            operation_id=operation,
+        )
+        hold = read_hold(manager.store.root, str(inspected["slug"]))
+        if hold is None or hold["operation_id"] != str(operation):
+            raise StateMismatchError("S12 held-state readback has no matching private hold")
+        guard = manager._guard(
+            self.context.workspace_id,
+            self.agent_id,
+            hold["slug"],
+            "s12-held-read-" + uuid4().hex,
+            "tool.release_read",
+        )
+        try:
+            if authorize_attempt is not None:
+                authorize_attempt()
+            self._readback(hold, manager.runtime, require_pins=False)
+            guard.ensure_live()
+            with self.approvals.database.transaction(self.context) as conn:
+                row = self._record(conn, operation, lock=True, binding=hold)
+                if authorize_commit is not None:
+                    authorize_commit(conn)
+                if (
+                    row["release_binding"] != hold
+                    or row["release_phase"] not in {"failed", "indeterminate"}
+                    or row["postflight_token"] is not None
+                ):
+                    raise StateMismatchError(
+                        "S12 held-state readback differs from retained failure"
+                    )
+                return {
+                    "id": str(operation),
+                    "state": row["state"],
+                    "releaseState": row["release_phase"],
+                }
+        finally:
+            try:
+                guard.finish(evidence_sha256=content_hash(hold))
+            except StateMismatchError:
+                guard.abandon()
+                raise
+
+    def reconcile_activation(
+        self,
+        *,
+        operation: UUID,
+        confirm: bool,
+        authorize_attempt: Callable[[], None] | None = None,
+        authorize_commit: Callable[[Any], None] | None = None,
+    ) -> dict[str, object]:
         """Acknowledge a verified S9 outcome after an interrupted S11 response.
 
         The host must first reconcile any uncertain filesystem/worker lease via
@@ -284,7 +468,11 @@ class ToolReleaseAuthority:
             workspace_id=self.context.workspace_id, agent_id=self.agent_id, operation_id=operation
         )
         hold = read_hold(self.manager.store.root, str(inspected["slug"]))
-        if hold is None or hold["operation_id"] != str(operation):
+        if (
+            hold is None
+            or hold["operation_id"] != str(operation)
+            or hold["direction"] != "activate"
+        ):
             raise StateMismatchError("S12 recovery has no matching host hold")
         guard = self.manager._guard(
             self.context.workspace_id,
@@ -294,9 +482,19 @@ class ToolReleaseAuthority:
             "tool.release_reconcile",
         )
         try:
-            self._readback(hold, self.manager.runtime)
+            if authorize_attempt is not None:
+                authorize_attempt()
+            # Recovering an interrupted activation only restores the repin
+            # handoff. Exact bytes and signed approval are still checked here;
+            # record_repin and postflight retain strict executable-pin checks.
+            self._readback(hold, self.manager.runtime, require_pins=False)
+            if authorize_attempt is not None:
+                authorize_attempt()
+            guard.ensure_live()
             with self.approvals.database.transaction(self.context) as conn:
                 row = self._record(conn, operation, lock=True, binding=hold)
+                if authorize_commit is not None:
+                    authorize_commit(conn)
                 if row["release_phase"] != "none" or row["state"] not in {
                     "approved",
                     "executing",
@@ -327,7 +525,13 @@ class ToolReleaseAuthority:
                 guard.abandon()
 
     def postflight(
-        self, *, operation: UUID, suite: ToolTestSuite, executor: TestExecutor | None = None
+        self,
+        *,
+        operation: UUID,
+        suite: ToolTestSuite,
+        executor: TestExecutor | None = None,
+        authorize_attempt: Callable[[], None] | None = None,
+        authorize_commit: Callable[[Any], None] | None = None,
     ) -> dict[str, object]:
         """Execute the approved suite once under the existing exclusive tool lease.
 
@@ -344,6 +548,8 @@ class ToolReleaseAuthority:
         hold = initial["release_binding"]
         if not isinstance(hold, dict) or suite.digest != hold["suite_sha256"]:
             raise StateMismatchError("S12 postflight suite differs from the approved tests")
+        if hold["direction"] == "withdraw":
+            raise StateMismatchError("S12 an absent installation has no executable postflight")
         self._approved_binding(initial, hold)
         if initial["release_phase"] == "released":
             self.admits(hold, manager.runtime)
@@ -362,9 +568,14 @@ class ToolReleaseAuthority:
         lease_finished = False
         results: list[dict[str, object]] = []
         try:
+            if authorize_attempt is not None:
+                authorize_attempt()
             self._readback(hold, manager.runtime)
+            guard.ensure_live()
             with self.approvals.database.transaction(context) as conn:
                 row = self._record(conn, operation, lock=True, binding=hold)
+                if authorize_commit is not None:
+                    authorize_commit(conn)
                 if (
                     row["release_phase"] != "repinned"
                     or row["release_binding"] != hold
@@ -395,6 +606,8 @@ class ToolReleaseAuthority:
                 replace(manager.runtime, tool_maintenance_probe=probe), monitor=manager.ai_monitor
             )
             for case in suite.cases:
+                if authorize_attempt is not None:
+                    authorize_attempt()
                 guard.ensure_live()
                 self._readback(hold, manager.runtime)
                 uncertain = True
@@ -450,6 +663,8 @@ class ToolReleaseAuthority:
                     }
                 )
             self._readback(hold, manager.runtime)
+            if authorize_attempt is not None:
+                authorize_attempt()
             guard.ensure_live()
             evidence = {
                 "schema": "potbot-tool-postflight/1",
@@ -468,6 +683,8 @@ class ToolReleaseAuthority:
             uncertain = False
             with self.approvals.database.transaction(context) as conn:
                 row = self._record(conn, operation, lock=True, binding=hold)
+                if authorize_commit is not None:
+                    authorize_commit(conn)
                 if (
                     row["release_phase"] != "testing"
                     or row["postflight_token"] != token

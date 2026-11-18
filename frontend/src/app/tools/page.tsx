@@ -48,7 +48,7 @@ function Detail({ item, workspaceId, principalId, snapshot }: { item: Operation;
         <div><dt>Generation</dt><dd>{item.release.generation ?? "Not established"}</dd></div>
       </dl>
       <p className={styles.muted}>This is the retained release record. The host checks current pins, permissions and postflight evidence again at admission.</p>
-      <a className={styles.linkButton} href={`/setup/tools?workspace=${encodeURIComponent(workspaceId)}`}>Open tool upgrade review <span aria-hidden="true">↗</span></a>
+      <a className={styles.linkButton} href={`/setup/tools?workspace=${encodeURIComponent(workspaceId)}`}>Open tool acquisition and release review <span aria-hidden="true">↗</span></a>
       <details className={styles.identity}><summary>Release evidence and identity</summary>
         <dl className={styles.facts}>
           <div><dt>Upgrade operation</dt><dd><code>{item.release.operationId}</code></dd></div>

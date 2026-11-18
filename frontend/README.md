@@ -373,3 +373,48 @@ the other tab's durable pending receipt.
 The skill contract test consumes a retained real HTTP/PostgreSQL lifecycle
 fixture; set `POTBOT_SKILL_CONTRACT_OUTPUT` to the fresh integration-test export
 to check the current backend wire responses directly.
+
+## U04-X — Executable source acquisition and release
+
+Open **Executable tool acquisition and upgrades** from the workspace menu, or
+visit `/setup/tools?workspace=<authorized-workspace-id>`. The acquisition
+workbench uses an immutable operator recipe and an exact Git commit. Its source
+review shows the verified inventory, predecessor or verified absence, dependency
+lock hashes, sandbox identity and exact build arguments. Separate approvals
+authorize the sandbox build and promotion of the tested candidate. The same
+durable operation then tracks host pin verification, installed postflight,
+release, predecessor rollback or verified withdrawal of a first installation.
+The **Existing tested approvals** tab retains the earlier S11 review surface.
+
+Deploy the acquisition migration and HTTP API with this frontend. Publish a
+recipe from the enrolled host and operate the acquisition worker using the
+existing S10/S9/S11/S12 owners and their maintenance prerequisites. The browser
+cannot supply build commands, host paths, repository overrides or executable
+pins. Applying reviewed pins, restarting the runtime and reconciling interrupted
+workspace leases remain independent host actions; their browser controls request
+readback through the host worker. A built or promoted candidate stays held until
+the release owner records passing installed postflight. Released tools continue
+to require normal execution policy and task-specific eligibility checks.
+
+Reads are private to the configured workspace bearer principal. Every mutation
+also requires the server-only `POTBOT_UI_SETUP_TOKEN`, the authenticated operator
+session and exact origin. The BFF forwards fixed routes, limits mutation JSON to
+8 KiB and bounds public metadata to 2 MiB. Private claims, signatures, raw process
+output and host storage locations do not reach the browser.
+
+The browser retains the exact request and idempotency key in the same IndexedDB
+recovery journal used by skills, under a separate tool/workspace/principal/tab
+scope. Recovery requires an explicit **Retry exact request**; rejected recovery
+authorization does not discard an earlier uncertain outcome. If durable storage
+is unavailable or a copied tab already owns the slot, the page warns that only
+the open tab retains the request. Keep that tab open until the receipt is
+confirmed. Monitoring reads the selected operation every five seconds, pauses
+in hidden tabs, and stops after 60 reads until explicitly resumed. Control
+history is cursor-paged and keeps at most 200 loaded events in the page.
+
+The frontend gates remain `npm test`, `npm run typecheck` and `npm run build`.
+Set `POTBOT_TOOL_ACQUISITION_CONTRACT_OUTPUT` to the actual HTTP/PostgreSQL
+pipeline export to check the current backend responses against
+`tests/tool-acquisitions-contract.test.mjs`. Its sandbox process outcomes are
+explicit integration fixtures; real sandbox qualification retains its existing
+host acceptance gates.

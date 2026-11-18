@@ -1,6 +1,7 @@
 import { potbotConfigForRequest, upstream, upstreamFailure } from "../../../../../../../lib/server/potbot.ts";
 import { boundedJSON, requireOperator, safeError, validOrigin } from "../../../../../../../lib/server/security.ts";
 import { upgradeRecord } from "../../../../../../../lib/tool-upgrades.ts";
+import { workbenchJSON } from "../../../../../../../lib/server/operation-workbench.ts";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,12 +33,12 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
       method: "POST", headers: { "Origin": operator.publicOrigin,
         "X-Potbot-Setup-Token": setupToken, "Content-Type": "application/json" },
       body: JSON.stringify(body),
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(8000)]),
     });
     if (!response.ok) return response.status === 409 ? safeError("Upgrade revision has changed; reload.", 409) : upstreamFailure(response);
-    const bytes = await response.arrayBuffer();
-    if (bytes.byteLength > 8192) return safeError("Upgrade response too large.", 502);
-    const record = upgradeRecord(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)), config.workspaceId);
-    if (!record || record.id !== id || record.evidenceSha256 !== body.evidenceSha256)
+    let rawResult: unknown; try { rawResult = await workbenchJSON(response, 8192); } catch { return safeError("Upgrade response exceeded its bounded JSON contract.", 502); }
+    const record = upgradeRecord(rawResult, config.workspaceId);
+    if (!record || record.id !== id || record.evidenceSha256 !== body.evidenceSha256 || record.revision !== Number(body.revision) + 1 || record.state !== (action === "approve" ? "approved" : "rejected"))
       return safeError("Unexpected upgrade confirmation.", 502);
     return Response.json(record, { headers: { "Cache-Control": "private, no-store" } });
   } catch { return safeError("Cannot record upgrade decision.", 503); }

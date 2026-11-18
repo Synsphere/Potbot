@@ -19,7 +19,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from potbot.domain.errors import (
     CapabilityUnavailableError,
@@ -28,6 +28,7 @@ from potbot.domain.errors import (
     StateMismatchError,
 )
 from potbot.tools.agent_homes import AgentHomeRegistry
+from potbot.tools.shared_tool_git import validate_tracked_source
 from potbot.tools.shared_tool_release_markers import (
     ToolMaintenanceProbe,
     canonical,
@@ -54,6 +55,7 @@ _SLUG = re.compile(r"[a-z][a-z0-9-]{1,62}\Z")
 _KIND = frozenset({"smoke", "unit", "integration", "regression"})
 _DIGEST = re.compile(r"[0-9a-f]{64}\Z")
 _RENAME_EXCHANGE = 2  # Linux renameat2, atomic exchange of directory entries.
+_RENAME_NOREPLACE = 1
 _MAX_CASES = 16
 
 
@@ -164,6 +166,52 @@ def _exchange(parent: Path, left: str, right: str) -> None:
         os.fsync(root_fd)
     finally:
         os.close(root_fd)
+
+
+def _move_to_absent(parent: Path, source: str, destination: str) -> None:
+    """Atomically publish or withdraw a first install without replacing anything.
+
+    The kernel's no-replace operation closes the gap between checking absence
+    and renaming. A portable rename/copy fallback could overwrite unrelated
+    bytes and is deliberately unavailable.
+    """
+    if os.name != "posix" or not hasattr(os, "O_NOFOLLOW"):
+        raise CapabilityUnavailableError("S9 installation requires Linux renameat2")
+    library = ctypes.CDLL(None, use_errno=True)
+    rename = getattr(library, "renameat2", None)
+    if rename is None:
+        raise CapabilityUnavailableError("S9 installation requires atomic no-replace rename")
+    rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
+    rename.restype = ctypes.c_int
+    for name in (source, destination):
+        if not name or "/" in name or name in {".", ".."}:
+            raise ScopeDeniedError("Invalid S9 installation entry")
+    root_fd = os.open(parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        info = os.stat(source, dir_fd=root_fd, follow_symlinks=False)
+        if not stat.S_ISDIR(info.st_mode):
+            raise ScopeDeniedError("S9 installation source was replaced")
+        try:
+            os.stat(destination, dir_fd=root_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            pass
+        else:
+            raise StateMismatchError("S9 installation destination is no longer absent")
+        if rename(root_fd, source.encode(), root_fd, destination.encode(), _RENAME_NOREPLACE) != 0:
+            number = ctypes.get_errno()
+            raise OSError(number, os.strerror(number))
+        os.fsync(root_fd)
+    finally:
+        os.close(root_fd)
+
+
+def _absent(path: Path) -> bool:
+    """A dangling link is an occupied entry, never an absent installation."""
+    try:
+        path.lstat()
+    except FileNotFoundError:
+        return True
+    return False
 
 
 @dataclass(frozen=True, slots=True)
@@ -548,6 +596,7 @@ class SharedToolUpgradeManager:
             or git(checkout, "clean", "-ndx")
         ):
             raise StateMismatchError("S9 checkout is not the exact clean pinned source")
+        validate_tracked_source(checkout, definition.commit, git)
         locks: dict[str, str] = {}
         for relative, digest in definition.lockfiles:
             path = checkout / relative
@@ -610,14 +659,49 @@ class SharedToolUpgradeManager:
         self._verify_at(parent, definition)
         return _sha({"paths": definition.cleanup_paths, "commit": definition.commit})
 
-    def _registered(self, db: Any, workspace_id: UUID, slug: str) -> str:
+    def _registration(self, db: Any, workspace_id: UUID, slug: str) -> str | None:
         row = db.execute(
             "SELECT definition_json FROM trusted_shared_tools WHERE workspace_id=? AND slug=?",
             (str(workspace_id), slug),
         ).fetchone()
-        if row is None:
+        return None if row is None else str(row["definition_json"])
+
+    def _registered(self, db: Any, workspace_id: UUID, slug: str) -> str:
+        record = self._registration(db, workspace_id, slug)
+        if record is None:
             raise StateMismatchError("S9 requires a registered existing installation")
-        return str(row["definition_json"])
+        return record
+
+    def _require_absent(self, workspace_id: UUID, slug: str) -> None:
+        """Absence must agree across the filesystem, registry and retained hold.
+
+        A completed first-install withdrawal can be followed by a new reviewed
+        install. Missing bytes from an earlier active release cannot be adopted
+        as an ordinary empty slot.
+        """
+        with self.store.ledger._connect() as db:
+            record = self._registration(db, workspace_id, slug)
+        if record is not None or not _absent(self.store.root / slug):
+            raise StateMismatchError("S9 first installation requires an absent tool")
+        hold = read_hold(self.store.root, slug)
+        if hold is None:
+            return
+        if hold["direction"] != "withdraw" or hold["workspace_id"] != str(workspace_id):
+            raise StateMismatchError("S9 missing installation requires operator reconciliation")
+        _, old, new = self._transaction(
+            workspace_id,
+            UUID(hold["agent_id"]),
+            UUID(hold["operation_id"]),
+            slug,
+            allowed={"rolled_back"},
+        )
+        if old is not None or new.commit != hold["commit"]:
+            raise StateMismatchError("S9 absent installation has an inconsistent withdrawal")
+
+    def _assert_registration(self, db: Any, workspace_id: UUID, slug: str, expected: str) -> None:
+        actual = self._registration(db, workspace_id, slug)
+        if actual != (None if expected == "null" else expected):
+            raise StateMismatchError("S9 registered installation changed since plan creation")
 
     def _row(self, db: Any, operation_id: UUID) -> dict[str, Any]:
         row = db.execute(
@@ -627,15 +711,67 @@ class SharedToolUpgradeManager:
             raise StateMismatchError("S9 upgrade transaction does not exist")
         return dict(row)
 
+    def acquisition_predecessor(
+        self, *, workspace_id: UUID, agent_id: UUID, slug: str
+    ) -> SharedToolDefinition | None:
+        """Read the actual predecessor for a reviewed source/build request.
+
+        A genuinely empty slot is returned as None. Damaged files, an
+        unregistered tree and unfinished transitions raise; callers must not
+        reinterpret those failures as permission for a first installation.
+        The short existing-ledger read lease also observes uncertain writers.
+        """
+        if not isinstance(slug, str) or not _SLUG.fullmatch(slug):
+            raise InvalidInputError("S9 acquisition requires a canonical tool slug")
+        image = self._actor(workspace_id, agent_id)
+        guard = WorkspaceLeaseGuard(
+            self.store.ledger,
+            AccessRequest(
+                workspace_id,
+                agent_id,
+                "tool.inspect_installation",
+                "s9-acquisition-predecessor-" + uuid4().hex,
+                "read",
+                (AccessResource("shared_tool", slug, "read"),),
+                image,
+            ),
+        )
+        guard.start()
+        try:
+            with self.store.ledger._connect() as db:
+                pending = db.execute(
+                    "SELECT 1 FROM trusted_tool_upgrades WHERE workspace_id=? AND slug=? "
+                    "AND state IN ('ready','switching','rolling_back','indeterminate') LIMIT 1",
+                    (str(workspace_id), slug),
+                ).fetchone()
+                recorded = self._registration(db, workspace_id, slug)
+            if pending is not None:
+                raise StateMismatchError("S9 acquisition has an unfinished tool transaction")
+            if recorded is None:
+                self._require_absent(workspace_id, slug)
+                result = None
+            else:
+                result = SharedToolDefinition.from_dict(json.loads(recorded))
+                self._verify_at(self.store.root / slug, result)
+            guard.ensure_live()
+            return result
+        finally:
+            try:
+                guard.finish(evidence_sha256=admission_digest("s9-predecessor-read"))
+            except StateMismatchError:
+                guard.abandon()
+                raise
+
     def prepare(
         self,
         *,
         workspace_id: UUID,
         agent_id: UUID,
         operation_id: UUID,
-        expected_old_commit: str,
+        expected_old_commit: str | None,
         replacement: SharedToolDefinition,
         suite: ToolTestSuite,
+        authorize_attempt: Callable[[], None] | None = None,
     ) -> dict[str, object]:
         """Test a host-provisioned candidate. Leaves the active install alone."""
         if not isinstance(replacement, SharedToolDefinition) or not isinstance(
@@ -647,8 +783,9 @@ class SharedToolUpgradeManager:
         if not isinstance(operation_id, UUID) or not _SLUG.fullmatch(replacement.slug):
             raise InvalidInputError("S9 prepare requires a canonical upgrade identity")
         slug = replacement.slug
-        if not isinstance(expected_old_commit, str) or not re.fullmatch(
-            r"[0-9a-f]{40}", expected_old_commit
+        if expected_old_commit is not None and (
+            not isinstance(expected_old_commit, str)
+            or not re.fullmatch(r"[0-9a-f]{40}", expected_old_commit)
         ):
             raise InvalidInputError("S9 requires an exact expected predecessor commit")
         guard = self._guard(
@@ -656,19 +793,33 @@ class SharedToolUpgradeManager:
         )
         uncertain = False
         try:
-            old = self.store.definition(workspace_id, slug)
-            if old.commit != expected_old_commit or old.commit == replacement.commit:
-                raise StateMismatchError("S9 upgrade predecessor or candidate revision changed")
-            if old.repository != replacement.repository:
-                raise ScopeDeniedError("S9 cannot silently replace a tool's GitHub publisher")
-            old_json = json.dumps(old.to_dict(), sort_keys=True)
+            if authorize_attempt is not None:
+                authorize_attempt()
+            guard.ensure_live()
+            old = None
+            if expected_old_commit is None:
+                self._require_absent(workspace_id, slug)
+            else:
+                old = self.store.definition(workspace_id, slug)
+                if old.commit != expected_old_commit or old.commit == replacement.commit:
+                    raise StateMismatchError("S9 upgrade predecessor or candidate revision changed")
+                if old.repository != replacement.repository:
+                    raise ScopeDeniedError("S9 cannot silently replace a tool's GitHub publisher")
+                self._verify_at(self.store.root / slug, old)
+            old_json = json.dumps(old.to_dict() if old is not None else None, sort_keys=True)
             new_json = json.dumps(replacement.to_dict(), sort_keys=True)
-            self._verify_at(self.store.root / slug, old)
             stage = self._location(slug, operation_id)
             verified = self._verify_at(stage, replacement)
+            if not any(
+                relative.startswith(("static/", "environment/"))
+                and (stage / relative).stat().st_mode & 0o111
+                for relative, _ in replacement.reusable_artifacts
+            ):
+                raise StateMismatchError(
+                    "S9 executable installation requires a pinned executable artifact"
+                )
             with self.store.ledger._connect() as db:
-                if self._registered(db, workspace_id, slug) != old_json:
-                    raise StateMismatchError("S9 registered tool changed since plan creation")
+                self._assert_registration(db, workspace_id, slug, old_json)
                 existing = db.execute(
                     "SELECT 1 FROM trusted_tool_upgrades WHERE workspace_id=? AND slug=? "
                     "AND state IN ('ready','switching','rolling_back','indeterminate')",
@@ -692,6 +843,8 @@ class SharedToolUpgradeManager:
                     supervisor_factory=executor.supervisor_factory,
                 )
             for case in suite.cases:
+                if authorize_attempt is not None:
+                    authorize_attempt()
                 guard.ensure_live()
                 argv = case.render(slug=slug, stage=stage.name, agent=agent.directory)
                 uncertain = True
@@ -744,6 +897,9 @@ class SharedToolUpgradeManager:
                 )
                 if self._verify_at(stage, replacement) != verified:
                     raise StateMismatchError("S9 candidate changed during tests")
+            if authorize_attempt is not None:
+                authorize_attempt()
+            guard.ensure_live()
             uncertain = True
             clean_digest = self._clean_probe(stage, replacement)
             uncertain = False
@@ -755,7 +911,7 @@ class SharedToolUpgradeManager:
                 "agent_id": str(agent_id),
                 "slug": slug,
                 "operation_id": str(operation_id),
-                "previous": old.commit,
+                "previous": old.commit if old is not None else None,
                 "candidate": replacement.commit,
                 "image": self.runtime.image_digest,
                 "suite_sha256": suite.digest,
@@ -764,11 +920,14 @@ class SharedToolUpgradeManager:
                 "cases": results,
             }
             evidence_digest = _sha(evidence)
+            if authorize_attempt is not None:
+                authorize_attempt()
             guard.ensure_live()
+            if old is None:
+                self._require_absent(workspace_id, slug)
             with self.store.ledger._connect() as db:
                 db.execute("BEGIN IMMEDIATE")
-                if self._registered(db, workspace_id, slug) != old_json:
-                    raise StateMismatchError("S9 tool changed during test admission")
+                self._assert_registration(db, workspace_id, slug, old_json)
                 db.execute(
                     "INSERT INTO trusted_tool_upgrades VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                     (
@@ -791,7 +950,7 @@ class SharedToolUpgradeManager:
                 "id": str(operation_id),
                 "state": "ready",
                 "slug": slug,
-                "old_commit": old.commit,
+                "old_commit": old.commit if old is not None else None,
                 "new_commit": replacement.commit,
                 "suite_sha256": suite.digest,
                 "evidence_sha256": evidence_digest,
@@ -815,7 +974,7 @@ class SharedToolUpgradeManager:
         slug: str,
         *,
         allowed: set[str],
-    ) -> tuple[dict[str, Any], SharedToolDefinition, SharedToolDefinition]:
+    ) -> tuple[dict[str, Any], SharedToolDefinition | None, SharedToolDefinition]:
         with self.store.ledger._connect() as db:
             row = self._row(db, operation_id)
             if (
@@ -826,19 +985,19 @@ class SharedToolUpgradeManager:
                 raise ScopeDeniedError("S9 transaction is not in the selected workspace")
             if row["state"] not in allowed:
                 raise StateMismatchError("S9 upgrade state does not permit this operation")
-            old = SharedToolDefinition.from_dict(json.loads(row["old_definition"]))
+            old_value = json.loads(row["old_definition"])
+            old = SharedToolDefinition.from_dict(old_value) if old_value is not None else None
             new = SharedToolDefinition.from_dict(json.loads(row["new_definition"]))
             if (
-                old.slug != slug
-                or new.slug != slug
-                or old.repository != new.repository
+                new.slug != slug
+                or (old is not None and (old.slug != slug or old.repository != new.repository))
                 or stage_name(slug, operation_id) != row["stage_name"]
             ):
                 raise StateMismatchError("S9 transaction identity was altered")
             evidence = json.loads(row["evidence_json"])
             if row["evidence_sha256"] != _sha(evidence) or (
                 evidence.get("candidate") != new.commit
-                or evidence.get("previous") != old.commit
+                or evidence.get("previous") != (old.commit if old is not None else None)
                 or evidence.get("suite_sha256") != row["suite_sha256"]
             ):
                 raise StateMismatchError("S9 upgrade test evidence was altered")
@@ -867,11 +1026,25 @@ class SharedToolUpgradeManager:
     ) -> None:
         with self.store.ledger._connect() as db:
             db.execute("BEGIN IMMEDIATE")
-            result = db.execute(
-                "UPDATE trusted_shared_tools SET definition_json=? "
-                "WHERE workspace_id=? AND slug=? AND definition_json=?",
-                (new_record, str(workspace_id), slug, old_record),
-            )
+            if old_record == "null":
+                # A first install inserts only into a still-empty canonical
+                # registry slot; no invented predecessor is ever registered.
+                result = db.execute(
+                    "INSERT OR IGNORE INTO trusted_shared_tools VALUES (?,?,?)",
+                    (str(workspace_id), slug, new_record),
+                )
+            elif new_record == "null":
+                result = db.execute(
+                    "DELETE FROM trusted_shared_tools WHERE workspace_id=? AND slug=? "
+                    "AND definition_json=?",
+                    (str(workspace_id), slug, old_record),
+                )
+            else:
+                result = db.execute(
+                    "UPDATE trusted_shared_tools SET definition_json=? "
+                    "WHERE workspace_id=? AND slug=? AND definition_json=?",
+                    (new_record, str(workspace_id), slug, old_record),
+                )
             if result.rowcount != 1:
                 raise StateMismatchError("S9 installed tool CAS rejected the exchanged candidate")
             result = db.execute(
@@ -887,6 +1060,76 @@ class SharedToolUpgradeManager:
             if result.rowcount != 1:
                 raise StateMismatchError("S9 upgrade journal was altered during activation")
 
+    def abandon_candidate(
+        self,
+        *,
+        workspace_id: UUID,
+        agent_id: UUID,
+        operation_id: UUID,
+        slug: str,
+        confirm: bool,
+        authorize_attempt: Callable[[], None] | None = None,
+    ) -> dict[str, object]:
+        """Close a preactivation attempt while retaining all hidden candidate data.
+
+        This cannot infer process termination or clear an uncertain lease. The
+        existing writer guard must be obtainable first. Only a missing journal
+        or an intact ready candidate can be abandoned; physical transitions use
+        their separate explicit reconciliation path.
+        """
+        if confirm is not True or not isinstance(operation_id, UUID):
+            raise ScopeDeniedError("S9 candidate abandonment needs explicit operator confirmation")
+        stage = self._location(slug, operation_id)
+        guard = self._guard(
+            workspace_id,
+            agent_id,
+            slug,
+            "s9-abandon-" + uuid4().hex,
+            "tool.abandon_candidate",
+        )
+        try:
+            if authorize_attempt is not None:
+                authorize_attempt()
+            guard.ensure_live()
+            with self.store.ledger._connect() as db:
+                found = db.execute(
+                    "SELECT 1 FROM trusted_tool_upgrades WHERE operation_id=?", (str(operation_id),)
+                ).fetchone()
+            if found is not None:
+                row, old, new = self._transaction(
+                    workspace_id, agent_id, operation_id, slug, allowed={"ready", "aborted"}
+                )
+                if row["state"] == "ready":
+                    with self.store.ledger._connect() as db:
+                        self._assert_registration(db, workspace_id, slug, row["old_definition"])
+                    if old is None:
+                        self._require_absent(workspace_id, slug)
+                    else:
+                        self._verify_at(self.store.root / slug, old)
+                    if (
+                        self._verify_at(stage, new)
+                        != json.loads(row["evidence_json"])["candidate_identity"]
+                    ):
+                        raise StateMismatchError("S9 candidate changed before abandonment")
+                    if authorize_attempt is not None:
+                        authorize_attempt()
+                    guard.ensure_live()
+                    self._state(operation_id, "aborted", expect="ready")
+            guard.ensure_live()
+            return {
+                "id": str(operation_id),
+                "slug": slug,
+                "state": "aborted",
+                "candidate_retained": not _absent(stage)
+                or not _absent(self.store.root / (".potbot-s10-incoming-" + operation_id.hex)),
+            }
+        finally:
+            try:
+                guard.finish(evidence_sha256=admission_digest("s9-candidate-abandonment"))
+            except StateMismatchError:
+                guard.abandon()
+                raise
+
     def activate(
         self,
         *,
@@ -894,36 +1137,51 @@ class SharedToolUpgradeManager:
         agent_id: UUID,
         operation_id: UUID,
         slug: str,
-        expected_old_commit: str,
+        expected_old_commit: str | None,
         confirm: bool,
-    ) -> dict[str, str]:
+        authorize_attempt: Callable[[], None] | None = None,
+    ) -> dict[str, object]:
         if confirm is not True:
             raise ScopeDeniedError("S9 upgrade requires explicit operator approval")
-        guard = self._guard(
-            workspace_id, agent_id, slug, f"s9-activate-{operation_id.hex}", "tool.activate_upgrade"
-        )
+        attempt = f"s9-activate-{operation_id.hex}"
+        if authorize_attempt is not None:
+            attempt += "-" + uuid4().hex
+        guard = self._guard(workspace_id, agent_id, slug, attempt, "tool.activate_upgrade")
         uncertain = False
         try:
+            if authorize_attempt is not None:
+                authorize_attempt()
+            guard.ensure_live()
             row, old, new = self._transaction(
                 workspace_id, agent_id, operation_id, slug, allowed={"ready"}
             )
-            if old.commit != expected_old_commit or old.commit == new.commit:
+            if (old.commit if old is not None else None) != expected_old_commit or (
+                old is not None and old.commit == new.commit
+            ):
                 raise StateMismatchError("S9 predecessor pin changed")
             with self.store.ledger._connect() as db:
-                if self._registered(db, workspace_id, slug) != row["old_definition"]:
-                    raise StateMismatchError("S9 active source changed since candidate tests")
-            self._verify_at(self.store.root / slug, old)
+                self._assert_registration(db, workspace_id, slug, row["old_definition"])
+            if old is None:
+                self._require_absent(workspace_id, slug)
+            else:
+                self._verify_at(self.store.root / slug, old)
             current = self._verify_at(self._location(slug, operation_id), new)
             if current != json.loads(row["evidence_json"])["candidate_identity"]:
                 raise StateMismatchError("S9 stage changed since tested evidence")
-            guard.ensure_live()
             hold = self._hold(row, new, self._location(slug, operation_id), "activate")
+            if authorize_attempt is not None:
+                authorize_attempt()
+            guard.ensure_live()
             uncertain = True
             self._retain_hold(row, hold)
             write_hold(self.store.root, slug, hold)
-            _exchange(self.store.root, slug, row["stage_name"])
+            if old is None:
+                _move_to_absent(self.store.root, row["stage_name"], slug)
+            else:
+                _exchange(self.store.root, slug, row["stage_name"])
             self._verify_at(self.store.root / slug, new)
-            self._verify_at(self._location(slug, operation_id), old)
+            if old is not None:
+                self._verify_at(self._location(slug, operation_id), old)
             self._commit_swap(
                 operation_id,
                 workspace_id,
@@ -938,7 +1196,7 @@ class SharedToolUpgradeManager:
                 "id": str(operation_id),
                 "slug": slug,
                 "state": "active",
-                "old_commit": old.commit,
+                "old_commit": old.commit if old is not None else None,
                 "new_commit": new.commit,
             }
         except BaseException:
@@ -959,14 +1217,19 @@ class SharedToolUpgradeManager:
         slug: str,
         expected_current_commit: str,
         confirm: bool,
-    ) -> dict[str, str]:
+        authorize_attempt: Callable[[], None] | None = None,
+    ) -> dict[str, object]:
         if confirm is not True:
             raise ScopeDeniedError("S9 rollback requires explicit operator approval")
-        guard = self._guard(
-            workspace_id, agent_id, slug, f"s9-rollback-{operation_id.hex}", "tool.rollback_upgrade"
-        )
+        attempt = f"s9-rollback-{operation_id.hex}"
+        if authorize_attempt is not None:
+            attempt += "-" + uuid4().hex
+        guard = self._guard(workspace_id, agent_id, slug, attempt, "tool.rollback_upgrade")
         uncertain = False
         try:
+            if authorize_attempt is not None:
+                authorize_attempt()
+            guard.ensure_live()
             row, old, new = self._transaction(
                 workspace_id, agent_id, operation_id, slug, allowed={"active"}
             )
@@ -976,14 +1239,27 @@ class SharedToolUpgradeManager:
                 if self._registered(db, workspace_id, slug) != row["new_definition"]:
                     raise StateMismatchError("S9 rollback would overwrite a newer upgrade")
             self._verify_at(self.store.root / slug, new)
-            self._verify_at(self._location(slug, operation_id), old)
+            if old is None:
+                if not _absent(self._location(slug, operation_id)):
+                    raise StateMismatchError("S9 first-install withdrawal stage is occupied")
+            else:
+                self._verify_at(self._location(slug, operation_id), old)
+            hold = (
+                self._hold(row, old, self._location(slug, operation_id), "rollback")
+                if old is not None
+                else self._hold(row, new, self.store.root / slug, "withdraw")
+            )
+            if authorize_attempt is not None:
+                authorize_attempt()
             guard.ensure_live()
-            hold = self._hold(row, old, self._location(slug, operation_id), "rollback")
             uncertain = True
             self._retain_hold(row, hold)
             write_hold(self.store.root, slug, hold)
-            _exchange(self.store.root, slug, row["stage_name"])
-            self._verify_at(self.store.root / slug, old)
+            if old is None:
+                _move_to_absent(self.store.root, slug, row["stage_name"])
+            else:
+                _exchange(self.store.root, slug, row["stage_name"])
+                self._verify_at(self.store.root / slug, old)
             self._verify_at(self._location(slug, operation_id), new)
             self._commit_swap(
                 operation_id,
@@ -999,8 +1275,9 @@ class SharedToolUpgradeManager:
                 "id": str(operation_id),
                 "slug": slug,
                 "state": "rolled_back",
-                "old_commit": old.commit,
+                "old_commit": old.commit if old is not None else None,
                 "new_commit": new.commit,
+                "installation_state": "absent" if old is None else "installed",
             }
         except BaseException:
             try:
@@ -1012,7 +1289,14 @@ class SharedToolUpgradeManager:
             raise
 
     def reconcile(
-        self, *, workspace_id: UUID, agent_id: UUID, operation_id: UUID, slug: str, confirm: bool
+        self,
+        *,
+        workspace_id: UUID,
+        agent_id: UUID,
+        operation_id: UUID,
+        slug: str,
+        confirm: bool,
+        authorize_attempt: Callable[[], None] | None = None,
     ) -> dict[str, str]:
         """Host-only interrupted-exchange recovery, never automatic on startup.
 
@@ -1021,11 +1305,23 @@ class SharedToolUpgradeManager:
         """
         if confirm is not True:
             raise ScopeDeniedError("S9 recovery requires operator confirmation")
-        guard = self._guard(
-            workspace_id, agent_id, slug, f"s9-recover-{operation_id.hex}", "tool.reconcile_upgrade"
-        )
-        uncertain = True
+        attempt = f"s9-recover-{operation_id.hex}"
+        if authorize_attempt is not None:
+            attempt += "-" + uuid4().hex
+        guard = self._guard(workspace_id, agent_id, slug, attempt, "tool.reconcile_upgrade")
+        uncertain = False
+
+        def before_transition() -> None:
+            nonlocal uncertain
+            if authorize_attempt is not None:
+                authorize_attempt()
+            guard.ensure_live()
+            uncertain = True
+
         try:
+            if authorize_attempt is not None:
+                authorize_attempt()
+            guard.ensure_live()
             row, old, new = self._transaction(
                 workspace_id,
                 agent_id,
@@ -1034,14 +1330,19 @@ class SharedToolUpgradeManager:
                 allowed={"switching", "rolling_back"},
             )
             with self.store.ledger._connect() as db:
-                recorded = self._registered(db, workspace_id, slug)
-            if recorded != (
-                row["old_definition"] if row["state"] == "switching" else row["new_definition"]
-            ):
-                raise StateMismatchError(
-                    "S9 installed definition inconsistent with recovery journal"
+                self._assert_registration(
+                    db,
+                    workspace_id,
+                    slug,
+                    row["old_definition"] if row["state"] == "switching" else row["new_definition"],
                 )
             active, staged = self.store.root / slug, self._location(slug, operation_id)
+            if old is None:
+                final = self._reconcile_first_install(row, new, active, staged, before_transition)
+                guard.ensure_live()
+                guard.finish(evidence_sha256=admission_digest("s9-recovered:" + final))
+                uncertain = False
+                return {"id": str(operation_id), "slug": slug, "state": final}
             # Identify a physically intact exchange using pinned source and
             # artifacts, not timestamps or a guessed process outcome.
             old_active = new_active = old_staged = new_staged = False
@@ -1063,6 +1364,7 @@ class SharedToolUpgradeManager:
                     old_staged = True
                 else:
                     new_staged = True
+            before_transition()
             if row["state"] == "switching":
                 if old_active and new_staged:  # Swap never took place.
                     self._restore_hold(row, aborted=True)
@@ -1099,14 +1401,65 @@ class SharedToolUpgradeManager:
             uncertain = False
             return {"id": str(operation_id), "slug": slug, "state": final}
         except BaseException:
-            if uncertain:
-                try:
-                    guard.finish(
-                        evidence_sha256=admission_digest("s9-recovery-unknown"), uncertain=True
-                    )
-                except StateMismatchError:
-                    guard.abandon()
+            try:
+                guard.finish(
+                    evidence_sha256=admission_digest("s9-recovery-rejected"), uncertain=uncertain
+                )
+            except StateMismatchError:
+                guard.abandon()
             raise
+
+    def _reconcile_first_install(
+        self,
+        row: dict[str, Any],
+        new: SharedToolDefinition,
+        active: Path,
+        staged: Path,
+        before_transition: Callable[[], None],
+    ) -> str:
+        """Recover an interrupted no-replace move after independent lease recovery.
+
+        Only one exact retained tree plus one truly absent entry is sufficient
+        evidence. Two copies, redirected entries or missing content stay held.
+        """
+        operation = UUID(row["operation_id"])
+        active_new = staged_new = False
+        for location, is_active in ((active, True), (staged, False)):
+            try:
+                identity = self._verify_at(location, new)
+                if identity != json.loads(row["evidence_json"])["candidate_identity"]:
+                    continue
+            except (ScopeDeniedError, StateMismatchError, OSError):
+                continue
+            if is_active:
+                active_new = True
+            else:
+                staged_new = True
+        before_transition()
+        if row["state"] == "switching":
+            if active_new and _absent(staged):
+                _move_to_absent(self.store.root, row["slug"], row["stage_name"])
+                self._verify_at(staged, new)
+            elif not (_absent(active) and staged_new):
+                raise StateMismatchError("S9 first installation needs manual filesystem recovery")
+            self._restore_hold(row, aborted=True)
+            self._state(operation, "aborted", expect="switching")
+            return "aborted"
+        if active_new and _absent(staged):
+            self._restore_hold(row, aborted=False)
+            self._state(operation, "active", expect="rolling_back")
+            return "active"
+        if _absent(active) and staged_new:
+            self._commit_swap(
+                operation,
+                UUID(row["workspace_id"]),
+                row["slug"],
+                old_record=row["new_definition"],
+                new_record=row["old_definition"],
+                state="rolling_back",
+            )
+            return "rolled_back"
+        raise StateMismatchError("S9 first-install withdrawal needs manual filesystem recovery")
 
     def runtime_entrypoint_updates(
         self, *, workspace_id: UUID, agent_id: UUID, operation_id: UUID
@@ -1123,11 +1476,27 @@ class SharedToolUpgradeManager:
             raise ScopeDeniedError("S9 runtime pin plan unavailable")
         if row["state"] not in {"ready", "active", "rolled_back"}:
             raise StateMismatchError("S9 executable pins require a tested candidate")
-        definition = SharedToolDefinition.from_dict(
-            json.loads(
-                row["old_definition"] if row["state"] == "rolled_back" else row["new_definition"]
-            )
+        value = json.loads(
+            row["old_definition"] if row["state"] == "rolled_back" else row["new_definition"]
         )
+        if value is None:
+            self._require_absent(workspace_id, row["slug"])
+            new = SharedToolDefinition.from_dict(json.loads(row["new_definition"]))
+            self._verify_at(self._location(row["slug"], operation_id), new)
+            return {
+                "slug": row["slug"],
+                "candidate_commit": None,
+                "pins": {},
+                "remove_prior_pins": sorted(
+                    path
+                    for path, _ in self.runtime.tool_entrypoints
+                    if path.startswith(f"/usr/local/tools/{row['slug']}/")
+                ),
+                "requires_operator_runtime_repin": True,
+                "tested_sha256": row["evidence_sha256"],
+                "installation_state": "absent",
+            }
+        definition = SharedToolDefinition.from_dict(value)
         expected = dict(definition.reusable_artifacts)
         # Candidate remains at the stage location until activation; afterward
         # it resides at the active path. A completed rollback proposes the
@@ -1179,7 +1548,7 @@ class SharedToolUpgradeManager:
             "id": str(operation_id),
             "slug": row["slug"],
             "state": row["state"],
-            "old_commit": old["commit"],
+            "old_commit": old["commit"] if old is not None else None,
             "new_commit": new["commit"],
             "suite_sha256": row["suite_sha256"],
             "test_evidence_sha256": row["evidence_sha256"],

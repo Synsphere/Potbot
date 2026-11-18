@@ -1,0 +1,1787 @@
+{
+  "operationId": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+  "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+  "responses": {
+    "approve": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [
+          "cancel"
+        ],
+        "bindingSha256": "75343d3b3f3023cb3d2c199d721e1f00d384a8e7f452e4ea3a6bc51bfef6dcff",
+        "build": {
+          "bytes": 2506,
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "files": 24,
+          "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+        },
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+        "hostAction": null,
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "absent",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "approved",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": null,
+        "releaseEvidenceSha256": null,
+        "releaseGeneration": 0,
+        "releaseState": "none",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 7,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [
+          {
+            "elapsedMs": 2,
+            "kind": "smoke",
+            "name": "smoke",
+            "passed": true
+          },
+          {
+            "elapsedMs": 2,
+            "kind": "unit",
+            "name": "unit",
+            "passed": true
+          }
+        ],
+        "updatedAt": "2026-11-17T23:10:47.816831+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "approve-build": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [
+          "cancel"
+        ],
+        "bindingSha256": "41ff6ed49cc7ad979e745df6faacdbf6494dad6eb15f8a188b8b508f72659599",
+        "build": null,
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": null,
+        "hostAction": null,
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "absent",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "build_queued",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": null,
+        "releaseEvidenceSha256": null,
+        "releaseGeneration": 0,
+        "releaseState": "none",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 4,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [],
+        "updatedAt": "2026-11-17T23:10:46.996622+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "detail": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [],
+        "bindingSha256": "2f327d02d2f33e88476ab7721fa668fda0c17a413a56ccb7d45477f07aee9da6",
+        "build": {
+          "bytes": 2506,
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "files": 24,
+          "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+        },
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+        "hostAction": null,
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "absent",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "withdrawn",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": "cf2d4f16f1ac48ec4424f5afcd937875ddfbd2f874449dc29132ab102272bd7a",
+        "releaseEvidenceSha256": "76d54e604846655d050fae5727cfcb264685cebc7d5435c80a0ed27756b30936",
+        "releaseGeneration": 2,
+        "releaseState": "withdrawn",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 25,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [
+          {
+            "elapsedMs": 2,
+            "kind": "smoke",
+            "name": "smoke",
+            "passed": true
+          },
+          {
+            "elapsedMs": 2,
+            "kind": "unit",
+            "name": "unit",
+            "passed": true
+          }
+        ],
+        "updatedAt": "2026-11-17T23:10:48.510335+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "events": {
+      "hasMore": false,
+      "items": [
+        {
+          "action": "source_requested",
+          "evidenceSha256": "ea7ac774ff46fad165511ab6c95f2c74818bcc12360ab312ef37c020e217149f",
+          "nextState": "acquiring",
+          "priorState": "none",
+          "recordedAt": "2026-11-17T23:10:46.408549+00:00",
+          "revision": 1
+        },
+        {
+          "action": "source_claimed",
+          "evidenceSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "nextState": "acquiring",
+          "priorState": "acquiring",
+          "recordedAt": "2026-11-17T23:10:46.454059+00:00",
+          "revision": 2
+        },
+        {
+          "action": "source_ready",
+          "evidenceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "nextState": "acquiring",
+          "priorState": "acquiring",
+          "recordedAt": "2026-11-17T23:10:46.924585+00:00",
+          "revision": 3
+        },
+        {
+          "action": "build_approved",
+          "evidenceSha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "nextState": "acquiring",
+          "priorState": "acquiring",
+          "recordedAt": "2026-11-17T23:10:46.998780+00:00",
+          "revision": 4
+        },
+        {
+          "action": "build_claimed",
+          "evidenceSha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "nextState": "acquiring",
+          "priorState": "acquiring",
+          "recordedAt": "2026-11-17T23:10:47.021426+00:00",
+          "revision": 5
+        },
+        {
+          "action": "build_tested",
+          "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+          "nextState": "awaiting_approval",
+          "priorState": "acquiring",
+          "recordedAt": "2026-11-17T23:10:47.729500+00:00",
+          "revision": 6
+        },
+        {
+          "action": "approved",
+          "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+          "nextState": "approved",
+          "priorState": "awaiting_approval",
+          "recordedAt": "2026-11-17T23:10:47.820500+00:00",
+          "revision": 7
+        },
+        {
+          "action": "claimed",
+          "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+          "nextState": "executing",
+          "priorState": "approved",
+          "recordedAt": "2026-11-17T23:10:47.842706+00:00",
+          "revision": 8
+        },
+        {
+          "action": "activated",
+          "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+          "nextState": "awaiting_repin",
+          "priorState": "executing",
+          "recordedAt": "2026-11-17T23:10:47.918303+00:00",
+          "revision": 9
+        },
+        {
+          "action": "host_action_requested",
+          "evidenceSha256": "19a0fe5860f1fb59b8fca68c4f6a12d7da5d0ff152f3579b0957ebb202ee9840",
+          "nextState": "awaiting_repin",
+          "priorState": "awaiting_repin",
+          "recordedAt": "2026-11-17T23:10:47.958650+00:00",
+          "revision": 10
+        },
+        {
+          "action": "host_action_claimed",
+          "evidenceSha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "nextState": "awaiting_repin",
+          "priorState": "awaiting_repin",
+          "recordedAt": "2026-11-17T23:10:47.979309+00:00",
+          "revision": 11
+        },
+        {
+          "action": "release_repinned",
+          "evidenceSha256": "8978bc9028f69eec21ee473e09b68403855fad6136dd96cf5d45d5399535dc69",
+          "nextState": "awaiting_repin",
+          "priorState": "awaiting_repin",
+          "recordedAt": "2026-11-17T23:10:48.014432+00:00",
+          "revision": 12
+        },
+        {
+          "action": "host_action_finished",
+          "evidenceSha256": "8908a92beec485ea34ff86627db6f56dc79af2faba9dcc509d4e55d0573b3774",
+          "nextState": "awaiting_repin",
+          "priorState": "awaiting_repin",
+          "recordedAt": "2026-11-17T23:10:48.032280+00:00",
+          "revision": 13
+        },
+        {
+          "action": "host_action_requested",
+          "evidenceSha256": "ad4d0dbc84e7538881b2637197964acc21a0ddbc645246386feea8c460d7b3a3",
+          "nextState": "awaiting_repin",
+          "priorState": "awaiting_repin",
+          "recordedAt": "2026-11-17T23:10:48.067989+00:00",
+          "revision": 14
+        },
+        {
+          "action": "host_action_claimed",
+          "evidenceSha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "nextState": "awaiting_repin",
+          "priorState": "awaiting_repin",
+          "recordedAt": "2026-11-17T23:10:48.089665+00:00",
+          "revision": 15
+        },
+        {
+          "action": "postflight_started",
+          "evidenceSha256": "8978bc9028f69eec21ee473e09b68403855fad6136dd96cf5d45d5399535dc69",
+          "nextState": "testing",
+          "priorState": "repinned",
+          "recordedAt": "2026-11-17T23:10:48.137410+00:00",
+          "revision": 16
+        },
+        {
+          "action": "released",
+          "evidenceSha256": "2d874ed52582b141ad512b4a57b5d3507273d2f811f0f8d288a5c59aa3224bb3",
+          "nextState": "active",
+          "priorState": "testing",
+          "recordedAt": "2026-11-17T23:10:48.200252+00:00",
+          "revision": 17
+        },
+        {
+          "action": "host_action_finished",
+          "evidenceSha256": "373cce17764f7c897e66034760f1a505143f3f47c8d4f32bebfbbd3ede43c6b6",
+          "nextState": "active",
+          "priorState": "active",
+          "recordedAt": "2026-11-17T23:10:48.219011+00:00",
+          "revision": 18
+        },
+        {
+          "action": "host_action_requested",
+          "evidenceSha256": "aba90e3c2006a42b2c0d80082338a5fa7b8f0d20d3bde0ca3c5cae6ad8394a5b",
+          "nextState": "active",
+          "priorState": "active",
+          "recordedAt": "2026-11-17T23:10:48.288017+00:00",
+          "revision": 19
+        },
+        {
+          "action": "host_action_claimed",
+          "evidenceSha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "nextState": "active",
+          "priorState": "active",
+          "recordedAt": "2026-11-17T23:10:48.309317+00:00",
+          "revision": 20
+        },
+        {
+          "action": "host_action_finished",
+          "evidenceSha256": "d2b8db1ad40061593cf6d58ee06695e94715b3269dc752e70973474ad7c3aea8",
+          "nextState": "rolled_back",
+          "priorState": "active",
+          "recordedAt": "2026-11-17T23:10:48.391730+00:00",
+          "revision": 21
+        },
+        {
+          "action": "host_action_requested",
+          "evidenceSha256": "7c77cf6a2647f74f4203dfe4e3a3509a85e69194a20f5abd801bcbcf325d8b63",
+          "nextState": "rolled_back",
+          "priorState": "rolled_back",
+          "recordedAt": "2026-11-17T23:10:48.436860+00:00",
+          "revision": 22
+        },
+        {
+          "action": "host_action_claimed",
+          "evidenceSha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "nextState": "rolled_back",
+          "priorState": "rolled_back",
+          "recordedAt": "2026-11-17T23:10:48.459630+00:00",
+          "revision": 23
+        },
+        {
+          "action": "withdrawn",
+          "evidenceSha256": "76d54e604846655d050fae5727cfcb264685cebc7d5435c80a0ed27756b30936",
+          "nextState": "rolled_back",
+          "priorState": "rolled_back",
+          "recordedAt": "2026-11-17T23:10:48.495521+00:00",
+          "revision": 24
+        },
+        {
+          "action": "host_action_finished",
+          "evidenceSha256": "67a991e7657acc86502cef7406e0d80980f54b37701444ce6b662b3b84ac6515",
+          "nextState": "rolled_back",
+          "priorState": "rolled_back",
+          "recordedAt": "2026-11-17T23:10:48.512343+00:00",
+          "revision": 25
+        }
+      ],
+      "nextCursor": 25,
+      "operationId": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "list": {
+      "items": [
+        {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "allowedActions": [],
+          "bindingSha256": "2f327d02d2f33e88476ab7721fa668fda0c17a413a56ccb7d45477f07aee9da6",
+          "build": {
+            "bytes": 2506,
+            "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+            "files": 24,
+            "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+          },
+          "createdAt": "2026-11-17T23:10:46.403821+00:00",
+          "errorCode": null,
+          "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+          "hostAction": null,
+          "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "installedState": "absent",
+          "kind": "install",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "owned": true,
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "phase": "withdrawn",
+          "recipe": {
+            "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+            "approvalValid": true,
+            "artifactPaths": [
+              "static/fixture-tool"
+            ],
+            "build": {
+              "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+              "network": "denied",
+              "timeoutMs": 30000
+            },
+            "cleanupPaths": [
+              "build-cache"
+            ],
+            "createdAt": "2026-11-17T23:10:46.328324+00:00",
+            "description": "Explicit offline process fixture",
+            "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+            "lockfilePaths": [],
+            "name": "Fixture executable",
+            "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+            "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+            "repository": "https://github.com/example/reviewed-tool.git",
+            "slug": "fixture-tool",
+            "tests": [
+              {
+                "kind": "smoke",
+                "name": "smoke",
+                "timeoutMs": 1000
+              },
+              {
+                "kind": "unit",
+                "name": "unit",
+                "timeoutMs": 1000
+              }
+            ]
+          },
+          "releaseBindingSha256": "cf2d4f16f1ac48ec4424f5afcd937875ddfbd2f874449dc29132ab102272bd7a",
+          "releaseEvidenceSha256": "76d54e604846655d050fae5727cfcb264685cebc7d5435c80a0ed27756b30936",
+          "releaseGeneration": 2,
+          "releaseState": "withdrawn",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "review": {
+            "automaticActivation": false,
+            "buildArgv": [
+              "/usr/bin/python3",
+              "-I",
+              "-B",
+              "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+            ],
+            "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+            "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+            "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "kind": "install",
+            "lockfiles": [],
+            "network": "denied",
+            "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+            "oldCommit": null,
+            "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+            "requiresPostflight": true,
+            "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+            "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+          },
+          "revision": 25,
+          "slug": "fixture-tool",
+          "source": {
+            "bytes": 39,
+            "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+            "files": 2,
+            "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+            "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+            "repository": "https://github.com/example/reviewed-tool.git",
+            "schema": "potbot-tool-source/v1",
+            "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+            "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+            "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+          },
+          "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+          "tests": [
+            {
+              "elapsedMs": 2,
+              "kind": "smoke",
+              "name": "smoke",
+              "passed": true
+            },
+            {
+              "elapsedMs": 2,
+              "kind": "unit",
+              "name": "unit",
+              "passed": true
+            }
+          ],
+          "updatedAt": "2026-11-17T23:10:48.510335+00:00"
+        }
+      ],
+      "nextCursor": null,
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "postflight": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [],
+        "bindingSha256": "326ba2221ae1bc769dc6059ba058e207a9f90c59c2fde07a1363452c8eaa4a4e",
+        "build": {
+          "bytes": 2506,
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "files": 24,
+          "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+        },
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+        "hostAction": {
+          "action": "postflight",
+          "status": "queued"
+        },
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "held",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "repinned",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": "8978bc9028f69eec21ee473e09b68403855fad6136dd96cf5d45d5399535dc69",
+        "releaseEvidenceSha256": null,
+        "releaseGeneration": 1,
+        "releaseState": "repinned",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 14,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [
+          {
+            "elapsedMs": 2,
+            "kind": "smoke",
+            "name": "smoke",
+            "passed": true
+          },
+          {
+            "elapsedMs": 2,
+            "kind": "unit",
+            "name": "unit",
+            "passed": true
+          }
+        ],
+        "updatedAt": "2026-11-17T23:10:48.065748+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "recipes": {
+      "items": [
+        {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        }
+      ],
+      "nextCursor": null,
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "released": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [
+          "rollback"
+        ],
+        "bindingSha256": "aba90e3c2006a42b2c0d80082338a5fa7b8f0d20d3bde0ca3c5cae6ad8394a5b",
+        "build": {
+          "bytes": 2506,
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "files": 24,
+          "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+        },
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+        "hostAction": null,
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "released",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "active",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": "8978bc9028f69eec21ee473e09b68403855fad6136dd96cf5d45d5399535dc69",
+        "releaseEvidenceSha256": "2d874ed52582b141ad512b4a57b5d3507273d2f811f0f8d288a5c59aa3224bb3",
+        "releaseGeneration": 1,
+        "releaseState": "released",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 18,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [
+          {
+            "elapsedMs": 2,
+            "kind": "smoke",
+            "name": "smoke",
+            "passed": true
+          },
+          {
+            "elapsedMs": 2,
+            "kind": "unit",
+            "name": "unit",
+            "passed": true
+          }
+        ],
+        "updatedAt": "2026-11-17T23:10:48.216400+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "repin": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [],
+        "bindingSha256": "ebe956c6a13f0bca25323b42bcf78b9167aad2913cadcf49a2189f2abdbbba05",
+        "build": {
+          "bytes": 2506,
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "files": 24,
+          "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+        },
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+        "hostAction": {
+          "action": "repin",
+          "status": "queued"
+        },
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "held",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "rolled_back",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": null,
+        "releaseEvidenceSha256": null,
+        "releaseGeneration": 1,
+        "releaseState": "none",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 22,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [
+          {
+            "elapsedMs": 2,
+            "kind": "smoke",
+            "name": "smoke",
+            "passed": true
+          },
+          {
+            "elapsedMs": 2,
+            "kind": "unit",
+            "name": "unit",
+            "passed": true
+          }
+        ],
+        "updatedAt": "2026-11-17T23:10:48.434801+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "repinned": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [
+          "rollback",
+          "postflight"
+        ],
+        "bindingSha256": "ad4d0dbc84e7538881b2637197964acc21a0ddbc645246386feea8c460d7b3a3",
+        "build": {
+          "bytes": 2506,
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "files": 24,
+          "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+        },
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+        "hostAction": null,
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "held",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "repinned",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": "8978bc9028f69eec21ee473e09b68403855fad6136dd96cf5d45d5399535dc69",
+        "releaseEvidenceSha256": null,
+        "releaseGeneration": 1,
+        "releaseState": "repinned",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 13,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [
+          {
+            "elapsedMs": 2,
+            "kind": "smoke",
+            "name": "smoke",
+            "passed": true
+          },
+          {
+            "elapsedMs": 2,
+            "kind": "unit",
+            "name": "unit",
+            "passed": true
+          }
+        ],
+        "updatedAt": "2026-11-17T23:10:48.030031+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "requested": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [
+          "cancel"
+        ],
+        "bindingSha256": "fb384c19c40c6eb05b19105566364b53dbe0631b654632d23b4a824361d756b9",
+        "build": null,
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": null,
+        "hostAction": null,
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "unknown",
+        "kind": null,
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "source_queued",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": null,
+        "releaseEvidenceSha256": null,
+        "releaseGeneration": 0,
+        "releaseState": "none",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": null,
+        "revision": 1,
+        "slug": "fixture-tool",
+        "source": null,
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [],
+        "updatedAt": "2026-11-17T23:10:46.403821+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "reviewed": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [
+          "approve-build",
+          "cancel"
+        ],
+        "bindingSha256": "984147fb08e2c869f9225cf82f73046737ab63571cb4eb77fad185a751a051de",
+        "build": null,
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": null,
+        "hostAction": null,
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "absent",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "review",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": null,
+        "releaseEvidenceSha256": null,
+        "releaseGeneration": 0,
+        "releaseState": "none",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 3,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [],
+        "updatedAt": "2026-11-17T23:10:46.922548+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "rollback": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [],
+        "bindingSha256": "239c4d1904e082f436d3f8d87f9b5477a8d0d21292914dac7071f830d15638ad",
+        "build": {
+          "bytes": 2506,
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "files": 24,
+          "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+        },
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+        "hostAction": {
+          "action": "rollback",
+          "status": "queued"
+        },
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "released",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "active",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": "8978bc9028f69eec21ee473e09b68403855fad6136dd96cf5d45d5399535dc69",
+        "releaseEvidenceSha256": "2d874ed52582b141ad512b4a57b5d3507273d2f811f0f8d288a5c59aa3224bb3",
+        "releaseGeneration": 1,
+        "releaseState": "released",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 19,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [
+          {
+            "elapsedMs": 2,
+            "kind": "smoke",
+            "name": "smoke",
+            "passed": true
+          },
+          {
+            "elapsedMs": 2,
+            "kind": "unit",
+            "name": "unit",
+            "passed": true
+          }
+        ],
+        "updatedAt": "2026-11-17T23:10:48.285295+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "tested": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [
+          "approve",
+          "reject"
+        ],
+        "bindingSha256": "ef5e61e66b6e72987dbf6425d67fc535bb509d0a09f6e9dac0bd1eea15e00581",
+        "build": {
+          "bytes": 2506,
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "files": 24,
+          "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+        },
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+        "hostAction": null,
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "absent",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "awaiting_approval",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": null,
+        "releaseEvidenceSha256": null,
+        "releaseGeneration": 0,
+        "releaseState": "none",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 6,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [
+          {
+            "elapsedMs": 2,
+            "kind": "smoke",
+            "name": "smoke",
+            "passed": true
+          },
+          {
+            "elapsedMs": 2,
+            "kind": "unit",
+            "name": "unit",
+            "passed": true
+          }
+        ],
+        "updatedAt": "2026-11-17T23:10:47.726590+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    },
+    "withdrawn": {
+      "operation": {
+        "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+        "allowedActions": [],
+        "bindingSha256": "2f327d02d2f33e88476ab7721fa668fda0c17a413a56ccb7d45477f07aee9da6",
+        "build": {
+          "bytes": 2506,
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "files": 24,
+          "isolationIdentity": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "treeSha256": "93488de637dd056ae63a5e76c07e0d0851de5b60b1463a726368290c437b34e9"
+        },
+        "createdAt": "2026-11-17T23:10:46.403821+00:00",
+        "errorCode": null,
+        "evidenceSha256": "7a6671673926b251e9d99ad5c241c8949f801efb0067cb83f074302c0f6a1e25",
+        "hostAction": null,
+        "id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+        "installedState": "absent",
+        "kind": "install",
+        "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+        "oldCommit": null,
+        "owned": true,
+        "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+        "phase": "withdrawn",
+        "recipe": {
+          "agentId": "5690c998-7155-4a35-987a-732cbd90e21b",
+          "approvalValid": true,
+          "artifactPaths": [
+            "static/fixture-tool"
+          ],
+          "build": {
+            "commandSha256": "748bdefd27e15383d5563f01869caedccf91779daf158828f8345828a8f49ff3",
+            "network": "denied",
+            "timeoutMs": 30000
+          },
+          "cleanupPaths": [
+            "build-cache"
+          ],
+          "createdAt": "2026-11-17T23:10:46.328324+00:00",
+          "description": "Explicit offline process fixture",
+          "id": "2f150072-21ca-436b-a48d-9ac00c2ab993",
+          "lockfilePaths": [],
+          "name": "Fixture executable",
+          "ownerPrincipalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "slug": "fixture-tool",
+          "tests": [
+            {
+              "kind": "smoke",
+              "name": "smoke",
+              "timeoutMs": 1000
+            },
+            {
+              "kind": "unit",
+              "name": "unit",
+              "timeoutMs": 1000
+            }
+          ]
+        },
+        "releaseBindingSha256": "cf2d4f16f1ac48ec4424f5afcd937875ddfbd2f874449dc29132ab102272bd7a",
+        "releaseEvidenceSha256": "76d54e604846655d050fae5727cfcb264685cebc7d5435c80a0ed27756b30936",
+        "releaseGeneration": 2,
+        "releaseState": "withdrawn",
+        "repository": "https://github.com/example/reviewed-tool.git",
+        "review": {
+          "automaticActivation": false,
+          "buildArgv": [
+            "/usr/bin/python3",
+            "-I",
+            "-B",
+            "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596/checkout/run.py"
+          ],
+          "buildRoot": "/home/dc960c04679319200dac26c1d57fca5a89df3e6a3ca16746a2d45704049bd66a/builds/8cc4483c4a3f470a8d30ffbcb4d4e596",
+          "commandSha256": "6698add5e607a7b6747d06155a62c6d0a7775847ee3c1cbdfb6dfe47900b5b24",
+          "imageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "install",
+          "lockfiles": [],
+          "network": "denied",
+          "newCommit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "oldCommit": null,
+          "qualificationSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "recipeSha256": "d62e0444861e702fac681002d6a311f1b46fc12f84cfe958173fa53c6abf1227",
+          "requiresPostflight": true,
+          "sha256": "58cfc94e64e69a1c2548103f12a3f5d90d6ac97dec39a2e00e1ed15a1a78364d",
+          "sourceSha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f"
+        },
+        "revision": 25,
+        "slug": "fixture-tool",
+        "source": {
+          "bytes": 39,
+          "commit": "86fa2ce97c4612c32113563fe1b59cc8d0be86ea",
+          "files": 2,
+          "git_tree": "d109512bef767f3bc6648e245c98345372174488",
+          "operation_id": "8cc4483c-4a3f-470a-8d30-ffbcb4d4e596",
+          "repository": "https://github.com/example/reviewed-tool.git",
+          "schema": "potbot-tool-source/v1",
+          "source_sha256": "6aeb47ef2c307c997911aa48aab646a40c293adf417e9356c34bd0c4aaee082f",
+          "storage_sha256": "4621a0d49101e60f19aabfe4482cd58639f3d981b56894817c8a7310c9417885",
+          "tree_sha256": "cb3c35960b6a1d004310e3f75dc9c01eb2fa6da7150a5fbaa7a8376746e87361"
+        },
+        "suiteSha256": "60bc0f6086017d6828ff4bc5547eb5dc9eaa81ebafc68e8101595ab692f1948f",
+        "tests": [
+          {
+            "elapsedMs": 2,
+            "kind": "smoke",
+            "name": "smoke",
+            "passed": true
+          },
+          {
+            "elapsedMs": 2,
+            "kind": "unit",
+            "name": "unit",
+            "passed": true
+          }
+        ],
+        "updatedAt": "2026-11-17T23:10:48.510335+00:00"
+      },
+      "principalId": "f484356b-5944-485c-ad95-5eacbffa7a01",
+      "schema": "potbot-tool-acquisitions/v1",
+      "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+    }
+  },
+  "workspaceId": "348590f4-bad4-4b24-b6c2-56ce9cd91652"
+}

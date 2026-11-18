@@ -129,14 +129,19 @@ class ToolApprovalWorker:
         finally:
             os.close(fd)
 
-    def run_once(self) -> dict[str, object]:
+    def run_once(self, *, operation_id: UUID | None = None) -> dict[str, object]:
         claim = self.approvals.claim(
-            self.context, agent_id=self.agent_id, setup_token=self.setup_token
+            self.context,
+            agent_id=self.agent_id,
+            setup_token=self.setup_token,
+            **({"operation_id": operation_id} if operation_id is not None else {}),
         )
         if claim is None:
             return {"state": "idle"}
         if claim["agent_id"] != self.agent_id:
             raise ScopeDeniedError("S11 approval claim belongs to a different agent")
+        if operation_id is not None and claim["id"] != operation_id:
+            raise ScopeDeniedError("S11 approval claim differs from the selected operation")
         operation = claim["id"]
         token = claim["worker_token"]
         if not isinstance(operation, UUID) or not isinstance(token, UUID):
@@ -151,6 +156,9 @@ class ToolApprovalWorker:
                 slug=claim["slug"],
                 expected_old_commit=claim["old_commit"],
                 confirm=True,
+                authorize_attempt=lambda: self.approvals.validate_claim(
+                    self.context, claim, setup_token=self.setup_token
+                ),
             )
             if result.get("state") != "active" or result.get("new_commit") != claim["new_commit"]:
                 raise StateMismatchError("S11 filesystem activation receipt differs")

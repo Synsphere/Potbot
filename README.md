@@ -110,6 +110,15 @@ authored skill history while adding full-package release identities and signed
 operator controls. Bundled code remains inspectable data; executable dependency
 installation and host qualification keep their existing independent gates.
 
+The [U04-X executable tool lifecycle](docs/implementation/u04-x-executable-tool-acquisition.md)
+adds pinned public Git source acquisition, private operator recipes, exact build
+review, sandbox staging, independent tests, first installation and upgrades.
+The `/setup/tools` workbench and `potbot tool-acquisition` CLI share migration 41
+and the existing S9–S12 owners. Promotion stays held until independent runtime
+repin and installed postflight; first-install rollback restores verified absence.
+Signed recovery fences delayed workers and preserves uncertain outcomes. Native
+host qualification and broader registry discovery remain separate evidence gates.
+
 ## Install and check
 
 Run the entry point for your platform from the extracted checkout:

@@ -59,7 +59,15 @@ _THING = re.compile(r"syn(?:ny)?://thing/[a-z0-9]+(?:[-_][a-z0-9]+)*\Z")
 _SHARED = re.compile(r"shared-tool:[a-z][a-z0-9-]{1,62}\Z")
 _UNIT = re.compile(r"[A-Za-z][A-Za-z0-9_.-]{0,95}\Z")
 _ORIGINS = {"measured", "synthetic", "provider_reported", "conservative_estimate"}
-_RELEASE_STATES = {"none", "repinned", "testing", "failed", "indeterminate", "released"}
+_RELEASE_STATES = {
+    "none",
+    "repinned",
+    "testing",
+    "failed",
+    "indeterminate",
+    "released",
+    "withdrawn",
+}
 _UPGRADE_STATES = {
     "awaiting_approval",
     "approved",
@@ -104,6 +112,7 @@ runtime_heads AS (
              ELSE 'rejected' END ORDER BY created_at DESC,id DESC) AS rank
  FROM ui_tool_upgrade_approvals
  WHERE workspace_id=%(workspace)s AND principal_id=%(principal)s
+ AND acquisition_phase IN ('none','tested')
 ), upgrades AS (
  SELECT * FROM upgrade_heads WHERE rank=1
  ORDER BY created_at DESC,id LIMIT %(cap)s
@@ -510,8 +519,14 @@ def project_observations(
             selected["state"] = "indeterminate"
         elif phase == "failed":
             selected["state"] = "degraded"
-        elif state in {"executing", "awaiting_repin"} or phase in {"repinned", "testing"}:
+        elif state in {"executing", "awaiting_repin"} or phase in {
+            "repinned",
+            "testing",
+            "withdrawn",
+        }:
             selected["state"] = "policy_disabled"
+        if phase == "withdrawn":
+            selected["reasons"].append("installation_withdrawn")
         if phase in {"repinned", "testing", "failed"}:
             selected["reasons"].append(
                 {

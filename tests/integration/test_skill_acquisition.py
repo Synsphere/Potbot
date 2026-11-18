@@ -537,9 +537,9 @@ def test_populated_v39_upgrade_preserves_genuine_authored_sessions_and_releases(
         )
     with admin_connection(app_env.admin_dsn, schema) as conn:
         ledger = conn.execute("SELECT * FROM schema_migrations ORDER BY version").fetchall()
-    assert migrate(app_env.admin_dsn, schema) == tuple(range(1, 41))
+    assert migrate(app_env.admin_dsn, schema, migrations[:40]) == tuple(range(1, 41))
     grant_application_role(app_env.admin_dsn, schema, role)
-    assert migrate(app_env.admin_dsn, schema) == tuple(range(1, 41))
+    assert migrate(app_env.admin_dsn, schema, migrations[:40]) == tuple(range(1, 41))
     with database.transaction(actor) as conn:
         current = conn.execute("SELECT * FROM workspace_context_skills").fetchone()
         assert current == {

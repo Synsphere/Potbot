@@ -28,6 +28,7 @@ from typing import Literal
 from uuid import UUID
 
 from potbot.domain.errors import InvalidInputError, ScopeDeniedError, StateMismatchError
+from potbot.tools.shared_tool_git import validate_git_metadata, validate_tracked_source
 from potbot.tools.workspace_concurrency import (
     AccessRequest,
     AccessResource,
@@ -313,6 +314,7 @@ class SharedToolStore:
 
     def _git(self, cwd: Path, *args: str) -> str:
         """Read-only git introspection; no hooks, repo scripts, fetch or filters."""
+        validate_git_metadata(cwd)
         env = {
             "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
             "LANG": "C",
@@ -321,6 +323,7 @@ class SharedToolStore:
             "GIT_CONFIG_GLOBAL": os.devnull,
             "GIT_OPTIONAL_LOCKS": "0",
             "GIT_TERMINAL_PROMPT": "0",
+            "GIT_NO_REPLACE_OBJECTS": "1",
         }
         argv = [
             self.git,
@@ -328,6 +331,8 @@ class SharedToolStore:
             "core.hooksPath=/dev/null",
             "-c",
             "core.fsmonitor=false",
+            "-c",
+            "core.attributesFile=/dev/null",
             "-c",
             "submodule.recurse=false",
             "-c",
@@ -349,6 +354,7 @@ class SharedToolStore:
             raise StateMismatchError("shared checkout Git root differs from installed tool")
         if self._git(checkout, "remote", "get-url", "origin") != definition.repository:
             raise StateMismatchError("shared tool remote origin differs from operator pin")
+        validate_tracked_source(checkout, definition.commit, self._git)
         parent = checkout.parent
         for relative, digest in definition.reusable_artifacts:
             artifact = parent / relative

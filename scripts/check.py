@@ -136,7 +136,11 @@ def main() -> int:
                         # roughly 165 seconds on GitHub-hosted Linux runners. A
                         # 240-second cap flakes under ordinary runner contention;
                         # keep a bounded two-baseline allowance instead.
-                        timeout={"postgres": 900, "sandbox": 360}.get(label, 240),
+                        # The complete PostgreSQL lane now includes the skill,
+                        # operation and executable lifecycle migrations. Its
+                        # prior 15-minute bound expired at 89% on merged U04-A.
+                        # Keep a finite process deadline without dropping gates.
+                        timeout={"postgres": 1800, "sandbox": 360}.get(label, 240),
                         temporary_root=pytest_root,
                     )
                 finally:

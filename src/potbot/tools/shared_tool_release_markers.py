@@ -78,7 +78,7 @@ def validate_hold(value: object, slug: str) -> dict[str, Any]:
             value.get("schema") != "potbot-tool-release-hold/1"
             or value.get("slug") != slug
             or not _SLUG.fullmatch(slug)
-            or value.get("direction") not in {"activate", "rollback"}
+            or value.get("direction") not in {"activate", "rollback", "withdraw"}
             or not isinstance(value.get("commit"), str)
             or re.fullmatch(r"[a-f0-9]{40}", value["commit"]) is None
         )
@@ -204,7 +204,8 @@ class ToolMaintenanceProbe:
         request = self.guard.request
         if hold is not None:
             if (
-                self.hold_sha256 is None
+                hold["direction"] == "withdraw"
+                or self.hold_sha256 is None
                 or request.operation != "tool.postflight"
                 or str(request.workspace_id) != hold["workspace_id"]
                 or str(request.actor_id) != hold["agent_id"]
@@ -244,6 +245,10 @@ def blocked_directories(runtime: SharedWorkspaceRuntime) -> tuple[str, ...]:
     if probe is not None and not isinstance(probe, ToolMaintenanceProbe):
         raise ScopeDeniedError("S12 maintenance probe is not an operator capability")
     for child in root.iterdir():
+        if child.name.startswith(".potbot-s10-incoming-"):
+            # Interrupted descriptor-copy residue is never a runnable stage.
+            # Releasing a reconciled lease must not expose it to interpreters.
+            blocked.add(child.name)
         if child.name.startswith(".potbot-s9-stage-"):
             if probe is None or not probe.admits(root, child.name, None):
                 blocked.add(child.name)
@@ -259,6 +264,11 @@ def blocked_directories(runtime: SharedWorkspaceRuntime) -> tuple[str, ...]:
             hold = read_hold(root, slug)
             if hold is None:
                 raise StateMismatchError("S12 release hold disappeared during admission")
+            if hold["direction"] == "withdraw":
+                # An absence receipt never grants permission to execute the
+                # retained removed tree, even under a postflight capability.
+                blocked.add(slug)
+                continue
             if probe is not None and probe.admits(root, slug, hold):
                 continue
             authority = runtime.tool_release_authority

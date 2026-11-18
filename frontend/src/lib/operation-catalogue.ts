@@ -79,11 +79,12 @@ export function projectOperation(value: unknown): Operation | null {
     const value = doc(row.release);
     if (!value || typeof value.operationId !== "string" || !UUID.test(value.operationId) ||
         typeof value.state !== "string" || !["awaiting_approval", "approved", "rejected", "executing", "awaiting_repin", "active", "indeterminate", "rolled_back"].includes(value.state) ||
-        typeof value.releaseState !== "string" || !["none", "repinned", "testing", "failed", "indeterminate", "released"].includes(value.releaseState) ||
+        typeof value.releaseState !== "string" || !["none", "repinned", "testing", "failed", "indeterminate", "released", "withdrawn"].includes(value.releaseState) ||
         !(value.generation === null || (count(value.generation) && value.generation >= 1)) ||
         !nullableId(value.bindingSha256, SHA) || !nullableId(value.evidenceSha256, SHA) ||
         (value.releaseState !== "none" && value.generation === null) ||
-        (value.releaseState === "released" && (value.bindingSha256 === null || value.evidenceSha256 === null))) return null;
+        (["released", "withdrawn"].includes(value.releaseState) && (value.bindingSha256 === null || value.evidenceSha256 === null)) ||
+        (value.releaseState === "withdrawn" && (value.state !== "rolled_back" || row.state === "qualified"))) return null;
     release = { operationId: value.operationId, state: value.state as string, releaseState: value.releaseState as string,
       generation: value.generation as number | null, bindingSha256: value.bindingSha256, evidenceSha256: value.evidenceSha256 };
   }

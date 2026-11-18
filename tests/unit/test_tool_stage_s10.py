@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
+from dataclasses import replace
 from types import SimpleNamespace
 from uuid import uuid4
 
@@ -163,3 +165,30 @@ def test_source_copy_does_not_run_git_hooks(layout):
         ["git", "rev-parse", "HEAD"], cwd=tools / stage_name(p.slug, p.operation_id) / "checkout"
     ).strip()
     assert before == after
+
+
+def test_first_install_build_plan_records_an_explicit_absent_predecessor():
+    p = replace(plan(), expected_old_commit=None)
+    assert p.expected_old_commit is None
+    with pytest.raises(InvalidInputError):
+        replace(p, expected_old_commit="absent")
+
+
+def test_safe_copy_cannot_block_on_a_regular_file_replaced_by_fifo(tmp_path, monkeypatch):
+    source, destination = tmp_path / "source", tmp_path / "destination"
+    source.mkdir()
+    destination.mkdir()
+    target = source / "data"
+    target.write_bytes(b"before")
+    original = os.open
+
+    def swap(name, flags, *args, **kwargs):
+        if name == "data" and flags & os.O_ACCMODE == os.O_RDONLY:
+            assert flags & os.O_NONBLOCK
+            target.unlink()
+            os.mkfifo(target)
+        return original(name, flags, *args, **kwargs)
+
+    monkeypatch.setattr(os, "open", swap)
+    with pytest.raises(StateMismatchError, match="changed before"):
+        _SafeCopy().copy(source, destination)

@@ -52,3 +52,11 @@ test('failed, unresolved and legacy records never display a successful release',
   assert.equal(releaseStatus({...record, releaseState:'failed'}).attention, true);
   assert.equal(releaseStatus({...record, releaseState:'indeterminate'}).attention, true);
 });
+test('first installations use explicit absence and withdrawn releases never imply an installed tool',()=>{
+  const first={...record,oldCommit:null};assert.deepEqual(upgradeRecord(first,ws),first);
+  const withdrawn={...first,state:'rolled_back',releaseState:'withdrawn',releaseGeneration:2,
+    releaseBindingSha256:'e'.repeat(64),releaseEvidenceSha256:'f'.repeat(64)};
+  assert.deepEqual(upgradeRecord(withdrawn,ws),withdrawn);
+  assert.equal(releaseStatus(withdrawn).label,'Installation removed');
+  for(const invalid of [{...withdrawn,oldCommit:record.oldCommit},{...withdrawn,state:'active'},{...withdrawn,releaseEvidenceSha256:null},{...withdrawn,releaseBindingSha256:null}])assert.equal(upgradeRecord(invalid,ws),null);
+});

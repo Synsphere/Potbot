@@ -1,0 +1,109 @@
+name: U04-X executable tool acquisition
+on:
+  push:
+    paths:
+      - 'src/potbot/tools/tool_acquisition*.py'
+      - 'src/potbot/tools/tool_sources.py'
+      - 'src/potbot/tools/shared_tool*.py'
+      - 'src/potbot/tools/shared_workspace_isolation.py'
+      - 'src/potbot/tools/tool_stage_s10.py'
+      - 'src/potbot/tools/tool_approval_worker_s11.py'
+      - 'src/potbot/tools/tool_release_gate_s12.py'
+      - 'src/potbot/tools/workspace_*.py'
+      - 'src/potbot/api/ui_tool*.py'
+      - 'src/potbot/api/server_cli.py'
+      - 'src/potbot/cli.py'
+      - 'src/potbot/persistence/tool_*.py'
+      - 'src/potbot/persistence/schema.py'
+      - 'src/potbot/controller/operation_catalogue.py'
+      - 'frontend/src/app/api/ui/tools/**'
+      - 'frontend/src/app/setup/tools/**'
+      - 'frontend/src/lib/tool-acquisition*.ts'
+      - 'frontend/src/lib/server/tool-acquisition.ts'
+      - 'frontend/tests/tool-acquisitions*.test.mjs'
+      - 'frontend/tests/fixtures/tool-acquisitions-http.json'
+      - 'tests/unit/test_tool_*.py'
+      - 'tests/unit/test_shared_tool*.py'
+      - 'tests/unit/test_ui_tool*.py'
+      - 'tests/integration/test_tool_acquisition*.py'
+      - 'tests/integration/test_shared_tool*.py'
+      - 'scripts/check.py'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - 'compose.yaml'
+      - '.github/workflows/tool-acquisition-u04-x.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lifecycle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      # Disposable fixture credentials, never a production database.
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+      POTBOT_TOOL_ACQUISITION_CONTRACT_OUTPUT: artifacts/tool-acquisitions-http.json
+      UV_PYTHON: '3.12'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.23'
+      - name: Install the locked application and test environment
+        run: uv sync --locked --extra postgres --extra credentials --extra web --dev
+      - name: Start real PostgreSQL and pgvector
+        run: docker compose up --detach --wait --wait-timeout 90
+      - name: Verify complete source, approval, first-install and rollback lifecycle
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_tool_sources.py
+          tests/unit/test_tool_source_process_lifetime.py
+          tests/unit/test_tool_acquisition_recipe.py
+          tests/unit/test_tool_acquisition_cli.py
+          tests/unit/test_ui_tool_acquisitions.py
+          tests/unit/test_tool_stage_claim_fences.py
+          tests/unit/test_shared_tool_git.py
+          tests/unit/test_shared_tool_first_install.py
+          tests/unit/test_tool_stage_s10.py
+          tests/unit/test_shared_tool_store.py
+          tests/unit/test_shared_tool_upgrades_s9.py
+          tests/unit/test_tool_approval_worker_s11.py
+          tests/unit/test_tool_upgrade_approval_store_s11.py
+          tests/unit/test_ui_tool_upgrades_s11.py
+          tests/unit/test_shared_tool_release_s12.py
+          tests/unit/test_shared_tool_mounts_s5.py
+          tests/unit/test_shared_workspace_isolation.py
+          tests/unit/test_shared_tool_install_gate.py
+          tests/unit/test_workspace_concurrency.py
+          tests/unit/test_operation_catalogue.py
+          tests/integration/test_tool_acquisition.py
+          tests/integration/test_tool_acquisition_pipeline.py
+          tests/integration/test_shared_tool_first_install.py
+          tests/integration/test_shared_tool_release_s12.py
+          --junitxml=artifacts/tool-acquisition-u04-x.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify actual HTTP records against browser projections and route contracts
+        run: >-
+          node --experimental-strip-types --test
+          frontend/tests/tool-acquisitions-contract.test.mjs
+          frontend/tests/tool-acquisitions.test.mjs
+          frontend/tests/tool-acquisitions-routes.test.mjs
+          frontend/tests/tool-acquisitions-recovery.test.mjs
+      - name: Retain acquisition evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: tool-acquisition-u04-x
+          path: |
+            artifacts/tool-acquisition-u04-x.xml
+            artifacts/tool-acquisitions-http.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Stop disposable database
+        if: always()
+        run: docker compose down --volumes --remove-orphans --timeout 10

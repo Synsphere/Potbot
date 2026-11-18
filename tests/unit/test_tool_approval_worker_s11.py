@@ -38,6 +38,7 @@ def rig(tmp_path):
     }
     approvals = SimpleNamespace(
         claim=lambda ctx, **kwargs: claim,
+        validate_claim=lambda *args, **kwargs: None,
         finished=[],
         finish=lambda ctx, **kwargs: approvals.finished.append(kwargs),
     )
@@ -136,3 +137,16 @@ def test_forged_test_summary_blocks_activation(rig):
         worker.run_once()
     assert invocations == []
     assert approvals.finished[0]["active"] is False
+
+
+def test_selected_operation_is_forwarded_to_the_existing_claim_owner(rig):
+    worker, claim, approvals, _, _, _ = rig
+    seen = []
+
+    def selected(ctx, **kwargs):
+        seen.append(kwargs)
+        return claim
+
+    approvals.claim = selected
+    assert worker.run_once(operation_id=claim["id"])["state"] == "awaiting_repin"
+    assert seen[0]["operation_id"] == claim["id"]

@@ -67,6 +67,12 @@ class SQLitePG:
                 sql,
             )
             self.db.execute(sql)
+        # This legacy SQL-shape fixture exercises current S11 queries. The
+        # actual migration41 constraints/RLS are qualified on PostgreSQL.
+        self.db.execute("ALTER TABLE ui_tool_upgrade_approvals ADD COLUMN acquisition_kind TEXT")
+        self.db.execute(
+            "ALTER TABLE ui_tool_upgrade_approvals ADD COLUMN acquisition_phase TEXT NOT NULL DEFAULT 'none'"
+        )
         self.statements = []
 
     @contextmanager
@@ -85,6 +91,7 @@ class SQLitePG:
             return Cursor(self.db.execute("SELECT 1"))
         statement = (
             sql.replace("%s::jsonb", "?")
+            .replace("%s::uuid", "?")
             .replace("%s", "?")
             .replace(" FOR UPDATE SKIP LOCKED", "")
             .replace(" FOR UPDATE", "")

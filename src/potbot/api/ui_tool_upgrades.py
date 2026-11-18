@@ -36,7 +36,7 @@ class ToolApprovalClaim(TypedDict):
     id: UUID
     agent_id: UUID
     slug: str
-    old_commit: str
+    old_commit: str | None
     new_commit: str
     evidence_sha256: str
     suite_sha256: str
@@ -194,8 +194,7 @@ class UiToolUpgradeStore:
         if (
             not isinstance(slug, str)
             or not _SLUG.fullmatch(slug)
-            or not isinstance(old, str)
-            or not _COMMIT.fullmatch(old)
+            or (old is not None and (not isinstance(old, str) or not _COMMIT.fullmatch(old)))
             or not isinstance(new, str)
             or not _COMMIT.fullmatch(new)
             or old == new
@@ -254,8 +253,8 @@ class UiToolUpgradeStore:
             row = conn.execute(
                 "INSERT INTO ui_tool_upgrade_approvals "
                 "(workspace_id,id,principal_id,agent_id,slug,old_commit,new_commit,"
-                "suite_sha256,evidence_sha256,passed_tests,tests) "
-                "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s::jsonb) RETURNING *",
+                "suite_sha256,evidence_sha256,passed_tests,tests,acquisition_kind) "
+                "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s::jsonb,%s) RETURNING *",
                 (
                     context.workspace_id,
                     operation,
@@ -268,6 +267,7 @@ class UiToolUpgradeStore:
                     evidence,
                     len(tests),
                     json.dumps(safe_tests),
+                    "install" if old is None else "upgrade",
                 ),
             ).fetchone()
             self._audit(
@@ -281,16 +281,20 @@ class UiToolUpgradeStore:
         with self.database.transaction(context) as conn:
             rows = conn.execute(
                 "SELECT * FROM ui_tool_upgrade_approvals WHERE workspace_id=%s "
+                "AND acquisition_phase IN ('none','tested') "
+                "AND (acquisition_phase='none' OR principal_id=%s) "
                 "ORDER BY created_at DESC,id LIMIT %s",
-                (context.workspace_id, limit),
+                (context.workspace_id, context.principal_id, limit),
             ).fetchall()
         return {"schema": "potbot-tool-upgrades-s11/v1", "items": [_public(row) for row in rows]}
 
     def inspect(self, context: WorkspaceContext, operation: UUID) -> dict[str, object]:
         with self.database.transaction(context) as conn:
             row = conn.execute(
-                "SELECT * FROM ui_tool_upgrade_approvals WHERE workspace_id=%s AND id=%s",
-                (context.workspace_id, operation),
+                "SELECT * FROM ui_tool_upgrade_approvals WHERE workspace_id=%s AND id=%s "
+                "AND acquisition_phase IN ('none','tested') "
+                "AND (acquisition_phase='none' OR principal_id=%s)",
+                (context.workspace_id, operation, context.principal_id),
             ).fetchone()
         if row is None:
             raise ScopeDeniedError("Tool upgrade was not published to this workspace")
@@ -315,8 +319,9 @@ class UiToolUpgradeStore:
         with self.database.transaction(context) as conn:
             row = conn.execute(
                 "SELECT * FROM ui_tool_upgrade_approvals "
-                "WHERE workspace_id=%s AND id=%s FOR UPDATE",
-                (context.workspace_id, operation),
+                "WHERE workspace_id=%s AND id=%s AND acquisition_phase IN ('none','tested') "
+                "AND (acquisition_phase='none' OR principal_id=%s) FOR UPDATE",
+                (context.workspace_id, operation, context.principal_id),
             ).fetchone()
             if row is None:
                 raise ScopeDeniedError("Tool upgrade approval unavailable")
@@ -360,17 +365,26 @@ class UiToolUpgradeStore:
             return _public(updated)
 
     def claim(
-        self, context: WorkspaceContext, *, agent_id: UUID, setup_token: str
+        self,
+        context: WorkspaceContext,
+        *,
+        agent_id: UUID,
+        setup_token: str,
+        operation_id: UUID | None = None,
     ) -> ToolApprovalClaim | None:
         """Host-only worker claim; API never calls this or handles worker token."""
-        if not isinstance(agent_id, UUID):
+        if not isinstance(agent_id, UUID) or (
+            operation_id is not None and not isinstance(operation_id, UUID)
+        ):
             raise InvalidInputError("Approval worker needs an enrolled agent")
         with self.database.transaction(context) as conn:
             row = conn.execute(
                 "SELECT * FROM ui_tool_upgrade_approvals "
-                "WHERE workspace_id=%s AND agent_id=%s AND state='approved' ORDER BY created_at,id "
+                "WHERE workspace_id=%s AND agent_id=%s AND state='approved' "
+                "AND (acquisition_phase='none' OR principal_id=%s) "
+                "AND (%s::uuid IS NULL OR id=%s) ORDER BY created_at,id "
                 "FOR UPDATE SKIP LOCKED LIMIT 1",
-                (context.workspace_id, agent_id),
+                (context.workspace_id, agent_id, context.principal_id, operation_id, operation_id),
             ).fetchone()
             if row is None:
                 return None
@@ -413,6 +427,49 @@ class UiToolUpgradeStore:
                 "passed_tests": row["passed_tests"],
                 "tests": row["tests"],
             }
+
+    def validate_claim(
+        self, context: WorkspaceContext, claim: ToolApprovalClaim, *, setup_token: str
+    ) -> None:
+        """Fence delayed promotion inside its existing native write lease."""
+        if not isinstance(claim, dict) or not isinstance(claim.get("id"), UUID):
+            raise ScopeDeniedError("An exact S11 promotion claim is required")
+        with self.database.transaction(context) as conn:
+            row = conn.execute(
+                "SELECT * FROM ui_tool_upgrade_approvals WHERE workspace_id=%s AND id=%s "
+                "AND (acquisition_phase='none' OR principal_id=%s)",
+                (context.workspace_id, claim["id"], context.principal_id),
+            ).fetchone()
+            if (
+                row is None
+                or row["state"] != "executing"
+                or any(
+                    row[field] != claim.get(field)
+                    for field in (
+                        "agent_id",
+                        "slug",
+                        "old_commit",
+                        "new_commit",
+                        "evidence_sha256",
+                        "suite_sha256",
+                        "passed_tests",
+                        "tests",
+                        "worker_token",
+                    )
+                )
+            ):
+                raise StateMismatchError("The S11 promotion claim was fenced")
+            if (
+                row["approval_principal_id"] is None
+                or not isinstance(row["approval_mac"], str)
+                or not hmac.compare_digest(
+                    row["approval_mac"],
+                    _approval_mac(
+                        setup_token, row, row["approval_principal_id"], row["revision"] - 1
+                    ),
+                )
+            ):
+                raise ScopeDeniedError("The S11 promotion approval is no longer current")
 
     def finish(
         self, context: WorkspaceContext, *, operation: UUID, worker_token: UUID, active: bool
