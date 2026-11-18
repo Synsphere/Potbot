@@ -42,8 +42,10 @@ _SKIP_NAMES = {
     ".venv", ".potbot", "node_modules", ".next",
 }
 _MAX_SOURCE_BYTES = 160 * 1024 * 1024
+_MAX_PROCESS_LOG_BYTES = 128 * 1024
 _HEX = re.compile(r"[0-9a-f]{64}\Z")
 _COMMIT = re.compile(r"[0-9a-f]{40}\Z")
+_BOOTSTRAP_FAILED_STAGE = re.compile(r"^POTBOT_BOOTSTRAP_FAILED_STAGE=([a-z0-9-]+)$", re.MULTILINE)
 
 UV_VERSION = "0.12.23"
 UV_URL = (
@@ -59,6 +61,20 @@ COSIGN_SHA256 = "4629c757b7618056f8ddd7e2625ae9fdd94c0372a65049520bc7d9df9efc7f7
 
 _ROOT_BOOTSTRAP = r"""
 set -eu
+stage="bootstrap"
+cleanup_path=""
+finish() {
+  code=$?
+  if [ -n "$cleanup_path" ]; then
+    rm -rf "$cleanup_path" || true
+  fi
+  if [ "$code" -ne 0 ]; then
+    printf 'POTBOT_BOOTSTRAP_FAILED_STAGE=%s\n' "$stage" >&2
+  fi
+  exit "$code"
+}
+trap finish 0
+
 bundle="$1"
 source_sha="$2"
 uv_url="$3"
@@ -68,11 +84,20 @@ cosign_sha="$6"
 test -f "$bundle"
 test "${#source_sha}" -eq 64
 
+stage="ubuntu-release"
 . /etc/os-release
 test "$ID" = ubuntu
 test "$VERSION_ID" = 24.04
 export DEBIAN_FRONTEND=noninteractive
+
+stage="ubuntu-repositories"
 apt-get update
+apt-get install --yes --no-install-recommends software-properties-common
+command -v add-apt-repository >/dev/null
+add-apt-repository --yes universe
+apt-get update
+
+stage="core-packages"
 apt-get install --yes --no-install-recommends \
   ca-certificates curl python3.12 python3.12-venv python3.12-dev \
   xpra xauth bubblewrap uidmap libseccomp2 strace build-essential \
@@ -85,9 +110,11 @@ command -v umoci >/dev/null
 command -v strace >/dev/null
 command -v setpriv >/dev/null
 
+stage="runtime-directories"
 install -d -m 0755 -o root -g root /usr/local/libexec
 install -d -m 0755 -o root -g root /var/lib/potbot/core-source
 
+stage="uv"
 uv_dir=/usr/local/libexec/potbot-uv-0.12.23
 uv_bin="$uv_dir/uv"
 uv_marker="$uv_dir/.archive-sha256"
@@ -96,34 +123,34 @@ if [ -e "$uv_dir" ]; then
   test -f "$uv_marker"
   test "$(cat "$uv_marker")" = "$uv_sha"
 else
-  tmp="$(mktemp -d /var/tmp/potbot-uv.XXXXXX)"
-  trap 'rm -rf "$tmp"' EXIT
+  cleanup_path="$(mktemp -d /var/tmp/potbot-uv.XXXXXX)"
   curl --proto '=https' --tlsv1.2 --fail --location --silent --show-error \
-    "$uv_url" -o "$tmp/uv.tar.gz"
-  test "$(sha256sum "$tmp/uv.tar.gz" | awk '{print $1}')" = "$uv_sha"
+    "$uv_url" -o "$cleanup_path/uv.tar.gz"
+  test "$(sha256sum "$cleanup_path/uv.tar.gz" | awk '{print $1}')" = "$uv_sha"
   install -d -m 0755 -o root -g root "$uv_dir"
-  tar -xzf "$tmp/uv.tar.gz" -C "$tmp"
-  found="$(find "$tmp" -type f -name uv -perm -u+x | head -n 1)"
+  tar -xzf "$cleanup_path/uv.tar.gz" -C "$cleanup_path"
+  found="$(find "$cleanup_path" -type f -name uv -perm -u+x | head -n 1)"
   test -n "$found"
   install -o root -g root -m 0755 "$found" "$uv_bin"
   printf '%s\n' "$uv_sha" > "$uv_marker"
   chmod 0444 "$uv_marker"
-  rm -rf "$tmp"
-  trap - EXIT
+  rm -rf "$cleanup_path"
+  cleanup_path=""
 fi
 
+stage="cosign"
 cosign=/usr/local/libexec/potbot-cosign
 if [ ! -x "$cosign" ] || [ "$(sha256sum "$cosign" | awk '{print $1}')" != "$cosign_sha" ]; then
-  tmp="$(mktemp /var/tmp/potbot-cosign.XXXXXX)"
-  trap 'rm -f "$tmp"' EXIT
+  cleanup_path="$(mktemp /var/tmp/potbot-cosign.XXXXXX)"
   curl --proto '=https' --tlsv1.2 --fail --location --silent --show-error \
-    "$cosign_url" -o "$tmp"
-  test "$(sha256sum "$tmp" | awk '{print $1}')" = "$cosign_sha"
-  install -o root -g root -m 0755 "$tmp" "$cosign"
-  rm -f "$tmp"
-  trap - EXIT
+    "$cosign_url" -o "$cleanup_path"
+  test "$(sha256sum "$cleanup_path" | awk '{print $1}')" = "$cosign_sha"
+  install -o root -g root -m 0755 "$cleanup_path" "$cosign"
+  rm -f "$cleanup_path"
+  cleanup_path=""
 fi
 
+stage="source-staging"
 source_root="/var/lib/potbot/core-source/$source_sha"
 marker="$source_root/.potbot-source-sha256"
 if [ -e "$source_root" ] && [ ! -f "$marker" ]; then
@@ -147,13 +174,17 @@ PY
 fi
 test "$(cat "$marker")" = "$source_sha"
 
+stage="locked-python"
 cd "$source_root"
 export UV_PROJECT_ENVIRONMENT="$source_root/.venv"
 "$uv_bin" sync --locked --no-dev \
   --extra web --extra security --extra semantics --extra credentials --extra skills \
   --python /usr/bin/python3.12
 test -x "$source_root/.venv/bin/python"
+
+stage="complete"
 printf '%s\n' "$source_root/.venv/bin/python"
+trap - 0
 """
 
 
@@ -223,6 +254,43 @@ def _write_bundle(root: Path, files: list[Path], target: Path) -> None:
     os.replace(temporary, target)
 
 
+def _write_process_log(
+    root: Path, name: str, result: subprocess.CompletedProcess[str]
+) -> Path:
+    directory = root / ".potbot" / "service"
+    if directory.exists() and directory.is_symlink():
+        raise CapabilityUnavailableError("Core runtime service log directory is redirected")
+    directory.mkdir(parents=True, exist_ok=True)
+    target = directory / name
+    if target.is_symlink():
+        raise CapabilityUnavailableError("Core runtime diagnostic log is redirected")
+    payload = (
+        f"return_code={result.returncode}\n"
+        f"--- stdout ---\n{result.stdout or ''}\n"
+        f"--- stderr ---\n{result.stderr or ''}\n"
+    ).encode("utf-8", errors="replace")
+    if len(payload) > _MAX_PROCESS_LOG_BYTES:
+        prefix = b"[older diagnostic output truncated]\n"
+        payload = prefix + payload[-(_MAX_PROCESS_LOG_BYTES - len(prefix)) :]
+    temporary = target.with_name("." + target.name + ".pending")
+    temporary.unlink(missing_ok=True)
+    descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, target)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return target
+
+
+def _failed_bootstrap_stage(stderr: str) -> str:
+    matches = _BOOTSTRAP_FAILED_STAGE.findall(stderr)
+    return matches[-1] if matches else "unknown"
+
+
 def _head(root: Path) -> str:
     result = subprocess.run(
         ["git", "-C", str(root), "rev-parse", "HEAD"],
@@ -275,9 +343,11 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
         root_command, capture_output=True, text=True, timeout=1800, check=False,
         env={**os.environ, "PATH": os.environ.get("PATH", "")},
     )
+    bootstrap_log = _write_process_log(root, "wsl-core-bootstrap.log", result)
     if result.returncode:
+        stage = _failed_bootstrap_stage(result.stderr or "")
         raise CapabilityUnavailableError(
-            "Managed WSL core prerequisites or locked Python environment failed"
+            f"Managed WSL core bootstrap failed during {stage}; inspect {bootstrap_log}"
         )
     python = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else ""
     expected = f"/var/lib/potbot/core-source/{source_sha}/.venv/bin/python"
@@ -297,9 +367,11 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
         capture_output=True, text=True, timeout=1800, check=False,
         env={**os.environ, "PATH": os.environ.get("PATH", "")},
     )
+    qualification_log = _write_process_log(root, "wsl-core-qualification.log", prepare)
     if prepare.returncode:
         raise CapabilityUnavailableError(
-            "Managed WSL sandbox image, accounting or Xpra qualification failed"
+            "Managed WSL sandbox image, accounting or Xpra qualification failed; "
+            f"inspect {qualification_log}"
         )
     try:
         import json
