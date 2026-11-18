@@ -16,6 +16,8 @@ async function boundedJson(response: Response, bound: number): Promise<unknown> 
 export async function agentXpraInventoryProxy(request: Request): Promise<Response> {
   const config = xpraAppScope(request, false);
   if (config instanceof Response) return config;
+  if ("unavailable" in config)
+    return Response.json({workspaceId:config.workspaceId, viewOnly:true, sessions:[]}, {headers:NO_STORE});
   try {
     const response = await fetch(`${config.base}/v1/xpra/agent-sessions`, {
       method: "GET", redirect: "error", cache: "no-store",
@@ -31,6 +33,7 @@ export async function agentXpraInventoryProxy(request: Request): Promise<Respons
 export async function agentXpraTicketProxy(request: Request, agentId: string, sessionId: string): Promise<Response> {
   const config = xpraAppScope(request, true);
   if (config instanceof Response) return config;
+  if ("unavailable" in config) return safeError("Agent Xpra service is not configured.", 503);
   if (!WORKSPACE_ID.test(agentId) || agentId !== agentId.toLowerCase() || !appSessionId(sessionId) ||
       (request.headers.get("content-length") && request.headers.get("content-length") !== "0"))
     return safeError("Invalid agent browser scope.", 400);
