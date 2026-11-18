@@ -19,7 +19,6 @@ import secrets
 import socket
 import subprocess
 import sys
-import tempfile
 import urllib.request
 from pathlib import Path
 from urllib.parse import quote
@@ -27,6 +26,7 @@ from urllib.parse import quote
 from potbot.credentials import CredentialStore, credential_profile, validate_connection
 from potbot.dependencies import project_root
 from potbot.domain.errors import CapabilityUnavailableError, InvalidInputError
+from potbot.tools.temporary import allocate_file
 
 PORT = 55436
 VERSION = "potbot-native-postgres/v1"
@@ -162,8 +162,8 @@ def _mamba(root: Path) -> Path:
     _notice("Downloading the pinned native PostgreSQL package manager")
     temporary: Path | None = None
     try:
-        with tempfile.NamedTemporaryFile(dir=bundle.parent, prefix="download-", delete=False) as writer:
-            temporary = Path(writer.name)
+        fd, temporary = allocate_file(bundle.parent, prefix="download-", suffix=".part")
+        with os.fdopen(fd, "wb") as writer:
             sha = hashlib.sha256()
             size = 0
             with urllib.request.urlopen(MAMBA_RELEASE + "micromamba-" + release, timeout=30) as response:
@@ -298,12 +298,10 @@ def _create_cluster(root: Path) -> None:
     password = secrets.token_urlsafe(42)
     tmp: Path | None = None
     try:
-        with tempfile.NamedTemporaryFile(dir=parent, prefix="cluster-password-", delete=False) as writer:
-            tmp = Path(writer.name)
+        fd, tmp = allocate_file(parent, prefix="cluster-password-", suffix=".txt")
+        with os.fdopen(fd, "wb") as writer:
             writer.write((password + "\n").encode("utf-8"))
             writer.flush()
-        if os.name != "nt":
-            tmp.chmod(0o600)
         _notice("Initializing private PostgreSQL data and password authentication")
         _command([str(initdb), "-D", str(data), "-U", "potbot_admin", "--pwfile", str(tmp),
                   "--auth-host=scram-sha-256", "--auth-local=scram-sha-256", "--encoding=UTF8"],

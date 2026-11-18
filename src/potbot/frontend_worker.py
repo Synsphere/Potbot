@@ -18,7 +18,6 @@ import signal
 import subprocess
 import sys
 import tarfile
-import tempfile
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -28,6 +27,7 @@ from potbot.credentials import CredentialStore, credential_profile
 from potbot.dependencies import project_root
 from potbot.domain.errors import CapabilityUnavailableError, InvalidInputError
 from potbot.service import ServiceConfig, config_path
+from potbot.tools.temporary import TemporaryDirectory
 
 _NODE_VERSION = "22.16.0"
 _NODE_ROOT = "https://nodejs.org/dist/v" + _NODE_VERSION + "/"
@@ -146,7 +146,7 @@ def ensure_node(root: Path | None = None) -> tuple[Path, Path, dict[str, str]]:
         raise CapabilityUnavailableError("Pinned Node.js checksum is unavailable")
     expected = matches[0][0]
     location.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="potbot-node-", dir=location.parent) as staging:
+    with TemporaryDirectory(prefix="potbot-node-", dir=location.parent) as staging:
         temporary = Path(staging)
         data = _download(_NODE_ROOT + release, maximum=_MAX_DOWNLOAD)
         if hashlib.sha256(data).hexdigest() != expected:
