@@ -38,8 +38,19 @@ def test_runtime_units_use_discovered_cgroup_and_distinct_auditor_gid() -> None:
     assert f"accept {cgroup}" in broker
     assert " 1000 1000 998 997\n" in broker
     assert f"POTBOT_OPERATOR_CGROUP_ROOT={cgroup}\n" in files[provision.ENV_FILE]
-    credentials = scoped_launcher._credentials(998, 997, "-all,+net_admin")
+    credentials = scoped_launcher._credentials(
+        998,
+        997,
+        "-all,+net_admin",
+        supplementary_gids=(1000,),
+    )
     assert "--reuid=998" in credentials and "--regid=997" in credentials
+    assert "--groups=1000" in credentials
+    assert "--clear-groups" not in credentials
+
+    worker_credentials = scoped_launcher._credentials(1000, 1000)
+    assert "--clear-groups" in worker_credentials
+    assert not any(item.startswith("--groups=") for item in worker_credentials)
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Linux systemd provisioning")

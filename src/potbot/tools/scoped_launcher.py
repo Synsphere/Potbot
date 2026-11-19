@@ -160,12 +160,28 @@ def _proxy(fd: int, targets: list[int], argv: list[str]) -> int:
         return code if code >= 0 else 128 - code
 
 
-def _credentials(uid: int, gid: int, capability: str = "-all") -> list[str]:
+def _credentials(
+    uid: int,
+    gid: int,
+    capability: str = "-all",
+    *,
+    supplementary_gids: tuple[int, ...] = (),
+) -> list[str]:
+    if (
+        any(type(value) is not int or value <= 0 for value in supplementary_gids)
+        or len(set(supplementary_gids)) != len(supplementary_gids)
+    ):
+        raise CapabilityUnavailableError("Invalid scoped launcher supplementary groups")
+    group_args = (
+        ["--groups=" + ",".join(str(value) for value in supplementary_gids)]
+        if supplementary_gids
+        else ["--clear-groups"]
+    )
     return [
         "/usr/bin/setpriv",
         f"--reuid={uid}",
         f"--regid={gid}",
-        "--clear-groups",
+        *group_args,
         "--no-new-privs",
         f"--bounding-set={capability}",
         f"--inh-caps={capability}",
@@ -251,7 +267,12 @@ def _scope(
         try:
             auditor = subprocess.Popen(
                 [
-                    *_credentials(auditor_uid, auditor_gid, "-all,+net_admin"),
+                    *_credentials(
+                        auditor_uid,
+                        auditor_gid,
+                        "-all,+net_admin",
+                        supplementary_gids=(gid,),
+                    ),
                     sys.executable,
                     "-I",
                     "-m",

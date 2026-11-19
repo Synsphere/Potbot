@@ -112,7 +112,13 @@ def _failure_summary(
     worker: object,
 ) -> dict[str, object]:
     if not isinstance(accounting, dict) or accounting.get("qualified") is not True:
-        return {"stage": "taskstats"}
+        result: dict[str, object] = {"stage": "taskstats"}
+        if isinstance(accounting, dict):
+            for name in ("source", "error"):
+                value = accounting.get(name)
+                if isinstance(value, str):
+                    result[name] = value
+        return result
     if not isinstance(smoke, dict) or smoke.get("qualified_smoke") is not True:
         return {
             "stage": "workspace-smoke",

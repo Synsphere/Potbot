@@ -187,3 +187,23 @@ def test_published_qualifier_reports_scoped_taskstats_failure_without_throwing(
         "source": "scoped-launcher-preflight",
         "error": "PermissionError",
     }
+
+
+def test_taskstats_failure_summary_retains_only_safe_category_fields() -> None:
+    qualifier = _qualifier()
+    summary = qualifier._failure_summary(
+        {
+            "qualified": False,
+            "source": "scoped-launcher-preflight",
+            "error": "CapabilityUnavailableError",
+            "private": "/must/not/escape",
+        },
+        {"qualified_smoke": False},
+        None,
+        None,
+    )
+    assert summary == {
+        "stage": "taskstats",
+        "source": "scoped-launcher-preflight",
+        "error": "CapabilityUnavailableError",
+    }
