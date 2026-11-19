@@ -115,6 +115,7 @@ def test_root_bootstrap_enables_universe_and_marks_failure_stages() -> None:
     assert "/usr/bin/python3.12 -m venv --copies" in _ROOT_BOOTSTRAP
     assert 'test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"' in _ROOT_BOOTSTRAP
     assert '--python "$UV_PROJECT_ENVIRONMENT/bin/python"' in _ROOT_BOOTSTRAP
+    assert "--no-editable" in _ROOT_BOOTSTRAP
     assert 'service_gid="$(id -g synoperator)"' in _ROOT_BOOTSTRAP
     assert '-path "$UV_PROJECT_ENVIRONMENT" -prune' in _ROOT_BOOTSTRAP
     assert 'chmod u+rwX,g+rX,g-w,o-rwx' in _ROOT_BOOTSTRAP

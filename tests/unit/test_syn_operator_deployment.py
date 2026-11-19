@@ -104,8 +104,9 @@ def test_windows_setup_installs_owned_wsl_and_native_service_without_claiming_ke
     assert "--no-launch" in install and "--web-download" in install
     (provision,) = [argv for argv, _ in calls if "--exec" in argv and "/bin/sh" in argv]
     assert provision[-1] == host.PROVISION_UBUNTU
-    assert "gnome-keyring" in provision[-1]
-    assert any(
+    assert "for package in gnome-keyring libpam-gnome-keyring libsecret-tools" in provision[-1]
+    assert "apt-get purge --yes $legacy_packages" in provision[-1]
+    assert not any(
         argv[-4:] == ["/usr/bin/systemctl", "--user", "start", "gnome-keyring-daemon.service"]
         for argv, _ in calls
     )
@@ -182,24 +183,14 @@ def test_setup_resumes_same_registration_after_provisioning_interrupts(managed_h
     assert len([argv for argv, _ in calls if "--install" in argv]) == 1
 
 
-def test_ready_prerequisites_survive_an_interrupted_keystore_start(managed_host, monkeypatch):
+def test_ready_revision_does_not_repeat_native_prerequisites(managed_host):
     manager, _, calls = managed_host
-    run = host.run_host
+    ready = manager.setup()
+    assert ready["prerequisite_revision"] == host.PREREQUISITE_REVISION
+    calls.clear()
 
-    def interrupt_keystore(argv, *, timeout=30):
-        if argv[-1] == "gnome-keyring-daemon.service":
-            raise CapabilityUnavailableError("Interrupted keystore startup")
-        return run(argv, timeout=timeout)
-
-    monkeypatch.setattr(host, "run_host", interrupt_keystore)
-    with pytest.raises(CapabilityUnavailableError, match="Interrupted"):
-        manager.setup()
-    assert manager.status()["setup_phase"] == "native-keystore"
-    checkpoint = manager._read_receipt()
-    resumed = host.WslOperatorHost(manager.root)
-    monkeypatch.setattr(host, "run_host", run)
-    assert resumed.setup()["registration_id"] == checkpoint["registration_id"]
-    assert len([argv for argv, _ in calls if argv[-1] == host.PROVISION_UBUNTU]) == 1
+    assert manager.setup() == ready
+    assert calls == []
 
 
 @pytest.mark.parametrize("mismatch", ["path", "identifier", "version", "state"])
@@ -249,8 +240,7 @@ def test_ready_legacy_receipt_binds_existing_registration_without_provisioning(m
     calls.clear()
 
     assert manager.setup() == ready
-    (keystore,) = calls
-    assert keystore[0][-1] == "gnome-keyring-daemon.service"
+    assert calls == []
 
 
 def test_status_separates_host_readiness_from_worker_qualification(managed_host, monkeypatch):

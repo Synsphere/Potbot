@@ -8,10 +8,15 @@ from potbot import windows_core_runtime
 from potbot.syn_release import host
 
 
-def test_windows_wsl_prerequisites_do_not_install_linux_secret_service() -> None:
-    assert "gnome-keyring" not in host.PROVISION_UBUNTU
-    assert "libsecret-tools" not in host.PROVISION_UBUNTU
+def test_windows_wsl_prerequisites_remove_linux_secret_service() -> None:
     assert "dbus-user-session" in host.PROVISION_UBUNTU
+    assert "for package in gnome-keyring libpam-gnome-keyring libsecret-tools" in host.PROVISION_UBUNTU
+    assert "apt-get purge --yes $legacy_packages" in host.PROVISION_UBUNTU
+    assert "systemctl --global mask gnome-keyring-daemon.service gnome-keyring-daemon.socket" in host.PROVISION_UBUNTU
+    assert "pkill -u synoperator -f" in host.PROVISION_UBUNTU
+    assert "rm -f /etc/xdg/autostart/gnome-keyring-*.desktop" in host.PROVISION_UBUNTU
+    assert "test ! -x /usr/bin/gnome-keyring-daemon" in host.PROVISION_UBUNTU
+    assert ".local/share/keyrings" not in host.PROVISION_UBUNTU
 
 
 def test_legacy_ready_receipt_migrates_to_dpapi_without_starting_keyring(
@@ -43,14 +48,15 @@ def test_legacy_ready_receipt_migrates_to_dpapi_without_starting_keyring(
 
     def run(argv: list[str], *, timeout: int = 30) -> str:
         calls.append((argv, timeout))
-        return ""
+        return "syn-native-prerequisites-ready\n" if argv[-1] == host.PROVISION_UBUNTU else ""
 
     monkeypatch.setattr(host, "run_host", run)
     ready = manager.setup()
 
     assert ready["custody"] == "windows-dpapi-host"
-    assert ready["prerequisite_revision"] == 3
-    assert calls == []
+    assert ready["prerequisite_revision"] == host.PREREQUISITE_REVISION
+    assert len(calls) == 1
+    assert calls[0][0][-1] == host.PROVISION_UBUNTU
 
 
 def test_kernel_activation_does_not_start_linux_keyring(monkeypatch, tmp_path: Path) -> None:

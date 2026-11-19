@@ -25,6 +25,7 @@ from potbot.tools.temporary import create_directory
 DISTRO = "Potbot-SynOperator"
 UBUNTU = "Ubuntu-24.04"
 OPERATOR_USER = "synoperator"
+PREREQUISITE_REVISION = 4
 _PENDING = "registration-pending"
 _HOST_PHASES = {
     "windows-platform",
@@ -95,13 +96,31 @@ test "$(id -u)" = 0
 test "$ID" = ubuntu
 test "$VERSION_ID" = 24.04
 export DEBIAN_FRONTEND=noninteractive
-apt-get update
-apt-get install --yes --no-install-recommends ca-certificates python3.12 python3.12-venv python3.12-dev \
-    dbus-user-session build-essential libgmp-dev
 if ! id synoperator >/dev/null 2>&1; then
     useradd --create-home --shell /bin/bash synoperator
 fi
 test "$(id -u synoperator)" -ne 0
+
+# Windows owns operator custody. Remove the legacy Secret Service stack from
+# this Potbot-owned distro without touching any retained user keyring data.
+systemctl --global mask gnome-keyring-daemon.service gnome-keyring-daemon.socket >/dev/null 2>&1 || true
+pkill -u synoperator -f "gnome-keyring-daemon" >/dev/null 2>&1 || true
+pkill -u synoperator -f "gcr-prompter" >/dev/null 2>&1 || true
+legacy_packages=""
+for package in gnome-keyring libpam-gnome-keyring libsecret-tools; do
+    if dpkg-query -W -f='${db:Status-Status}\n' "$package" 2>/dev/null | grep -qx installed; then
+        legacy_packages="$legacy_packages $package"
+    fi
+done
+if [ -n "$legacy_packages" ]; then
+    apt-get purge --yes $legacy_packages
+fi
+rm -f /etc/xdg/autostart/gnome-keyring-*.desktop
+test ! -x /usr/bin/gnome-keyring-daemon
+
+apt-get update
+apt-get install --yes --no-install-recommends ca-certificates python3.12 python3.12-venv python3.12-dev \
+    dbus-user-session build-essential libgmp-dev
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share/potbot
@@ -373,9 +392,9 @@ class WslOperatorHost:
                     "Windows restart, then rerun host-setup."
                 )
         registration = self._require_registration(registration, record)
-        prerequisites_complete = record.get("prerequisite_revision") == 3 and (
-            record["state"] == "ready"
-            or (record["state"] == "installing" and record.get("setup_phase") == "native-keystore")
+        prerequisites_complete = (
+            record.get("prerequisite_revision") == PREREQUISITE_REVISION
+            and record["state"] == "ready"
         )
         if not prerequisites_complete:
             record = self._checkpoint(
@@ -400,12 +419,16 @@ class WslOperatorHost:
             )
             if confirmation.splitlines()[-1:] != ["syn-native-prerequisites-ready"]:
                 raise CapabilityUnavailableError("Native prerequisites did not confirm completion")
-            record = self._checkpoint(record, "native-prerequisites", prerequisite_revision=3)
+            record = self._checkpoint(
+                record,
+                "native-prerequisites",
+                prerequisite_revision=PREREQUISITE_REVISION,
+            )
         ready = {
             **record,
             "state": "ready",
             "registration_id": registration.identifier,
-            "prerequisite_revision": 3,
+            "prerequisite_revision": PREREQUISITE_REVISION,
             "custody": "windows-dpapi-host",
             "keystore_unlocked": False,
             "operator_identity_created": False,

@@ -220,7 +220,7 @@ fi
 test -f "$UV_PROJECT_ENVIRONMENT/bin/python"
 test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"
 umask 0027
-"$uv_bin" sync --locked --no-dev \
+"$uv_bin" sync --locked --no-dev --no-editable \
   --extra web --extra security --extra semantics --extra credentials --extra skills \
   --python "$UV_PROJECT_ENVIRONMENT/bin/python"
 test -x "$UV_PROJECT_ENVIRONMENT/bin/python"
