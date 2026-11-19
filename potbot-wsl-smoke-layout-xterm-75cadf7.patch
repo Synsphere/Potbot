@@ -1,0 +1,51 @@
+diff --git a/sandbox/image/Dockerfile b/sandbox/image/Dockerfile
+--- a/sandbox/image/Dockerfile
++++ b/sandbox/image/Dockerfile
+@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.title="Potbot minimal Linux sandbox rootfs" \
+       org.opencontainers.image.revision="${SOURCE_COMMIT}"
+ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+         bash ca-certificates coreutils findutils grep sed git gzip tar util-linux \
+-        python3 python3-venv chromium fonts-liberation \
++        python3 python3-venv chromium fonts-liberation xterm \
+         figlet fortune-mod fortunes-min lolcat \
+     && apt-get clean && rm -rf /var/lib/apt/lists/* \
+     && mkdir -p /home /var/ai /opt/potbot/models /usr/local/tools /usr/local/skills /etc/ai /etc/ai-past /etc/skel/.cache /etc/skel/.ollama \
+diff --git a/src/potbot/wsl_core_runtime.py b/src/potbot/wsl_core_runtime.py
+--- a/src/potbot/wsl_core_runtime.py
++++ b/src/potbot/wsl_core_runtime.py
+@@ -594,7 +594,7 @@ def _prepare(args: argparse.Namespace) -> int:
+         (staging, service.pw_gid, 0o700),
+         (models, service.pw_gid, 0o755),
+         (tools, 69, 0o2775),
+-        (ai, service.pw_gid, 0o700),
++        (ai, service.pw_gid, 0o775),
+         (past, service.pw_gid, 0o700),
+     ):
+         _ensure_directory(path, service.pw_uid, gid, mode)
+diff --git a/tests/unit/test_windows_core_runtime.py b/tests/unit/test_windows_core_runtime.py
+--- a/tests/unit/test_windows_core_runtime.py
++++ b/tests/unit/test_windows_core_runtime.py
+@@ -312,3 +312,22 @@ def test_wsl_workspace_shared_tools_are_gid69_setgid() -> None:
+     assert "_ensure_directory(path, service.pw_uid, gid, mode)" in source
+     assert "(home, service.pw_gid, 0o700)" in source
+     assert "(models, service.pw_gid, 0o755)" in source
++
++
++def test_wsl_workspace_ai_config_matches_qualified_group_writable_layout() -> None:
++    source = (project_root() / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
++    # The disposable image qualifier and the persistent workspace must enforce
++    # the same writable /etc/ai contract. Keep history operator-private.
++    assert source.count("(ai, service.pw_gid, 0o775)") == 2
++    assert "(ai, service.pw_gid, 0o700)" not in source
++    assert "(past, service.pw_gid, 0o700)" in source
++
++
++def test_wsl_terminal_recipe_dependency_is_in_sandbox_image() -> None:
++    root = project_root()
++    source = (root / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
++    image = (root / "sandbox/image/Dockerfile").read_text(encoding="utf-8")
++    install = image.split("apt-get install -y --no-install-recommends", 1)[1].split(
++        "&& apt-get clean", 1
++    )[0]
++    assert '"/usr/bin/xterm"' in source
++    assert "xterm" in install.split()

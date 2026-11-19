@@ -463,6 +463,16 @@ def test_wsl_controller_retries_same_pin_and_keeps_previous_selection_on_failure
 
     from potbot.syn_release import wsl_controller
 
+    monkeypatch.setattr(
+        wsl_controller,
+        "_stage_controller_wheel",
+        lambda _manager, _wheel, expected: (
+            f"/home/synoperator/.local/share/potbot/incoming/{expected}.whl"
+        ),
+    )
+    monkeypatch.setattr(
+        wsl_controller, "_remove_staged_controller", lambda _manager, _native: None
+    )
     manager, _, _ = managed_host
     wheel = tmp_path / "potbot-0.5.0.dev12-py3-none-any.whl"
     wheel.write_bytes(b"first reviewed wheel")
@@ -510,6 +520,16 @@ def test_windows_setup_resumes_the_pinned_controller_after_restart(
 
     from potbot.syn_release import wsl_controller
 
+    monkeypatch.setattr(
+        wsl_controller,
+        "_stage_controller_wheel",
+        lambda _manager, _wheel, expected: (
+            f"/home/synoperator/.local/share/potbot/incoming/{expected}.whl"
+        ),
+    )
+    monkeypatch.setattr(
+        wsl_controller, "_remove_staged_controller", lambda _manager, _native: None
+    )
     manager, _, calls = managed_host
     ready_run = host.run_host
     wheel = tmp_path / "potbot-0.5.0.dev12-py3-none-any.whl"

@@ -327,3 +327,4 @@ def test_wsl_terminal_recipe_dependency_is_in_sandbox_image() -> None:
         "&& apt-get clean", 1
     )[0]
     assert '"/usr/bin/xterm"' in source
+    assert "xterm" in install.split()

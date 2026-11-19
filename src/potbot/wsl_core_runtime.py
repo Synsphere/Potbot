@@ -12,13 +12,13 @@ import signal
 import stat
 import subprocess
 import sys
-import tempfile
 import threading
 import time
 from pathlib import Path
 from uuid import UUID
 
 from potbot.domain.errors import CapabilityUnavailableError, InvalidInputError
+from potbot.tools.temporary import TemporaryDirectory
 from potbot.tools.workspace_concurrency import WorkspaceLeaseLedger
 
 IMAGE = "ghcr.io/synsphere/potbot-sandbox"
@@ -95,7 +95,7 @@ def _ensure_scoped_launcher(source: Path, python: Path, service: pwd.struct_pass
     if not helper_source.is_file():
         raise CapabilityUnavailableError("Scoped launcher native source is missing")
     target = Path("/usr/local/libexec/potbot-cgroup-join")
-    with tempfile.TemporaryDirectory(prefix="potbot-join-", dir="/var/tmp") as directory:
+    with TemporaryDirectory(prefix="potbot-join-", dir=Path("/var/tmp")) as directory:
         built = Path(directory) / "potbot-cgroup-join"
         _run(
             ["/usr/bin/cc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
