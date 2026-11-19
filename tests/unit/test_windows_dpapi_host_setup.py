@@ -17,6 +17,10 @@ def test_windows_wsl_prerequisites_remove_linux_secret_service() -> None:
     assert "rm -f /etc/xdg/autostart/gnome-keyring-*.desktop" in host.PROVISION_UBUNTU
     assert "test ! -x /usr/bin/gnome-keyring-daemon" in host.PROVISION_UBUNTU
     assert ".local/share/keyrings" not in host.PROVISION_UBUNTU
+    assert "[boot]\nsystemd=true" in host.PROVISION_UBUNTU
+    assert "[automount]\nenabled=false\nmountFsTab=false" in host.PROVISION_UBUNTU
+    assert "[interop]\nenabled=false\nappendWindowsPath=false" in host.PROVISION_UBUNTU
+    assert "[user]\ndefault=synoperator" in host.PROVISION_UBUNTU
 
 
 def test_legacy_ready_receipt_migrates_to_dpapi_without_starting_keyring(
@@ -48,7 +52,12 @@ def test_legacy_ready_receipt_migrates_to_dpapi_without_starting_keyring(
 
     def run(argv: list[str], *, timeout: int = 30) -> str:
         calls.append((argv, timeout))
-        return "syn-native-prerequisites-ready\n" if argv[-1] == host.PROVISION_UBUNTU else ""
+        return (
+            "POTBOT_WSL_CONFIG_CHANGED=0\n"
+            "syn-native-prerequisites-ready\n"
+            if argv[-1] == host.PROVISION_UBUNTU
+            else ""
+        )
 
     monkeypatch.setattr(host, "run_host", run)
     ready = manager.setup()

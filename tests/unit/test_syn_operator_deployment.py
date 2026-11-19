@@ -85,7 +85,10 @@ def managed_host(monkeypatch, tmp_path):
             return "WSL version: 2.6.3.0\n"
         if "--install" in argv and "--no-distribution" not in argv:
             current.add(host.DISTRO)
-        return "syn-native-prerequisites-ready\n"
+        return (
+            "POTBOT_WSL_CONFIG_CHANGED=0\n"
+            "syn-native-prerequisites-ready\n"
+        )
 
     monkeypatch.setattr(host, "run_host", run)
     monkeypatch.setattr(
@@ -106,6 +109,10 @@ def test_windows_setup_installs_owned_wsl_and_native_service_without_claiming_ke
     assert provision[-1] == host.PROVISION_UBUNTU
     assert "for package in gnome-keyring libpam-gnome-keyring libsecret-tools" in provision[-1]
     assert "apt-get purge --yes $legacy_packages" in provision[-1]
+    assert "[boot]\nsystemd=true" in provision[-1]
+    assert "[automount]\nenabled=false\nmountFsTab=false" in provision[-1]
+    assert "[interop]\nenabled=false\nappendWindowsPath=false" in provision[-1]
+    assert "[user]\ndefault=synoperator" in provision[-1]
     assert not any(
         argv[-4:] == ["/usr/bin/systemctl", "--user", "start", "gnome-keyring-daemon.service"]
         for argv, _ in calls
@@ -622,3 +629,47 @@ def test_windows_lifetime_helpers_parse_in_the_native_powershell_host(tmp_path):
             creationflags=subprocess.CREATE_NO_WINDOW,
         )
         assert result.returncode == 0, "Native Windows task helper did not parse"
+
+
+def test_revision4_host_migrates_wsl_policy_and_restarts_only_managed_distro(
+    managed_host, monkeypatch
+) -> None:
+    manager, _, calls = managed_host
+    ready = manager.setup()
+    manager._write_receipt({**ready, "prerequisite_revision": 4})
+    calls.clear()
+
+    base_run = host.run_host
+
+    def migrating_run(argv, *, timeout=30):
+        calls.append((argv, timeout))
+        if argv[-1:] == [host.PROVISION_UBUNTU]:
+            return (
+                "POTBOT_WSL_CONFIG_CHANGED=1\n"
+                "syn-native-prerequisites-ready\n"
+            )
+        if argv[1:] == ["--terminate", host.DISTRO]:
+            return ""
+        return base_run(argv, timeout=timeout)
+
+    monkeypatch.setattr(host, "run_host", migrating_run)
+    migrated = manager.setup()
+
+    assert migrated["prerequisite_revision"] == host.PREREQUISITE_REVISION
+    terminate_calls = [
+        argv for argv, _ in calls if argv[1:] == ["--terminate", host.DISTRO]
+    ]
+    assert terminate_calls == [[manager.wsl, "--terminate", host.DISTRO]]
+    assert not any(
+        argv[1:2] == ["--shutdown"]
+        for argv, _ in calls
+    )
+
+
+def test_wsl_policy_no_change_does_not_restart_managed_distro(managed_host) -> None:
+    manager, _, calls = managed_host
+    manager.setup()
+    assert not any(
+        argv[1:] == ["--terminate", host.DISTRO]
+        for argv, _ in calls
+    )

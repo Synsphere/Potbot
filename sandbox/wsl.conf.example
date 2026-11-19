@@ -1,5 +1,8 @@
-# Install as /etc/wsl.conf in the dedicated Potbot *WSL distribution*.
+# Installed as /etc/wsl.conf in the dedicated Potbot WSL distribution.
 # This is defense in depth, NOT a Windows security boundary.
+[boot]
+systemd=true
+
 [automount]
 enabled=false
 mountFsTab=false
@@ -9,5 +12,5 @@ enabled=false
 appendWindowsPath=false
 
 [user]
-# Run the host-side Potbot broker as an ordinary Linux user.
-default=potbot
+# Run the host-side Potbot broker as the managed Linux service user.
+default=synoperator

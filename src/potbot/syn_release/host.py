@@ -25,7 +25,7 @@ from potbot.tools.temporary import create_directory
 DISTRO = "Potbot-SynOperator"
 UBUNTU = "Ubuntu-24.04"
 OPERATOR_USER = "synoperator"
-PREREQUISITE_REVISION = 4
+PREREQUISITE_REVISION = 5
 _PENDING = "registration-pending"
 _HOST_PHASES = {
     "windows-platform",
@@ -101,6 +101,34 @@ if ! id synoperator >/dev/null 2>&1; then
 fi
 test "$(id -u synoperator)" -ne 0
 
+# This is a Potbot-owned distro. Its WSL policy is part of the mandatory
+# sandbox boundary, not an optional administrator example.
+test ! -L /etc/wsl.conf
+wsl_config="$(mktemp /etc/.potbot-wsl.conf.XXXXXX)"
+cat > "$wsl_config" <<'POTBOT_WSL_CONF'
+[boot]
+systemd=true
+
+[automount]
+enabled=false
+mountFsTab=false
+
+[interop]
+enabled=false
+appendWindowsPath=false
+
+[user]
+default=synoperator
+POTBOT_WSL_CONF
+chmod 0644 "$wsl_config"
+chown root:root "$wsl_config"
+wsl_config_changed=0
+if [ ! -f /etc/wsl.conf ] || ! cmp -s "$wsl_config" /etc/wsl.conf; then
+    install -o root -g root -m 0644 "$wsl_config" /etc/wsl.conf
+    wsl_config_changed=1
+fi
+rm -f "$wsl_config"
+
 # Windows owns operator custody. Remove the legacy Secret Service stack from
 # this Potbot-owned distro without touching any retained user keyring data.
 systemctl --global mask gnome-keyring-daemon.service gnome-keyring-daemon.socket >/dev/null 2>&1 || true
@@ -126,6 +154,7 @@ install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share/potbot
 command -v dbus-run-session >/dev/null
 loginctl enable-linger synoperator
+printf 'POTBOT_WSL_CONFIG_CHANGED=%s\n' "$wsl_config_changed"
 printf 'syn-native-prerequisites-ready\n'
 """
 
@@ -417,8 +446,21 @@ class WslOperatorHost:
                 ],
                 timeout=1200,
             )
-            if confirmation.splitlines()[-1:] != ["syn-native-prerequisites-ready"]:
+            lines = confirmation.splitlines()
+            if lines[-1:] != ["syn-native-prerequisites-ready"]:
                 raise CapabilityUnavailableError("Native prerequisites did not confirm completion")
+            config_markers = [
+                line for line in lines if line.startswith("POTBOT_WSL_CONFIG_CHANGED=")
+            ]
+            if config_markers not in (
+                ["POTBOT_WSL_CONFIG_CHANGED=0"],
+                ["POTBOT_WSL_CONFIG_CHANGED=1"],
+            ):
+                raise CapabilityUnavailableError(
+                    "Managed WSL policy did not confirm its migration state"
+                )
+            if config_markers == ["POTBOT_WSL_CONFIG_CHANGED=1"]:
+                run_host([self.wsl, "--terminate", DISTRO], timeout=60)
             record = self._checkpoint(
                 record,
                 "native-prerequisites",
