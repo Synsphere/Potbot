@@ -31,12 +31,20 @@ final workspace-state creation.
 
 The digest-staged runtime remains root-owned and immutable to `synoperator`, but
 its complete tree is assigned to the service user's primary group with recursive
-read/traverse/execute permission and no group or other write access. This is a
-runtime-wide invariant rather than a special case for Python: `synoperator` can
-execute any staged workspace program while only root can modify the immutable
-runtime. Bootstrap then invokes the exact staged Python as `synoperator` and
-imports both scoped-launcher modules before systemd provisioning is allowed to
-begin, preventing a later `203/EXEC` failure from hiding a permission problem.
+read/traverse/execute permission and no group or other write access. The parent
+`/var/lib/potbot` and `core-source` directories are explicitly root-owned
+`0755` traversal points. This is a runtime-wide invariant rather than a special
+case for Python: `synoperator` can execute any staged workspace program while
+only root can modify the immutable runtime.
+
+The virtual environment is created first with
+`/usr/bin/python3.12 -m venv --copies`, then uv synchronizes the lockfile into
+that existing environment. Potbot rejects a symlinked venv interpreter both
+before and after the uv sync, so the executable cannot escape into a root-private
+uv-managed Python tree. Bootstrap then invokes that exact copied Python as
+`synoperator` and imports both scoped-launcher modules before systemd
+provisioning is allowed to begin, preventing a later `203/EXEC` failure from
+hiding a permission or interpreter-link problem.
 
 The Windows one-click supervisor keeps Syn's DPAPI custody broker alive for the
 entire managed WSL core-runtime lifetime and forwards its bounded bridge variables

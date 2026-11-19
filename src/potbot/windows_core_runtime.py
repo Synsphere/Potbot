@@ -123,6 +123,7 @@ command -v setpriv >/dev/null
 
 stage="runtime-directories"
 install -d -m 0755 -o root -g root /usr/local/libexec
+install -d -m 0755 -o root -g root /var/lib/potbot
 install -d -m 0755 -o root -g root /var/lib/potbot/core-source
 
 stage="uv"
@@ -188,10 +189,21 @@ test "$(cat "$marker")" = "$source_sha"
 stage="locked-python"
 cd "$source_root"
 export UV_PROJECT_ENVIRONMENT="$source_root/.venv"
+if [ -e "$UV_PROJECT_ENVIRONMENT" ]; then
+  if [ -L "$UV_PROJECT_ENVIRONMENT/bin/python" ] || [ ! -f "$UV_PROJECT_ENVIRONMENT/pyvenv.cfg" ]; then
+    rm -rf "$UV_PROJECT_ENVIRONMENT"
+  fi
+fi
+if [ ! -d "$UV_PROJECT_ENVIRONMENT" ]; then
+  /usr/bin/python3.12 -m venv --copies "$UV_PROJECT_ENVIRONMENT"
+fi
+test -f "$UV_PROJECT_ENVIRONMENT/bin/python"
+test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"
 "$uv_bin" sync --locked --no-dev \
   --extra web --extra security --extra semantics --extra credentials --extra skills \
-  --python /usr/bin/python3.12
-test -x "$source_root/.venv/bin/python"
+  --python "$UV_PROJECT_ENVIRONMENT/bin/python"
+test -x "$UV_PROJECT_ENVIRONMENT/bin/python"
+test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"
 
 stage="service-runtime-permissions"
 service_gid="$(id -g synoperator)"

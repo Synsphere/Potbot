@@ -109,6 +109,10 @@ def test_root_bootstrap_enables_universe_and_marks_failure_stages() -> None:
     ):
         assert f'stage="{stage}"' in _ROOT_BOOTSTRAP
     assert "POTBOT_BOOTSTRAP_FAILED_STAGE=%s" in _ROOT_BOOTSTRAP
+    assert "install -d -m 0755 -o root -g root /var/lib/potbot" in _ROOT_BOOTSTRAP
+    assert "/usr/bin/python3.12 -m venv --copies" in _ROOT_BOOTSTRAP
+    assert 'test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"' in _ROOT_BOOTSTRAP
+    assert '--python "$UV_PROJECT_ENVIRONMENT/bin/python"' in _ROOT_BOOTSTRAP
     assert 'service_gid="$(id -g synoperator)"' in _ROOT_BOOTSTRAP
     assert 'chgrp -hR "$service_gid" "$source_root"' in _ROOT_BOOTSTRAP
     assert 'chmod -R u+rwX,g+rx,g-w,o-rwx "$source_root"' in _ROOT_BOOTSTRAP
