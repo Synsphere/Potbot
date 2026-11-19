@@ -64,18 +64,26 @@ def test_only_explicit_builtin_native_backend_is_selected(
     assert imports == [module_name]
 
 
-def test_windows_managed_wsl_never_opens_linux_secret_service(monkeypatch) -> None:
+def test_windows_managed_wsl_uses_parent_backed_secret_service(monkeypatch) -> None:
     imports: list[str] = []
 
     def imported(name: str) -> SimpleNamespace:
         imports.append(name)
-        raise AssertionError("Linux Secret Service must not be imported")
+        return SimpleNamespace(Keyring=lambda: SimpleNamespace(priority=1))
 
     monkeypatch.setenv("POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED", "1")
     monkeypatch.setattr(credentials.importlib, "import_module", imported)
-    with pytest.raises(CapabilityUnavailableError, match="refuses Linux Secret Service"):
+    with pytest.raises(CapabilityUnavailableError, match="parent-backed Secret Service proxy"):
         credentials.native_backend("linux")
     assert imports == []
+
+    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_HOST", "172.30.16.1")
+    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_PORT", "42319")
+    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_SESSION", "SynHostCustody-" + "a" * 32)
+    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_TOKEN", "11" * 32)
+    backend = credentials.native_backend("linux")
+    assert backend.priority == 1
+    assert imports == ["keyring.backends.SecretService"]
 
 
 @pytest.mark.parametrize("unavailable", ["missing", "disabled", "exception"])

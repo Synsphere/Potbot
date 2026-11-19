@@ -8,10 +8,12 @@ verifies their Git blob identities before using Syn's own locked host project.
 from __future__ import annotations
 
 import hashlib
+import ipaddress
 import json
 import os
 import secrets
 import shutil
+import socket
 import subprocess
 import time
 import urllib.request
@@ -31,10 +33,18 @@ SYN_RELEASE_PUBLIC_KEY = "945786a5587110a061a6b73a02057b327f1ce819db4b0b5850201f
 SYN_RELEASE_KEY_SHA256 = "a47f15e010613c0a839a48f2035b8f71d6f9e46ee3df07ed58487079d56ae216"
 UV_VERSION = "0.12.23"
 
+PARENT_KEYSTORE_CLIENT = "/usr/local/libexec/potbot-parent-keystore-client"
+PARENT_KEYSTORE_ENVIRONMENT = (
+    "POTBOT_PARENT_KEYSTORE_HOST",
+    "POTBOT_PARENT_KEYSTORE_PORT",
+    "POTBOT_PARENT_KEYSTORE_SESSION",
+    "POTBOT_PARENT_KEYSTORE_TOKEN",
+)
 CUSTODY_ENVIRONMENT = (
     "SYN_HOST_CUSTODY_PIPE",
     "SYN_HOST_CUSTODY_CLIENT_WIN",
     "SYN_HOST_CUSTODY_POWERSHELL",
+    *PARENT_KEYSTORE_ENVIRONMENT,
 )
 REQUIRED_MARKER = "POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED"
 
@@ -409,6 +419,15 @@ def prepare_windows_host_custody(host_root: Path) -> dict[str, Path | str]:
         else:
             with runner.open("xb") as output:
                 output.write(raw)
+        server_raw = Path(__file__).with_name("parent_keystore_server.py").read_bytes()
+        server_digest = hashlib.sha256(server_raw).hexdigest()
+        server = source / f"potbot-parent-keystore-server-{server_digest[:16]}.py"
+        if server.exists() or server.is_symlink():
+            if server.is_symlink() or server.read_bytes() != server_raw:
+                raise StateMismatchError("Existing Potbot parent-keystore server differs")
+        else:
+            with server.open("xb") as output:
+                output.write(server_raw)
     return {
         "profile": "potbot.syn-windows-host-custody/1",
         "version": SYN_HOST_CUSTODY_VERSION,
@@ -417,6 +436,7 @@ def prepare_windows_host_custody(host_root: Path) -> dict[str, Path | str]:
         "python": python,
         "client": client,
         "runner": runner,
+        "parent_server": server,
     }
 
 
@@ -443,32 +463,171 @@ def _process_creation_filetime() -> int:
     return (values[0].dwHighDateTime << 32) | values[0].dwLowDateTime
 
 
-def _health(powershell: Path, client: Path, pipe: str) -> bool:
+_WSL_NETWORK_IDENTITY = r"""
+import ipaddress, json, socket, struct
+routes = []
+with open('/proc/net/route', encoding='ascii') as stream:
+    for line in stream:
+        fields = line.split()
+        if len(fields) >= 4 and fields[1] == '00000000' and int(fields[3], 16) & 2:
+            routes.append(fields[2])
+if len(routes) != 1:
+    raise SystemExit(2)
+host = socket.inet_ntoa(struct.pack('<L', int(routes[0], 16)))
+with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+    probe.connect((host, 9))
+    guest = probe.getsockname()[0]
+for value in (host, guest):
+    address = ipaddress.ip_address(value)
+    if address.version != 4 or not address.is_private or address.is_loopback:
+        raise SystemExit(3)
+if host == guest:
+    raise SystemExit(4)
+print(json.dumps({'host': host, 'guest': guest}, sort_keys=True))
+"""
+
+_RECEIVE_PARENT_CLIENT = r"""
+import hashlib, os, pathlib, stat, sys
+path = pathlib.Path(sys.argv[1])
+expected = sys.argv[2]
+payload = sys.stdin.buffer.read(512 * 1024 + 1)
+if len(payload) > 512 * 1024 or hashlib.sha256(payload).hexdigest() != expected:
+    raise SystemExit(64)
+path.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
+parent = path.parent.lstat()
+if not stat.S_ISDIR(parent.st_mode) or parent.st_uid != 0 or parent.st_mode & 0o022:
+    raise SystemExit(65)
+managed = b'#!/usr/bin/python3.12\\n# Managed by Potbot parent keystore client v1\\n'
+if path.exists() or path.is_symlink():
+    info = path.lstat()
+    current = path.read_bytes() if stat.S_ISREG(info.st_mode) else b''
+    if (path.is_symlink() or info.st_uid != 0 or stat.S_IMODE(info.st_mode) != 0o755
+            or (current != payload and not current.startswith(managed))):
+        raise SystemExit(66)
+    if current == payload:
+        raise SystemExit(0)
+temporary = path.with_name('.' + path.name + '.pending')
+try:
+    temporary.unlink(missing_ok=True)
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o755)
+    with os.fdopen(fd, 'wb') as output:
+        output.write(payload)
+        output.flush()
+        os.fsync(output.fileno())
+    os.chown(temporary, 0, 0)
+    os.chmod(temporary, 0o755)
+    os.replace(temporary, path)
+finally:
+    temporary.unlink(missing_ok=True)
+"""
+
+
+def _wsl_network_identity(manager) -> tuple[str, str]:
+    from .host import run_host
+
+    raw = run_host(
+        manager.command(
+            "/usr/bin/python3.12", ["-I", "-B", "-c", _WSL_NETWORK_IDENTITY]
+        ),
+        timeout=20,
+    )
+    try:
+        value = json.loads(raw)
+        host, guest = value["host"], value["guest"]
+        for candidate in (host, guest):
+            address = ipaddress.ip_address(candidate)
+            if address.version != 4 or not address.is_private or address.is_loopback:
+                raise ValueError
+    except (KeyError, TypeError, ValueError):
+        raise CapabilityUnavailableError(
+            "Managed WSL private network identity is invalid"
+        ) from None
+    if host == guest:
+        raise CapabilityUnavailableError("Managed WSL private network identity is invalid")
+    return host, guest
+
+
+def _parent_client_payload() -> bytes:
+    source = Path(__file__).with_name("parent_keystore_client.py").read_bytes()
+    return b"#!/usr/bin/python3.12\n# Managed by Potbot parent keystore client v1\n" + source
+
+
+def _install_parent_client(manager) -> str:
+    from .host import DISTRO, windows_environment
+
+    payload = _parent_client_payload()
+    expected = hashlib.sha256(payload).hexdigest()
+    result = subprocess.run(
+        [
+            manager.wsl,
+            "--distribution",
+            DISTRO,
+            "--user",
+            "root",
+            "--exec",
+            "/usr/bin/python3.12",
+            "-I",
+            "-B",
+            "-c",
+            _RECEIVE_PARENT_CLIENT,
+            PARENT_KEYSTORE_CLIENT,
+            expected,
+        ],
+        input=payload,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=30,
+        check=False,
+        env=windows_environment(),
+    )
+    if result.returncode or len(result.stdout) + len(result.stderr) > 65536:
+        raise CapabilityUnavailableError(
+            "Managed WSL parent-keystore client could not be installed"
+        )
+    return PARENT_KEYSTORE_CLIENT
+
+
+def _allocate_parent_port(host: str) -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+        probe.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        probe.bind((host, 0))
+        return int(probe.getsockname()[1])
+
+
+def _parent_environment(
+    *, host: str, port: int, session: str, token: str, client: str
+) -> dict[str, str]:
+    values = {
+        "SYN_HOST_CUSTODY_PIPE": session,
+        # Syn 0.11 still names these as Windows/PowerShell paths. For Potbot's
+        # hardened WSL host they deliberately point at the same native Linux
+        # compatibility executable; no Windows path or executable enters WSL.
+        "SYN_HOST_CUSTODY_CLIENT_WIN": client,
+        "SYN_HOST_CUSTODY_POWERSHELL": client,
+        "POTBOT_PARENT_KEYSTORE_HOST": host,
+        "POTBOT_PARENT_KEYSTORE_PORT": str(port),
+        "POTBOT_PARENT_KEYSTORE_SESSION": session,
+        "POTBOT_PARENT_KEYSTORE_TOKEN": token,
+        REQUIRED_MARKER: "1",
+    }
+    values["WSLENV"] = ":".join(name + "/u" for name in (*CUSTODY_ENVIRONMENT, REQUIRED_MARKER))
+    return values
+
+
+def _health_via_wsl(manager, environment: dict[str, str], client: str) -> bool:
     try:
         result = subprocess.run(
-            [
-                str(powershell),
-                "-NoLogo",
-                "-NoProfile",
-                "-NonInteractive",
-                "-ExecutionPolicy",
-                "Bypass",
-                "-File",
-                str(client),
-                "-Pipe",
-                pipe,
-            ],
+            manager.command(client, ["-Pipe", environment["SYN_HOST_CUSTODY_PIPE"]]),
             input='{"op":"health"}\n',
             capture_output=True,
             text=True,
-            timeout=3,
+            timeout=5,
             check=False,
+            env=environment,
         )
-        body = (
-            json.loads(result.stdout)
-            if result.returncode == 0 and len(result.stdout) <= 4096
-            else {}
-        )
+        if result.returncode or len(result.stdout) > 4096:
+            return False
+        body = json.loads(result.stdout)
         return (
             body.get("ok") is True
             and body.get("result", {}).get("profile") == "syn.host-custody/1"
@@ -485,17 +644,32 @@ def windows_host_custody(manager):
     runtime = prepare_windows_host_custody(manager.root)
     project = Path(runtime["project"])
     python = Path(runtime["python"])
-    client = Path(runtime["client"])
-    powershell = Path(manager.wsl).parent / "WindowsPowerShell/v1.0/powershell.exe"
-    pipe = "SynHostCustody-" + secrets.token_hex(16)
-    broker = subprocess.Popen(
+    server = Path(runtime["parent_server"])
+    host, guest = _wsl_network_identity(manager)
+    client = _install_parent_client(manager)
+    port = _allocate_parent_port(host)
+    session = "SynHostCustody-" + secrets.token_hex(16)
+    token = secrets.token_hex(32)
+    from .host import windows_environment
+
+    environment = windows_environment()
+    environment.update(
+        _parent_environment(host=host, port=port, session=session, token=token, client=client)
+    )
+    parent = subprocess.Popen(
         [
             str(python),
+            "-I",
             "-B",
-            "-m",
-            "syn_host_custody.broker",
-            "--pipe",
-            pipe,
+            str(server),
+            "--host",
+            host,
+            "--guest",
+            guest,
+            "--port",
+            str(port),
+            "--session",
+            session,
             "--owner-pid",
             str(os.getpid()),
             "--owner-created",
@@ -506,41 +680,29 @@ def windows_host_custody(manager):
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        env={
+            **windows_environment(),
+            "PYTHONNOUSERSITE": "1",
+            "POTBOT_PARENT_KEYSTORE_SERVER_TOKEN": token,
+        },
     )
     try:
         for _ in range(100):
-            if broker.poll() is not None:
+            if parent.poll() is not None:
                 raise CapabilityUnavailableError(
-                    "Syn Windows host-custody broker exited during startup"
+                    "Syn parent keystore authority exited during startup"
                 )
-            if _health(powershell, client, pipe):
+            if _health_via_wsl(manager, environment, client):
                 break
             time.sleep(0.1)
         else:
-            raise CapabilityUnavailableError("Syn Windows host-custody broker did not become ready")
-        from .host import windows_environment
-
-        environment = windows_environment()
-        environment.update(
-            {
-                "SYN_HOST_CUSTODY_PIPE": pipe,
-                "SYN_HOST_CUSTODY_CLIENT_WIN": str(client),
-                "SYN_HOST_CUSTODY_POWERSHELL": str(powershell),
-                REQUIRED_MARKER: "1",
-                "WSLENV": (
-                    "SYN_HOST_CUSTODY_PIPE/u:"
-                    "SYN_HOST_CUSTODY_CLIENT_WIN/u:"
-                    "SYN_HOST_CUSTODY_POWERSHELL/pu:"
-                    "POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED/u"
-                ),
-            }
-        )
+            raise CapabilityUnavailableError("Syn parent keystore authority did not become ready")
         yield environment
     finally:
-        if broker.poll() is None:
-            broker.terminate()
+        if parent.poll() is None:
+            parent.terminate()
             try:
-                broker.wait(timeout=8)
+                parent.wait(timeout=8)
             except subprocess.TimeoutExpired:
-                broker.kill()
-                broker.wait(timeout=5)
+                parent.kill()
+                parent.wait(timeout=5)

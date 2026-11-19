@@ -645,6 +645,68 @@ def _monitor_environment() -> dict[str, str]:
     return result
 
 
+def _core_child_environment(token: str) -> dict[str, str]:
+    import pwd
+
+    from potbot.syn_release.windows_custody import CUSTODY_ENVIRONMENT, REQUIRED_MARKER
+
+    account = pwd.getpwuid(os.geteuid())
+    runtime = f"/run/user/{os.geteuid()}"
+    env = {
+        "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "HOME": account.pw_dir,
+        "LANG": "C.UTF-8",
+        "PYTHONNOUSERSITE": "1",
+        "XDG_RUNTIME_DIR": runtime,
+        "DBUS_SESSION_BUS_ADDRESS": "unix:path=" + runtime + "/bus",
+        "POTBOT_XPRA_BRIDGE_TOKEN": token,
+        "POTBOT_NON_INTERACTIVE": "1",
+    }
+    if os.environ.get("POTBOT_DSN"):
+        env["POTBOT_DSN"] = os.environ["POTBOT_DSN"]
+    for name in (*CUSTODY_ENVIRONMENT, REQUIRED_MARKER):
+        value = os.environ.get(name)
+        if not value:
+            raise CapabilityUnavailableError("Parent keystore capability was not inherited")
+        env[name] = value
+    env.update(_monitor_environment())
+    return env
+
+
+def _start_secret_service(source: Path, env: dict[str, str]) -> subprocess.Popen:
+    if source != source.resolve(strict=True) or source.is_symlink():
+        raise CapabilityUnavailableError("Core source root for Secret Service is invalid")
+    code = (
+        "import sys;"
+        + "sys.path.insert(0," + repr(str(source)) + ");"
+        + "from potbot.syn_release.secret_service_proxy import main;"
+        + "raise SystemExit(main())"
+    )
+    process = subprocess.Popen(
+        ["/usr/bin/python3.12", "-I", "-B", "-c", code],
+        env=env,
+        stdin=subprocess.DEVNULL,
+    )
+    for _ in range(50):
+        if process.poll() is not None:
+            raise CapabilityUnavailableError("Parent-backed Secret Service exited during startup")
+        probe = subprocess.run(
+            ["/usr/bin/busctl", "--user", "--quiet", "status", "org.freedesktop.secrets"],
+            env=env,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=2,
+            check=False,
+        )
+        if probe.returncode == 0:
+            return process
+        time.sleep(0.1)
+    process.terminate()
+    process.wait(timeout=5)
+    raise CapabilityUnavailableError("Parent-backed Secret Service did not become ready")
+
+
 def _run_core(args: argparse.Namespace) -> int:
     if os.geteuid() == 0:
         raise CapabilityUnavailableError("Core operator/Xpra runtime must be unprivileged")
@@ -677,7 +739,9 @@ def _run_core(args: argparse.Namespace) -> int:
         qualification_sha256=paths.qualification_sha256,
         mounts_sha256=mount_fingerprint(paths.ai_config_dir, paths.ai_history_dir),
     )
-    env = {**os.environ, **_monitor_environment()}
+    source = python.parents[2].resolve(strict=True)
+    _protected_root(source)
+    env = _core_child_environment(token)
     env.update({
         "POTBOT_OPERATOR_REQUIRED": "1",
         "POTBOT_OPERATOR_SOCKET": str(socket_path),
@@ -689,12 +753,14 @@ def _run_core(args: argparse.Namespace) -> int:
         "POTBOT_GUI_AUDIT_REQUIRED": "1",
         "POTBOT_XPRA_BRIDGE_TOKEN": token,
     })
-    operator = subprocess.Popen(
-        [str(python), "-I", "-B", "-m", "potbot.startup", "operator", "run",
-         "--manifest", str(manifest), "--socket-path", str(socket_path)],
-        env=env,
-    )
+    secret_service = _start_secret_service(source, env)
+    operator = None
     try:
+        operator = subprocess.Popen(
+            [str(python), "-I", "-B", "-m", "potbot.startup", "operator", "run",
+             "--manifest", str(manifest), "--socket-path", str(socket_path)],
+            env=env,
+        )
         for _ in range(100):
             if operator.poll() is not None:
                 raise CapabilityUnavailableError("Managed WSL operator exited during startup")
@@ -723,14 +789,16 @@ def _run_core(args: argparse.Namespace) -> int:
         while not stopped.wait(0.5):
             if operator.poll() is not None:
                 raise CapabilityUnavailableError("Managed WSL operator stopped")
+            if secret_service.poll() is not None:
+                raise CapabilityUnavailableError("Parent-backed Secret Service stopped")
             if xpra.poll() is not None:
                 raise CapabilityUnavailableError("Managed WSL Xpra bridge stopped")
         return 0
     finally:
-        for process in (locals().get("xpra"), operator):
+        for process in (locals().get("xpra"), operator, secret_service):
             if process is not None and process.poll() is None:
                 process.terminate()
-        for process in (locals().get("xpra"), operator):
+        for process in (locals().get("xpra"), operator, secret_service):
             if process is None:
                 continue
             try:

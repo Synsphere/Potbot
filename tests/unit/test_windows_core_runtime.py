@@ -50,10 +50,12 @@ def test_windows_core_runtime_forwards_only_scoped_runtime_secrets(monkeypatch) 
     custody = {
         **supervisor,
         "SYN_HOST_CUSTODY_PIPE": "SynHostCustody-" + "a" * 32,
-        "SYN_HOST_CUSTODY_CLIENT_WIN": r"C:\\Potbot\\pipe-client.ps1",
-        "SYN_HOST_CUSTODY_POWERSHELL": (
-            r"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
-        ),
+        "SYN_HOST_CUSTODY_CLIENT_WIN": "/usr/local/libexec/potbot-parent-keystore-client",
+        "SYN_HOST_CUSTODY_POWERSHELL": "/usr/local/libexec/potbot-parent-keystore-client",
+        "POTBOT_PARENT_KEYSTORE_HOST": "172.30.16.1",
+        "POTBOT_PARENT_KEYSTORE_PORT": "42319",
+        "POTBOT_PARENT_KEYSTORE_SESSION": "SynHostCustody-" + "a" * 32,
+        "POTBOT_PARENT_KEYSTORE_TOKEN": "11" * 32,
         "POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED": "1",
         "WSLENV": (
             "SYN_HOST_CUSTODY_PIPE/u:"
@@ -67,8 +69,18 @@ def test_windows_core_runtime_forwards_only_scoped_runtime_secrets(monkeypatch) 
     assert "POTBOT_XPRA_BRIDGE_TOKEN/u" in forwarded
     assert "POTBOT_DSN/u" in forwarded
     assert "POTBOT_NON_INTERACTIVE/u" in forwarded
+    assert "POTBOT_PARENT_KEYSTORE_TOKEN/u" in forwarded
+    assert "SYN_HOST_CUSTODY_POWERSHELL/pu" not in forwarded
+    assert result["SYN_HOST_CUSTODY_POWERSHELL"] == custody["SYN_HOST_CUSTODY_POWERSHELL"]
     assert "POTBOT_ADMIN_DSN" not in result["WSLENV"]
     assert "DBUS_SESSION_BUS_ADDRESS" not in result
+    assert set(result) <= {
+        "SystemRoot", "PATH", "SYN_HOST_CUSTODY_PIPE", "SYN_HOST_CUSTODY_CLIENT_WIN",
+        "SYN_HOST_CUSTODY_POWERSHELL", "POTBOT_PARENT_KEYSTORE_HOST",
+        "POTBOT_PARENT_KEYSTORE_PORT", "POTBOT_PARENT_KEYSTORE_SESSION",
+        "POTBOT_PARENT_KEYSTORE_TOKEN", "POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED",
+        "POTBOT_XPRA_BRIDGE_TOKEN", "POTBOT_DSN", "POTBOT_NON_INTERACTIVE", "WSLENV",
+    }
 
 
 @pytest.mark.parametrize("token", ["short", "x\n" * 20])

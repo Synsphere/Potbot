@@ -101,7 +101,9 @@ def _linux_unit(argv: list[str], uid: int, *, host_custody: bool = False) -> byt
     custody = (
         "\nEnvironment=POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED=1"
         "\nPassEnvironment=SYN_HOST_CUSTODY_PIPE SYN_HOST_CUSTODY_CLIENT_WIN "
-        "SYN_HOST_CUSTODY_POWERSHELL"
+        "SYN_HOST_CUSTODY_POWERSHELL POTBOT_PARENT_KEYSTORE_HOST "
+        "POTBOT_PARENT_KEYSTORE_PORT POTBOT_PARENT_KEYSTORE_SESSION "
+        "POTBOT_PARENT_KEYSTORE_TOKEN"
         if host_custody
         else ""
     )

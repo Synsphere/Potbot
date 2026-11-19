@@ -77,9 +77,14 @@ def native_backend(platform_name: str | None = None) -> KeyringBackend:
         platform_name == "linux"
         and os.environ.get("POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED") == "1"
     ):
-        raise CapabilityUnavailableError(
-            "Windows-managed WSL refuses Linux Secret Service; use host-forwarded credentials."
+        required = (
+            "POTBOT_PARENT_KEYSTORE_HOST", "POTBOT_PARENT_KEYSTORE_PORT",
+            "POTBOT_PARENT_KEYSTORE_SESSION", "POTBOT_PARENT_KEYSTORE_TOKEN",
         )
+        if any(not os.environ.get(name) for name in required):
+            raise CapabilityUnavailableError(
+                "Windows-managed WSL requires the parent-backed Secret Service proxy."
+            )
     choices = {
         "win32": ("keyring.backends.Windows", "WinVaultKeyring"),
         "darwin": ("keyring.backends.macOS", "Keyring"),

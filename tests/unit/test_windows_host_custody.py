@@ -76,8 +76,16 @@ def test_windows_custody_environment_fails_closed_without_bridge(monkeypatch, tm
         Fixture()._environment()
 
     monkeypatch.setenv("SYN_HOST_CUSTODY_PIPE", "SynHostCustody-" + "a" * 32)
-    monkeypatch.setenv("SYN_HOST_CUSTODY_CLIENT_WIN", r"C:\Potbot\pipe-client.ps1")
-    monkeypatch.setenv("SYN_HOST_CUSTODY_POWERSHELL", "/mnt/c/Windows/powershell.exe")
+    monkeypatch.setenv(
+        "SYN_HOST_CUSTODY_CLIENT_WIN", "/usr/local/libexec/potbot-parent-keystore-client"
+    )
+    monkeypatch.setenv(
+        "SYN_HOST_CUSTODY_POWERSHELL", "/usr/local/libexec/potbot-parent-keystore-client"
+    )
+    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_HOST", "172.30.16.1")
+    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_PORT", "42319")
+    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_SESSION", "SynHostCustody-" + "a" * 32)
+    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_TOKEN", "11" * 32)
     monkeypatch.setenv("DBUS_SESSION_BUS_ADDRESS", "must-not-be-used")
     environment = Fixture()._environment()
     assert environment[windows_custody.REQUIRED_MARKER] == "1"
@@ -91,8 +99,9 @@ def test_host_custody_systemd_unit_has_no_gnome_keyring_fallback() -> None:
     assert "Environment=POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED=1" in raw
     assert (
         "PassEnvironment=SYN_HOST_CUSTODY_PIPE SYN_HOST_CUSTODY_CLIENT_WIN "
-        "SYN_HOST_CUSTODY_POWERSHELL"
+        "SYN_HOST_CUSTODY_POWERSHELL POTBOT_PARENT_KEYSTORE_HOST "
     ) in raw
+    assert "POTBOT_PARENT_KEYSTORE_TOKEN" in raw
     native = system_service._linux_unit(["/verified/potbot"], 1000).decode()
     assert "Requires=gnome-keyring-daemon.service" in native
 

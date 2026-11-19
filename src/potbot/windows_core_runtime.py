@@ -158,7 +158,7 @@ apt-get update
 progress "core-packages"
 apt-get install --yes --no-install-recommends \
   ca-certificates curl python3.12 python3.12-venv python3.12-dev \
-  xpra xauth bubblewrap uidmap libseccomp2 strace build-essential \
+  xpra xauth bubblewrap uidmap libseccomp2 strace build-essential python3-dbus-next \
   skopeo umoci jq util-linux
 command -v xpra >/dev/null
 command -v bwrap >/dev/null
@@ -278,6 +278,8 @@ progress "service-runtime-probe"
 /usr/sbin/runuser -u synoperator -- \
   "$source_root/.venv/bin/python" -I -B -c \
   'import potbot.tools.scoped_provision; import potbot.tools.scoped_launcher'
+/usr/bin/python3.12 -I -B -c \
+  'import importlib.metadata; import dbus_next; assert importlib.metadata.version("dbus-next") == "0.2.3"'
 
 progress "complete"
 printf '%s\n' "$source_root/.venv/bin/python"
@@ -677,17 +679,30 @@ def _runtime_secret_environment(token: str, application_dsn: str) -> dict[str, s
 def _wsl_environment(
     custody_environment: dict[str, str], token: str, application_dsn: str
 ) -> dict[str, str]:
-    env = dict(custody_environment)
-    env.update(_runtime_secret_environment(token, application_dsn))
-    existing = [item for item in custody_environment.get("WSLENV", "").split(":") if item]
-    for item in (
-        "POTBOT_XPRA_BRIDGE_TOKEN/u",
-        "POTBOT_DSN/u",
-        "POTBOT_NON_INTERACTIVE/u",
-    ):
-        if item not in existing:
-            existing.append(item)
-    env["WSLENV"] = ":".join(existing)
+    from potbot.syn_release.host import windows_environment
+    from potbot.syn_release.windows_custody import CUSTODY_ENVIRONMENT, REQUIRED_MARKER
+
+    # wsl.exe gets only the Windows variables it needs to launch. Linux
+    # receives the explicit capability allowlist below, never Windows PATH.
+    env = windows_environment()
+    runtime = _runtime_secret_environment(token, application_dsn)
+    for name in (*CUSTODY_ENVIRONMENT, REQUIRED_MARKER):
+        value = custody_environment.get(name)
+        if not value:
+            raise StateMismatchError("Parent keystore session is incomplete")
+        env[name] = value
+    for name in ("POTBOT_XPRA_BRIDGE_TOKEN", "POTBOT_DSN", "POTBOT_NON_INTERACTIVE"):
+        env[name] = runtime[name]
+    env["WSLENV"] = ":".join(
+        name + "/u"
+        for name in (
+            *CUSTODY_ENVIRONMENT,
+            REQUIRED_MARKER,
+            "POTBOT_XPRA_BRIDGE_TOKEN",
+            "POTBOT_DSN",
+            "POTBOT_NON_INTERACTIVE",
+        )
+    )
     return env
 
 
