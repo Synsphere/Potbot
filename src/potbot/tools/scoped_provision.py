@@ -365,14 +365,33 @@ def _audit_directory(uid: int, gid: int) -> bool:
         AUDIT.mkdir(mode=0o700)
     except FileExistsError:
         info = AUDIT.lstat()
-        if not stat.S_ISDIR(info.st_mode) or (
-            info.st_uid,
-            info.st_gid,
-            stat.S_IMODE(info.st_mode),
-        ) != (uid, gid, 0o700):
+        if (
+            not stat.S_ISDIR(info.st_mode)
+            or info.st_uid != uid
+            or stat.S_IMODE(info.st_mode) != 0o700
+        ):
             raise CapabilityUnavailableError(
                 "Existing audit directory has a different owner or mode."
             ) from None
+        if info.st_gid != gid:
+            try:
+                # The dedicated WSL host may migrate synoperator's primary
+                # group while preserving this private, service-owned audit tree.
+                # Only that exact owner+0700 case is safe to repair automatically.
+                os.chown(AUDIT, -1, gid)
+            except OSError:
+                raise CapabilityUnavailableError(
+                    "Existing private audit directory group migration failed."
+                ) from None
+            migrated = AUDIT.lstat()
+            if (
+                not stat.S_ISDIR(migrated.st_mode)
+                or (migrated.st_uid, migrated.st_gid, stat.S_IMODE(migrated.st_mode))
+                != (uid, gid, 0o700)
+            ):
+                raise CapabilityUnavailableError(
+                    "Existing private audit directory group migration failed."
+                )
         return False
     try:
         os.chmod(AUDIT, 0o700)

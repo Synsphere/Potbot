@@ -1,6 +1,7 @@
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -51,6 +52,54 @@ def test_runtime_units_use_discovered_cgroup_and_distinct_auditor_gid() -> None:
     worker_credentials = scoped_launcher._credentials(1000, 1000)
     assert "--clear-groups" in worker_credentials
     assert not any(item.startswith("--groups=") for item in worker_credentials)
+
+
+def test_existing_private_audit_directory_migrates_only_its_group(
+    tmp_path, monkeypatch
+) -> None:
+    audit = tmp_path / "audit"
+    audit.mkdir(mode=0o700)
+    audit.chmod(0o700)
+    actual = audit.lstat()
+    uid = actual.st_uid
+    old_gid, new_gid = 1000, 69
+    migrated = False
+    real_lstat = Path.lstat
+
+    def lstat(path: Path):
+        info = real_lstat(path)
+        if path != audit:
+            return info
+        return SimpleNamespace(
+            st_mode=info.st_mode,
+            st_uid=uid,
+            st_gid=new_gid if migrated else old_gid,
+        )
+
+    def chown(path: Path, owner: int, group: int) -> None:
+        nonlocal migrated
+        assert path == audit
+        assert owner == -1
+        assert group == new_gid
+        migrated = True
+
+    monkeypatch.setattr(provision, "AUDIT", audit)
+    monkeypatch.setattr(Path, "lstat", lstat)
+    monkeypatch.setattr(provision.os, "chown", chown)
+
+    assert provision._audit_directory(uid, new_gid) is False
+    assert migrated is True
+
+
+def test_existing_audit_directory_with_wrong_owner_or_mode_is_still_refused(
+    tmp_path, monkeypatch
+) -> None:
+    audit = tmp_path / "audit"
+    audit.mkdir(mode=0o755)
+    audit.chmod(0o755)
+    monkeypatch.setattr(provision, "AUDIT", audit)
+    with pytest.raises(CapabilityUnavailableError, match="different owner or mode"):
+        provision._audit_directory(audit.stat().st_uid, audit.stat().st_gid)
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Linux systemd provisioning")
