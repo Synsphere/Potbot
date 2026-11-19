@@ -259,3 +259,15 @@ def test_wsl_sandbox_qualification_runs_as_complete_synoperator_identity() -> No
     assert '"PYTHONNOUSERSITE": "1"' in source
     assert "_verify_image(" in source
     assert "service," in source
+
+
+def test_wsl_image_cache_wrapper_is_traversable_but_not_writable_by_synoperator() -> None:
+    source = (project_root() / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
+    assert "def _prepare_image_cache_access(" in source
+    assert 'bundle = image_root / "bundle"' in source
+    assert "os.chown(directory, 0, service.pw_gid)" in source
+    assert "os.chmod(directory, 0o750)" in source
+    assert "stat.S_IWGRP | stat.S_IWOTH" in source
+    assert "root_info.st_uid != 0" in source
+    assert "root_info.st_mode & stat.S_IXOTH" in source
+    assert "_prepare_image_cache_access(image_root, rootfs, service)" in source

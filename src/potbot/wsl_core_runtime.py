@@ -177,6 +177,49 @@ def _resolve_image_digest(image_source: str) -> str:
     )
 
 
+def _prepare_image_cache_access(
+    image_root: Path,
+    rootfs: Path,
+    service: pwd.struct_passwd,
+) -> None:
+    bundle = image_root / "bundle"
+    for directory in (image_root, bundle):
+        if directory.is_symlink():
+            raise CapabilityUnavailableError("Sandbox image cache wrapper is redirected")
+        try:
+            info = directory.stat()
+        except OSError as exc:
+            raise CapabilityUnavailableError(
+                "Sandbox image cache wrapper is unavailable"
+            ) from exc
+        if (
+            not stat.S_ISDIR(info.st_mode)
+            or info.st_uid != 0
+            or info.st_mode & (stat.S_IWGRP | stat.S_IWOTH)
+        ):
+            raise CapabilityUnavailableError(
+                "Sandbox image cache wrapper has unsafe ownership or permissions"
+            )
+        os.chown(directory, 0, service.pw_gid)
+        os.chmod(directory, 0o750)
+
+    if rootfs.is_symlink():
+        raise CapabilityUnavailableError("Sandbox rootfs is redirected")
+    try:
+        root_info = rootfs.stat()
+    except OSError as exc:
+        raise CapabilityUnavailableError("Sandbox rootfs is unavailable") from exc
+    if (
+        not stat.S_ISDIR(root_info.st_mode)
+        or root_info.st_uid != 0
+        or root_info.st_mode & (stat.S_IWGRP | stat.S_IWOTH)
+        or not root_info.st_mode & stat.S_IXOTH
+    ):
+        raise CapabilityUnavailableError(
+            "Sandbox rootfs root is not safely traversable by the service"
+        )
+
+
 def _verify_image(
     source: Path,
     source_sha: str,
@@ -241,6 +284,8 @@ def _verify_image(
         except BaseException:
             shutil.rmtree(pending, ignore_errors=True)
             raise
+
+    _prepare_image_cache_access(image_root, rootfs, service)
 
     kernel = os.uname().release
     key = hashlib.sha256(
