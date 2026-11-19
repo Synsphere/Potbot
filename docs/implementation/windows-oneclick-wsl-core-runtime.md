@@ -28,9 +28,14 @@ generic capability error. WSL-side qualification now emits stage markers too, so
 failures distinguish scoped-launcher provisioning, signed sandbox-image
 qualification and final workspace-state creation.
 
-Only the fresh Xpra bridge bearer crosses from Windows to WSL, via `WSLENV`.
-PostgreSQL, provider credentials, API tokens and the GUI password stay in their
-existing Windows custody.
+The Windows one-click supervisor keeps Syn's DPAPI custody broker alive for the
+entire managed WSL core-runtime lifetime and forwards its bounded bridge variables
+through `WSLENV`. The same trusted WSL core receives the fresh Xpra bearer and
+the already-restricted PostgreSQL application-role DSN because its context
+projection must authenticate to PostgreSQL. The administrator DSN, provider
+credentials, API tokens and GUI password remain in Windows custody. The WSL core
+is forced non-interactive so any accidental Linux credential-store lookup fails
+closed instead of opening a GNOME Keyring prompt.
 
 A failed WSL setup/restart, image signature, kernel accounting gate, sandbox
 qualification, operator attachment or Xpra bridge remains a startup failure.

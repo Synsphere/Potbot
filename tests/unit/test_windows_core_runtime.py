@@ -19,24 +19,80 @@ from potbot.windows_core_runtime import (
     _ensure_required_wsl_kernel,
     _failed_bootstrap_stage,
     _failed_qualification_stage,
+    _runtime_secret_environment,
+    _supervisor_command,
     _write_process_log,
     _wsl_environment,
 )
 
 
-def test_wsl_environment_propagates_only_the_xpra_secret(monkeypatch) -> None:
-    monkeypatch.setenv("WSLENV", "EXISTING/u")
-    monkeypatch.setenv("POTBOT_ADMIN_DSN", "not-forwarded")
-    result = _wsl_environment("x" * 48)
-    assert result["POTBOT_XPRA_BRIDGE_TOKEN"] == "x" * 48
-    assert result["WSLENV"].split(":") == ["EXISTING/u", "POTBOT_XPRA_BRIDGE_TOKEN"]
+def test_windows_core_runtime_forwards_only_scoped_runtime_secrets(monkeypatch) -> None:
+    from potbot.syn_release import host
+
+    monkeypatch.setenv("POTBOT_ADMIN_DSN", "must-not-reach-core-runtime")
+    monkeypatch.setattr(
+        host,
+        "windows_environment",
+        lambda: {"SystemRoot": r"C:\\Windows", "PATH": r"C:\\Windows\\System32"},
+    )
+    token = "x" * 48
+    application_dsn = "postgresql://restricted:secret@127.0.0.1:55436/potbot"
+    supervisor = _runtime_secret_environment(token, application_dsn)
+    assert supervisor["POTBOT_XPRA_BRIDGE_TOKEN"] == token
+    assert supervisor["POTBOT_DSN"] == application_dsn
+    assert supervisor["POTBOT_NON_INTERACTIVE"] == "1"
+    assert "POTBOT_ADMIN_DSN" not in supervisor
+
+    custody = {
+        **supervisor,
+        "SYN_HOST_CUSTODY_PIPE": "SynHostCustody-" + "a" * 32,
+        "SYN_HOST_CUSTODY_CLIENT_WIN": r"C:\\Potbot\\pipe-client.ps1",
+        "SYN_HOST_CUSTODY_POWERSHELL": (
+            r"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        ),
+        "POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED": "1",
+        "WSLENV": (
+            "SYN_HOST_CUSTODY_PIPE/u:"
+            "SYN_HOST_CUSTODY_CLIENT_WIN/u:"
+            "SYN_HOST_CUSTODY_POWERSHELL/pu:"
+            "POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED/u"
+        ),
+    }
+    result = _wsl_environment(custody, token, application_dsn)
+    forwarded = result["WSLENV"].split(":")
+    assert "POTBOT_XPRA_BRIDGE_TOKEN/u" in forwarded
+    assert "POTBOT_DSN/u" in forwarded
+    assert "POTBOT_NON_INTERACTIVE/u" in forwarded
     assert "POTBOT_ADMIN_DSN" not in result["WSLENV"]
+    assert "DBUS_SESSION_BUS_ADDRESS" not in result
 
 
 @pytest.mark.parametrize("token", ["short", "x\n" * 20])
-def test_wsl_environment_rejects_bad_bridge_tokens(token: str) -> None:
+def test_windows_core_runtime_rejects_bad_bridge_tokens(monkeypatch, token: str) -> None:
+    from potbot.syn_release import host
+
+    monkeypatch.setattr(host, "windows_environment", lambda: {"SystemRoot": r"C:\\Windows"})
     with pytest.raises(Exception):
-        _wsl_environment(token)
+        _runtime_secret_environment(token, "postgresql://restricted@127.0.0.1/potbot")
+
+
+def test_windows_core_runtime_uses_host_custody_supervisor() -> None:
+    command = _supervisor_command(
+        "/var/lib/potbot/core-source/" + "a" * 64 + "/.venv/bin/python",
+        "/home/synoperator/.local/share/potbot/core/workspace/private/core-state.json",
+    )
+    assert command[:6] == (
+        __import__("sys").executable,
+        "-I",
+        "-B",
+        "-m",
+        "potbot.windows_core_runtime",
+        "supervise",
+    )
+    source = (project_root() / "src/potbot/windows_core_runtime.py").read_text(encoding="utf-8")
+    assert "with windows_host_custody(manager) as custody_environment:" in source
+    assert 'resolve_postgres_dsn("application")' in source
+    assert '"POTBOT_NON_INTERACTIVE": "1"' in source
 
 
 def test_root_bootstrap_enables_universe_and_marks_failure_stages() -> None:

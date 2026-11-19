@@ -15,7 +15,9 @@ import os
 import re
 import stat
 import subprocess
+import sys
 import tarfile
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -203,6 +205,21 @@ class WindowsCoreRuntime:
     environment: dict[str, str]
 
 
+def _supervisor_command(python: str, state: str) -> tuple[str, ...]:
+    return (
+        sys.executable,
+        "-I",
+        "-B",
+        "-m",
+        "potbot.windows_core_runtime",
+        "supervise",
+        "--python",
+        python,
+        "--state",
+        state,
+    )
+
+
 def _source_files(root: Path) -> list[Path]:
     files: list[Path] = []
     total = 0
@@ -368,21 +385,76 @@ def _head(root: Path) -> str:
     return value
 
 
-def _wsl_environment(token: str) -> dict[str, str]:
+def _runtime_secret_environment(token: str, application_dsn: str) -> dict[str, str]:
     if not isinstance(token, str) or not 32 <= len(token) <= 4096 or "\n" in token or "\r" in token:
         raise StateMismatchError("Xpra bridge token is invalid")
-    env = dict(os.environ)
-    env["POTBOT_XPRA_BRIDGE_TOKEN"] = token
-    existing = [item for item in env.get("WSLENV", "").split(":") if item]
-    if "POTBOT_XPRA_BRIDGE_TOKEN" not in existing:
-        existing.append("POTBOT_XPRA_BRIDGE_TOKEN")
+    if (
+        not isinstance(application_dsn, str)
+        or not application_dsn
+        or len(application_dsn) > 4096
+        or "\x00" in application_dsn
+        or "\n" in application_dsn
+        or "\r" in application_dsn
+    ):
+        raise StateMismatchError("Restricted PostgreSQL application credential is invalid")
+    from potbot.syn_release.host import windows_environment
+
+    env = windows_environment()
+    env.update(
+        {
+            "POTBOT_XPRA_BRIDGE_TOKEN": token,
+            "POTBOT_DSN": application_dsn,
+            "POTBOT_NON_INTERACTIVE": "1",
+        }
+    )
+    return env
+
+
+def _wsl_environment(
+    custody_environment: dict[str, str], token: str, application_dsn: str
+) -> dict[str, str]:
+    env = dict(custody_environment)
+    env.update(_runtime_secret_environment(token, application_dsn))
+    existing = [item for item in custody_environment.get("WSLENV", "").split(":") if item]
+    for item in (
+        "POTBOT_XPRA_BRIDGE_TOKEN/u",
+        "POTBOT_DSN/u",
+        "POTBOT_NON_INTERACTIVE/u",
+    ):
+        if item not in existing:
+            existing.append(item)
     env["WSLENV"] = ":".join(existing)
     return env
+
+
+def _supervise_windows_core_runtime(python: str, state: str) -> int:
+    if os.name != "nt":
+        raise CapabilityUnavailableError("Windows core runtime supervisor requires Windows")
+    if not python.startswith("/") or not state.startswith("/home/synoperator/"):
+        raise StateMismatchError("Managed WSL core runtime command escaped its owned paths")
+    token = os.environ.get("POTBOT_XPRA_BRIDGE_TOKEN", "")
+    application_dsn = os.environ.get("POTBOT_DSN", "")
+    from potbot.syn_release.host import WslOperatorHost
+    from potbot.syn_release.windows_custody import windows_host_custody
+
+    manager = WslOperatorHost()
+    with windows_host_custody(manager) as custody_environment:
+        environment = _wsl_environment(custody_environment, token, application_dsn)
+        result = subprocess.run(
+            manager.command(
+                python,
+                ["-I", "-B", "-m", "potbot.wsl_core_runtime", "run", "--state", state],
+            ),
+            check=False,
+            env=environment,
+        )
+    return result.returncode
 
 
 def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> WindowsCoreRuntime:
     if os.name != "nt":
         raise CapabilityUnavailableError("Windows core runtime handoff requires Windows")
+    from potbot.credentials import resolve_postgres_dsn
     from potbot.syn_release.host import DISTRO, WslOperatorHost, run_host
 
     root = project_root()
@@ -449,10 +521,30 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
     if not isinstance(state, str) or not state.startswith("/home/synoperator/"):
         raise CapabilityUnavailableError("Managed WSL core runtime state escaped its private owner")
 
+    application_dsn = resolve_postgres_dsn("application")
     return WindowsCoreRuntime(
-        command=tuple(manager.command(
-            python,
-            ["-I", "-B", "-m", "potbot.wsl_core_runtime", "run", "--state", state],
-        )),
-        environment=_wsl_environment(token),
+        command=_supervisor_command(python, state),
+        environment=_runtime_secret_environment(token, application_dsn),
     )
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    commands = parser.add_subparsers(dest="action", required=True)
+    supervise = commands.add_parser("supervise")
+    supervise.add_argument("--python", required=True)
+    supervise.add_argument("--state", required=True)
+    args = parser.parse_args(argv)
+    try:
+        if args.action == "supervise":
+            return _supervise_windows_core_runtime(args.python, args.state)
+    except (CapabilityUnavailableError, StateMismatchError, OSError, ValueError) as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

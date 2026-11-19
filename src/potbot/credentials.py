@@ -73,6 +73,13 @@ class KeyringBackend(Protocol):
 def native_backend(platform_name: str | None = None) -> KeyringBackend:
     """Select a bundled native adapter without loading configurable plugin chains."""
     platform_name = sys.platform if platform_name is None else platform_name
+    if (
+        platform_name == "linux"
+        and os.environ.get("POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED") == "1"
+    ):
+        raise CapabilityUnavailableError(
+            "Windows-managed WSL refuses Linux Secret Service; use host-forwarded credentials."
+        )
     choices = {
         "win32": ("keyring.backends.Windows", "WinVaultKeyring"),
         "darwin": ("keyring.backends.macOS", "Keyring"),

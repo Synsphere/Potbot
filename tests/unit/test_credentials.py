@@ -64,6 +64,20 @@ def test_only_explicit_builtin_native_backend_is_selected(
     assert imports == [module_name]
 
 
+def test_windows_managed_wsl_never_opens_linux_secret_service(monkeypatch) -> None:
+    imports: list[str] = []
+
+    def imported(name: str) -> SimpleNamespace:
+        imports.append(name)
+        raise AssertionError("Linux Secret Service must not be imported")
+
+    monkeypatch.setenv("POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED", "1")
+    monkeypatch.setattr(credentials.importlib, "import_module", imported)
+    with pytest.raises(CapabilityUnavailableError, match="refuses Linux Secret Service"):
+        credentials.native_backend("linux")
+    assert imports == []
+
+
 @pytest.mark.parametrize("unavailable", ["missing", "disabled", "exception"])
 def test_unavailable_native_backend_has_no_plugin_or_plaintext_fallback(
     monkeypatch: pytest.MonkeyPatch, unavailable: str
