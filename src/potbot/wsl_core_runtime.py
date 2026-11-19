@@ -449,6 +449,58 @@ def _write_private(path: Path, value: dict) -> None:
         temporary.unlink(missing_ok=True)
 
 
+def _activate_workspace_image_pin(
+    ledger: WorkspaceLeaseLedger,
+    workspace: UUID,
+    *,
+    image_digest: str,
+    image_source: str,
+    rootfs: Path,
+    qualification: str,
+) -> int:
+    """Activate or refresh one exact image binding.
+
+    A live qualification receipt deliberately contains a fresh qualification ID,
+    so its receipt SHA changes on every successful requalification.  That is not
+    an image change.  Preserve the exact digest/source/platform/rootfs binding and
+    CAS-refresh only the qualification receipt when those immutable fields match.
+    """
+    image_ref = f"{IMAGE}@sha256:{image_digest}"
+    arguments = {
+        "digest": image_digest,
+        "image_ref": image_ref,
+        "build_commit": image_source,
+        "platform": "linux/amd64",
+        "rootfs_path": rootfs,
+        "qualification_sha256": qualification,
+    }
+    pin = ledger.image_status(workspace)
+    if pin is None:
+        return ledger.pin_image(workspace, **arguments)
+
+    immutable = {
+        "digest": image_digest,
+        "image_ref": image_ref,
+        "build_commit": image_source,
+        "platform": "linux/amd64",
+        "rootfs_path": str(rootfs),
+    }
+    if any(pin.get(name) != value for name, value in immutable.items()):
+        raise CapabilityUnavailableError("Existing workspace image pin differs")
+
+    revision = pin.get("revision")
+    if type(revision) is not int or revision < 1:
+        raise CapabilityUnavailableError("Existing workspace image revision is invalid")
+    if pin.get("qualification_sha256") == qualification:
+        return revision
+
+    return ledger.pin_image(
+        workspace,
+        **arguments,
+        expected_revision=revision,
+    )
+
+
 def _finalize(args: argparse.Namespace) -> int:
     if os.geteuid() == 0:
         raise CapabilityUnavailableError("Final core runtime ownership must be unprivileged")
@@ -476,24 +528,14 @@ def _finalize(args: argparse.Namespace) -> int:
         "controller_ledger": private / "leases.sqlite",
     }
     ledger = WorkspaceLeaseLedger(paths["controller_ledger"], workspace_home=home)
-    pin = ledger.image_status(workspace)
-    if pin is None:
-        ledger.pin_image(
-            workspace,
-            digest=image_digest,
-            image_ref=f"{IMAGE}@sha256:{image_digest}",
-            build_commit=image_source,
-            platform="linux/amd64",
-            rootfs_path=rootfs,
-            qualification_sha256=qualification,
-        )
-    else:
-        if (
-            pin["digest"] != image_digest
-            or pin["qualification_sha256"] != qualification
-            or pin["rootfs_path"] != str(rootfs)
-        ):
-            raise CapabilityUnavailableError("Existing workspace image pin differs")
+    _activate_workspace_image_pin(
+        ledger,
+        workspace,
+        image_digest=image_digest,
+        image_source=image_source,
+        rootfs=rootfs,
+        qualification=qualification,
+    )
 
     manifest = private / "operator.json"
     _write_private(manifest, {
@@ -621,7 +663,23 @@ def _prepare(args: argparse.Namespace) -> int:
         "--ai-config", str(ai),
         "--ai-past", str(past),
     ]
-    result = _run(command, timeout=120)
+    result = subprocess.run(
+        command,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    if result.returncode:
+        for label, output in (("stdout", result.stdout), ("stderr", result.stderr)):
+            if output:
+                bounded = output[-16384:]
+                print(
+                    f"--- finalize {label} ---\n{bounded}",
+                    file=sys.stderr,
+                    flush=True,
+                )
+        raise CapabilityUnavailableError("Required WSL core-runtime finalize command failed")
     _qualification_stage("complete")
     print(result.stdout.strip())
     return 0

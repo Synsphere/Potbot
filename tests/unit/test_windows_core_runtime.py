@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from potbot.dependencies import project_root
+from potbot.domain.errors import CapabilityUnavailableError
 from potbot.windows_core_runtime import (
     _MAX_PROCESS_LOG_BYTES,
     _ROOT_BOOTSTRAP,
@@ -341,3 +342,79 @@ def test_wsl_terminal_recipe_dependency_is_in_sandbox_image() -> None:
     )[0]
     assert '"/usr/bin/xterm"' in source
     assert "xterm" in install.split()
+
+
+def test_wsl_finalize_refreshes_qualification_without_treating_it_as_image_change(
+    tmp_path: Path,
+) -> None:
+    from uuid import uuid4
+
+    from potbot.wsl_core_runtime import _activate_workspace_image_pin
+
+    workspace = uuid4()
+    rootfs = tmp_path / "rootfs"
+    rootfs.mkdir()
+    digest = "a" * 64
+    source = "b" * 40
+    first_qualification = "c" * 64
+    next_qualification = "d" * 64
+
+    class Ledger:
+        def __init__(self) -> None:
+            self.pin = None
+            self.calls = []
+
+        def image_status(self, selected):
+            assert selected == workspace
+            return None if self.pin is None else dict(self.pin)
+
+        def pin_image(self, selected, **kwargs):
+            assert selected == workspace
+            expected = kwargs.pop("expected_revision", 0)
+            current = 0 if self.pin is None else self.pin["revision"]
+            assert expected == current
+            revision = current + 1
+            self.pin = {
+                **kwargs,
+                "rootfs_path": str(kwargs["rootfs_path"]),
+                "revision": revision,
+            }
+            self.calls.append(dict(self.pin))
+            return revision
+
+    ledger = Ledger()
+    assert (
+        _activate_workspace_image_pin(
+            ledger,
+            workspace,
+            image_digest=digest,
+            image_source=source,
+            rootfs=rootfs,
+            qualification=first_qualification,
+        )
+        == 1
+    )
+    assert (
+        _activate_workspace_image_pin(
+            ledger,
+            workspace,
+            image_digest=digest,
+            image_source=source,
+            rootfs=rootfs,
+            qualification=next_qualification,
+        )
+        == 2
+    )
+    assert ledger.pin["qualification_sha256"] == next_qualification
+    assert len(ledger.calls) == 2
+
+    ledger.pin["digest"] = "e" * 64
+    with pytest.raises(CapabilityUnavailableError, match="image pin differs"):
+        _activate_workspace_image_pin(
+            ledger,
+            workspace,
+            image_digest=digest,
+            image_source=source,
+            rootfs=rootfs,
+            qualification="f" * 64,
+        )
