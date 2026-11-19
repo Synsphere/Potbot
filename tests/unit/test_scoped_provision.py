@@ -183,6 +183,10 @@ def test_wsl_scope_detaches_only_known_infrastructure_9p_mounts(tmp_path, monkey
         "1 0 0:1 / /usr/lib/wsl/drivers ro - 9p drivers ro",
         "2 0 0:2 / /usr/lib/wsl/lib ro - 9p lib ro",
         "3 0 0:3 / /init ro - 9p tools ro",
+        "4 0 0:4 / /mnt/wslg ro - 9p wslg ro",
+        "5 4 0:5 / /mnt/wslg/distro ro - 9p distro ro",
+        "6 4 0:6 / /mnt/wslg/doc ro - 9p doc ro",
+        "7 4 0:7 / /mnt/wslg/versions.txt ro - 9p versions ro",
     ]
     mountinfo.write_text("\n".join(rows) + "\n", encoding="utf-8")
     removed = []
@@ -203,7 +207,15 @@ def test_wsl_scope_detaches_only_known_infrastructure_9p_mounts(tmp_path, monkey
 
     monkeypatch.setattr(scoped_launcher.subprocess, "run", run)
     scoped_launcher._detach_wsl_infrastructure_shares(mountinfo)
-    assert removed == ["/usr/lib/wsl/drivers", "/usr/lib/wsl/lib", "/init"]
+    assert removed[:3] == [
+        "/mnt/wslg/distro",
+        "/mnt/wslg/doc",
+        "/mnt/wslg/versions.txt",
+    ]
+    assert "/mnt/wslg" in removed
+    assert "/usr/lib/wsl/drivers" in removed
+    assert "/usr/lib/wsl/lib" in removed
+    assert "/init" in removed
 
 
 def test_wsl_scope_rejects_arbitrary_remaining_drvfs_mount(tmp_path, monkeypatch) -> None:
@@ -221,3 +233,10 @@ def test_wsl_scope_rejects_arbitrary_remaining_drvfs_mount(tmp_path, monkeypatch
     )
     with pytest.raises(CapabilityUnavailableError, match="Windows filesystems"):
         scoped_launcher._detach_wsl_infrastructure_shares(mountinfo)
+
+
+def test_wslg_prefix_accepts_future_nested_infrastructure_mounts() -> None:
+    assert scoped_launcher._known_wsl_infrastructure_mount("/mnt/wslg")
+    assert scoped_launcher._known_wsl_infrastructure_mount("/mnt/wslg/runtime/new-share")
+    assert not scoped_launcher._known_wsl_infrastructure_mount("/mnt/wsl")
+    assert not scoped_launcher._known_wsl_infrastructure_mount("/mnt/c")

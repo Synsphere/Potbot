@@ -30,6 +30,9 @@ _WSL_INFRASTRUCTURE_SHARES = (
     "/usr/lib/wsl/lib",
     "/init",
 )
+_WSL_INFRASTRUCTURE_PREFIXES = (
+    "/mnt/wslg",
+)
 _MODULE = "potbot.tools.scoped_launcher"
 _PACKET = 128 * 1024
 _MAX_FDS = 8
@@ -225,16 +228,29 @@ def _windows_filesystem_mounts(mountinfo: str) -> tuple[str, ...]:
     return tuple(mounts)
 
 
+def _known_wsl_infrastructure_mount(mountpoint: str) -> bool:
+    if mountpoint in _WSL_INFRASTRUCTURE_SHARES:
+        return True
+    return any(
+        mountpoint == prefix or mountpoint.startswith(prefix + "/")
+        for prefix in _WSL_INFRASTRUCTURE_PREFIXES
+    )
+
+
 def _detach_wsl_infrastructure_shares(mounts: Path) -> None:
-    for mountpoint in _windows_filesystem_mounts(mounts.read_text()):
-        if mountpoint in _WSL_INFRASTRUCTURE_SHARES:
-            subprocess.run(
-                ["/usr/bin/umount", "--", mountpoint],
-                check=True,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
+    candidates = [
+        mountpoint
+        for mountpoint in _windows_filesystem_mounts(mounts.read_text())
+        if _known_wsl_infrastructure_mount(mountpoint)
+    ]
+    for mountpoint in sorted(candidates, key=lambda value: value.count("/"), reverse=True):
+        subprocess.run(
+            ["/usr/bin/umount", "--", mountpoint],
+            check=True,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
     remaining = _windows_filesystem_mounts(mounts.read_text())
     if remaining:
         raise CapabilityUnavailableError(
