@@ -15,6 +15,7 @@ from uuid import uuid4
 from potbot.evaluation.sandbox_worker_acceptance import write_report
 from potbot.tools.ai_config_history import AiConfigHistoryMonitor
 from potbot.tools.shared_workspace_isolation import SharedWorkspaceRuntime
+from potbot.tools.worker_telemetry import WorkerMonitorConfig
 from scripts.qualify_shared_workspace import qualify as qualify_workspace
 from scripts.qualify_worker_exit_accounting import qualify as qualify_accounting
 from scripts.worker_audit_fixture import monitored_cog_cgroup
