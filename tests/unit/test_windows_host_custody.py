@@ -137,6 +137,18 @@ def test_parent_keystore_server_waits_for_retired_vault_owner() -> None:
     assert "Parent keystore vault is still owned by another Syn authority" in source
 
 
+def test_parent_keystore_server_restores_only_verified_source_under_isolated_python() -> None:
+    source = (
+        Path(windows_custody.__file__).with_name("parent_keystore_server.py")
+    ).read_text(encoding="utf-8")
+    insert = 'sys.path.insert(0, str(_SOURCE_ROOT))'
+    imported = "from syn_host_custody.broker import"
+    assert "_SOURCE_ROOT = Path(__file__).resolve(strict=True).parent" in source
+    assert 'raise RuntimeError("Parent keystore source root is redirected")' in source
+    assert insert in source
+    assert source.index(insert) < source.index(imported)
+
+
 def test_windows_service_can_replace_only_the_exact_legacy_helper(
     tmp_path, monkeypatch
 ) -> None:

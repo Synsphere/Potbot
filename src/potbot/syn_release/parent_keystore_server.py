@@ -15,7 +15,17 @@ import re
 import socket
 import sys
 import time
+from pathlib import Path
 from typing import Any
+
+# The host-custody project is intentionally `tool.uv.package = false`, so its
+# verified source package is not installed into the venv.  Potbot launches this
+# server with `python -I` to ignore ambient/user Python paths; explicitly restore
+# only the server's own staged, hash-verified project root before importing Syn.
+_SOURCE_ROOT = Path(__file__).resolve(strict=True).parent
+if Path(__file__).is_symlink() or _SOURCE_ROOT.is_symlink():
+    raise RuntimeError("Parent keystore source root is redirected")
+sys.path.insert(0, str(_SOURCE_ROOT))
 
 from syn_host_custody.broker import VaultInUseError, WindowsVault, host_approve
 from syn_host_custody.core import Authority, MAX_REQUEST, root_slot, safe_ref, safe_slot
