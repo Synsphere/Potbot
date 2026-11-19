@@ -8,6 +8,7 @@ import json
 import os
 import subprocess
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 from uuid import uuid4
 
@@ -42,6 +43,28 @@ def _failed_names(section: object) -> list[str]:
         for name, result in section.items()
         if not isinstance(result, dict) or result.get("passed") is not True
     )
+
+
+@contextmanager
+def _monitor_scope(private: Path, audit: Path):
+    if os.environ.get("POTBOT_OPERATOR_SCOPED_LAUNCHER"):
+        installed = WorkerMonitorConfig.from_environment(scoped_worker=True)
+        if installed.scoped_launcher is None:
+            raise RuntimeError("scoped launcher environment did not select an endpoint")
+        yield WorkerMonitorConfig(
+            audit,
+            installed.cgroup_root,
+            installed.strace,
+            installed.cgroup_join,
+            installed.strace_sha256,
+            installed.cgroup_join_sha256,
+            max_trace_bytes=installed.max_trace_bytes,
+            sample_seconds=installed.sample_seconds,
+            scoped_launcher=installed.scoped_launcher,
+        )
+        return
+    with monitored_cog_cgroup(private, audit) as monitor:
+        yield monitor
 
 
 def _failure_summary(
@@ -130,7 +153,7 @@ def main() -> int:
     )
     accounting = qualify_accounting()
     worker = operator = None
-    with monitored_cog_cgroup(private, audit) as monitor:
+    with _monitor_scope(private, audit) as monitor:
         with AiConfigHistoryMonitor(config_dir=ai, past_dir=history) as watcher:
             smoke = qualify_workspace(
                 runtime, watcher, workspace_id=uuid4(), principal_id=uuid4(), monitor_config=monitor
@@ -162,6 +185,8 @@ def main() -> int:
                 "--report",
                 str(report_path),
             ]
+            if os.environ.get("POTBOT_OPERATOR_SCOPED_LAUNCHER"):
+                command.append("--scoped-worker-launcher")
             execution = subprocess.run(
                 command,
                 capture_output=True,

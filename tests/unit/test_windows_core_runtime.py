@@ -239,3 +239,10 @@ def test_wsl_runtime_resolves_synsphere_signed_image_instead_of_hard_coding_dige
     assert "IMAGE_SOURCE =" not in source
     assert "system-v1-{image_source}-amd64" in source
     assert "src/potbot/tools/queue_transport_worker.py" in workflow
+
+
+def test_wsl_qualification_passes_installed_scoped_launcher_environment() -> None:
+    source = (project_root() / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
+    assert '"POTBOT_OPERATOR_SCOPED_LAUNCHER": str(SCOPED_SOCKET)' in source
+    assert "monitor_environment = _monitor_environment()" in source
+    assert 'line == "# Managed by Potbot scoped launcher v2; do not edit"' in source

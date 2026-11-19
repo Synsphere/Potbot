@@ -277,11 +277,17 @@ def _verify_image(source: Path, source_sha: str, image_source: str) -> tuple[Pat
             str(report),
         ]
         try:
+            monitor_environment = _monitor_environment()
             execution = subprocess.run(
                 command,
                 timeout=900,
                 cwd=source,
-                env={**os.environ, "PYTHONPATH": str(source)},
+                env={
+                    **os.environ,
+                    **monitor_environment,
+                    "PYTHONPATH": str(source),
+                    "POTBOT_OPERATOR_SCOPED_LAUNCHER": str(SCOPED_SOCKET),
+                },
                 check=False,
             )
         except subprocess.TimeoutExpired:
@@ -541,6 +547,8 @@ def _monitor_environment() -> dict[str, str]:
         raise CapabilityUnavailableError("Scoped worker monitor environment is missing")
     result: dict[str, str] = {}
     for line in MONITOR_ENV.read_text(encoding="ascii").splitlines():
+        if line == "# Managed by Potbot scoped launcher v2; do not edit":
+            continue
         if not line or "=" not in line:
             raise CapabilityUnavailableError("Scoped worker monitor environment is invalid")
         name, value = line.split("=", 1)

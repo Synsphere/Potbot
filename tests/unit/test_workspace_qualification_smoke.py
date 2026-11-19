@@ -521,3 +521,83 @@ def test_socket_probe_requires_explicit_denial_without_any_connection(
     assert stopped.value.code == expected
     assert families == [socket.AF_INET, socket.AF_INET6][: len(errors)]
     assert len(closed) == errors.count(None)
+
+
+def test_published_image_uses_installed_scoped_launcher_when_available(
+    tmp_path: Path, monkeypatch
+) -> None:
+    source = Path(__file__).resolve().parents[2] / "scripts" / "qualify_published_sandbox_image.py"
+    spec = importlib.util.spec_from_file_location("published_image_qualifier", source)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    audit = tmp_path / "audit"
+    audit.mkdir(mode=0o700)
+    private = tmp_path / "private"
+    private.mkdir(mode=0o700)
+
+    installed = SimpleNamespace(
+        audit_root=tmp_path / "installed-audit",
+        cgroup_root=tmp_path / "cgroup",
+        strace=tmp_path / "strace",
+        cgroup_join=tmp_path / "join",
+        strace_sha256="a" * 64,
+        cgroup_join_sha256="b" * 64,
+        max_trace_bytes=1024 * 1024,
+        sample_seconds=0.2,
+        scoped_launcher=Path("/run/potbot-scoped-worker.sock"),
+    )
+    constructed = []
+
+    class FakeConfig:
+        @classmethod
+        def from_environment(cls, *, scoped_worker=False):
+            assert scoped_worker is True
+            return installed
+
+        def __new__(cls, *args, **kwargs):
+            value = SimpleNamespace(
+                audit_root=args[0],
+                cgroup_root=args[1],
+                strace=args[2],
+                cgroup_join=args[3],
+                strace_sha256=args[4],
+                cgroup_join_sha256=args[5],
+                max_trace_bytes=kwargs["max_trace_bytes"],
+                sample_seconds=kwargs["sample_seconds"],
+                scoped_launcher=kwargs["scoped_launcher"],
+            )
+            constructed.append(value)
+            return value
+
+    monkeypatch.setenv("POTBOT_OPERATOR_SCOPED_LAUNCHER", "/run/potbot-scoped-worker.sock")
+    monkeypatch.setattr(module, "WorkerMonitorConfig", FakeConfig)
+
+    with module._monitor_scope(private, audit) as selected:
+        assert selected.audit_root == audit
+        assert selected.cgroup_root == installed.cgroup_root
+        assert selected.scoped_launcher == Path("/run/potbot-scoped-worker.sock")
+
+    assert len(constructed) == 1
+
+
+def test_published_image_native_mode_keeps_disposable_monitor_fixture(
+    tmp_path: Path, monkeypatch
+) -> None:
+    source = Path(__file__).resolve().parents[2] / "scripts" / "qualify_published_sandbox_image.py"
+    spec = importlib.util.spec_from_file_location("published_image_qualifier_native", source)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    monkeypatch.delenv("POTBOT_OPERATOR_SCOPED_LAUNCHER", raising=False)
+    expected = object()
+
+    @contextmanager
+    def fixture(private, audit):
+        yield expected
+
+    monkeypatch.setattr(module, "monitored_cog_cgroup", fixture)
+    with module._monitor_scope(tmp_path / "private", tmp_path / "audit") as selected:
+        assert selected is expected
