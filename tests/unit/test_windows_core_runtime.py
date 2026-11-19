@@ -220,10 +220,28 @@ def test_stream_process_forwards_and_retains_output(capsys) -> None:
     assert "live-err" in result.stderr
 
 
-def test_sandbox_image_source_is_git_derived_and_tracks_real_build_inputs() -> None:
+def test_sandbox_image_source_is_git_derived_and_tracks_workflow_triggers() -> None:
     assert ".github/workflows/sandbox-system-image.yml" in _SANDBOX_IMAGE_INPUTS
     assert "sandbox" in _SANDBOX_IMAGE_INPUTS
     assert "src/potbot/tools/queue_transport_worker.py" in _SANDBOX_IMAGE_INPUTS
+    assert "tests/unit/test_workspace_qualification_smoke.py" in _SANDBOX_IMAGE_INPUTS
+
+    workflow = (
+        project_root() / ".github/workflows/sandbox-system-image.yml"
+    ).read_text(encoding="utf-8")
+    push_block = workflow.split("  pull_request:", 1)[0]
+    paths_block = push_block.split("    paths:", 1)[1]
+    workflow_paths = {
+        line.strip()[2:]
+        for line in paths_block.splitlines()
+        if line.strip().startswith("- ")
+    }
+    normalized = {
+        item[:-3] if item.endswith("/**") else item
+        for item in workflow_paths
+    }
+    assert set(_SANDBOX_IMAGE_INPUTS) == normalized
+
     value = _sandbox_image_source(project_root())
     assert len(value) == 40
     assert all(character in "0123456789abcdef" for character in value)
