@@ -593,7 +593,7 @@ def _prepare(args: argparse.Namespace) -> int:
         (staging, service.pw_gid, 0o700),
         (models, service.pw_gid, 0o755),
         (tools, 69, 0o2775),
-        (ai, service.pw_gid, 0o700),
+        (ai, service.pw_gid, 0o775),
         (past, service.pw_gid, 0o700),
     ):
         _ensure_directory(path, service.pw_uid, gid, mode)

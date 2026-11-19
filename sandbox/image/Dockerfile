@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.title="Potbot minimal Linux sandbox rootfs" \
       org.opencontainers.image.revision="${SOURCE_COMMIT}"
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         bash ca-certificates coreutils findutils grep sed git gzip tar util-linux \
-        python3 python3-venv chromium fonts-liberation \
+        python3 python3-venv chromium fonts-liberation xterm \
         figlet fortune-mod fortunes-min lolcat \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /home /var/ai /opt/potbot/models /usr/local/tools /usr/local/skills /etc/ai /etc/ai-past /etc/skel/.cache /etc/skel/.ollama \

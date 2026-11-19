@@ -308,3 +308,22 @@ def test_wsl_workspace_shared_tools_are_gid69_setgid() -> None:
     assert "_ensure_directory(path, service.pw_uid, gid, mode)" in source
     assert "(home, service.pw_gid, 0o700)" in source
     assert "(models, service.pw_gid, 0o755)" in source
+
+
+def test_wsl_workspace_ai_config_matches_qualified_group_writable_layout() -> None:
+    source = (project_root() / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
+    # The disposable image qualifier and the persistent workspace must enforce
+    # the same writable /etc/ai contract. Keep history operator-private.
+    assert source.count("(ai, service.pw_gid, 0o775)") == 2
+    assert "(ai, service.pw_gid, 0o700)" not in source
+    assert "(past, service.pw_gid, 0o700)" in source
+
+
+def test_wsl_terminal_recipe_dependency_is_in_sandbox_image() -> None:
+    root = project_root()
+    source = (root / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
+    image = (root / "sandbox/image/Dockerfile").read_text(encoding="utf-8")
+    install = image.split("apt-get install -y --no-install-recommends", 1)[1].split(
+        "&& apt-get clean", 1
+    )[0]
+    assert '"/usr/bin/xterm"' in source
