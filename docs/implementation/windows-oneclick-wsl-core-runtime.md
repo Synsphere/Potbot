@@ -23,10 +23,20 @@ The Windows handoff retains bounded diagnostics in
 `.potbot/service/wsl-core-bootstrap.log` and
 `.potbot/service/wsl-core-qualification.log`. Bootstrap failures identify the
 exact failed stage (`ubuntu-repositories`, `core-packages`, `uv`, `cosign`,
-`source-staging` or `locked-python`) instead of collapsing every failure into a
-generic capability error. WSL-side qualification now emits stage markers too, so
-failures distinguish scoped-launcher provisioning, signed sandbox-image
-qualification and final workspace-state creation.
+`source-staging`, `locked-python`, `service-runtime-permissions` or
+`service-runtime-probe`) instead of collapsing every failure into a generic
+capability error. WSL-side qualification now emits stage markers too, so failures
+distinguish scoped-launcher provisioning, signed sandbox-image qualification and
+final workspace-state creation.
+
+The digest-staged runtime remains root-owned and immutable to `synoperator`, but
+its complete tree is assigned to the service user's primary group with recursive
+read/traverse/execute permission and no group or other write access. This is a
+runtime-wide invariant rather than a special case for Python: `synoperator` can
+execute any staged workspace program while only root can modify the immutable
+runtime. Bootstrap then invokes the exact staged Python as `synoperator` and
+imports both scoped-launcher modules before systemd provisioning is allowed to
+begin, preventing a later `203/EXEC` failure from hiding a permission problem.
 
 The Windows one-click supervisor keeps Syn's DPAPI custody broker alive for the
 entire managed WSL core-runtime lifetime and forwards its bounded bridge variables

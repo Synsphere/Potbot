@@ -104,9 +104,17 @@ def test_root_bootstrap_enables_universe_and_marks_failure_stages() -> None:
         "cosign",
         "source-staging",
         "locked-python",
+        "service-runtime-permissions",
+        "service-runtime-probe",
     ):
         assert f'stage="{stage}"' in _ROOT_BOOTSTRAP
     assert "POTBOT_BOOTSTRAP_FAILED_STAGE=%s" in _ROOT_BOOTSTRAP
+    assert 'service_gid="$(id -g synoperator)"' in _ROOT_BOOTSTRAP
+    assert 'chgrp -hR "$service_gid" "$source_root"' in _ROOT_BOOTSTRAP
+    assert 'chmod -R u+rwX,g+rx,g-w,o-rwx "$source_root"' in _ROOT_BOOTSTRAP
+    assert "/usr/sbin/runuser -u synoperator --" in _ROOT_BOOTSTRAP
+    assert "import potbot.tools.scoped_provision" in _ROOT_BOOTSTRAP
+    assert "import potbot.tools.scoped_launcher" in _ROOT_BOOTSTRAP
 
 
 def test_wsl_source_bundle_covers_all_wheel_force_includes() -> None:

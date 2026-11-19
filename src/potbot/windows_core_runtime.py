@@ -193,6 +193,17 @@ export UV_PROJECT_ENVIRONMENT="$source_root/.venv"
   --python /usr/bin/python3.12
 test -x "$source_root/.venv/bin/python"
 
+stage="service-runtime-permissions"
+service_gid="$(id -g synoperator)"
+test "$service_gid" -gt 0
+chgrp -hR "$service_gid" "$source_root"
+chmod -R u+rwX,g+rx,g-w,o-rwx "$source_root"
+
+stage="service-runtime-probe"
+/usr/sbin/runuser -u synoperator -- \
+  "$source_root/.venv/bin/python" -I -B -c \
+  'import potbot.tools.scoped_provision; import potbot.tools.scoped_launcher'
+
 stage="complete"
 printf '%s\n' "$source_root/.venv/bin/python"
 trap - 0
