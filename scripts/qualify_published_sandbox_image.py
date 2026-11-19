@@ -14,8 +14,9 @@ from uuid import uuid4
 
 from potbot.evaluation.sandbox_worker_acceptance import write_report
 from potbot.tools.ai_config_history import AiConfigHistoryMonitor
+from potbot.tools.scoped_launcher import DEFAULT_SOCKET
 from potbot.tools.shared_workspace_isolation import SharedWorkspaceRuntime
-from potbot.tools.worker_telemetry import WorkerMonitorConfig
+from potbot.tools.worker_telemetry import WorkerMonitorConfig, qualify_scoped_worker
 from scripts.qualify_shared_workspace import qualify as qualify_workspace
 from scripts.qualify_worker_exit_accounting import qualify as qualify_accounting
 from scripts.worker_audit_fixture import monitored_cog_cgroup
@@ -66,6 +67,42 @@ def _monitor_scope(private: Path, audit: Path):
         return
     with monitored_cog_cgroup(private, audit) as monitor:
         yield monitor
+
+
+def _accounting_gate() -> dict[str, object]:
+    endpoint = os.environ.get("POTBOT_OPERATOR_SCOPED_LAUNCHER")
+    if endpoint:
+        if Path(endpoint) != DEFAULT_SOCKET:
+            return {
+                "schema": 1,
+                "qualified": False,
+                "source": "scoped-launcher-preflight",
+                "error": "InvalidEndpoint",
+            }
+        try:
+            qualify_scoped_worker(DEFAULT_SOCKET)
+        except Exception as exc:
+            return {
+                "schema": 1,
+                "qualified": False,
+                "source": "scoped-launcher-preflight",
+                "error": type(exc).__name__,
+            }
+        return {
+            "schema": 1,
+            "qualified": True,
+            "source": "scoped-launcher-preflight",
+        }
+
+    try:
+        return qualify_accounting()
+    except Exception as exc:
+        return {
+            "schema": 1,
+            "qualified": False,
+            "source": "linux-generic-netlink-taskstats",
+            "error": type(exc).__name__,
+        }
 
 
 def _failure_summary(
@@ -168,16 +205,22 @@ def main() -> int:
         ai_config_dir=ai,
         ai_history_dir=history,
     )
-    accounting = qualify_accounting()
+    accounting = _accounting_gate()
     worker = operator = None
-    with _monitor_scope(private, audit) as monitor:
-        with AiConfigHistoryMonitor(config_dir=ai, past_dir=history) as watcher:
-            smoke = qualify_workspace(
-                runtime, watcher, workspace_id=uuid4(), principal_id=uuid4(), monitor_config=monitor
-            )
-        if smoke["qualified_smoke"] is True:
-            report_path = private / "worker.json"
-            command = [
+    smoke: dict[str, object] = {"qualified_smoke": False, "tests": {}}
+    if accounting["qualified"] is True:
+        with _monitor_scope(private, audit) as monitor:
+            with AiConfigHistoryMonitor(config_dir=ai, past_dir=history) as watcher:
+                smoke = qualify_workspace(
+                    runtime,
+                    watcher,
+                    workspace_id=uuid4(),
+                    principal_id=uuid4(),
+                    monitor_config=monitor,
+                )
+            if smoke["qualified_smoke"] is True:
+                report_path = private / "worker.json"
+                command = [
                 sys.executable,
                 "-B",
                 "scripts/qualify_operator_workers.py",
@@ -199,31 +242,31 @@ def main() -> int:
                 args.image_digest,
                 "--qualification-sha256",
                 str(smoke["receipt_sha256"]),
-                "--report",
-                str(report_path),
-            ]
-            if os.environ.get("POTBOT_OPERATOR_SCOPED_LAUNCHER"):
-                command.append("--scoped-worker-launcher")
-            execution = subprocess.run(
-                command,
-                capture_output=True,
-                text=True,
-                timeout=210,
-                check=False,
-                env={
-                    **os.environ,
-                    "POTBOT_OPERATOR_AUDIT_ROOT": str(monitor.audit_root),
-                    "POTBOT_OPERATOR_CGROUP_ROOT": str(monitor.cgroup_root),
-                    "POTBOT_OPERATOR_STRACE": str(monitor.strace),
-                    "POTBOT_OPERATOR_STRACE_SHA256": monitor.strace_sha256,
-                    "POTBOT_OPERATOR_CGROUP_JOIN": str(monitor.cgroup_join),
-                    "POTBOT_OPERATOR_CGROUP_JOIN_SHA256": monitor.cgroup_join_sha256,
-                },
-            )
-            if execution.stdout.strip():
-                operator = json.loads(execution.stdout)
-            if execution.returncode == 0 and operator and operator["qualified"] is True:
-                worker = json.loads(report_path.read_text())
+                    "--report",
+                    str(report_path),
+                ]
+                if os.environ.get("POTBOT_OPERATOR_SCOPED_LAUNCHER"):
+                    command.append("--scoped-worker-launcher")
+                execution = subprocess.run(
+                    command,
+                    capture_output=True,
+                    text=True,
+                    timeout=210,
+                    check=False,
+                    env={
+                        **os.environ,
+                        "POTBOT_OPERATOR_AUDIT_ROOT": str(monitor.audit_root),
+                        "POTBOT_OPERATOR_CGROUP_ROOT": str(monitor.cgroup_root),
+                        "POTBOT_OPERATOR_STRACE": str(monitor.strace),
+                        "POTBOT_OPERATOR_STRACE_SHA256": monitor.strace_sha256,
+                        "POTBOT_OPERATOR_CGROUP_JOIN": str(monitor.cgroup_join),
+                        "POTBOT_OPERATOR_CGROUP_JOIN_SHA256": monitor.cgroup_join_sha256,
+                    },
+                )
+                if execution.stdout.strip():
+                    operator = json.loads(execution.stdout)
+                if execution.returncode == 0 and operator and operator["qualified"] is True:
+                    worker = json.loads(report_path.read_text())
 
     passed = (
         accounting["qualified"] is True and worker is not None and worker["qualified_smoke"] is True

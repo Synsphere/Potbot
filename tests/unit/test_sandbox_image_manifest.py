@@ -116,3 +116,74 @@ def test_published_qualifier_verifies_preprovisioned_scratch_without_chown() -> 
     assert "tools: (os.geteuid(), 69, 0o2775)" in source
     assert "qualification scratch ownership or mode differs" in source
     assert "(home / \".tmp\").mkdir(mode=0o700)" in source
+
+
+def test_published_qualifier_uses_scoped_taskstats_preflight_when_launcher_is_active(
+    monkeypatch,
+) -> None:
+    qualifier = _qualifier()
+    calls = []
+    monkeypatch.setenv(
+        "POTBOT_OPERATOR_SCOPED_LAUNCHER",
+        str(qualifier.DEFAULT_SOCKET),
+    )
+    monkeypatch.setattr(
+        qualifier,
+        "qualify_scoped_worker",
+        lambda endpoint: calls.append(endpoint),
+    )
+    monkeypatch.setattr(
+        qualifier,
+        "qualify_accounting",
+        lambda: (_ for _ in ()).throw(AssertionError("raw TASKSTATS must not run")),
+    )
+
+    result = qualifier._accounting_gate()
+    assert result == {
+        "schema": 1,
+        "qualified": True,
+        "source": "scoped-launcher-preflight",
+    }
+    assert calls == [qualifier.DEFAULT_SOCKET]
+
+
+def test_published_qualifier_keeps_direct_taskstats_for_native_linux(monkeypatch) -> None:
+    qualifier = _qualifier()
+    monkeypatch.delenv("POTBOT_OPERATOR_SCOPED_LAUNCHER", raising=False)
+    expected = {
+        "schema": 1,
+        "qualified": True,
+        "source": "linux-generic-netlink-taskstats",
+    }
+    monkeypatch.setattr(qualifier, "qualify_accounting", lambda: expected)
+    monkeypatch.setattr(
+        qualifier,
+        "qualify_scoped_worker",
+        lambda endpoint: (_ for _ in ()).throw(
+            AssertionError("scoped launcher must not run")
+        ),
+    )
+
+    assert qualifier._accounting_gate() == expected
+
+
+def test_published_qualifier_reports_scoped_taskstats_failure_without_throwing(
+    monkeypatch,
+) -> None:
+    qualifier = _qualifier()
+    monkeypatch.setenv(
+        "POTBOT_OPERATOR_SCOPED_LAUNCHER",
+        str(qualifier.DEFAULT_SOCKET),
+    )
+
+    def fail(endpoint):
+        raise PermissionError("private details must not escape")
+
+    monkeypatch.setattr(qualifier, "qualify_scoped_worker", fail)
+    result = qualifier._accounting_gate()
+    assert result == {
+        "schema": 1,
+        "qualified": False,
+        "source": "scoped-launcher-preflight",
+        "error": "PermissionError",
+    }
