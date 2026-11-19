@@ -586,11 +586,17 @@ def _prepare(args: argparse.Namespace) -> int:
     tools = base / "tools"
     ai = base / "ai"
     past = base / "ai-past"
-    for path, mode in (
-        (base, 0o700), (private, 0o700), (home, 0o700), (staging, 0o700),
-        (models, 0o755), (tools, 0o2775), (ai, 0o700), (past, 0o700),
+    for path, gid, mode in (
+        (base, service.pw_gid, 0o700),
+        (private, service.pw_gid, 0o700),
+        (home, service.pw_gid, 0o700),
+        (staging, service.pw_gid, 0o700),
+        (models, service.pw_gid, 0o755),
+        (tools, 69, 0o2775),
+        (ai, service.pw_gid, 0o700),
+        (past, service.pw_gid, 0o700),
     ):
-        _ensure_directory(path, service.pw_uid, service.pw_gid, mode)
+        _ensure_directory(path, service.pw_uid, gid, mode)
     _ensure_directory(home / ".tmp", service.pw_uid, service.pw_gid, 0o700)
 
     _qualification_stage("finalize")

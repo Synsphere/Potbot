@@ -300,3 +300,11 @@ def test_wsl_root_prepares_qualification_scratch_before_privilege_drop() -> None
     assert "os.chown(path, service.pw_uid, gid)" in source
     assert 'str(service.pw_uid)' in source
     assert 'str(service.pw_gid)' in source
+
+
+def test_wsl_workspace_shared_tools_are_gid69_setgid() -> None:
+    source = (project_root() / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
+    assert "(tools, 69, 0o2775)" in source
+    assert "_ensure_directory(path, service.pw_uid, gid, mode)" in source
+    assert "(home, service.pw_gid, 0o700)" in source
+    assert "(models, service.pw_gid, 0o755)" in source
