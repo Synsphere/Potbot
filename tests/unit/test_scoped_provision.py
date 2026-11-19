@@ -175,3 +175,49 @@ def test_stale_managed_file_is_atomically_replaced_and_restorable(
 
     provision._restore(keeper, previous)
     assert keeper.read_text(encoding="ascii") == legacy
+
+
+def test_wsl_scope_detaches_only_known_infrastructure_9p_mounts(tmp_path, monkeypatch) -> None:
+    mountinfo = tmp_path / "mountinfo"
+    rows = [
+        "1 0 0:1 / /usr/lib/wsl/drivers ro - 9p drivers ro",
+        "2 0 0:2 / /usr/lib/wsl/lib ro - 9p lib ro",
+        "3 0 0:3 / /init ro - 9p tools ro",
+    ]
+    mountinfo.write_text("\n".join(rows) + "\n", encoding="utf-8")
+    removed = []
+
+    def run(argv, **kwargs):
+        removed.append(argv[-1])
+        target = argv[-1]
+        mountinfo.write_text(
+            "\n".join(
+                row
+                for row in mountinfo.read_text().splitlines()
+                if row.split()[4] != target
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        return subprocess.CompletedProcess(argv, 0)
+
+    monkeypatch.setattr(scoped_launcher.subprocess, "run", run)
+    scoped_launcher._detach_wsl_infrastructure_shares(mountinfo)
+    assert removed == ["/usr/lib/wsl/drivers", "/usr/lib/wsl/lib", "/init"]
+
+
+def test_wsl_scope_rejects_arbitrary_remaining_drvfs_mount(tmp_path, monkeypatch) -> None:
+    mountinfo = tmp_path / "mountinfo"
+    mountinfo.write_text(
+        "1 0 0:1 /C:/ /mnt/c rw - 9p drvfs rw\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        scoped_launcher.subprocess,
+        "run",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("must not unmount /mnt/c")
+        ),
+    )
+    with pytest.raises(CapabilityUnavailableError, match="Windows filesystems"):
+        scoped_launcher._detach_wsl_infrastructure_shares(mountinfo)

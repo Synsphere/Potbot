@@ -25,6 +25,11 @@ from potbot.tools.scoped_taskstats import (
 
 DEFAULT_SOCKET = Path("/run/potbot-scoped-worker.sock")
 WSL_DRIVER_SHARE = "/usr/lib/wsl/drivers"
+_WSL_INFRASTRUCTURE_SHARES = (
+    WSL_DRIVER_SHARE,
+    "/usr/lib/wsl/lib",
+    "/init",
+)
 _MODULE = "potbot.tools.scoped_launcher"
 _PACKET = 128 * 1024
 _MAX_FDS = 8
@@ -209,6 +214,34 @@ def _worker_exec(spec_fd: int, received: list[int]) -> None:
     os.execve(spec["argv"][0], spec["argv"], spec["env"])
 
 
+def _windows_filesystem_mounts(mountinfo: str) -> tuple[str, ...]:
+    mounts: list[str] = []
+    for row in mountinfo.splitlines():
+        before, separator, after = row.partition(" - ")
+        fields = before.split()
+        filesystem = after.split(" ", 1)[0].casefold() if separator else ""
+        if len(fields) >= 5 and filesystem in {"9p", "drvfs"}:
+            mounts.append(fields[4])
+    return tuple(mounts)
+
+
+def _detach_wsl_infrastructure_shares(mounts: Path) -> None:
+    for mountpoint in _windows_filesystem_mounts(mounts.read_text()):
+        if mountpoint in _WSL_INFRASTRUCTURE_SHARES:
+            subprocess.run(
+                ["/usr/bin/umount", "--", mountpoint],
+                check=True,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+    remaining = _windows_filesystem_mounts(mounts.read_text())
+    if remaining:
+        raise CapabilityUnavailableError(
+            "Windows filesystems are visible inside the worker scope"
+        )
+
+
 def _validate_worker(request: dict[str, Any], fds: list[int]) -> list[int]:
     if set(request) != {"argv", "env", "targets"}:
         raise CapabilityUnavailableError("Invalid scoped worker launch")
@@ -245,13 +278,7 @@ def _scope(
     if os.getpid() != 1 or os.geteuid() != 0:
         raise CapabilityUnavailableError("Scoped launcher requires a private PID namespace")
     mounts = Path("/proc/self/mountinfo")
-    if any(
-        row.split()[4] == WSL_DRIVER_SHARE and " - 9p " in row
-        for row in mounts.read_text().splitlines()
-    ):
-        subprocess.run(["/usr/bin/umount", "--", WSL_DRIVER_SHARE], check=True)
-    if any(" - 9p " in row or " - drvfs " in row for row in mounts.read_text().splitlines()):
-        raise CapabilityUnavailableError("Windows filesystems are visible inside the worker scope")
+    _detach_wsl_infrastructure_shares(mounts)
     identity = _cgroup_identity(leaf)
     worker: subprocess.Popen[bytes] | None = None
     auditor: subprocess.Popen[bytes] | None = None

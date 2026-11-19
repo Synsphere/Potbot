@@ -12,6 +12,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from uuid import uuid4
 
+from potbot.domain.errors import CapabilityUnavailableError
 from potbot.evaluation.sandbox_worker_acceptance import write_report
 from potbot.tools.ai_config_history import AiConfigHistoryMonitor
 from potbot.tools.scoped_launcher import DEFAULT_SOCKET
@@ -82,12 +83,26 @@ def _accounting_gate() -> dict[str, object]:
         try:
             qualify_scoped_worker(DEFAULT_SOCKET)
         except Exception as exc:
-            return {
+            result: dict[str, object] = {
                 "schema": 1,
                 "qualified": False,
                 "source": "scoped-launcher-preflight",
                 "error": type(exc).__name__,
             }
+            if isinstance(exc, CapabilityUnavailableError):
+                prefix = "Scoped worker preflight failed during "
+                message = str(exc)
+                phase = message.removeprefix(prefix) if message.startswith(prefix) else ""
+                if phase in {
+                    "monitor-config",
+                    "cgroup-create",
+                    "cgroup-readback",
+                    "launcher-allocation",
+                    "collector-probe",
+                    "cleanup",
+                }:
+                    result["phase"] = phase
+            return result
         return {
             "schema": 1,
             "qualified": True,
@@ -114,7 +129,7 @@ def _failure_summary(
     if not isinstance(accounting, dict) or accounting.get("qualified") is not True:
         result: dict[str, object] = {"stage": "taskstats"}
         if isinstance(accounting, dict):
-            for name in ("source", "error"):
+            for name in ("source", "error", "phase"):
                 value = accounting.get(name)
                 if isinstance(value, str):
                     result[name] = value

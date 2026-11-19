@@ -207,3 +207,38 @@ def test_taskstats_failure_summary_retains_only_safe_category_fields() -> None:
         "source": "scoped-launcher-preflight",
         "error": "CapabilityUnavailableError",
     }
+
+
+@pytest.mark.parametrize(
+    "phase",
+    [
+        "monitor-config",
+        "cgroup-create",
+        "cgroup-readback",
+        "launcher-allocation",
+        "collector-probe",
+        "cleanup",
+    ],
+)
+def test_taskstats_failure_summary_retains_safe_scoped_probe_phase(monkeypatch, phase) -> None:
+    qualifier = _qualifier()
+    monkeypatch.setenv(
+        "POTBOT_OPERATOR_SCOPED_LAUNCHER",
+        str(qualifier.DEFAULT_SOCKET),
+    )
+
+    def fail(endpoint):
+        raise qualifier.CapabilityUnavailableError(
+            f"Scoped worker preflight failed during {phase}"
+        )
+
+    monkeypatch.setattr(qualifier, "qualify_scoped_worker", fail)
+    result = qualifier._accounting_gate()
+    assert result["phase"] == phase
+    summary = qualifier._failure_summary(
+        result,
+        {"qualified_smoke": False},
+        None,
+        None,
+    )
+    assert summary["phase"] == phase

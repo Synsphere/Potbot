@@ -469,24 +469,70 @@ class WorkerMonitorConfig:
         )
 
 
+_SCOPED_PROBE_PHASES = frozenset(
+    {
+        "monitor-config",
+        "cgroup-create",
+        "cgroup-readback",
+        "launcher-allocation",
+        "collector-probe",
+        "cleanup",
+    }
+)
+
+
 def qualify_scoped_worker(endpoint: Path) -> None:
-    """Check the installed worker's accounting prerequisites without launching work."""
-    config = WorkerMonitorConfig.from_environment()
-    worker_id = uuid4()
-    leaf = config.cgroup_root / worker_id.hex
-    leaf.mkdir(mode=0o755)
+    phase = "monitor-config"
+    leaf: Path | None = None
+    launch: ScopedWorkerLaunch | None = None
+    failure: tuple[str, BaseException] | None = None
+    cleanup_failure: BaseException | None = None
     try:
+        config = WorkerMonitorConfig.from_environment(scoped_worker=True)
+        if config.scoped_launcher != endpoint:
+            raise CapabilityUnavailableError(
+                "scoped launcher environment differs from selected endpoint"
+            )
+        worker_id = uuid4()
+        leaf = config.cgroup_root / worker_id.hex
+
+        phase = "cgroup-create"
+        leaf.mkdir(mode=0o755)
+
+        phase = "cgroup-readback"
         _cgroup_usage(leaf)
+
+        phase = "launcher-allocation"
         launch = ScopedWorkerLaunch(endpoint, worker_id, probe=True)
-        try:
-            launch.confirm_probe(leaf, config.cgroup_join_sha256)
-        finally:
-            try:
-                launch.collector.close()
-            finally:
-                launch.close()
+
+        phase = "collector-probe"
+        launch.confirm_probe(leaf, config.cgroup_join_sha256)
+    except (CapabilityUnavailableError, OSError, ValueError) as exc:
+        failure = (phase, exc)
     finally:
-        leaf.rmdir()
+        if launch is not None:
+            try:
+                try:
+                    launch.collector.close()
+                finally:
+                    launch.close()
+            except (CapabilityUnavailableError, OSError, ValueError) as exc:
+                cleanup_failure = cleanup_failure or exc
+        if leaf is not None and leaf.exists():
+            try:
+                leaf.rmdir()
+            except OSError as exc:
+                cleanup_failure = cleanup_failure or exc
+
+    if failure is not None:
+        failed_phase, error = failure
+        raise CapabilityUnavailableError(
+            f"Scoped worker preflight failed during {failed_phase}"
+        ) from error
+    if cleanup_failure is not None:
+        raise CapabilityUnavailableError(
+            "Scoped worker preflight failed during cleanup"
+        ) from cleanup_failure
 
 
 def _seal_worker_trace(path: Path) -> int:
