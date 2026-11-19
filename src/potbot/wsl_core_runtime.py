@@ -260,14 +260,14 @@ def _verify_image(
         if qroot.exists():
             raise CapabilityUnavailableError("Incomplete core qualification needs reconciliation")
         qroot.mkdir(mode=0o700, parents=True)
-        os.chown(qroot, service.pw_uid, 69)
+        os.chown(qroot, service.pw_uid, service.pw_gid)
         os.chmod(qroot, 0o700)
         command = [
             "/usr/bin/setpriv",
             "--reuid",
             str(service.pw_uid),
             "--regid",
-            "69",
+            str(service.pw_gid),
             "--clear-groups",
             str(source / ".venv/bin/python"),
             "-B",
