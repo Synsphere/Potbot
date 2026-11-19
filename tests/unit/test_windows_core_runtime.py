@@ -107,6 +107,7 @@ def test_root_bootstrap_enables_universe_and_marks_failure_stages() -> None:
         "source-staging",
         "locked-python",
         "service-runtime-permissions",
+        "service-venv-permissions",
         "service-runtime-probe",
     ):
         assert f'progress "{stage}"' in _ROOT_BOOTSTRAP
@@ -116,6 +117,9 @@ def test_root_bootstrap_enables_universe_and_marks_failure_stages() -> None:
     assert 'test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"' in _ROOT_BOOTSTRAP
     assert '--python "$UV_PROJECT_ENVIRONMENT/bin/python"' in _ROOT_BOOTSTRAP
     assert "--no-editable" in _ROOT_BOOTSTRAP
+    assert "--link-mode copy" in _ROOT_BOOTSTRAP
+    assert 'chgrp -hR "$service_gid" "$UV_PROJECT_ENVIRONMENT"' in _ROOT_BOOTSTRAP
+    assert 'chmod -R u+rwX,g+rX,g-w,o-rwx "$UV_PROJECT_ENVIRONMENT"' in _ROOT_BOOTSTRAP
     assert 'service_gid="$(id -g synoperator)"' in _ROOT_BOOTSTRAP
     assert '-path "$UV_PROJECT_ENVIRONMENT" -prune' in _ROOT_BOOTSTRAP
     assert 'chmod u+rwX,g+rX,g-w,o-rwx' in _ROOT_BOOTSTRAP

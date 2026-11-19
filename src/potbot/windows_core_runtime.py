@@ -220,11 +220,17 @@ fi
 test -f "$UV_PROJECT_ENVIRONMENT/bin/python"
 test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"
 umask 0027
-"$uv_bin" sync --locked --no-dev --no-editable \
+"$uv_bin" sync --locked --no-dev --no-editable --link-mode copy \
   --extra web --extra security --extra semantics --extra credentials --extra skills \
   --python "$UV_PROJECT_ENVIRONMENT/bin/python"
 test -x "$UV_PROJECT_ENVIRONMENT/bin/python"
 test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"
+
+progress "service-venv-permissions"
+chgrp -hR "$service_gid" "$UV_PROJECT_ENVIRONMENT"
+chmod -R u+rwX,g+rX,g-w,o-rwx "$UV_PROJECT_ENVIRONMENT"
+find "$UV_PROJECT_ENVIRONMENT" -type d -exec chmod g+s {} +
+test -z "$(find "$UV_PROJECT_ENVIRONMENT" ! -group "$service_gid" -print -quit)"
 
 progress "service-runtime-probe"
 /usr/sbin/runuser -u synoperator -- \
