@@ -1,0 +1,199 @@
+diff --git a/src/potbot/syn_release/host.py b/src/potbot/syn_release/host.py
+--- a/src/potbot/syn_release/host.py
++++ b/src/potbot/syn_release/host.py
+@@ -1,6 +1,7 @@
+ DISTRO = "Potbot-SynOperator"
+ UBUNTU = "Ubuntu-24.04"
+ OPERATOR_USER = "synoperator"
++PREREQUISITE_REVISION = 4
+ _PENDING = "registration-pending"
+ _HOST_PHASES = {
+     "windows-platform",
+@@ -37,13 +38,31 @@
+ test "$ID" = ubuntu
+ test "$VERSION_ID" = 24.04
+ export DEBIAN_FRONTEND=noninteractive
+-apt-get update
+-apt-get install --yes --no-install-recommends ca-certificates python3.12 python3.12-venv python3.12-dev \
+-    dbus-user-session build-essential libgmp-dev
+ if ! id synoperator >/dev/null 2>&1; then
+     useradd --create-home --shell /bin/bash synoperator
+ fi
+ test "$(id -u synoperator)" -ne 0
++
++# Windows owns operator custody. Remove the legacy Secret Service stack from
++# this Potbot-owned distro without touching any retained user keyring data.
++systemctl --global mask gnome-keyring-daemon.service gnome-keyring-daemon.socket >/dev/null 2>&1 || true
++pkill -u synoperator -x gnome-keyring-daemon >/dev/null 2>&1 || true
++pkill -u synoperator -x gcr-prompter >/dev/null 2>&1 || true
++legacy_packages=""
++for package in gnome-keyring libpam-gnome-keyring libsecret-tools; do
++    if dpkg-query -W -f='${db:Status-Status}\n' "$package" 2>/dev/null | grep -qx installed; then
++        legacy_packages="$legacy_packages $package"
++    fi
++done
++if [ -n "$legacy_packages" ]; then
++    apt-get purge --yes $legacy_packages
++fi
++rm -f /etc/xdg/autostart/gnome-keyring-*.desktop
++test ! -x /usr/bin/gnome-keyring-daemon
++
++apt-get update
++apt-get install --yes --no-install-recommends ca-certificates python3.12 python3.12-venv python3.12-dev \
++    dbus-user-session build-essential libgmp-dev
+ install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local
+ install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share
+ install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share/potbot
+@@ -73,9 +92,9 @@
+ # spacer-b-18
+ # spacer-b-19
+         registration = self._require_registration(registration, record)
+-        prerequisites_complete = record.get("prerequisite_revision") == 3 and (
+-            record["state"] == "ready"
+-            or (record["state"] == "installing" and record.get("setup_phase") == "native-keystore")
++        prerequisites_complete = (
++            record.get("prerequisite_revision") == PREREQUISITE_REVISION
++            and record["state"] == "ready"
+         )
+         if not prerequisites_complete:
+             record = self._checkpoint(
+@@ -100,12 +119,16 @@
+             )
+             if confirmation.splitlines()[-1:] != ["syn-native-prerequisites-ready"]:
+                 raise CapabilityUnavailableError("Native prerequisites did not confirm completion")
+-            record = self._checkpoint(record, "native-prerequisites", prerequisite_revision=3)
++            record = self._checkpoint(
++                record,
++                "native-prerequisites",
++                prerequisite_revision=PREREQUISITE_REVISION,
++            )
+         ready = {
+             **record,
+             "state": "ready",
+             "registration_id": registration.identifier,
+-            "prerequisite_revision": 3,
++            "prerequisite_revision": PREREQUISITE_REVISION,
+             "custody": "windows-dpapi-host",
+             "keystore_unlocked": False,
+             "operator_identity_created": False,
+diff --git a/tests/unit/test_windows_dpapi_host_setup.py b/tests/unit/test_windows_dpapi_host_setup.py
+--- a/tests/unit/test_windows_dpapi_host_setup.py
++++ b/tests/unit/test_windows_dpapi_host_setup.py
+@@ -1,7 +1,12 @@
+-def test_windows_wsl_prerequisites_do_not_install_linux_secret_service() -> None:
+-    assert "gnome-keyring" not in host.PROVISION_UBUNTU
+-    assert "libsecret-tools" not in host.PROVISION_UBUNTU
++def test_windows_wsl_prerequisites_remove_linux_secret_service() -> None:
+     assert "dbus-user-session" in host.PROVISION_UBUNTU
++    assert "for package in gnome-keyring libpam-gnome-keyring libsecret-tools" in host.PROVISION_UBUNTU
++    assert "apt-get purge --yes $legacy_packages" in host.PROVISION_UBUNTU
++    assert "systemctl --global mask gnome-keyring-daemon.service gnome-keyring-daemon.socket" in host.PROVISION_UBUNTU
++    assert "pkill -u synoperator -x gnome-keyring-daemon" in host.PROVISION_UBUNTU
++    assert "rm -f /etc/xdg/autostart/gnome-keyring-*.desktop" in host.PROVISION_UBUNTU
++    assert "test ! -x /usr/bin/gnome-keyring-daemon" in host.PROVISION_UBUNTU
++    assert ".local/share/keyrings" not in host.PROVISION_UBUNTU
+ 
+ 
+ # spacer-0
+@@ -23,11 +28,12 @@
+ 
+     def run(argv: list[str], *, timeout: int = 30) -> str:
+         calls.append((argv, timeout))
+-        return ""
++        return "syn-native-prerequisites-ready\n" if argv[-1] == host.PROVISION_UBUNTU else ""
+ 
+     monkeypatch.setattr(host, "run_host", run)
+     ready = manager.setup()
+ 
+     assert ready["custody"] == "windows-dpapi-host"
+-    assert ready["prerequisite_revision"] == 3
+-    assert calls == []
++    assert ready["prerequisite_revision"] == host.PREREQUISITE_REVISION
++    assert len(calls) == 1
++    assert calls[0][0][-1] == host.PROVISION_UBUNTU
+diff --git a/tests/unit/test_syn_operator_deployment.py b/tests/unit/test_syn_operator_deployment.py
+--- a/tests/unit/test_syn_operator_deployment.py
++++ b/tests/unit/test_syn_operator_deployment.py
+@@ -1,7 +1,8 @@
+     (provision,) = [argv for argv, _ in calls if "--exec" in argv and "/bin/sh" in argv]
+     assert provision[-1] == host.PROVISION_UBUNTU
+-    assert "gnome-keyring" in provision[-1]
+-    assert any(
++    assert "for package in gnome-keyring libpam-gnome-keyring libsecret-tools" in provision[-1]
++    assert "apt-get purge --yes $legacy_packages" in provision[-1]
++    assert not any(
+         argv[-4:] == ["/usr/bin/systemctl", "--user", "start", "gnome-keyring-daemon.service"]
+         for argv, _ in calls
+     )
+@@ -22,24 +23,14 @@
+ # spacer-x-12
+ # spacer-x-13
+ # spacer-x-14
+-def test_ready_prerequisites_survive_an_interrupted_keystore_start(managed_host, monkeypatch):
++def test_ready_revision_does_not_repeat_native_prerequisites(managed_host):
+     manager, _, calls = managed_host
+-    run = host.run_host
++    ready = manager.setup()
++    assert ready["prerequisite_revision"] == host.PREREQUISITE_REVISION
++    calls.clear()
+ 
+-    def interrupt_keystore(argv, *, timeout=30):
+-        if argv[-1] == "gnome-keyring-daemon.service":
+-            raise CapabilityUnavailableError("Interrupted keystore startup")
+-        return run(argv, timeout=timeout)
+-
+-    monkeypatch.setattr(host, "run_host", interrupt_keystore)
+-    with pytest.raises(CapabilityUnavailableError, match="Interrupted"):
+-        manager.setup()
+-    assert manager.status()["setup_phase"] == "native-keystore"
+-    checkpoint = manager._read_receipt()
+-    resumed = host.WslOperatorHost(manager.root)
+-    monkeypatch.setattr(host, "run_host", run)
+-    assert resumed.setup()["registration_id"] == checkpoint["registration_id"]
+-    assert len([argv for argv, _ in calls if argv[-1] == host.PROVISION_UBUNTU]) == 1
++    assert manager.setup() == ready
++    assert calls == []
+ 
+ # spacer-y-0
+ # spacer-y-1
+@@ -57,5 +48,4 @@
+ # spacer-y-13
+ # spacer-y-14
+     assert manager.setup() == ready
+-    (keystore,) = calls
+-    assert keystore[0][-1] == "gnome-keyring-daemon.service"
++    assert calls == []
+diff --git a/docs/implementation/windows-dpapi-host-setup.md b/docs/implementation/windows-dpapi-host-setup.md
+--- a/docs/implementation/windows-dpapi-host-setup.md
++++ b/docs/implementation/windows-dpapi-host-setup.md
+@@ -1,8 +1,14 @@
+-Older Potbot host receipts can contain `custody: linux-secret-service` and the
+-legacy `native-keystore` setup checkpoint. A ready revision-3 receipt is
+-migrated in place to `windows-dpapi-host` without starting a Linux credential
+-daemon or replacing any Operator identity. The old checkpoint name remains
+-accepted only so interrupted installations can resume safely.
++Older Potbot host receipts can contain `custody: linux-secret-service`, the
++legacy `native-keystore` checkpoint, and prerequisite revision 3. Windows host
++prerequisite revision 4 forces those existing managed distros through one cleanup
++pass before they are considered ready. The cleanup runs before package updates:
++GNOME Keyring user units are globally masked, any running keyring/prompter
++process owned by `synoperator` is stopped, and any installed `gnome-keyring`,
++`libpam-gnome-keyring` or `libsecret-tools` packages are purged. System
++autostart entries are removed and the daemon binary must be absent before the
++migration succeeds. Potbot deliberately does **not** delete
++`/home/synoperator/.local/share/keyrings`; retained legacy data is left untouched
++even though no Windows runtime path can activate it.
+ 
+ <!-- spacer-0 -->
+ <!-- spacer-1 -->
+@@ -16,7 +22,8 @@
+ <!-- spacer-9 -->
+ ## Acceptance
+ 
+-- Fresh Windows WSL provisioning contains no GNOME Keyring dependency.
+-- An existing ready Windows receipt migrates custody without invoking WSL.
++- Fresh Windows WSL provisioning contains no active GNOME Keyring dependency.
++- Existing revision-3 Windows WSL hosts run the revision-4 purge/mask migration once.
++- The migration does not delete retained user keyring data.
+ - Kernel activation never calls a Linux keystore bootstrap.
+ - Windows Syn commands still fail closed when the DPAPI bridge is unavailable.
