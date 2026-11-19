@@ -24,6 +24,16 @@ _SHIPPED_FILES = {
 }
 
 
+def _canonical_source_bytes(path: Path) -> bytes:
+    # Match Git's committed LF representation for shipped Python source.
+    # A Windows checkout may retain CRLF bytes after .gitattributes changed
+    # while Git still reports the file clean because its clean filter normalizes it.
+    payload = path.read_bytes()
+    if path.suffix == ".py":
+        payload = payload.replace(b"\r\n", b"\n")
+    return payload
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rootfs", required=True, type=Path)
@@ -47,7 +57,10 @@ def main() -> int:
         if candidate.resolve(strict=True) != candidate or not candidate.is_file():
             raise ValueError(f"unexpected installed path for {source}")
         digest = hashlib.sha256(candidate.read_bytes()).hexdigest()
-        if digest != hashlib.sha256((source_root / source).read_bytes()).hexdigest():
+        expected = hashlib.sha256(
+            _canonical_source_bytes(source_root / source)
+        ).hexdigest()
+        if digest != expected:
             raise ValueError(f"published image bytes differ for {source}")
         shipped[guest] = digest
 

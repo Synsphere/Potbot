@@ -17,6 +17,15 @@ def _module():
     return module
 
 
+def _qualifier():
+    path = Path(__file__).resolve().parents[2] / "scripts" / "qualify_published_sandbox_image.py"
+    spec = importlib.util.spec_from_file_location("qualify_published_sandbox_image", path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def test_immutable_image_manifest_no_false_qualification() -> None:
     make = _module().manifest
     entry = make("ghcr.io/example/potbot-sandbox", "a" * 64, "b" * 40, "linux/arm64")
@@ -38,3 +47,19 @@ def test_immutable_image_manifest_no_false_qualification() -> None:
     ):
         with pytest.raises(ValueError):
             make(*args)
+
+
+def test_shipped_python_bytes_use_git_lf_canonicalization(tmp_path: Path) -> None:
+    source = tmp_path / "worker_probe.py"
+    source.write_bytes(b"first\r\nsecond\r\n")
+    assert _qualifier()._canonical_source_bytes(source) == b"first\nsecond\n"
+
+    source.write_bytes(b"first\rsecond\n")
+    assert _qualifier()._canonical_source_bytes(source) == b"first\rsecond\n"
+
+
+def test_non_python_shipped_bytes_are_not_rewritten(tmp_path: Path) -> None:
+    source = tmp_path / "payload.bin"
+    payload = b"first\r\nsecond\r\n"
+    source.write_bytes(payload)
+    assert _qualifier()._canonical_source_bytes(source) == payload
