@@ -72,7 +72,7 @@ def test_failed_socket_start_rolls_back_fresh_keeper_and_launcher_files(tmp_path
     )
 
     def inspect(path, content):
-        return path.exists() and path.read_text() == content
+        return "current" if path.exists() and path.read_text() == content else "missing"
 
     def audit_directory(uid, gid):
         audit.mkdir()
@@ -120,3 +120,47 @@ def test_failed_socket_start_rolls_back_fresh_keeper_and_launcher_files(tmp_path
         ("stop", provision.KEEPER),
         ("daemon-reload",),
     ]
+
+
+def test_legacy_potbot_keeper_is_upgradeable_but_foreign_unit_is_refused(
+    tmp_path, monkeypatch
+) -> None:
+    monkeypatch.setattr(provision, "UNIT_DIR", tmp_path)
+    monkeypatch.setattr(provision, "_protected", lambda path: None)
+    keeper = tmp_path / provision.KEEPER
+    desired = provision._keeper_unit(Path("/root/venv/bin/python"), 1000, 1000)[keeper]
+    legacy = desired.removeprefix(provision._MANAGED_HEADER)
+    keeper.write_text(legacy, encoding="ascii")
+    keeper.chmod(0o644)
+
+    assert provision._inspect(keeper, desired) == "stale"
+
+    keeper.write_text(
+        legacy.replace(
+            "Description=Potbot scoped worker accounting subtree",
+            "Description=administrator-owned replacement",
+        ),
+        encoding="ascii",
+    )
+    with pytest.raises(CapabilityUnavailableError, match="existing configuration was kept"):
+        provision._inspect(keeper, desired)
+
+
+def test_stale_managed_file_is_atomically_replaced_and_restorable(
+    tmp_path, monkeypatch
+) -> None:
+    monkeypatch.setattr(provision, "UNIT_DIR", tmp_path)
+    monkeypatch.setattr(provision, "_protected", lambda path: None)
+    keeper = tmp_path / provision.KEEPER
+    desired = provision._keeper_unit(Path("/root/venv/bin/python"), 1000, 1000)[keeper]
+    legacy = desired.removeprefix(provision._MANAGED_HEADER)
+    keeper.write_text(legacy, encoding="ascii")
+    keeper.chmod(0o644)
+
+    state = provision._inspect(keeper, desired)
+    previous = provision._publish(keeper, desired, state)
+    assert previous == legacy.encode("ascii")
+    assert keeper.read_text(encoding="ascii") == desired
+
+    provision._restore(keeper, previous)
+    assert keeper.read_text(encoding="ascii") == legacy

@@ -30,6 +30,8 @@ AUDIT = Path("/var/lib/potbot-scoped-worker/audit")
 LOCK = Path("/run/potbot-scoped-worker-provision.lock")
 SYSTEMCTL = "/usr/bin/systemctl"
 MODULE = "potbot.tools.scoped_provision"
+_MANAGED_HEADER = "# Managed by Potbot scoped launcher v2; do not edit\n"
+_LEGACY_PATH = r"/[A-Za-z0-9_./+@:\\-]+"
 
 
 def _protected(path: Path) -> None:
@@ -65,7 +67,7 @@ def _executable(path: Path, digest: str | None = None) -> None:
 
 def _keeper_unit(python: Path, uid: int, gid: int) -> dict[Path, str]:
     return {
-        UNIT_DIR / KEEPER: (
+        UNIT_DIR / KEEPER: _MANAGED_HEADER + (
             "[Unit]\nDescription=Potbot scoped worker accounting subtree\n"
             "[Service]\nType=notify\nNotifyAccess=main\nSlice=system.slice\n"
             f"User={uid}\nGroup={gid}\n"
@@ -89,14 +91,14 @@ def _runtime_units(
     cgroup: Path,
 ) -> dict[Path, str]:
     return {
-        UNIT_DIR / BROKER: (
+        UNIT_DIR / BROKER: _MANAGED_HEADER + (
             "[Unit]\nDescription=Potbot scoped worker launcher instance\n"
             "[Service]\nType=simple\nStandardInput=socket\nStandardOutput=journal\n"
             f"ExecStart={python} -I -m potbot.tools.scoped_launcher "
             f"accept {cgroup} {join} {uid} {gid} {auditor_uid} {auditor_gid}\n"
             "KillMode=control-group\nTimeoutStopSec=10\n"
         ),
-        UNIT_DIR / SOCKET: (
+        UNIT_DIR / SOCKET: _MANAGED_HEADER + (
             "[Unit]\nDescription=Potbot scoped worker launcher\n"
             f"BindsTo={KEEPER}\nAfter={KEEPER}\n"
             "[Socket]\nAccept=yes\nRemoveOnStop=yes\n"
@@ -104,7 +106,7 @@ def _runtime_units(
             f"SocketUser=root\nSocketGroup={gid}\nSocketMode=0660\n"
             "[Install]\nWantedBy=sockets.target\n"
         ),
-        ENV_FILE: (
+        ENV_FILE: _MANAGED_HEADER + (
             f"POTBOT_OPERATOR_AUDIT_ROOT={AUDIT}\n"
             f"POTBOT_OPERATOR_CGROUP_ROOT={cgroup}\n"
             f"POTBOT_OPERATOR_STRACE={tracer}\nPOTBOT_OPERATOR_STRACE_SHA256={tracer_sha}\n"
@@ -214,25 +216,76 @@ def _delegated_cgroup_from_membership(value: str) -> Path:
     return process_cgroup.parent
 
 
-def _inspect(path: Path, content: str) -> bool:
-    if not path.exists() and not path.is_symlink():
+def _legacy_managed(path: Path, payload: str) -> bool:
+    escaped_socket = re.escape(str(DEFAULT_SOCKET))
+    if path == UNIT_DIR / KEEPER:
+        pattern = (
+            r"\[Unit\]\nDescription=Potbot scoped worker accounting subtree\n"
+            r"\[Service\]\nType=notify\nNotifyAccess=main\nSlice=system\.slice\n"
+            r"User=\d+\nGroup=\d+\nDelegate=cpu io memory pids\nDelegateSubgroup=keeper\n"
+            rf"ExecStart={_LEGACY_PATH} -I -m potbot\.tools\.scoped_provision hold\n"
+            r"NoNewPrivileges=yes\nTimeoutStartSec=15\n"
+        )
+    elif path == UNIT_DIR / BROKER:
+        pattern = (
+            r"\[Unit\]\nDescription=Potbot scoped worker launcher instance\n"
+            r"\[Service\]\nType=simple\nStandardInput=socket\nStandardOutput=journal\n"
+            rf"ExecStart={_LEGACY_PATH} -I -m potbot\.tools\.scoped_launcher "
+            rf"accept {_LEGACY_PATH} {_LEGACY_PATH} \d+ \d+ \d+(?: \d+)?\n"
+            r"KillMode=control-group\nTimeoutStopSec=10\n"
+        )
+    elif path == UNIT_DIR / SOCKET:
+        pattern = (
+            r"\[Unit\]\nDescription=Potbot scoped worker launcher\n"
+            rf"BindsTo={re.escape(KEEPER)}\nAfter={re.escape(KEEPER)}\n"
+            r"\[Socket\]\nAccept=yes\nRemoveOnStop=yes\n"
+            rf"ListenSequentialPacket={escaped_socket}\n"
+            r"SocketUser=root\nSocketGroup=\d+\nSocketMode=0660\n"
+            r"\[Install\]\nWantedBy=sockets\.target\n"
+        )
+    elif path == ENV_FILE:
+        pattern = (
+            rf"POTBOT_OPERATOR_AUDIT_ROOT={re.escape(str(AUDIT))}\n"
+            rf"POTBOT_OPERATOR_CGROUP_ROOT={_LEGACY_PATH}\n"
+            rf"POTBOT_OPERATOR_STRACE={_LEGACY_PATH}\n"
+            r"POTBOT_OPERATOR_STRACE_SHA256=[0-9a-f]{64}\n"
+            rf"POTBOT_OPERATOR_CGROUP_JOIN={_LEGACY_PATH}\n"
+            r"POTBOT_OPERATOR_CGROUP_JOIN_SHA256=[0-9a-f]{64}\n"
+        )
+    else:
         return False
+    return re.fullmatch(pattern, payload) is not None
+
+
+def _managed_existing(path: Path, payload: str) -> bool:
+    return payload.startswith(_MANAGED_HEADER) or _legacy_managed(path, payload)
+
+
+def _inspect(path: Path, content: str) -> str:
+    if not path.exists() and not path.is_symlink():
+        return "missing"
     _protected(path)
     info = path.lstat()
-    if (
-        not stat.S_ISREG(info.st_mode)
-        or stat.S_IMODE(info.st_mode) != 0o644
-        or info.st_size != len(content)
-        or path.read_bytes() != content.encode("ascii")
-    ):
+    if not stat.S_ISREG(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o644:
         raise CapabilityUnavailableError(
             "A launcher file differs; existing configuration was kept."
         )
-    return True
+    try:
+        payload = path.read_text(encoding="ascii")
+    except (OSError, UnicodeError):
+        raise CapabilityUnavailableError(
+            "A launcher file differs; existing configuration was kept."
+        ) from None
+    if payload == content:
+        return "current"
+    if _managed_existing(path, payload):
+        return "stale"
+    raise CapabilityUnavailableError(
+        "A launcher file differs; existing configuration was kept."
+    )
 
 
-def _write(path: Path, text: str) -> None:
-    # Publish without replacing a file, even if it appeared since preflight.
+def _temporary_file(path: Path, text: str) -> Path:
     temporary = path.with_name(f".potbot-{uuid4().hex}")
     fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     try:
@@ -241,9 +294,70 @@ def _write(path: Path, text: str) -> None:
             stream.write(text.encode("ascii"))
             stream.flush()
             os.fsync(stream.fileno())
-        os.link(temporary, path, follow_symlinks=False)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+    return temporary
+
+
+def _publish(path: Path, text: str, state: str) -> bytes | None:
+    if state not in {"missing", "stale"}:
+        raise AssertionError("publish requires a pending launcher file")
+    previous: bytes | None = None
+    snapshot: tuple[int, int, int, int] | None = None
+    if state == "stale":
+        before = path.lstat()
+        previous = path.read_bytes()
+        try:
+            decoded = previous.decode("ascii")
+        except UnicodeError:
+            raise CapabilityUnavailableError(
+                "A launcher file changed during provisioning."
+            ) from None
+        if not _managed_existing(path, decoded):
+            raise CapabilityUnavailableError(
+                "A launcher file changed during provisioning."
+            )
+        snapshot = (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
+
+    temporary = _temporary_file(path, text)
+    try:
+        if state == "missing":
+            os.link(temporary, path, follow_symlinks=False)
+        else:
+            assert snapshot is not None
+            current = path.lstat()
+            observed = (
+                current.st_dev,
+                current.st_ino,
+                current.st_size,
+                current.st_mtime_ns,
+            )
+            if observed != snapshot:
+                raise CapabilityUnavailableError(
+                    "A launcher file changed during provisioning."
+                )
+            os.replace(temporary, path)
     finally:
-        temporary.unlink()
+        temporary.unlink(missing_ok=True)
+    return previous
+
+
+def _restore(path: Path, previous: bytes | None) -> None:
+    if previous is None:
+        path.unlink(missing_ok=True)
+        return
+    temporary = path.with_name(f".potbot-restore-{uuid4().hex}")
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            os.fchmod(stream.fileno(), 0o644)
+            stream.write(previous)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def _audit_directory(uid: int, gid: int) -> bool:
@@ -283,10 +397,10 @@ def _apply(
     for name in (KEEPER, BROKER, SOCKET):
         _preflight_unit(name)
 
-    active = _manager("is-active", "--quiet", SOCKET, check=False).returncode == 0
-    keeper_active = _manager("is-active", "--quiet", KEEPER, check=False).returncode == 0
+    pre_active = _manager("is-active", "--quiet", SOCKET, check=False).returncode == 0
+    pre_keeper_active = _manager("is-active", "--quiet", KEEPER, check=False).returncode == 0
     enable_state = _manager("is-enabled", SOCKET, check=False).stdout.strip()
-    enabled = enable_state == "enabled"
+    pre_enabled = enable_state == "enabled"
     wants = UNIT_DIR / "sockets.target.wants" / SOCKET
     if enable_state not in ("", "not-found", "disabled", "enabled") or (
         (wants.exists() or wants.is_symlink())
@@ -295,26 +409,37 @@ def _apply(
         raise CapabilityUnavailableError(
             "An existing socket enablement needs administrator review."
         )
-    if active and not keeper_active:
+    if pre_active and not pre_keeper_active:
         raise CapabilityUnavailableError("Scoped launcher socket is active without its keeper")
-    if (DEFAULT_SOCKET.exists() or DEFAULT_SOCKET.is_symlink()) and not active:
-        raise CapabilityUnavailableError(
-            "An existing launcher socket needs administrator review."
-        )
+    if (DEFAULT_SOCKET.exists() or DEFAULT_SOCKET.is_symlink()) and not pre_active:
+        info = DEFAULT_SOCKET.lstat()
+        if (
+            not stat.S_ISSOCK(info.st_mode)
+            or (info.st_uid, info.st_gid, stat.S_IMODE(info.st_mode)) != (0, gid, 0o660)
+        ):
+            raise CapabilityUnavailableError(
+                "An existing launcher socket needs administrator review."
+            )
+        DEFAULT_SOCKET.unlink()
 
     keeper_files = _keeper_unit(python, uid, gid)
-    keeper_pending = {
-        path: data for path, data in keeper_files.items() if not _inspect(path, data)
-    }
-    if keeper_pending and keeper_active:
+    keeper_states = {path: _inspect(path, data) for path, data in keeper_files.items()}
+    if pre_keeper_active and any(state == "missing" for state in keeper_states.values()):
         raise CapabilityUnavailableError(
-            "The active scoped launcher keeper differs from the managed unit."
+            "The active scoped launcher keeper has no managed unit file."
         )
+    keeper_change = any(state != "current" for state in keeper_states.values())
 
-    created: list[Path] = []
+    changes: list[tuple[Path, bytes | None]] = []
     directories: list[Path] = []
     made_audit = False
-    enabling = starting_socket = starting_keeper = False
+    enabled_by_us = False
+    socket_started = False
+    socket_stopped = False
+    keeper_started = False
+    keeper_stopped = False
+    socket_running = pre_active
+
     try:
         for directory in (ENV_FILE.parent, AUDIT.parent):
             if not directory.exists() and not directory.is_symlink():
@@ -327,13 +452,22 @@ def _apply(
                 )
         made_audit = _audit_directory(uid, gid)
 
-        for path, data in keeper_pending.items():
-            _write(path, data)
-            created.append(path)
-        if keeper_pending:
+        if keeper_change:
+            if socket_running:
+                _manager("stop", SOCKET)
+                socket_stopped = True
+                socket_running = False
+            if pre_keeper_active:
+                _manager("stop", KEEPER)
+                keeper_stopped = True
+            for path, data in keeper_files.items():
+                state = keeper_states[path]
+                if state != "current":
+                    changes.append((path, _publish(path, data, state)))
             _manager("daemon-reload")
-        if not keeper_active:
-            starting_keeper = True
+
+        if not pre_keeper_active or keeper_change:
+            keeper_started = True
             _manager("start", KEEPER)
 
         cgroup = _keeper_cgroup()
@@ -349,25 +483,28 @@ def _apply(
             auditor_gid,
             cgroup,
         )
-        runtime_pending = {
-            path: data for path, data in runtime_files.items() if not _inspect(path, data)
-        }
-        if runtime_pending and (active or enabled):
-            raise CapabilityUnavailableError(
-                "An active scoped launcher differs from the managed configuration."
-            )
-        for path, data in runtime_pending.items():
-            _write(path, data)
-            created.append(path)
-        if runtime_pending:
+        runtime_states = {path: _inspect(path, data) for path, data in runtime_files.items()}
+        runtime_change = any(state != "current" for state in runtime_states.values())
+
+        if runtime_change and socket_running:
+            _manager("stop", SOCKET)
+            socket_stopped = True
+            socket_running = False
+
+        if runtime_change:
+            for path, data in runtime_files.items():
+                state = runtime_states[path]
+                if state != "current":
+                    changes.append((path, _publish(path, data, state)))
             _manager("daemon-reload")
 
-        if not enabled:
-            enabling = True
+        if not pre_enabled:
+            enabled_by_us = True
             _manager("enable", SOCKET)
-        if not active:
-            starting_socket = True
+        if not socket_running:
+            socket_started = True
             _manager("start", SOCKET)
+            socket_running = True
 
         info = DEFAULT_SOCKET.lstat()
         if (
@@ -382,16 +519,20 @@ def _apply(
             )
     except (CapabilityUnavailableError, OSError, subprocess.TimeoutExpired):
         try:
-            if starting_socket:
+            if socket_started:
                 _manager("stop", SOCKET)
-            if enabling:
+            if enabled_by_us:
                 _manager("disable", SOCKET)
-            if starting_keeper:
+            if keeper_started:
                 _manager("stop", KEEPER)
-            for path in reversed(created):
-                path.unlink()
-            if created:
+            for path, previous in reversed(changes):
+                _restore(path, previous)
+            if changes:
                 _manager("daemon-reload")
+            if keeper_stopped:
+                _manager("start", KEEPER)
+            if socket_stopped:
+                _manager("start", SOCKET)
             if made_audit:
                 AUDIT.rmdir()
             for path in reversed(directories):
