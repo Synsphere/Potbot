@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import subprocess
 import tomllib
 from pathlib import Path
@@ -20,6 +21,7 @@ from potbot.windows_core_runtime import (
     _failed_bootstrap_stage,
     _failed_qualification_stage,
     _runtime_secret_environment,
+    _stream_process,
     _supervisor_command,
     _write_process_log,
     _wsl_environment,
@@ -107,15 +109,18 @@ def test_root_bootstrap_enables_universe_and_marks_failure_stages() -> None:
         "service-runtime-permissions",
         "service-runtime-probe",
     ):
-        assert f'stage="{stage}"' in _ROOT_BOOTSTRAP
+        assert f'progress "{stage}"' in _ROOT_BOOTSTRAP
     assert "POTBOT_BOOTSTRAP_FAILED_STAGE=%s" in _ROOT_BOOTSTRAP
     assert "install -d -m 0755 -o root -g root /var/lib/potbot" in _ROOT_BOOTSTRAP
     assert "/usr/bin/python3.12 -m venv --copies" in _ROOT_BOOTSTRAP
     assert 'test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"' in _ROOT_BOOTSTRAP
     assert '--python "$UV_PROJECT_ENVIRONMENT/bin/python"' in _ROOT_BOOTSTRAP
     assert 'service_gid="$(id -g synoperator)"' in _ROOT_BOOTSTRAP
-    assert 'chgrp -hR "$service_gid" "$source_root"' in _ROOT_BOOTSTRAP
-    assert 'chmod -R u+rwX,g+rx,g-w,o-rwx "$source_root"' in _ROOT_BOOTSTRAP
+    assert '-path "$UV_PROJECT_ENVIRONMENT" -prune' in _ROOT_BOOTSTRAP
+    assert 'chmod u+rwX,g+rX,g-w,o-rwx' in _ROOT_BOOTSTRAP
+    assert 'chmod g+s' in _ROOT_BOOTSTRAP
+    assert 'install -d -m 2750 -o root -g "$service_gid" "$UV_PROJECT_ENVIRONMENT"' in _ROOT_BOOTSTRAP
+    assert "umask 0027" in _ROOT_BOOTSTRAP
     assert "/usr/sbin/runuser -u synoperator --" in _ROOT_BOOTSTRAP
     assert "import potbot.tools.scoped_provision" in _ROOT_BOOTSTRAP
     assert "import potbot.tools.scoped_launcher" in _ROOT_BOOTSTRAP
@@ -187,3 +192,22 @@ def test_wsl_qualifier_emits_named_stage_markers() -> None:
         "complete",
     ):
         assert f'_qualification_stage("{stage}")' in source
+    assert "[Potbot WSL] qualification:" in source
+
+
+def test_stream_process_forwards_and_retains_output(capsys) -> None:
+    result = _stream_process(
+        [
+            __import__("sys").executable,
+            "-c",
+            "import sys; print('live-out'); print('live-err', file=sys.stderr)",
+        ],
+        timeout=10,
+        env=dict(os.environ),
+    )
+    visible = capsys.readouterr()
+    assert result.returncode == 0
+    assert "live-out" in visible.out
+    assert "live-err" in visible.err
+    assert "live-out" in result.stdout
+    assert "live-err" in result.stderr

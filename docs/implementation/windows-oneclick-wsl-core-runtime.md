@@ -19,10 +19,12 @@ signed sandbox image, runs the repository's existing published-image host smoke,
 provisions the scoped worker launcher, pins the qualified runtime and starts the operator
 plus Xpra bridge.
 
-The Windows handoff retains bounded diagnostics in
+The Windows handoff streams bootstrap and qualification output to the foreground
+terminal while retaining bounded diagnostics in
 `.potbot/service/wsl-core-bootstrap.log` and
-`.potbot/service/wsl-core-qualification.log`. Bootstrap failures identify the
-exact failed stage (`ubuntu-repositories`, `core-packages`, `uv`, `cosign`,
+`.potbot/service/wsl-core-qualification.log`. Long first-run work therefore
+shows named `[Potbot WSL]` stages plus package-manager progress instead of a
+silent wait. Bootstrap failures identify the exact failed stage (`ubuntu-repositories`, `core-packages`, `uv`, `cosign`,
 `source-staging`, `locked-python`, `service-runtime-permissions` or
 `service-runtime-probe`) instead of collapsing every failure into a generic
 capability error. WSL-side qualification now emits stage markers too, so failures
@@ -36,6 +38,13 @@ read/traverse/execute permission and no group or other write access. The parent
 `0755` traversal points. This is a runtime-wide invariant rather than a special
 case for Python: `synoperator` can execute any staged workspace program while
 only root can modify the immutable runtime.
+
+Permissions are normalized on the staged source before the virtual environment
+exists, explicitly pruning any retained valid `.venv` from that filesystem
+walk. Source directories are setgid to the `synoperator` primary group and
+`umask 0027` is used while creating/synchronizing the environment, so new venv
+content inherits service-readable permissions without a later recursive chmod
+across thousands of package files.
 
 The virtual environment is created first with
 `/usr/bin/python3.12 -m venv --copies`, then uv synchronizes the lockfile into

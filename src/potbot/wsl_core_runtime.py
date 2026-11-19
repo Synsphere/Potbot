@@ -334,6 +334,7 @@ def _finalize(args: argparse.Namespace) -> int:
 
 
 def _qualification_stage(name: str) -> None:
+    print(f"[Potbot WSL] qualification: {name}", file=sys.stderr, flush=True)
     print(f"POTBOT_QUALIFICATION_STAGE={name}", file=sys.stderr, flush=True)
 
 

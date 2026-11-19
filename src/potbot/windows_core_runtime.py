@@ -17,6 +17,7 @@ import stat
 import subprocess
 import sys
 import tarfile
+import threading
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -73,6 +74,11 @@ WSL_KERNEL_PUBLIC_KEY = "945786a5587110a061a6b73a02057b327f1ce819db4b0b5850201fb
 _ROOT_BOOTSTRAP = r"""
 set -eu
 stage="bootstrap"
+progress() {
+  stage="$1"
+  printf '[Potbot WSL] %s\n' "$stage" >&2
+}
+progress "bootstrap"
 cleanup_path=""
 finish() {
   code=$?
@@ -95,20 +101,20 @@ cosign_sha="$6"
 test -f "$bundle"
 test "${#source_sha}" -eq 64
 
-stage="ubuntu-release"
+progress "ubuntu-release"
 . /etc/os-release
 test "$ID" = ubuntu
 test "$VERSION_ID" = 24.04
 export DEBIAN_FRONTEND=noninteractive
 
-stage="ubuntu-repositories"
+progress "ubuntu-repositories"
 apt-get update
 apt-get install --yes --no-install-recommends software-properties-common
 command -v add-apt-repository >/dev/null
 add-apt-repository --yes universe
 apt-get update
 
-stage="core-packages"
+progress "core-packages"
 apt-get install --yes --no-install-recommends \
   ca-certificates curl python3.12 python3.12-venv python3.12-dev \
   xpra xauth bubblewrap uidmap libseccomp2 strace build-essential \
@@ -121,12 +127,12 @@ command -v umoci >/dev/null
 command -v strace >/dev/null
 command -v setpriv >/dev/null
 
-stage="runtime-directories"
+progress "runtime-directories"
 install -d -m 0755 -o root -g root /usr/local/libexec
 install -d -m 0755 -o root -g root /var/lib/potbot
 install -d -m 0755 -o root -g root /var/lib/potbot/core-source
 
-stage="uv"
+progress "uv"
 uv_dir=/usr/local/libexec/potbot-uv-0.12.23
 uv_bin="$uv_dir/uv"
 uv_marker="$uv_dir/.archive-sha256"
@@ -150,7 +156,7 @@ else
   cleanup_path=""
 fi
 
-stage="cosign"
+progress "cosign"
 cosign=/usr/local/libexec/potbot-cosign
 if [ ! -x "$cosign" ] || [ "$(sha256sum "$cosign" | awk '{print $1}')" != "$cosign_sha" ]; then
   cleanup_path="$(mktemp /var/tmp/potbot-cosign.XXXXXX)"
@@ -162,7 +168,7 @@ if [ ! -x "$cosign" ] || [ "$(sha256sum "$cosign" | awk '{print $1}')" != "$cosi
   cleanup_path=""
 fi
 
-stage="source-staging"
+progress "source-staging"
 source_root="/var/lib/potbot/core-source/$source_sha"
 marker="$source_root/.potbot-source-sha256"
 if [ -e "$source_root" ] && [ ! -f "$marker" ]; then
@@ -186,37 +192,46 @@ PY
 fi
 test "$(cat "$marker")" = "$source_sha"
 
-stage="locked-python"
+progress "service-runtime-permissions"
 cd "$source_root"
+service_gid="$(id -g synoperator)"
+test "$service_gid" -gt 0
 export UV_PROJECT_ENVIRONMENT="$source_root/.venv"
 if [ -e "$UV_PROJECT_ENVIRONMENT" ]; then
-  if [ -L "$UV_PROJECT_ENVIRONMENT/bin/python" ] || [ ! -f "$UV_PROJECT_ENVIRONMENT/pyvenv.cfg" ]; then
+  if (
+    [ -L "$UV_PROJECT_ENVIRONMENT" ] ||
+    [ -L "$UV_PROJECT_ENVIRONMENT/bin/python" ] ||
+    [ ! -f "$UV_PROJECT_ENVIRONMENT/pyvenv.cfg" ] ||
+    [ "$(stat -c %g "$UV_PROJECT_ENVIRONMENT")" -ne "$service_gid" ]
+  ); then
     rm -rf "$UV_PROJECT_ENVIRONMENT"
   fi
 fi
+find "$source_root" -path "$UV_PROJECT_ENVIRONMENT" -prune -o -exec chgrp "$service_gid" {} +
+find "$source_root" -path "$UV_PROJECT_ENVIRONMENT" -prune -o -exec chmod u+rwX,g+rX,g-w,o-rwx {} +
+find "$source_root" -path "$UV_PROJECT_ENVIRONMENT" -prune -o -type d -exec chmod g+s {} +
+
+progress "locked-python"
 if [ ! -d "$UV_PROJECT_ENVIRONMENT" ]; then
+  install -d -m 2750 -o root -g "$service_gid" "$UV_PROJECT_ENVIRONMENT"
+  umask 0027
   /usr/bin/python3.12 -m venv --copies "$UV_PROJECT_ENVIRONMENT"
 fi
 test -f "$UV_PROJECT_ENVIRONMENT/bin/python"
 test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"
+umask 0027
 "$uv_bin" sync --locked --no-dev \
   --extra web --extra security --extra semantics --extra credentials --extra skills \
   --python "$UV_PROJECT_ENVIRONMENT/bin/python"
 test -x "$UV_PROJECT_ENVIRONMENT/bin/python"
 test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"
 
-stage="service-runtime-permissions"
-service_gid="$(id -g synoperator)"
-test "$service_gid" -gt 0
-chgrp -hR "$service_gid" "$source_root"
-chmod -R u+rwX,g+rx,g-w,o-rwx "$source_root"
-
-stage="service-runtime-probe"
+progress "service-runtime-probe"
 /usr/sbin/runuser -u synoperator -- \
   "$source_root/.venv/bin/python" -I -B -c \
   'import potbot.tools.scoped_provision; import potbot.tools.scoped_launcher'
 
-stage="complete"
+progress "complete"
 printf '%s\n' "$source_root/.venv/bin/python"
 trap - 0
 """
@@ -301,6 +316,62 @@ def _write_bundle(root: Path, files: list[Path], target: Path) -> None:
             info.mtime = 0
             archive.addfile(info, io.BytesIO(payload))
     os.replace(temporary, target)
+
+
+def _stream_process(
+    argv: list[str],
+    *,
+    timeout: int,
+    env: dict[str, str],
+) -> subprocess.CompletedProcess[str]:
+    process = subprocess.Popen(
+        argv,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        bufsize=1,
+        env=env,
+    )
+    assert process.stdout is not None and process.stderr is not None
+    captured: dict[str, list[str]] = {"stdout": [], "stderr": []}
+    sizes = {"stdout": 0, "stderr": 0}
+    lock = threading.Lock()
+
+    def pump(name: str, stream, sink) -> None:
+        for line in iter(stream.readline, ""):
+            print(line, end="", file=sink, flush=True)
+            with lock:
+                captured[name].append(line)
+                sizes[name] += len(line.encode("utf-8", errors="replace"))
+                while sizes[name] > _MAX_PROCESS_LOG_BYTES and captured[name]:
+                    removed = captured[name].pop(0)
+                    sizes[name] -= len(removed.encode("utf-8", errors="replace"))
+
+    threads = (
+        threading.Thread(target=pump, args=("stdout", process.stdout, sys.stdout), daemon=True),
+        threading.Thread(target=pump, args=("stderr", process.stderr, sys.stderr), daemon=True),
+    )
+    for thread in threads:
+        thread.start()
+    try:
+        return_code = process.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=10)
+        raise
+    finally:
+        for thread in threads:
+            thread.join(timeout=5)
+        process.stdout.close()
+        process.stderr.close()
+    return subprocess.CompletedProcess(
+        argv,
+        return_code,
+        stdout="".join(captured["stdout"]),
+        stderr="".join(captured["stderr"]),
+    )
 
 
 def _write_process_log(
@@ -501,8 +572,10 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
         "/bin/sh", "-c", _ROOT_BOOTSTRAP, "potbot-core",
         native, source_sha, UV_URL, UV_SHA256, COSIGN_URL, COSIGN_SHA256,
     ]
-    result = subprocess.run(
-        root_command, capture_output=True, text=True, timeout=1800, check=False,
+    print("[Potbot startup] WSL bootstrap: preparing the managed Linux runtime", flush=True)
+    result = _stream_process(
+        root_command,
+        timeout=1800,
         env={**os.environ, "PATH": os.environ.get("PATH", "")},
     )
     bootstrap_log = _write_process_log(root, "wsl-core-bootstrap.log", result)
@@ -516,7 +589,11 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
     if python != expected:
         raise CapabilityUnavailableError("Managed WSL core Python did not confirm its identity")
 
-    prepare = subprocess.run(
+    print(
+        "[Potbot startup] WSL qualification: validating launcher, sandbox image and workspace",
+        flush=True,
+    )
+    prepare = _stream_process(
         [
             manager.wsl, "--distribution", DISTRO, "--user", "root", "--exec",
             python, "-I", "-B", "-m", "potbot.wsl_core_runtime", "prepare",
@@ -526,7 +603,7 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
             "--source-sha256", source_sha,
             "--consumer-commit", _head(root),
         ],
-        capture_output=True, text=True, timeout=1800, check=False,
+        timeout=1800,
         env={**os.environ, "PATH": os.environ.get("PATH", "")},
     )
     qualification_log = _write_process_log(root, "wsl-core-qualification.log", prepare)
