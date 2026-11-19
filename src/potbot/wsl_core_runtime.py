@@ -21,11 +21,9 @@ from uuid import UUID
 from potbot.domain.errors import CapabilityUnavailableError, InvalidInputError
 from potbot.tools.workspace_concurrency import WorkspaceLeaseLedger
 
-IMAGE = "ghcr.io/kieransimkin/potbot-sandbox"
-IMAGE_DIGEST = "fb2073511f71fbd1b3b0e400dd07585eea519e633a01f06a00da9a7a853f0ac1"
-IMAGE_SOURCE = "d87e19f22fb4f9ce5f6123112ea90d77cf8e4f9a"
+IMAGE = "ghcr.io/synsphere/potbot-sandbox"
 IMAGE_SIGNER = (
-    "https://github.com/kieransimkin/potbot/"
+    "https://github.com/Synsphere/Potbot/"
     ".github/workflows/sandbox-system-image.yml@refs/heads/main"
 )
 COSIGN = Path("/usr/local/libexec/potbot-cosign")
@@ -128,25 +126,81 @@ def _ensure_scoped_launcher(source: Path, python: Path, service: pwd.struct_pass
         raise CapabilityUnavailableError("Scoped worker launcher could not be provisioned")
 
 
-def _verify_image(source: Path, source_sha: str) -> tuple[Path, dict]:
-    ref = f"{IMAGE}@sha256:{IMAGE_DIGEST}"
+def _resolve_image_digest(image_source: str) -> str:
+    if _COMMIT.fullmatch(image_source) is None:
+        raise InvalidInputError("Sandbox image source commit is invalid")
+    tag = f"{IMAGE}:system-v1-{image_source}-amd64"
+    for attempt in range(120):
+        try:
+            result = subprocess.run(
+                ["/usr/bin/skopeo", "inspect", "docker://" + tag],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                env={"PATH": "/usr/sbin:/usr/bin", "LANG": "C"},
+            )
+        except subprocess.TimeoutExpired:
+            result = None
+        if result is not None and result.returncode == 0:
+            try:
+                document = json.loads(result.stdout)
+                digest = document["Digest"]
+            except (KeyError, TypeError, ValueError):
+                raise CapabilityUnavailableError(
+                    "Published sandbox image tag returned invalid registry metadata"
+                ) from None
+            if (
+                isinstance(digest, str)
+                and digest.startswith("sha256:")
+                and _HEX.fullmatch(digest.removeprefix("sha256:")) is not None
+            ):
+                return digest.removeprefix("sha256:")
+            raise CapabilityUnavailableError(
+                "Published sandbox image tag returned an invalid digest"
+            )
+        error = "" if result is None else (result.stderr or "")
+        lowered = error.lower()
+        if "unauthorized" in lowered or "denied" in lowered:
+            raise CapabilityUnavailableError(
+                "Synsphere sandbox image is not publicly readable from GHCR"
+            )
+        if attempt % 6 == 0:
+            print(
+                f"[Potbot WSL] waiting for signed sandbox image {image_source[:12]}",
+                file=sys.stderr,
+                flush=True,
+            )
+        time.sleep(10)
+    raise CapabilityUnavailableError(
+        "Signed sandbox image for the selected source commit was not published"
+    )
+
+
+def _verify_image(source: Path, source_sha: str, image_source: str) -> tuple[Path, dict]:
+    image_digest = _resolve_image_digest(image_source)
+    ref = f"{IMAGE}@sha256:{image_digest}"
     _run([
         str(COSIGN), "verify",
         "--certificate-identity", IMAGE_SIGNER,
         "--certificate-oidc-issuer", "https://token.actions.githubusercontent.com",
         ref,
     ], timeout=180)
-    inspected = json.loads(_run(["/usr/bin/skopeo", "inspect", "--config", "docker://" + ref],
-                                timeout=180).stdout)
+    inspected = json.loads(
+        _run(
+            ["/usr/bin/skopeo", "inspect", "--config", "docker://" + ref],
+            timeout=180,
+        ).stdout
+    )
     if (
         inspected.get("os") != "linux"
         or inspected.get("architecture") != "amd64"
         or inspected.get("config", {}).get("Labels", {}).get("org.opencontainers.image.revision")
-        != IMAGE_SOURCE
+        != image_source
     ):
         raise CapabilityUnavailableError("Published sandbox image identity differs")
 
-    image_root = Path("/var/lib/potbot/core-images") / IMAGE_DIGEST
+    image_root = Path("/var/lib/potbot/core-images") / image_digest
     rootfs = image_root / "bundle/rootfs"
     if not rootfs.is_dir():
         if image_root.exists() or image_root.is_symlink():
@@ -155,10 +209,27 @@ def _verify_image(source: Path, source_sha: str) -> tuple[Path, dict]:
         pending = image_root.parent / (".pending-" + os.urandom(8).hex())
         pending.mkdir(mode=0o700)
         try:
-            _run(["/usr/bin/skopeo", "copy", "--format", "oci",
-                  "docker://" + ref, f"oci:{pending}/oci:candidate"], timeout=600)
-            _run(["/usr/bin/umoci", "unpack", "--image",
-                  f"{pending}/oci:candidate", str(pending / "bundle")], timeout=600)
+            _run(
+                [
+                    "/usr/bin/skopeo",
+                    "copy",
+                    "--format",
+                    "oci",
+                    "docker://" + ref,
+                    f"oci:{pending}/oci:candidate",
+                ],
+                timeout=600,
+            )
+            _run(
+                [
+                    "/usr/bin/umoci",
+                    "unpack",
+                    "--image",
+                    f"{pending}/oci:candidate",
+                    str(pending / "bundle"),
+                ],
+                timeout=600,
+            )
             if not (pending / "bundle/rootfs").is_dir():
                 raise CapabilityUnavailableError("Sandbox image unpack produced no rootfs")
             os.rename(pending, image_root)
@@ -167,7 +238,17 @@ def _verify_image(source: Path, source_sha: str) -> tuple[Path, dict]:
             raise
 
     kernel = os.uname().release
-    key = hashlib.sha256((source_sha + "\0" + kernel).encode()).hexdigest()
+    key = hashlib.sha256(
+        (
+            source_sha
+            + "\0"
+            + kernel
+            + "\0"
+            + image_digest
+            + "\0"
+            + image_source
+        ).encode()
+    ).hexdigest()
     qroot = Path("/var/lib/potbot/core-qualification") / key
     report = qroot / "summary.json"
     if not report.is_file():
@@ -175,25 +256,38 @@ def _verify_image(source: Path, source_sha: str) -> tuple[Path, dict]:
             raise CapabilityUnavailableError("Incomplete core qualification needs reconciliation")
         qroot.mkdir(mode=0o700, parents=True)
         command = [
-            "/usr/bin/setpriv", "--regid", "69", "--clear-groups",
-            str(source / ".venv/bin/python"), "-B",
+            "/usr/bin/setpriv",
+            "--regid",
+            "69",
+            "--clear-groups",
+            str(source / ".venv/bin/python"),
+            "-B",
             "scripts/qualify_published_sandbox_image.py",
-            "--rootfs", str(rootfs),
-            "--scratch", str(qroot),
-            "--image-digest", IMAGE_DIGEST,
-            "--image-source", IMAGE_SOURCE,
-            "--consumer", os.environ["POTBOT_CORE_CONSUMER_COMMIT"],
-            "--report", str(report),
+            "--rootfs",
+            str(rootfs),
+            "--scratch",
+            str(qroot),
+            "--image-digest",
+            image_digest,
+            "--image-source",
+            image_source,
+            "--consumer",
+            os.environ["POTBOT_CORE_CONSUMER_COMMIT"],
+            "--report",
+            str(report),
         ]
         try:
             _run(
-                command, timeout=900, cwd=source,
+                command,
+                timeout=900,
+                cwd=source,
                 env={**os.environ, "PYTHONPATH": str(source)},
                 capture=False,
             )
         except BaseException:
             shutil.rmtree(qroot, ignore_errors=True)
             raise
+
     document = json.loads(report.read_text(encoding="utf-8"))
     workspace = dict(document.get("workspace_smoke") or {})
     qualification = workspace.pop("receipt_sha256", None)
@@ -203,17 +297,22 @@ def _verify_image(source: Path, source_sha: str) -> tuple[Path, dict]:
     if (
         document.get("schema") != "potbot.published-image-hosted-smoke/1"
         or document.get("qualified_smoke") is not True
-        or document.get("image_digest") != IMAGE_DIGEST
-        or document.get("image_source_commit") != IMAGE_SOURCE
+        or document.get("image_digest") != image_digest
+        or document.get("image_source_commit") != image_source
         or document.get("consumer_commit") != os.environ["POTBOT_CORE_CONSUMER_COMMIT"]
         or document.get("kernel_release") != kernel
         or workspace.get("qualified_smoke") is not True
-        or workspace.get("image_digest") != IMAGE_DIGEST
+        or workspace.get("image_digest") != image_digest
         or not isinstance(qualification, str)
         or calculated != qualification
     ):
         raise CapabilityUnavailableError("Published sandbox image did not qualify this WSL host")
-    return rootfs, {"qualification": qualification, "report": str(report)}
+    return rootfs, {
+        "digest": image_digest,
+        "source": image_source,
+        "qualification": qualification,
+        "report": str(report),
+    }
 
 
 def _ensure_directory(path: Path, uid: int, gid: int, mode: int) -> None:
@@ -252,8 +351,15 @@ def _finalize(args: argparse.Namespace) -> int:
     private = Path(args.private).resolve(strict=True)
     rootfs = Path(args.rootfs).resolve(strict=True)
     qualification = args.qualification_sha256
-    if _HEX.fullmatch(qualification) is None:
-        raise InvalidInputError("Qualification digest is invalid")
+    image_digest = args.image_digest
+    image_source = args.image_source
+    if (
+        _HEX.fullmatch(qualification) is None
+        or _HEX.fullmatch(image_digest) is None
+        or _COMMIT.fullmatch(image_source) is None
+    ):
+        raise InvalidInputError("Image or qualification identity is invalid")
+
     paths = {
         "home": home,
         "model_staging": Path(args.model_staging).resolve(strict=True),
@@ -268,16 +374,16 @@ def _finalize(args: argparse.Namespace) -> int:
     if pin is None:
         ledger.pin_image(
             workspace,
-            digest=IMAGE_DIGEST,
-            image_ref=f"{IMAGE}@sha256:{IMAGE_DIGEST}",
-            build_commit=IMAGE_SOURCE,
+            digest=image_digest,
+            image_ref=f"{IMAGE}@sha256:{image_digest}",
+            build_commit=image_source,
             platform="linux/amd64",
             rootfs_path=rootfs,
             qualification_sha256=qualification,
         )
     else:
         if (
-            pin["digest"] != IMAGE_DIGEST
+            pin["digest"] != image_digest
             or pin["qualification_sha256"] != qualification
             or pin["rootfs_path"] != str(rootfs)
         ):
@@ -286,7 +392,7 @@ def _finalize(args: argparse.Namespace) -> int:
     manifest = private / "operator.json"
     _write_private(manifest, {
         "workspace_id": str(workspace),
-        "image_digest": IMAGE_DIGEST,
+        "image_digest": image_digest,
         "qualification_sha256": qualification,
         "rootfs": str(rootfs),
         **{name: str(value) for name, value in paths.items()},
@@ -297,7 +403,7 @@ def _finalize(args: argparse.Namespace) -> int:
         "principalId": str(principal),
         "ledger": str(paths["controller_ledger"]),
         "runtime": {
-            "imageDigest": IMAGE_DIGEST,
+            "imageDigest": image_digest,
             "qualificationSha256": qualification,
             "rootfs": str(rootfs),
             "home": str(home),
@@ -326,7 +432,8 @@ def _finalize(args: argparse.Namespace) -> int:
         "home": str(home),
         "private": str(private),
         "python": str(Path(sys.executable).resolve()),
-        "imageDigest": IMAGE_DIGEST,
+        "imageDigest": image_digest,
+        "imageSource": image_source,
         "qualificationSha256": qualification,
     })
     print(json.dumps({"state": str(state)}, sort_keys=True))
@@ -342,7 +449,11 @@ def _prepare(args: argparse.Namespace) -> int:
     _qualification_stage("runtime-preflight")
     if not sys.platform.startswith("linux") or os.geteuid() != 0 or not sys.flags.isolated:
         raise CapabilityUnavailableError("Core runtime preparation requires isolated root Python in WSL")
-    if _HEX.fullmatch(args.source_sha256) is None or _COMMIT.fullmatch(args.consumer_commit) is None:
+    if (
+        _HEX.fullmatch(args.source_sha256) is None
+        or _COMMIT.fullmatch(args.consumer_commit) is None
+        or _COMMIT.fullmatch(args.image_source) is None
+    ):
         raise InvalidInputError("Core source identity is invalid")
     source = _protected_root(Path(args.source_root))
     os.environ["POTBOT_CORE_CONSUMER_COMMIT"] = args.consumer_commit
@@ -357,7 +468,7 @@ def _prepare(args: argparse.Namespace) -> int:
     _ensure_scoped_launcher(source, python, service, auditor)
 
     _qualification_stage("sandbox-image")
-    rootfs, image = _verify_image(source, args.source_sha256)
+    rootfs, image = _verify_image(source, args.source_sha256, args.image_source)
 
     _qualification_stage("workspace-state")
     base = Path("/home") / service.pw_name / ".local/share/potbot/core" / args.workspace_id
@@ -382,6 +493,8 @@ def _prepare(args: argparse.Namespace) -> int:
         "--workspace-id", args.workspace_id,
         "--principal-id", args.principal_id,
         "--rootfs", str(rootfs),
+        "--image-digest", image["digest"],
+        "--image-source", image["source"],
         "--qualification-sha256", image["qualification"],
         "--home", str(home),
         "--private", str(private),
@@ -517,11 +630,14 @@ def main(argv: list[str] | None = None) -> int:
     prepare.add_argument("--source-root", required=True)
     prepare.add_argument("--source-sha256", required=True)
     prepare.add_argument("--consumer-commit", required=True)
+    prepare.add_argument("--image-source", required=True)
 
     finalize = commands.add_parser("finalize")
     finalize.add_argument("--workspace-id", required=True)
     finalize.add_argument("--principal-id", required=True)
     finalize.add_argument("--rootfs", required=True)
+    finalize.add_argument("--image-digest", required=True)
+    finalize.add_argument("--image-source", required=True)
     finalize.add_argument("--qualification-sha256", required=True)
     finalize.add_argument("--home", required=True)
     finalize.add_argument("--private", required=True)

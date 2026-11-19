@@ -42,6 +42,14 @@ _SOURCE_TOP = (
     "native/potbot-identity",
     "vocab",
 )
+_SANDBOX_IMAGE_INPUTS = (
+    ".github/workflows/sandbox-system-image.yml",
+    "sandbox",
+    "src/potbot/tools/xpra_browser_worker.py",
+    "src/potbot/tools/browser_https_routes.py",
+    "src/potbot/tools/queue_transport_worker.py",
+    "src/potbot/tools/python_profile_worker.py",
+)
 _SKIP_NAMES = {
     "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".git",
     ".venv", ".potbot", "node_modules", ".next",
@@ -485,6 +493,31 @@ def _head(root: Path) -> str:
     return value
 
 
+def _sandbox_image_source(root: Path) -> str:
+    result = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(root),
+            "log",
+            "-1",
+            "--format=%H",
+            "--",
+            *_SANDBOX_IMAGE_INPUTS,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+    value = result.stdout.strip()
+    if result.returncode or _COMMIT.fullmatch(value) is None:
+        raise CapabilityUnavailableError(
+            "Sandbox image source commit could not be identified from Git history"
+        )
+    return value
+
+
 def _runtime_secret_environment(token: str, application_dsn: str) -> dict[str, str]:
     if not isinstance(token, str) or not 32 <= len(token) <= 4096 or "\n" in token or "\r" in token:
         raise StateMismatchError("Xpra bridge token is invalid")
@@ -562,6 +595,7 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
     source_sha = _source_digest(root, files)
     if _HEX.fullmatch(source_sha) is None:
         raise AssertionError("source digest is not canonical")
+    image_source = _sandbox_image_source(root)
     manager = WslOperatorHost()
     manager.setup()
     _ensure_required_wsl_kernel(manager)
@@ -599,6 +633,10 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
         "[Potbot startup] WSL qualification: validating launcher, sandbox image and workspace",
         flush=True,
     )
+    print(
+        f"[Potbot startup] Sandbox image source commit: {image_source[:12]}",
+        flush=True,
+    )
     prepare = _stream_process(
         [
             manager.wsl, "--distribution", DISTRO, "--user", "root", "--exec",
@@ -608,6 +646,7 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
             "--source-root", f"/var/lib/potbot/core-source/{source_sha}",
             "--source-sha256", source_sha,
             "--consumer-commit", _head(root),
+            "--image-source", image_source,
         ],
         timeout=1800,
         env={**os.environ, "PATH": os.environ.get("PATH", "")},

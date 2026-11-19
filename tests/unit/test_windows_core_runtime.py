@@ -11,6 +11,7 @@ from potbot.dependencies import project_root
 from potbot.windows_core_runtime import (
     _MAX_PROCESS_LOG_BYTES,
     _ROOT_BOOTSTRAP,
+    _SANDBOX_IMAGE_INPUTS,
     _SOURCE_TOP,
     WSL_KERNEL_ARCHIVE_SHA256,
     WSL_KERNEL_MANIFEST_SHA256,
@@ -21,6 +22,7 @@ from potbot.windows_core_runtime import (
     _failed_bootstrap_stage,
     _failed_qualification_stage,
     _runtime_secret_environment,
+    _sandbox_image_source,
     _stream_process,
     _supervisor_command,
     _write_process_log,
@@ -216,3 +218,24 @@ def test_stream_process_forwards_and_retains_output(capsys) -> None:
     assert "live-err" in visible.err
     assert "live-out" in result.stdout
     assert "live-err" in result.stderr
+
+
+def test_sandbox_image_source_is_git_derived_and_tracks_real_build_inputs() -> None:
+    assert ".github/workflows/sandbox-system-image.yml" in _SANDBOX_IMAGE_INPUTS
+    assert "sandbox" in _SANDBOX_IMAGE_INPUTS
+    assert "src/potbot/tools/queue_transport_worker.py" in _SANDBOX_IMAGE_INPUTS
+    value = _sandbox_image_source(project_root())
+    assert len(value) == 40
+    assert all(character in "0123456789abcdef" for character in value)
+
+
+def test_wsl_runtime_resolves_synsphere_signed_image_instead_of_hard_coding_digest() -> None:
+    root = project_root()
+    source = (root / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
+    workflow = (root / ".github/workflows/sandbox-system-image.yml").read_text(encoding="utf-8")
+    assert 'IMAGE = "ghcr.io/synsphere/potbot-sandbox"' in source
+    assert "https://github.com/Synsphere/Potbot/" in source
+    assert "IMAGE_DIGEST =" not in source
+    assert "IMAGE_SOURCE =" not in source
+    assert "system-v1-{image_source}-amd64" in source
+    assert "src/potbot/tools/queue_transport_worker.py" in workflow
