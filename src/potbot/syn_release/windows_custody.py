@@ -11,6 +11,7 @@ import hashlib
 import ipaddress
 import json
 import os
+import re
 import secrets
 import shutil
 import socket
@@ -47,6 +48,76 @@ CUSTODY_ENVIRONMENT = (
     *PARENT_KEYSTORE_ENVIRONMENT,
 )
 REQUIRED_MARKER = "POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED"
+
+_QUIESCE_WINDOWS_LIFETIME = r"""& {
+$ErrorActionPreference = 'Stop'
+$InstallationId = 'POTBOT_INSTALLATION_ID'
+$taskName = 'Potbot-SynOperator'
+$task = Get-ScheduledTask -TaskName $taskName -TaskPath '\' -ErrorAction SilentlyContinue
+if (-not $task) {
+    @{profile='potbot.parent-keystore-quiesce/1';state='absent'} | ConvertTo-Json -Compress
+    exit 0
+}
+$currentSid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+$principalId = $task.Principal.UserId
+if ($principalId -notmatch '^S-1-') {
+    $principalId = ([Security.Principal.NTAccount]$principalId).Translate(
+        [Security.Principal.SecurityIdentifier]).Value
+}
+$currentDescription = 'Potbot managed Syn operator with Windows DPAPI custody; host ' +
+    $InstallationId + '; no automatic restart after faults.'
+$legacyDescription = 'Potbot managed Syn operator; host ' +
+    $InstallationId + '; no automatic restart after faults.'
+if (
+    $principalId -cne $currentSid -or
+    @($task.Actions).Count -ne 1 -or
+    $task.Principal.LogonType -ne 'Interactive' -or
+    $task.Principal.RunLevel -ne 'Limited' -or
+    $task.Settings.RestartCount -ne 0 -or
+    ($task.Description -cne $currentDescription -and
+     $task.Description -cne $legacyDescription)
+) {
+    throw 'Existing Potbot-SynOperator task differs from the managed installation'
+}
+if ($task.State -eq 'Running') {
+    Stop-ScheduledTask -TaskName $taskName -TaskPath '\'
+    for ($i = 0; $i -lt 100; $i++) {
+        Start-Sleep -Milliseconds 50
+        $task = Get-ScheduledTask -TaskName $taskName -TaskPath '\'
+        if ($task.State -ne 'Running') { break }
+    }
+    if ($task.State -eq 'Running') {
+        throw 'Managed legacy Syn operator task did not stop'
+    }
+}
+@{profile='potbot.parent-keystore-quiesce/1';state='quiesced'} |
+    ConvertTo-Json -Compress
+}"""
+
+
+def _quiesce_windows_lifetime(manager) -> None:
+    """Stop only Potbot's exact legacy task before the live parent owns the vault."""
+    from .host import run_host
+
+    record = manager._read_receipt()
+    identity = record.get("installation_id", "")
+    if not isinstance(identity, str) or re.fullmatch(r"[0-9a-f]{32}", identity) is None:
+        raise StateMismatchError("Managed WSL host lacks its retained identity")
+    script = _QUIESCE_WINDOWS_LIFETIME.replace("POTBOT_INSTALLATION_ID", identity)
+    powershell = str(Path(manager.wsl).parent / "WindowsPowerShell/v1.0/powershell.exe")
+    raw = run_host(
+        [powershell, "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", script],
+        timeout=20,
+    )
+    try:
+        result = json.loads(raw)
+    except (TypeError, ValueError):
+        raise StateMismatchError("Managed Windows lifetime task returned an invalid receipt") from None
+    if (
+        result.get("profile") != "potbot.parent-keystore-quiesce/1"
+        or result.get("state") not in {"absent", "quiesced"}
+    ):
+        raise StateMismatchError("Managed Windows lifetime task did not quiesce")
 
 # Git blob identities from Syn v0.11.0 / source commit above. The signed release
 # manifest independently pins that source commit. Runtime download is therefore
@@ -641,6 +712,7 @@ def _health_via_wsl(manager, environment: dict[str, str], client: str) -> bool:
 def windows_host_custody(manager):
     if os.name != "nt":
         raise CapabilityUnavailableError("Windows host custody requires Windows")
+    _quiesce_windows_lifetime(manager)
     runtime = prepare_windows_host_custody(manager.root)
     project = Path(runtime["project"])
     python = Path(runtime["python"])
@@ -656,53 +728,70 @@ def windows_host_custody(manager):
     environment.update(
         _parent_environment(host=host, port=port, session=session, token=token, client=client)
     )
-    parent = subprocess.Popen(
-        [
-            str(python),
-            "-I",
-            "-B",
-            str(server),
-            "--host",
-            host,
-            "--guest",
-            guest,
-            "--port",
-            str(port),
-            "--session",
-            session,
-            "--owner-pid",
-            str(os.getpid()),
-            "--owner-created",
-            str(_process_creation_filetime()),
-        ],
-        cwd=project,
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        env={
-            **windows_environment(),
-            "PYTHONNOUSERSITE": "1",
-            "POTBOT_PARENT_KEYSTORE_SERVER_TOKEN": token,
-        },
-    )
-    try:
-        for _ in range(100):
-            if parent.poll() is not None:
+    log_path = manager.root / "parent-keystore-authority.log"
+    with log_path.open("wb") as log:
+        parent = subprocess.Popen(
+            [
+                str(python),
+                "-I",
+                "-B",
+                str(server),
+                "--host",
+                host,
+                "--guest",
+                guest,
+                "--port",
+                str(port),
+                "--session",
+                session,
+                "--owner-pid",
+                str(os.getpid()),
+                "--owner-created",
+                str(_process_creation_filetime()),
+            ],
+            cwd=project,
+            stdin=subprocess.DEVNULL,
+            stdout=log,
+            stderr=log,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            env={
+                **windows_environment(),
+                "PYTHONNOUSERSITE": "1",
+                "POTBOT_PARENT_KEYSTORE_SERVER_TOKEN": token,
+            },
+        )
+        try:
+            for _ in range(100):
+                if parent.poll() is not None:
+                    log.flush()
+                    try:
+                        os.fsync(log.fileno())
+                    except OSError:
+                        pass
+                    detail = log_path.read_text(
+                        encoding="utf-8", errors="replace"
+                    )[-4096:].strip()
+                    suffix = ""
+                    if detail:
+                        suffix = ": " + detail.splitlines()[-1][:500]
+                    raise CapabilityUnavailableError(
+                        "Syn parent keystore authority exited during startup"
+                        + suffix
+                        + f"; inspect {log_path}"
+                    )
+                if _health_via_wsl(manager, environment, client):
+                    break
+                time.sleep(0.1)
+            else:
                 raise CapabilityUnavailableError(
-                    "Syn parent keystore authority exited during startup"
+                    f"Syn parent keystore authority did not become ready; inspect {log_path}"
                 )
-            if _health_via_wsl(manager, environment, client):
-                break
-            time.sleep(0.1)
-        else:
-            raise CapabilityUnavailableError("Syn parent keystore authority did not become ready")
-        yield environment
-    finally:
-        if parent.poll() is None:
-            parent.terminate()
-            try:
-                parent.wait(timeout=8)
-            except subprocess.TimeoutExpired:
-                parent.kill()
-                parent.wait(timeout=5)
+            yield environment
+        finally:
+            if parent.poll() is None:
+                parent.terminate()
+                try:
+                    parent.wait(timeout=8)
+                except subprocess.TimeoutExpired:
+                    parent.kill()
+                    parent.wait(timeout=5)

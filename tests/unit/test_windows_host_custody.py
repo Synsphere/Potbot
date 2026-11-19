@@ -114,6 +114,29 @@ def test_lifetime_runner_imports_bridge_and_holds_broker_for_operator() -> None:
     assert "--owner-created" in source
 
 
+def test_live_parent_keystore_quiesces_the_exact_legacy_task_before_vault_open() -> None:
+    source = Path(windows_custody.__file__).read_text(encoding="utf-8")
+    script = windows_custody._QUIESCE_WINDOWS_LIFETIME
+    assert "Stop-ScheduledTask -TaskName $taskName" in script
+    assert "Potbot managed Syn operator with Windows DPAPI custody; host " in script
+    assert "Potbot managed Syn operator; host " in script
+    assert "_quiesce_windows_lifetime(manager)" in source
+    assert source.index("_quiesce_windows_lifetime(manager)") < source.index(
+        "runtime = prepare_windows_host_custody(manager.root)",
+        source.index("def windows_host_custody"),
+    )
+    assert 'manager.root / "parent-keystore-authority.log"' in source
+
+
+def test_parent_keystore_server_waits_for_retired_vault_owner() -> None:
+    source = (
+        Path(windows_custody.__file__).with_name("parent_keystore_server.py")
+    ).read_text(encoding="utf-8")
+    assert "except VaultInUseError:" in source
+    assert "deadline = time.monotonic() + 10.0" in source
+    assert "Parent keystore vault is still owned by another Syn authority" in source
+
+
 def test_windows_service_can_replace_only_the_exact_legacy_helper(
     tmp_path, monkeypatch
 ) -> None:

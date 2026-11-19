@@ -13,9 +13,11 @@ import json
 import os
 import re
 import socket
+import sys
+import time
 from typing import Any
 
-from syn_host_custody.broker import WindowsVault, host_approve
+from syn_host_custody.broker import VaultInUseError, WindowsVault, host_approve
 from syn_host_custody.core import Authority, MAX_REQUEST, root_slot, safe_ref, safe_slot
 from syn_host_custody.owner import OwnerProcess
 
@@ -144,6 +146,17 @@ def _response(token: bytes, request_id: str, response: dict[str, Any]) -> bytes:
     return canonical({**unsigned, "mac": mac(token, unsigned)}) + b"\n"
 
 
+def _open_vault() -> WindowsVault:
+    deadline = time.monotonic() + 10.0
+    while True:
+        try:
+            return WindowsVault()
+        except VaultInUseError:
+            if time.monotonic() >= deadline:
+                raise
+            time.sleep(0.1)
+
+
 def serve(
     host: str,
     guest: str,
@@ -154,7 +167,7 @@ def serve(
     owner_created: int,
 ) -> None:
     replay: set[str] = set()
-    with OwnerProcess(owner_pid, owner_created), WindowsVault() as vault:
+    with OwnerProcess(owner_pid, owner_created), _open_vault() as vault:
         authority = Authority(vault, approve=host_approve)
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
             server.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
@@ -231,15 +244,22 @@ def main(argv: list[str] | None = None) -> int:
         or len(token) != 32
     ):
         parser.error("invalid parent keystore network/session argument")
-    serve(
-        args.host,
-        args.guest,
-        args.port,
-        args.session,
-        token,
-        args.owner_pid,
-        args.owner_created,
-    )
+    try:
+        serve(
+            args.host,
+            args.guest,
+            args.port,
+            args.session,
+            token,
+            args.owner_pid,
+            args.owner_created,
+        )
+    except VaultInUseError:
+        print(
+            "Parent keystore vault is still owned by another Syn authority",
+            file=sys.stderr,
+        )
+        return 3
     return 0
 
 
