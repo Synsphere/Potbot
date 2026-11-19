@@ -277,16 +277,42 @@ def _verify_image(source: Path, source_sha: str, image_source: str) -> tuple[Pat
             str(report),
         ]
         try:
-            _run(
+            execution = subprocess.run(
                 command,
                 timeout=900,
                 cwd=source,
                 env={**os.environ, "PYTHONPATH": str(source)},
-                capture=False,
+                check=False,
             )
-        except BaseException:
+        except subprocess.TimeoutExpired:
             shutil.rmtree(qroot, ignore_errors=True)
-            raise
+            raise CapabilityUnavailableError(
+                "Published sandbox image qualification timed out"
+            ) from None
+        if execution.returncode:
+            summary: dict[str, object] = {"stage": "unreported"}
+            if report.is_file():
+                try:
+                    failed_report = json.loads(report.read_text(encoding="utf-8"))
+                    candidate = failed_report.get("failure_summary")
+                    if (
+                        isinstance(candidate, dict)
+                        and isinstance(candidate.get("stage"), str)
+                    ):
+                        summary = candidate
+                except (OSError, ValueError, TypeError):
+                    pass
+            print(
+                "POTBOT_SANDBOX_FAILURE="
+                + json.dumps(summary, sort_keys=True, separators=(",", ":")),
+                file=sys.stderr,
+                flush=True,
+            )
+            stage = str(summary.get("stage", "unreported"))
+            shutil.rmtree(qroot, ignore_errors=True)
+            raise CapabilityUnavailableError(
+                f"Published sandbox image qualification failed during {stage}"
+            )
 
     document = json.loads(report.read_text(encoding="utf-8"))
     workspace = dict(document.get("workspace_smoke") or {})

@@ -34,6 +34,49 @@ def _canonical_source_bytes(path: Path) -> bytes:
     return payload
 
 
+def _failed_names(section: object) -> list[str]:
+    if not isinstance(section, dict):
+        return []
+    return sorted(
+        str(name)
+        for name, result in section.items()
+        if not isinstance(result, dict) or result.get("passed") is not True
+    )
+
+
+def _failure_summary(
+    accounting: object,
+    smoke: object,
+    operator: object,
+    worker: object,
+) -> dict[str, object]:
+    if not isinstance(accounting, dict) or accounting.get("qualified") is not True:
+        return {"stage": "taskstats"}
+    if not isinstance(smoke, dict) or smoke.get("qualified_smoke") is not True:
+        return {
+            "stage": "workspace-smoke",
+            "failed_tests": _failed_names(
+                smoke.get("tests") if isinstance(smoke, dict) else None
+            ),
+        }
+    if not isinstance(operator, dict) or operator.get("qualified") is not True:
+        return {
+            "stage": "operator-gate",
+            "failed_checks": _failed_names(
+                operator.get("checks") if isinstance(operator, dict) else None
+            ),
+        }
+    if not isinstance(worker, dict) or worker.get("qualified_smoke") is not True:
+        details = None
+        if isinstance(worker, dict):
+            details = worker.get("checks", worker.get("tests"))
+        return {
+            "stage": "worker-fork-smoke",
+            "failed_checks": _failed_names(details),
+        }
+    return {"stage": "unknown"}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rootfs", required=True, type=Path)
@@ -143,6 +186,7 @@ def main() -> int:
     passed = (
         accounting["qualified"] is True and worker is not None and worker["qualified_smoke"] is True
     )
+    failure = None if passed else _failure_summary(accounting, smoke, operator, worker)
     report = {
         "schema": "potbot.published-image-hosted-smoke/1",
         "scope": "disposable-linux-amd64",
@@ -156,9 +200,19 @@ def main() -> int:
         "workspace_smoke": smoke,
         "operator_gate": operator,
         "worker_fork_smoke": worker,
+        "failure_summary": failure,
     }
     write_report(args.report, report)
-    print(json.dumps({"qualified_smoke": passed, "image_digest": args.image_digest}))
+    print(
+        json.dumps(
+            {
+                "qualified_smoke": passed,
+                "image_digest": args.image_digest,
+                "failure": failure,
+            },
+            sort_keys=True,
+        )
+    )
     return 0 if passed else 1
 
 

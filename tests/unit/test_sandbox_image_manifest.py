@@ -63,3 +63,44 @@ def test_non_python_shipped_bytes_are_not_rewritten(tmp_path: Path) -> None:
     payload = b"first\r\nsecond\r\n"
     source.write_bytes(payload)
     assert _qualifier()._canonical_source_bytes(source) == payload
+
+
+def test_published_image_failure_summary_names_workspace_failures() -> None:
+    qualifier = _qualifier()
+    summary = qualifier._failure_summary(
+        {"qualified": True},
+        {
+            "qualified_smoke": False,
+            "tests": {
+                "network_is_denied": {"passed": False},
+                "home_is_writable": {"passed": True},
+                "etc_is_read_only": {"passed": False},
+            },
+        },
+        None,
+        None,
+    )
+    assert summary == {
+        "stage": "workspace-smoke",
+        "failed_tests": ["etc_is_read_only", "network_is_denied"],
+    }
+
+
+def test_published_image_failure_summary_names_operator_checks() -> None:
+    qualifier = _qualifier()
+    summary = qualifier._failure_summary(
+        {"qualified": True},
+        {"qualified_smoke": True},
+        {
+            "qualified": False,
+            "checks": {
+                "host": {"passed": True},
+                "taskstats": {"passed": False},
+            },
+        },
+        None,
+    )
+    assert summary == {
+        "stage": "operator-gate",
+        "failed_checks": ["taskstats"],
+    }
