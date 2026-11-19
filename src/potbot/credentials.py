@@ -70,6 +70,42 @@ class KeyringBackend(Protocol):
     def delete_password(self, service: str, username: str) -> None: ...
 
 
+class ParentKeystoreBackend:
+    """Managed-WSL adapter that bypasses D-Bus/Secret Service readiness races."""
+
+    priority = 1
+
+    def get_password(self, service: str, username: str) -> str | None:
+        from potbot.syn_release.parent_keystore_client import ParentKeystoreError, secret_get
+
+        try:
+            return secret_get(service, username)
+        except ParentKeystoreError:
+            raise CapabilityUnavailableError(
+                "The Windows parent keystore is unavailable or denied the credential read."
+            ) from None
+
+    def set_password(self, service: str, username: str, password: str) -> None:
+        from potbot.syn_release.parent_keystore_client import ParentKeystoreError, secret_set
+
+        try:
+            secret_set(service, username, password)
+        except ParentKeystoreError:
+            raise CapabilityUnavailableError(
+                "The Windows parent keystore is unavailable or denied the credential write."
+            ) from None
+
+    def delete_password(self, service: str, username: str) -> None:
+        from potbot.syn_release.parent_keystore_client import ParentKeystoreError, secret_delete
+
+        try:
+            secret_delete(service, username)
+        except ParentKeystoreError:
+            raise CapabilityUnavailableError(
+                "The Windows parent keystore is unavailable or denied the credential deletion."
+            ) from None
+
+
 def native_backend(platform_name: str | None = None) -> KeyringBackend:
     """Select a bundled native adapter without loading configurable plugin chains."""
     platform_name = sys.platform if platform_name is None else platform_name
@@ -83,8 +119,9 @@ def native_backend(platform_name: str | None = None) -> KeyringBackend:
         )
         if any(not os.environ.get(name) for name in required):
             raise CapabilityUnavailableError(
-                "Windows-managed WSL requires the parent-backed Secret Service proxy."
+                "Windows-managed WSL requires the authenticated parent-keystore RPC."
             )
+        return ParentKeystoreBackend()
     choices = {
         "win32": ("keyring.backends.Windows", "WinVaultKeyring"),
         "darwin": ("keyring.backends.macOS", "Keyring"),
@@ -139,6 +176,8 @@ class CredentialStore:
         account = self._account(name)
         try:
             value = self._backend().get_password(SERVICE_NAME, account)
+        except CapabilityUnavailableError:
+            raise
         except Exception:
             raise CapabilityUnavailableError(_STORE_ERROR) from None
         if value is not None and (not isinstance(value, str) or not value or "\x00" in value):
@@ -159,6 +198,8 @@ class CredentialStore:
                 value.encode(), persisted.encode()
             ):
                 raise RuntimeError("Credential persistence was not confirmed")
+        except CapabilityUnavailableError:
+            raise
         except Exception:
             raise CapabilityUnavailableError(
                 "Credential persistence was not confirmed by the OS vault. Startup did not save "
@@ -174,6 +215,8 @@ class CredentialStore:
             backend.delete_password(SERVICE_NAME, account)
             if backend.get_password(SERVICE_NAME, account) is not None:
                 raise RuntimeError("Credential removal was not confirmed")
+        except CapabilityUnavailableError:
+            raise
         except Exception:
             raise CapabilityUnavailableError(
                 "Credential removal was not confirmed by the OS vault."

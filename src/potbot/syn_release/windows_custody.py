@@ -97,7 +97,7 @@ if ($task.State -eq 'Running') {
 
 def _quiesce_windows_lifetime(manager) -> None:
     """Stop only Potbot's exact legacy task before the live parent owns the vault."""
-    from .host import run_host
+    from .host import run_host, windows_environment
 
     record = manager._read_receipt()
     identity = record.get("installation_id", "")
@@ -118,6 +118,36 @@ def _quiesce_windows_lifetime(manager) -> None:
         or result.get("state") not in {"absent", "quiesced"}
     ):
         raise StateMismatchError("Managed Windows lifetime task did not quiesce")
+
+    # The old Windows runner may have exited while its WSL user unit survived.
+    # Retire that exact managed unit before the live parent authority owns the vault.
+    environment = windows_environment()
+    unit = "potbot-syn-operator.service"
+    active = subprocess.run(
+        manager.command("/usr/bin/systemctl", ["--user", "is-active", "--quiet", unit]),
+        env=environment,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        timeout=10,
+        check=False,
+    )
+    if active.returncode == 0:
+        stopped = subprocess.run(
+            manager.command("/usr/bin/systemctl", ["--user", "stop", unit]),
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=20,
+            check=False,
+        )
+        if stopped.returncode:
+            raise CapabilityUnavailableError("Retired managed WSL operator service did not stop")
+    elif active.returncode not in {3, 4}:
+        raise CapabilityUnavailableError(
+            "Retired managed WSL operator service state is unavailable"
+        )
 
 # Git blob identities from Syn v0.11.0 / source commit above. The signed release
 # manifest independently pins that source commit. Runtime download is therefore

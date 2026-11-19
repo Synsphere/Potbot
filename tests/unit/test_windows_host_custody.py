@@ -120,6 +120,8 @@ def test_live_parent_keystore_quiesces_the_exact_legacy_task_before_vault_open()
     assert "Stop-ScheduledTask -TaskName $taskName" in script
     assert "Potbot managed Syn operator with Windows DPAPI custody; host " in script
     assert "Potbot managed Syn operator; host " in script
+    assert '"is-active", "--quiet", "potbot-syn-operator.service"' in source
+    assert '"stop", "potbot-syn-operator.service"' in source
     assert "_quiesce_windows_lifetime(manager)" in source
     assert source.index("_quiesce_windows_lifetime(manager)") < source.index(
         "runtime = prepare_windows_host_custody(manager.root)",

@@ -427,7 +427,7 @@ def platform_release() -> str:
     return platform.release()
 
 
-def _foreground(config: Any) -> int:
+def _foreground(config: Any, *, open_browser: bool = True) -> int:
     """WSL/headless fallback when no user service manager is available."""
     _notice("Native service manager unavailable; supervising Potbot in this terminal")
     child = subprocess.Popen([sys.executable, "-m", "potbot.startup", "service", "run"])
@@ -438,7 +438,7 @@ def _foreground(config: Any) -> int:
             if _healthy(config):
                 _require_gui_login()
                 _notice("Potbot is running at " + _GUI_URL)
-                if sys.stdout.isatty():
+                if open_browser and sys.stdout.isatty():
                     _open_browser()
                 return child.wait()
             time.sleep(1)
@@ -455,7 +455,7 @@ def _foreground(config: Any) -> int:
                 child.wait(timeout=5)
 
 
-def _start() -> int:
+def _start(*, open_browser: bool = True) -> int:
     from potbot import service
     from potbot.native_postgres import ensure_running, is_managed
 
@@ -475,7 +475,7 @@ def _start() -> int:
         current = service.ServiceConfig.load(saved)
         if current.frontend_enabled and not password_chosen and _healthy(current) and _gui_accepts_current_password():
             _notice("Potbot is already running: " + _GUI_URL)
-            if sys.stdout.isatty():
+            if open_browser and sys.stdout.isatty():
                 _open_browser()
             return 0
     config, newly_chosen, first_setup = _install_or_upgrade(root)
@@ -484,7 +484,7 @@ def _start() -> int:
         _notice("Your chosen GUI password is stored securely; restarting the GUI login service")
     if not first_setup and not password_chosen and _healthy(config) and _gui_accepts_current_password():
         _notice("Potbot is already running: " + _GUI_URL)
-        if sys.stdout.isatty():
+        if open_browser and sys.stdout.isatty():
             _open_browser()
         return 0
     # A new install registers the existing per-user manager. Refresh on upgrades
@@ -498,16 +498,21 @@ def _start() -> int:
         service.install_manager(scoped_worker_launcher=config.scoped_worker_launcher)
         service.manager_action("start")
     except (OSError, DomainError):
-        return _foreground(config)
+        return _foreground(config, open_browser=open_browser)
     for _ in range(_STARTUP_HEALTH_ATTEMPTS):
         if _healthy(config):
             _require_gui_login()
             _notice("Backend and GUI are ready: " + _GUI_URL)
-            if sys.stdout.isatty():
+            if open_browser and sys.stdout.isatty():
                 _open_browser()
             return 0
         time.sleep(1)
     raise CapabilityUnavailableError("Potbot service did not become healthy; run start.* logs")
+
+
+def start_services(*, open_browser: bool = False) -> int:
+    """Start/upgrade the supervised stack for a native local client."""
+    return _start(open_browser=open_browser)
 
 
 def _change_password() -> int:
