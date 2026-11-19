@@ -271,3 +271,14 @@ def test_wsl_image_cache_wrapper_is_traversable_but_not_writable_by_synoperator(
     assert "root_info.st_uid != 0" in source
     assert "root_info.st_mode & stat.S_IXOTH" in source
     assert "_prepare_image_cache_access(image_root, rootfs, service)" in source
+
+
+def test_wsl_root_prepares_qualification_scratch_before_privilege_drop() -> None:
+    source = (project_root() / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
+    assert '("tools", 69, 0o2775)' in source
+    assert '("ai", service.pw_gid, 0o775)' in source
+    assert '("private", service.pw_gid, 0o700)' in source
+    assert '("audit", service.pw_gid, 0o700)' in source
+    assert "os.chown(path, service.pw_uid, gid)" in source
+    assert 'str(service.pw_uid)' in source
+    assert 'str(service.pw_gid)' in source

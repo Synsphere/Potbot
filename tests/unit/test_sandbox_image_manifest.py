@@ -104,3 +104,15 @@ def test_published_image_failure_summary_names_operator_checks() -> None:
         "stage": "operator-gate",
         "failed_checks": ["taskstats"],
     }
+
+
+def test_published_qualifier_verifies_preprovisioned_scratch_without_chown() -> None:
+    root = Path(__file__).resolve().parents[2]
+    source = (root / "scripts/qualify_published_sandbox_image.py").read_text(
+        encoding="utf-8"
+    )
+    assert "os.chown(tools" not in source
+    assert "expected_layout = {" in source
+    assert "tools: (os.geteuid(), 69, 0o2775)" in source
+    assert "qualification scratch ownership or mode differs" in source
+    assert "(home / \".tmp\").mkdir(mode=0o700)" in source

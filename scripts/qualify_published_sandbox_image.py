@@ -135,12 +135,28 @@ def main() -> int:
         scratch / name
         for name in ("home", "staging", "models", "tools", "ai", "history", "private", "audit")
     )
-    for path in (home, staging, models, tools, ai, history, private, audit):
-        path.mkdir(mode=0o700 if path in (private, audit) else 0o755)
-    (home / ".tmp").mkdir()
-    os.chown(tools, -1, 69)
-    tools.chmod(0o2775)
-    ai.chmod(0o775)
+    expected_layout = {
+        home: (os.geteuid(), os.getegid(), 0o755),
+        staging: (os.geteuid(), os.getegid(), 0o755),
+        models: (os.geteuid(), os.getegid(), 0o755),
+        tools: (os.geteuid(), 69, 0o2775),
+        ai: (os.geteuid(), os.getegid(), 0o775),
+        history: (os.geteuid(), os.getegid(), 0o755),
+        private: (os.geteuid(), os.getegid(), 0o700),
+        audit: (os.geteuid(), os.getegid(), 0o700),
+    }
+    for path, (uid, gid, mode) in expected_layout.items():
+        if path.is_symlink():
+            raise RuntimeError("qualification scratch path is redirected")
+        info = path.stat()
+        if (
+            not path.is_dir()
+            or info.st_uid != uid
+            or info.st_gid != gid
+            or (info.st_mode & 0o7777) != mode
+        ):
+            raise RuntimeError("qualification scratch ownership or mode differs")
+    (home / ".tmp").mkdir(mode=0o700)
     runtime = SharedWorkspaceRuntime(
         args.image_digest,
         rootfs,

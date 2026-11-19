@@ -307,6 +307,20 @@ def _verify_image(
         qroot.mkdir(mode=0o700, parents=True)
         os.chown(qroot, service.pw_uid, service.pw_gid)
         os.chmod(qroot, 0o700)
+        for name, gid, mode in (
+            ("home", service.pw_gid, 0o755),
+            ("staging", service.pw_gid, 0o755),
+            ("models", service.pw_gid, 0o755),
+            ("tools", 69, 0o2775),
+            ("ai", service.pw_gid, 0o775),
+            ("history", service.pw_gid, 0o755),
+            ("private", service.pw_gid, 0o700),
+            ("audit", service.pw_gid, 0o700),
+        ):
+            path = qroot / name
+            path.mkdir(mode=mode)
+            os.chown(path, service.pw_uid, gid)
+            os.chmod(path, mode)
         command = [
             "/usr/bin/setpriv",
             "--reuid",
