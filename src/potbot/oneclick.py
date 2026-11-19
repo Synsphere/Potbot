@@ -285,7 +285,17 @@ def _ensure_secrets() -> bool:
         if store.get(key) is None:
             store.set(key, secrets.token_urlsafe(38))
     confirmed = store.get("ui.password_confirmed")
-    if confirmed == "operator-chosen-v1" and store.get("ui.password") and store.get("ui.cookie_secret"):
+    password = store.get("ui.password")
+    cookie_secret = store.get("ui.cookie_secret")
+    if confirmed == "operator-chosen-v1" and password:
+        # Older one-click releases accepted any non-empty cookie secret, while
+        # the Next.js auth boundary correctly requires at least 32 characters.
+        # Rotate only the session signing key: retain the operator's explicitly
+        # chosen password and invalidate any stale browser sessions.
+        if not cookie_secret or len(cookie_secret) < 32:
+            store.set("ui.cookie_secret", secrets.token_urlsafe(48))
+            _notice("Upgraded the GUI session signing key")
+            return True
         return False
     if confirmed not in (None, "operator-chosen-v1", "operator-updating-v1"):
         raise InvalidInputError("Unknown GUI password confirmation marker in the OS vault")

@@ -46,6 +46,36 @@ def test_generated_credentials_are_reused_and_never_written_to_frontend(monkeypa
     assert len(memory) == 5
 
 
+def test_confirmed_legacy_short_cookie_secret_rotates_without_password_prompt(monkeypatch) -> None:
+    memory = {
+        "api.access_token": "a" * 42,
+        "api.setup_token": "s" * 42,
+        "ui.password": "my operator chosen password",
+        "ui.cookie_secret": "legacy-short-secret",
+        "ui.password_confirmed": "operator-chosen-v1",
+    }
+
+    class Store:
+        def __init__(self, _profile):
+            pass
+        def get(self, key):
+            return memory.get(key)
+        def set(self, key, value):
+            memory[key] = value
+
+    monkeypatch.setattr(oneclick, "CredentialStore", Store)
+    monkeypatch.setattr(
+        oneclick,
+        "_prompt_gui_password",
+        lambda: pytest.fail("A confirmed operator password must be retained"),
+    )
+    assert oneclick._ensure_secrets() is True
+    assert memory["ui.password"] == "my operator chosen password"
+    assert len(memory["ui.cookie_secret"]) >= 32
+    assert memory["ui.cookie_secret"] != "legacy-short-secret"
+    assert oneclick._ensure_secrets() is False
+
+
 def test_frontend_environment_uses_vault_not_checkout_files(monkeypatch):
     content = {"api.access_token": "s" * 48, "ui.password": "p" * 48,
                "ui.cookie_secret": "c" * 48, "api.setup_token": "t" * 48}
@@ -60,6 +90,19 @@ def test_frontend_environment_uses_vault_not_checkout_files(monkeypatch):
     assert "POTBOT_UI_WORKSPACES_JSON" not in env
 
 
+def test_frontend_environment_refuses_legacy_short_cookie_secret() -> None:
+    content = {
+        "api.access_token": "s" * 48,
+        "ui.password": "operator password",
+        "ui.cookie_secret": "too-short",
+        "api.setup_token": "t" * 48,
+    }
+    store = SimpleNamespace(get=content.get)
+    config = SimpleNamespace(host="127.0.0.1", port=8765, workspace_id=str(uuid4()))
+    with pytest.raises(CapabilityUnavailableError, match="credential setup is incomplete"):
+        frontend_worker.frontend_environment(config, store)
+
+
 def test_frontend_fingerprint_does_not_include_env_or_built_artifacts(tmp_path: Path):
     frontend = tmp_path / "frontend"
     frontend.mkdir()
@@ -71,6 +114,13 @@ def test_frontend_fingerprint_does_not_include_env_or_built_artifacts(tmp_path: 
     assert frontend_worker._frontend_fingerprint(frontend) == first
     (frontend / "package-lock.json").write_text('{"name":"changed"}')
     assert frontend_worker._frontend_fingerprint(frontend) != first
+
+
+def test_supervised_next_start_does_not_build_standalone_output() -> None:
+    config = (
+        frontend_worker.project_root() / "frontend" / "next.config.ts"
+    ).read_text(encoding="utf-8")
+    assert 'output: "standalone"' not in config
 
 
 def test_untrusted_node_archive_path_is_rejected(tmp_path: Path):

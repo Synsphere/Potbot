@@ -265,7 +265,7 @@ def frontend_environment(config: ServiceConfig, store: CredentialStore | None = 
     access = store.get("api.access_token")
     password = store.get("ui.password")
     secret = store.get("ui.cookie_secret")
-    if not all((access, password, secret)):
+    if not all((access, password, secret)) or len(secret) < 32:
         raise CapabilityUnavailableError("The GUI's native credential setup is incomplete")
     env = _safe_environment()
     host = f"[{config.host}]" if ":" in config.host else config.host
