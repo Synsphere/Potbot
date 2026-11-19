@@ -26,6 +26,7 @@ DISTRO = "Potbot-SynOperator"
 UBUNTU = "Ubuntu-24.04"
 OPERATOR_USER = "synoperator"
 PREREQUISITE_REVISION = 5
+_NATIVE_STAGE = re.compile(r"^POTBOT_NATIVE_FAILED_STAGE=([a-z0-9-]+)$", re.MULTILINE)
 _PENDING = "registration-pending"
 _HOST_PHASES = {
     "windows-platform",
@@ -91,6 +92,20 @@ def is_windows() -> bool:
 # All executable shell text is fixed reviewed source; no model/user field is
 # interpolated into root commands. Only this newly provisioned distro is used.
 PROVISION_UBUNTU = r"""set -eu
+stage="preflight"
+native_stage() {
+    stage="$1"
+    printf "[Potbot host] %s\\n" "$stage" >&2
+}
+native_finish() {
+    code=$?
+    if [ "$code" -ne 0 ]; then
+        printf "POTBOT_NATIVE_FAILED_STAGE=%s\\n" "$stage" >&2
+    fi
+    exit "$code"
+}
+trap native_finish 0
+native_stage "preflight"
 test "$(id -u)" = 0
 . /etc/os-release
 test "$ID" = ubuntu
@@ -101,6 +116,7 @@ if ! id synoperator >/dev/null 2>&1; then
 fi
 test "$(id -u synoperator)" -ne 0
 
+native_stage "wsl-policy"
 # This is a Potbot-owned distro. Its WSL policy is part of the mandatory
 # sandbox boundary, not an optional administrator example.
 test ! -L /etc/wsl.conf
@@ -129,6 +145,7 @@ if [ ! -f /etc/wsl.conf ] || ! cmp -s "$wsl_config" /etc/wsl.conf; then
 fi
 rm -f "$wsl_config"
 
+native_stage "legacy-keyring"
 # Windows owns operator custody. Remove the legacy Secret Service stack from
 # this Potbot-owned distro without touching any retained user keyring data.
 systemctl --global mask gnome-keyring-daemon.service gnome-keyring-daemon.socket >/dev/null 2>&1 || true
@@ -146,16 +163,20 @@ fi
 rm -f /etc/xdg/autostart/gnome-keyring-*.desktop
 test ! -x /usr/bin/gnome-keyring-daemon
 
+native_stage "packages"
 apt-get update
 apt-get install --yes --no-install-recommends ca-certificates python3.12 python3.12-venv python3.12-dev \
     dbus-user-session build-essential libgmp-dev
+native_stage "service-home"
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share
 install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share/potbot
 command -v dbus-run-session >/dev/null
 loginctl enable-linger synoperator
+native_stage "complete"
 printf 'POTBOT_WSL_CONFIG_CHANGED=%s\n' "$wsl_config_changed"
 printf 'syn-native-prerequisites-ready\n'
+trap - 0
 """
 
 _ACCOUNTING_PROBE = """
@@ -179,6 +200,20 @@ print(json.dumps({**result, "kernel": os.uname().release}))
 
 def _decode(raw: bytes) -> str:
     return raw.decode("utf-16-le" if b"\0" in raw else "utf-8", errors="replace").lstrip("\ufeff")
+
+
+def _terminate_owned_distro(wsl: str) -> None:
+    try:
+        run_host([wsl, "--terminate", DISTRO], timeout=60)
+        return
+    except CapabilityUnavailableError:
+        pass
+    running = run_host([wsl, "--list", "--running", "--quiet"], timeout=30)
+    names = {line.strip().casefold() for line in running.splitlines() if line.strip()}
+    if DISTRO.casefold() in names:
+        raise CapabilityUnavailableError(
+            "Managed WSL policy restart could not stop the owned distribution"
+        )
 
 
 def windows_environment() -> dict[str, str]:
@@ -229,6 +264,12 @@ def run_host(argv: list[str], *, timeout: int = 30) -> str:
             "Windows reported a restart is required; restart, then rerun host-setup."
         )
     if result.returncode != 0:
+        stderr = _decode(result.stderr)
+        stages = _NATIVE_STAGE.findall(stderr)
+        if stages:
+            raise CapabilityUnavailableError(
+                f"Managed WSL native prerequisites failed during {stages[-1]}"
+            )
         raise CapabilityUnavailableError(
             "Native host setup needs local administrator/restart or package-manager attention"
         )
@@ -460,7 +501,7 @@ class WslOperatorHost:
                     "Managed WSL policy did not confirm its migration state"
                 )
             if config_markers == ["POTBOT_WSL_CONFIG_CHANGED=1"]:
-                run_host([self.wsl, "--terminate", DISTRO], timeout=60)
+                _terminate_owned_distro(self.wsl)
             record = self._checkpoint(
                 record,
                 "native-prerequisites",

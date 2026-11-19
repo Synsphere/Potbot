@@ -6,12 +6,13 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 from contextlib import nullcontext
 from pathlib import Path
 
 from potbot.domain.errors import ScopeDeniedError, StateMismatchError
 
-from .host import OPERATOR_USER, WslOperatorHost, run_host, windows_environment
+from .host import DISTRO, OPERATOR_USER, WslOperatorHost, run_host, windows_environment
 
 ROOT = f"/home/{OPERATOR_USER}/.local/share/potbot/controllers"
 
@@ -105,6 +106,92 @@ print(json.dumps({"profile": "potbot.syn-wsl-controller/1", "wheel_sha256": expe
 """
 
 
+_RECEIVE_CONTROLLER = r"""
+import hashlib, os, pathlib, sys
+target = pathlib.Path(sys.argv[1])
+expected = sys.argv[2]
+limit = 50 * 1024 * 1024
+if not target.is_absolute() or ".." in target.parts:
+    raise SystemExit(64)
+parent = target.parent
+parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+info = parent.stat()
+if (
+    parent.is_symlink()
+    or parent.resolve(strict=True) != parent
+    or info.st_uid != os.geteuid()
+    or info.st_mode & 0o077
+    or target.is_symlink()
+):
+    raise SystemExit(65)
+payload = sys.stdin.buffer.read(limit + 1)
+if len(payload) > limit or hashlib.sha256(payload).hexdigest() != expected:
+    raise SystemExit(66)
+temporary = target.with_name("." + target.name + ".pending")
+try:
+    temporary.unlink(missing_ok=True)
+    fd = os.open(
+        temporary,
+        os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+        0o600,
+    )
+    with os.fdopen(fd, "wb") as output:
+        output.write(payload)
+        output.flush()
+        os.fsync(output.fileno())
+    os.chmod(temporary, 0o600)
+    os.replace(temporary, target)
+finally:
+    temporary.unlink(missing_ok=True)
+"""
+
+
+def _stage_controller_wheel(
+    manager: WslOperatorHost,
+    wheel: Path,
+    expected: str,
+) -> str:
+    native = f"/home/{OPERATOR_USER}/.local/share/potbot/incoming/{expected}.whl"
+    result = subprocess.run(
+        [
+            manager.wsl,
+            "--distribution",
+            DISTRO,
+            "--user",
+            OPERATOR_USER,
+            "--exec",
+            "/usr/bin/python3.12",
+            "-I",
+            "-B",
+            "-c",
+            _RECEIVE_CONTROLLER,
+            native,
+            expected,
+        ],
+        input=wheel.read_bytes(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=120,
+        check=False,
+        env=windows_environment(),
+    )
+    if len(result.stdout) + len(result.stderr) > 65536 or result.returncode:
+        raise StateMismatchError("Controller wheel private WSL transfer failed")
+    return native
+
+
+def _remove_staged_controller(manager: WslOperatorHost, native: str) -> None:
+    subprocess.run(
+        manager.command("/usr/bin/rm", ["-f", "--", native]),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        timeout=30,
+        check=False,
+        env=windows_environment(),
+    )
+
+
 def _controller_receipt(expected: str) -> dict[str, str]:
     return {
         "profile": "potbot.syn-wsl-controller/1",
@@ -130,27 +217,28 @@ def install_controller(
     with manager._setup_session():
         record = manager._setup(controller_sha256=expected, replace_pending=replace_pending)
         retained = record.get("controller") == desired
-        native = run_host(manager.command("/usr/bin/wslpath", ["-a", "-u", str(wheel)])).strip()
-        if not native.startswith("/") or "\n" in native:
-            raise StateMismatchError("Controller wheel has no canonical WSL path")
-        result = json.loads(
-            run_host(
-                manager.command(
-                    "/usr/bin/python3.12",
-                    [
-                        "-I",
-                        "-B",
-                        "-c",
-                        INSTALL,
-                        native,
-                        expected,
-                        ROOT,
-                        "retained" if retained else "new",
-                    ],
-                ),
-                timeout=340,
+        native = _stage_controller_wheel(manager, wheel, expected)
+        try:
+            result = json.loads(
+                run_host(
+                    manager.command(
+                        "/usr/bin/python3.12",
+                        [
+                            "-I",
+                            "-B",
+                            "-c",
+                            INSTALL,
+                            native,
+                            expected,
+                            ROOT,
+                            "retained" if retained else "new",
+                        ],
+                    ),
+                    timeout=340,
+                )
             )
-        )
+        finally:
+            _remove_staged_controller(manager, native)
         if result != desired:
             raise StateMismatchError("Native controller installation receipt differs")
         if not retained or "pending_controller_sha256" in record:

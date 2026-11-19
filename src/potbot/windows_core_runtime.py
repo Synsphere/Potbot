@@ -56,6 +56,7 @@ _SKIP_NAMES = {
 }
 _MAX_SOURCE_BYTES = 160 * 1024 * 1024
 _MAX_PROCESS_LOG_BYTES = 128 * 1024
+_MAX_WSL_TRANSFER_OUTPUT = 64 * 1024
 _HEX = re.compile(r"[0-9a-f]{64}\Z")
 _COMMIT = re.compile(r"[0-9a-f]{40}\Z")
 _BOOTSTRAP_FAILED_STAGE = re.compile(r"^POTBOT_BOOTSTRAP_FAILED_STAGE=([a-z0-9-]+)$", re.MULTILINE)
@@ -198,6 +199,7 @@ PY
   chmod 0444 "$pending/.potbot-source-sha256"
   mv "$pending" "$source_root"
 fi
+rm -f "$bundle"
 test "$(cat "$marker")" = "$source_sha"
 
 progress "service-runtime-permissions"
@@ -249,6 +251,103 @@ progress "complete"
 printf '%s\n' "$source_root/.venv/bin/python"
 trap - 0
 """
+
+
+_WSL_FILE_RECEIVER = r"""
+import hashlib, os, pathlib, sys
+target = pathlib.Path(sys.argv[1])
+limit = int(sys.argv[2])
+expected = sys.argv[3]
+if (
+    not target.is_absolute()
+    or ".." in target.parts
+    or limit <= 0
+    or len(expected) != 64
+    or any(c not in "0123456789abcdef" for c in expected)
+):
+    raise SystemExit(64)
+parent = target.parent
+parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+info = parent.stat()
+if (
+    parent.is_symlink()
+    or parent.resolve(strict=True) != parent
+    or info.st_uid != 0
+    or info.st_mode & 0o022
+    or target.is_symlink()
+):
+    raise SystemExit(65)
+payload = sys.stdin.buffer.read(limit + 1)
+if len(payload) > limit or hashlib.sha256(payload).hexdigest() != expected:
+    raise SystemExit(66)
+temporary = target.with_name("." + target.name + ".pending")
+try:
+    temporary.unlink(missing_ok=True)
+    fd = os.open(
+        temporary,
+        os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+        0o600,
+    )
+    with os.fdopen(fd, "wb") as output:
+        output.write(payload)
+        output.flush()
+        os.fsync(output.fileno())
+    os.chown(temporary, 0, 0)
+    os.chmod(temporary, 0o600)
+    os.replace(temporary, target)
+finally:
+    temporary.unlink(missing_ok=True)
+"""
+
+
+def _copy_private_file_to_wsl(
+    manager: "WslOperatorHost",
+    source: Path,
+    target: str,
+    *,
+    limit: int,
+) -> None:
+    from potbot.syn_release.host import DISTRO, windows_environment
+
+    if (
+        not source.is_file()
+        or source.is_symlink()
+        or not target.startswith("/var/lib/potbot/bootstrap/")
+        or "\x00" in target
+    ):
+        raise CapabilityUnavailableError("WSL private bootstrap transfer is invalid")
+    payload = source.read_bytes()
+    if len(payload) > limit:
+        raise CapabilityUnavailableError("WSL private bootstrap transfer exceeds its bound")
+    expected = hashlib.sha256(payload).hexdigest()
+    result = subprocess.run(
+        [
+            manager.wsl,
+            "--distribution",
+            DISTRO,
+            "--user",
+            "root",
+            "--exec",
+            "/usr/bin/python3.12",
+            "-I",
+            "-B",
+            "-c",
+            _WSL_FILE_RECEIVER,
+            target,
+            str(limit),
+            expected,
+        ],
+        input=payload,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=300,
+        check=False,
+        env=windows_environment(),
+    )
+    if len(result.stdout) + len(result.stderr) > _MAX_WSL_TRANSFER_OUTPUT:
+        raise CapabilityUnavailableError("WSL bootstrap transfer diagnostics exceeded their bound")
+    if result.returncode:
+        raise CapabilityUnavailableError("WSL private bootstrap transfer failed")
 
 
 @dataclass(frozen=True)
@@ -603,9 +702,13 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
     staging = manager.root / "core-runtime" / source_sha
     bundle = staging / "source.tar.gz"
     _write_bundle(root, files, bundle)
-    native = run_host(manager.command("/usr/bin/wslpath", ["-a", "-u", str(bundle)])).strip()
-    if not native.startswith("/") or "\n" in native:
-        raise CapabilityUnavailableError("Core runtime source bundle is not visible to WSL")
+    native = f"/var/lib/potbot/bootstrap/source-{source_sha}.tar.gz"
+    _copy_private_file_to_wsl(
+        manager,
+        bundle,
+        native,
+        limit=_MAX_SOURCE_BYTES,
+    )
 
     root_command = [
         manager.wsl, "--distribution", DISTRO, "--user", "root", "--exec",
