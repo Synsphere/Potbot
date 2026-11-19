@@ -113,6 +113,10 @@ def test_windows_setup_installs_owned_wsl_and_native_service_without_claiming_ke
     assert "[automount]\nenabled=false\nmountFsTab=false" in provision[-1]
     assert "[interop]\nenabled=false\nappendWindowsPath=false" in provision[-1]
     assert "[user]\ndefault=synoperator" in provision[-1]
+    assert "groupadd --gid 69 potbot-workspace" in provision[-1]
+    assert 'usermod --gid "$workspace_group" synoperator' in provision[-1]
+    assert 'test "$(id -g synoperator)" = 69' in provision[-1]
+    assert host.PREREQUISITE_REVISION == 6
     assert not any(
         argv[-4:] == ["/usr/bin/systemctl", "--user", "start", "gnome-keyring-daemon.service"]
         for argv, _ in calls
@@ -651,12 +655,12 @@ def test_windows_lifetime_helpers_parse_in_the_native_powershell_host(tmp_path):
         assert result.returncode == 0, "Native Windows task helper did not parse"
 
 
-def test_revision4_host_migrates_wsl_policy_and_restarts_only_managed_distro(
+def test_revision5_host_migrates_workspace_group_and_restarts_only_managed_distro(
     managed_host, monkeypatch
 ) -> None:
     manager, _, calls = managed_host
     ready = manager.setup()
-    manager._write_receipt({**ready, "prerequisite_revision": 4})
+    manager._write_receipt({**ready, "prerequisite_revision": 5})
     calls.clear()
 
     base_run = host.run_host

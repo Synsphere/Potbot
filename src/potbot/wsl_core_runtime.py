@@ -68,6 +68,10 @@ def _protected_root(path: Path) -> Path:
 
 def _ensure_user() -> tuple[pwd.struct_passwd, pwd.struct_passwd]:
     service = pwd.getpwnam("synoperator")
+    if service.pw_gid != 69:
+        raise CapabilityUnavailableError(
+            "Core runtime requires synoperator primary workspace GID 69"
+        )
     try:
         auditor = pwd.getpwnam("potbot-auditor")
     except KeyError:

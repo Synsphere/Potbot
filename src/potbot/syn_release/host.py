@@ -25,7 +25,7 @@ from potbot.tools.temporary import create_directory
 DISTRO = "Potbot-SynOperator"
 UBUNTU = "Ubuntu-24.04"
 OPERATOR_USER = "synoperator"
-PREREQUISITE_REVISION = 5
+PREREQUISITE_REVISION = 6
 _NATIVE_STAGE = re.compile(r"^POTBOT_NATIVE_FAILED_STAGE=([a-z0-9-]+)$", re.MULTILINE)
 _PENDING = "registration-pending"
 _HOST_PHASES = {
@@ -111,10 +111,23 @@ test "$(id -u)" = 0
 test "$ID" = ubuntu
 test "$VERSION_ID" = 24.04
 export DEBIAN_FRONTEND=noninteractive
+workspace_group="$(getent group 69 | cut -d: -f1 || true)"
+if [ -z "$workspace_group" ]; then
+    if getent group potbot-workspace >/dev/null 2>&1; then
+        echo "potbot-workspace exists with an unexpected GID" >&2
+        exit 1
+    fi
+    groupadd --gid 69 potbot-workspace
+    workspace_group=potbot-workspace
+fi
+test "$(getent group "$workspace_group" | cut -d: -f3)" = 69
 if ! id synoperator >/dev/null 2>&1; then
-    useradd --create-home --shell /bin/bash synoperator
+    useradd --create-home --shell /bin/bash --gid "$workspace_group" synoperator
+else
+    usermod --gid "$workspace_group" synoperator
 fi
 test "$(id -u synoperator)" -ne 0
+test "$(id -g synoperator)" = 69
 
 native_stage "wsl-policy"
 # This is a Potbot-owned distro. Its WSL policy is part of the mandatory
@@ -168,9 +181,9 @@ apt-get update
 apt-get install --yes --no-install-recommends ca-certificates python3.12 python3.12-venv python3.12-dev \
     dbus-user-session build-essential libgmp-dev
 native_stage "service-home"
-install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local
-install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share
-install -d -m 0700 -o synoperator -g synoperator /home/synoperator/.local/share/potbot
+install -d -m 0700 -o synoperator -g "$workspace_group" /home/synoperator/.local
+install -d -m 0700 -o synoperator -g "$workspace_group" /home/synoperator/.local/share
+install -d -m 0700 -o synoperator -g "$workspace_group" /home/synoperator/.local/share/potbot
 command -v dbus-run-session >/dev/null
 loginctl enable-linger synoperator
 native_stage "complete"

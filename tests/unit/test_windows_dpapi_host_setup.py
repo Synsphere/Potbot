@@ -21,6 +21,10 @@ def test_windows_wsl_prerequisites_remove_linux_secret_service() -> None:
     assert "[automount]\nenabled=false\nmountFsTab=false" in host.PROVISION_UBUNTU
     assert "[interop]\nenabled=false\nappendWindowsPath=false" in host.PROVISION_UBUNTU
     assert "[user]\ndefault=synoperator" in host.PROVISION_UBUNTU
+    assert "groupadd --gid 69 potbot-workspace" in host.PROVISION_UBUNTU
+    assert 'usermod --gid "$workspace_group" synoperator' in host.PROVISION_UBUNTU
+    assert 'test "$(id -g synoperator)" = 69' in host.PROVISION_UBUNTU
+    assert host.PREREQUISITE_REVISION == 6
 
 
 def test_legacy_ready_receipt_migrates_to_dpapi_without_starting_keyring(

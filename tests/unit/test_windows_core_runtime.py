@@ -271,6 +271,7 @@ def test_wsl_sandbox_qualification_runs_as_complete_synoperator_identity() -> No
     assert "os.chown(qroot, service.pw_uid, service.pw_gid)" in source
     assert '"--reuid",' in source
     assert "str(service.pw_uid)" in source
+    assert "service.pw_gid != 69" in source
     assert '"--regid",' in source
     assert "str(service.pw_gid)" in source
     assert '"HOME": service.pw_dir' in source
