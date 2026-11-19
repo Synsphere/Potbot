@@ -246,3 +246,16 @@ def test_wsl_qualification_passes_installed_scoped_launcher_environment() -> Non
     assert '"POTBOT_OPERATOR_SCOPED_LAUNCHER": str(SCOPED_SOCKET)' in source
     assert "monitor_environment = _monitor_environment()" in source
     assert 'line == "# Managed by Potbot scoped launcher v2; do not edit"' in source
+
+
+def test_wsl_sandbox_qualification_runs_as_synoperator_not_root() -> None:
+    source = (project_root() / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
+    assert "os.chown(qroot, service.pw_uid, 69)" in source
+    assert '"--reuid",' in source
+    assert "str(service.pw_uid)" in source
+    assert '"--regid",' in source
+    assert '"69"' in source
+    assert '"HOME": service.pw_dir' in source
+    assert '"PYTHONNOUSERSITE": "1"' in source
+    assert "_verify_image(" in source
+    assert "service," in source

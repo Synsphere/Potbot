@@ -177,7 +177,12 @@ def _resolve_image_digest(image_source: str) -> str:
     )
 
 
-def _verify_image(source: Path, source_sha: str, image_source: str) -> tuple[Path, dict]:
+def _verify_image(
+    source: Path,
+    source_sha: str,
+    image_source: str,
+    service: pwd.struct_passwd,
+) -> tuple[Path, dict]:
     image_digest = _resolve_image_digest(image_source)
     ref = f"{IMAGE}@sha256:{image_digest}"
     _run([
@@ -255,8 +260,12 @@ def _verify_image(source: Path, source_sha: str, image_source: str) -> tuple[Pat
         if qroot.exists():
             raise CapabilityUnavailableError("Incomplete core qualification needs reconciliation")
         qroot.mkdir(mode=0o700, parents=True)
+        os.chown(qroot, service.pw_uid, 69)
+        os.chmod(qroot, 0o700)
         command = [
             "/usr/bin/setpriv",
+            "--reuid",
+            str(service.pw_uid),
             "--regid",
             "69",
             "--clear-groups",
@@ -285,6 +294,8 @@ def _verify_image(source: Path, source_sha: str, image_source: str) -> tuple[Pat
                 env={
                     **os.environ,
                     **monitor_environment,
+                    "HOME": service.pw_dir,
+                    "PYTHONNOUSERSITE": "1",
                     "PYTHONPATH": str(source),
                     "POTBOT_OPERATOR_SCOPED_LAUNCHER": str(SCOPED_SOCKET),
                 },
@@ -500,7 +511,12 @@ def _prepare(args: argparse.Namespace) -> int:
     _ensure_scoped_launcher(source, python, service, auditor)
 
     _qualification_stage("sandbox-image")
-    rootfs, image = _verify_image(source, args.source_sha256, args.image_source)
+    rootfs, image = _verify_image(
+        source,
+        args.source_sha256,
+        args.image_source,
+        service,
+    )
 
     _qualification_stage("workspace-state")
     base = Path("/home") / service.pw_name / ".local/share/potbot/core" / args.workspace_id
