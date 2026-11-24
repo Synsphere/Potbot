@@ -2450,7 +2450,7 @@
         {
           "path": "tests/unit/test_persistent_service.py",
           "symbol": "test_debugger_child_is_started_once_and_requires_explicit_recovery",
-          "sha256": "292cafa1b8bf811a3328449e8828f34c505227baed1b835a3fa85a3e1c4e45bd",
+          "sha256": "feeb56525e5106af9fda3c7af4ecc12ac248bb02346b29a88d978db929a72d30",
           "basis": "Source inspection of the installed debugger service and its focused tests"
         },
         {
