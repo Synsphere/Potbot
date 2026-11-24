@@ -118,7 +118,7 @@ def test_bindings_are_copied_and_cannot_use_model_job_route() -> None:
 
 
 def test_migration_is_scoped_and_hooks_checked_queue_and_dispatch_fence() -> None:
-    migration = application_migrations()[-1]
+    migration = next(m for m in application_migrations() if m.version == 49)
     assert migration.version == 49 and migration.name == "atomic_graph_schema"
     assert migration.workspace_tables == (
         "atomic_graph_runs",

@@ -85,7 +85,9 @@ class OperationChecks:
         if request.episode_id != lease.episode_id:
             raise ScopeDeniedError("The operation check differs from its queued task.")
         expiry = datetime.fromtimestamp(lease.input["authorization"]["expires_at"], UTC)
-        return self._evaluate(actor, lease, identity, request, now, expiry)
+        return self._evaluate(
+            actor, lease, identity, request, now, expiry, lease.input.get("routing_decision_id")
+        )
 
     def revalidate(self, actor: WorkspaceContext, lease: JobLease) -> None:
         """Recheck a linked launch; the retained receipt is never an authority."""
@@ -110,7 +112,9 @@ class OperationChecks:
         ):
             raise StateMismatchError("The operation check is stale; check the exact request again.")
         expiry = datetime.fromtimestamp(prior["input"]["authorization"]["expires_at"], UTC)
-        current = self._evaluate(actor, lease, identity, request, now, expiry)
+        current = self._evaluate(
+            actor, lease, identity, request, now, expiry, prior["input"].get("routing_decision_id")
+        )
         if not current["eligible"] or current["bindings"] != recorded["bindings"]:
             raise StateMismatchError(
                 "Current operation eligibility differs from the checked request."
@@ -124,6 +128,7 @@ class OperationChecks:
         request: JobSpec,
         now: datetime,
         authorization_expiry: datetime,
+        routing_decision_id: str | None = None,
     ) -> dict[str, Any]:
         checks: list[dict[str, str]] = []
         bindings: dict[str, Any] = {
@@ -245,6 +250,17 @@ class OperationChecks:
                 raise CapabilityUnavailableError(
                     "No execution handler is installed for this operation."
                 )
+
+            if routing_decision_id is not None:
+                from potbot.controller.model_route_bindings import checked_route_binding
+
+                route_bindings = check(
+                    "model_route_binding",
+                    lambda: checked_route_binding(
+                        self.jobs.database, actor, routing_decision_id, request.to_dict(), bindings
+                    ),
+                )
+                bindings.update(route_bindings)
 
             def budget() -> None:
                 available = BudgetLedger(self.jobs.database).inspect(actor, request.episode_id)[

@@ -12,6 +12,8 @@ a separately qualified route remain unfinished. Full R7.4 is not qualified.
 live deployment receipt. Tests use synthetic worker reports. Screenshots and
 video add no useful evidence to this database/CLI boundary; no GUI was changed.*
 
+Follow-on: [R7.4-D checked prompt and worker-admission bindings](r7-4-d-checked-prompt-and-worker-bindings.md) now enforces an opt-in recipe, compiled-input provenance and observed worker configuration. It still does not qualify model weights, enable canaries or complete R7.4.
+
 ## One durable decision, one checked execution
 
 `ModelRoutingService` is a controller-side service over the existing PostgreSQL

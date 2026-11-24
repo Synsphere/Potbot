@@ -37,6 +37,9 @@ _BINDINGS = {
     "runtimeSha256",
     "releaseSha256",
     "taskExecutionSha256",
+    "modelRoutingSha256",
+    "modelPromptSha256",
+    "modelRuntimeSha256",
 }
 
 

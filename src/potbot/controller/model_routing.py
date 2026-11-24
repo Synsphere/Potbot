@@ -196,7 +196,13 @@ class ModelRoutingService:
         return self.inspect(context, policy_id)
 
     def allocate(
-        self, context: WorkspaceContext, policy_id: UUID, allocation_key: str, request: object
+        self,
+        context: WorkspaceContext,
+        policy_id: UUID,
+        allocation_key: str,
+        request: object,
+        *,
+        prompt_facts: object = None,
     ) -> dict[str, Any]:
         from psycopg.types.json import Jsonb
 
@@ -212,6 +218,9 @@ class ModelRoutingService:
             if policy is None:
                 raise ScopeDeniedError("Model route is unavailable")
             bind_route_request(policy["manifest"]["baseline"], request)
+            from potbot.controller.model_route_bindings import prepare_compilation
+
+            compilation = prepare_compilation(conn, context, policy, request, prompt_facts)
             row = conn.execute(
                 "SELECT * FROM model_route_decisions WHERE workspace_id=%s AND policy_id=%s AND allocation_key=%s",
                 (context.workspace_id, policy_id, allocation_key),
@@ -239,7 +248,37 @@ class ModelRoutingService:
                 ).fetchone()
                 if row is None:
                     raise ScopeDeniedError("The task is unavailable")
+            from potbot.controller.model_route_bindings import persist_compilation
+
+            persist_compilation(conn, context, row, compilation)
             return self._decision(row)
+
+    def configure_prompt(
+        self, context: WorkspaceContext, policy_id: UUID, recipe: object
+    ) -> dict[str, Any]:
+        from potbot.controller.model_route_bindings import configure_recipe
+
+        return configure_recipe(self.database, context, _uuid(policy_id), recipe)
+
+    def allocate_prompted(
+        self,
+        context: WorkspaceContext,
+        policy_id: UUID,
+        allocation_key: str,
+        request: object,
+        facts: object,
+    ) -> dict[str, Any]:
+        from potbot.controller.model_route_bindings import compile_route_request
+
+        with self.database.transaction(context) as conn:
+            row = conn.execute(
+                "SELECT recipe FROM model_route_prompt_recipes WHERE workspace_id=%s AND policy_id=%s",
+                (context.workspace_id, _uuid(policy_id)),
+            ).fetchone()
+            if row is None:
+                raise ScopeDeniedError("Frozen route prompt recipe is unavailable")
+        exact, _identity = compile_route_request(row["recipe"], facts, request, fill=True)
+        return self.allocate(context, policy_id, allocation_key, exact, prompt_facts=facts)
 
     @staticmethod
     def _decision(row: dict[str, Any]) -> dict[str, Any]:
