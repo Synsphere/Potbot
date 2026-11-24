@@ -21,8 +21,8 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from potbot.domain.errors import InvalidInputError
-from potbot.domain.serialization import canonical_json
+from potbot.domain.errors import InvalidInputError, SchemaViolationError
+from potbot.domain.serialization import canonical_json, content_hash
 from potbot.evaluation.agentic_model_bench import (
     ModelTarget,
     Observation,
@@ -98,6 +98,9 @@ def _report_html(document: dict[str, Any]) -> str:
                 r["variant"],
                 r["input_profile"],
                 r["trial"],
+                r["status"],
+                r["returned_model"],
+                r["model_identity"],
                 r["score"],
                 r["elapsed_ms"],
                 (
@@ -123,10 +126,12 @@ def _report_html(document: dict[str, Any]) -> str:
         "<p>Objective fixture/rubric matches, not verified end-to-end task execution. "
         "Scores and routing recommendations are <strong>advisory only</strong>.</p>"
         f"<p>Run {html.escape(document['run_id'])}; suite {html.escape(document['suite_sha256'])}</p>"
+        f"<p>Execution: {html.escape(document['execution']['status'])}. Returned labels are unauthenticated declarations.</p>"
         f"<table>{header}{body}</table>"
         "<h2>Side-by-side attempts (same suite tasks and input hashes)</h2>"
         "<table><tr><th>Case</th><th>Role</th><th>Model</th><th>Prompt profile</th>"
-        "<th>Input profile</th><th>Trial</th><th>Rubric match</th><th>Latency ms</th><th>Output</th></tr>"
+        "<th>Input profile</th><th>Trial</th><th>Status</th><th>Returned model label</th>"
+        "<th>Label comparison</th><th>Rubric match</th><th>Latency ms</th><th>Output</th></tr>"
         f"{detail}</table>"
         "<h2>Paired input-profile comparisons</h2>"
         f"<pre>{html.escape(json.dumps(document['summary']['input_comparisons'], indent=2))}</pre>"
@@ -167,6 +172,7 @@ def _preflight(
     )
     return {
         "suite_sha256": suite.identity,
+        "model_targets_sha256": content_hash([asdict(model) for model in models]),
         "matrix_attempts": len(matrix),
         "possible_hosted_calls": paid,
         "possible_local_calls": local,
@@ -208,6 +214,28 @@ def _review_admission(
     return str(bundle["bundle_sha256"])
 
 
+def _deployment_admission(
+    args: argparse.Namespace, suite: RoleSuite, models: list[ModelTarget]
+) -> dict[str, Any]:
+    bindings = getattr(args, "deployment_bindings", None)
+    root = getattr(args, "project_root", None)
+    if (bindings is None) != (root is None):
+        raise InvalidInputError("deployment bindings and owning project root are required together")
+    if bindings is None:
+        return {
+            "status": "unbound",
+            "qualified": False,
+            "server_loaded_identity_authenticated": False,
+        }
+    from potbot.evaluation.agentic_deployments import inspect_benchmark_deployments
+    from potbot.models.envelopes import strict_json
+
+    with bindings.open("rb") as stream:
+        raw = stream.read(1024 * 1024 + 1)
+    document = strict_json(raw, max_output_bytes=1024 * 1024)
+    return inspect_benchmark_deployments(document, models, suite, project_root=root)
+
+
 def _execute(
     args: argparse.Namespace,
     suite: RoleSuite,
@@ -221,6 +249,9 @@ def _execute(
     if not 1 <= args.repeat <= 5:
         raise InvalidInputError("repeats must be between one and five")
     review_bundle_sha256 = _review_admission(args, suite, models)
+    deployment_inspection = _deployment_admission(args, suite, models)
+    if deployment_inspection["status"] == "blocked":
+        raise InvalidInputError("local benchmark deployment preflight is blocked")
     plan = _preflight(models, suite, variants, args.repeat)
     if not plan["matrix_attempts"] or plan["matrix_attempts"] > 1600:
         raise InvalidInputError("benchmark matrix is empty or exceeds 1600 attempts")
@@ -313,6 +344,7 @@ def _execute(
     ]
     randomizer.shuffle(grid)
     observations: list[Observation] = []
+    identity_mismatch = False
     for index, (case, model, variant, trial) in enumerate(grid, start=1):
         key = {"case_id": case.id, "model_id": model.id, "variant": variant, "trial": trial}
         if on_event:
@@ -335,8 +367,11 @@ def _execute(
             f"[Potbot benchmark] {index}/{len(grid)} {model.id} {case.role} {variant} {row.status}",
             file=sys.stderr,
         )
+        if row.status == "identity_mismatch":
+            identity_mismatch = True
+            break
     judge_rows: list[Observation] = []
-    if args.judge_derived:
+    if args.judge_derived and not identity_mismatch:
         from potbot.evaluation.agentic_reviewers import model_revision_identity
 
         # Only derive a pair when independently graded outputs have different
@@ -395,17 +430,33 @@ def _execute(
                     judge_rows.append(judged)
                     if on_event:
                         on_event({"phase": "terminal", "result": judged.to_dict()})
+                    if judged.status == "identity_mismatch":
+                        identity_mismatch = True
+                        break
+                if identity_mismatch:
+                    break
             pairs += 1
+            if identity_mismatch:
+                break
     all_rows = observations + judge_rows
     report = {
         "schema_version": 1,
         "run_id": run_id or str(uuid4()),
         "created_at": datetime.now(UTC).isoformat(),
         "suite_sha256": suite.identity,
+        "model_targets_sha256": content_hash([asdict(model) for model in models]),
         "mode": "measured_reference_algorithms"
         if all(m.backend == "deterministic" for m in models)
         else "measured_requests",
         "dataset_audit": dataset_audit,
+        "deployment_inspection": deployment_inspection,
+        "execution": {
+            "status": "stopped_model_identity_mismatch" if identity_mismatch else "completed",
+            "scheduled_primary_attempts": len(grid),
+            "unattempted_primary_attempts": len(grid) - len(observations),
+            "no_automatic_replay": True,
+            "returned_model_labels_authenticated": False,
+        },
         "review_bundle_sha256": review_bundle_sha256,
         "reference_runtime": None,
         "admission_ceiling_microunits": args.max_cost_microunits,
@@ -436,6 +487,8 @@ def main(argv: list[str] | None = None) -> int:
         group.add_argument("--models", type=Path, required=True)
         group.add_argument("--dataset-card", type=Path)
         group.add_argument("--review-bundle", type=Path)
+        group.add_argument("--deployment-bindings", type=Path)
+        group.add_argument("--project-root", type=Path)
         group.add_argument("--variants", default="generic,family,model_role")
         group.add_argument("--repeat", type=int, default=1)
         if name == "run":
@@ -619,6 +672,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "preflight":
             review_bundle_sha256 = _review_admission(args, suite, models)
             plan = _preflight(models, suite, variants, args.repeat)
+            plan["deployment_inspection"] = _deployment_admission(args, suite, models)
             if review_bundle_sha256 is not None:
                 plan["review_bundle_sha256"] = review_bundle_sha256
             if args.dataset_card is not None:
@@ -626,7 +680,7 @@ def main(argv: list[str] | None = None) -> int:
 
                 plan["dataset_audit"] = audit_atomic_dataset(suite, _read(args.dataset_card))
             print(json.dumps(plan, indent=2))
-            return 0
+            return 2 if plan["deployment_inspection"]["status"] == "blocked" else 0
         if (
             not 1 <= args.max_judge_pairs <= 30
             or not 1 <= args.min_samples <= 10000
@@ -677,8 +731,16 @@ def main(argv: list[str] | None = None) -> int:
                 indent=2,
             )
         )
-        return 0
-    except (InvalidInputError, ValueError, OSError, TypeError, UnicodeError, KeyError):
+        return 2 if report["execution"]["status"] == "stopped_model_identity_mismatch" else 0
+    except (
+        InvalidInputError,
+        SchemaViolationError,
+        ValueError,
+        OSError,
+        TypeError,
+        UnicodeError,
+        KeyError,
+    ):
         # Do not print raw task/prompt/provider errors, credentials or file contents.
         parser.exit(
             2, "Benchmark configuration or execution failed; inspect safe local configuration.\n"

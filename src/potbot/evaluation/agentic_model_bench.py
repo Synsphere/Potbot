@@ -411,9 +411,21 @@ class Observation:
     input_profile: str = "standard"
     grader: str = "json_subset"
     response: str | None = None
+    returned_model: str | None = None
+    generation_origin: str = "unreported"
+    model_identity: str = "unknown"
 
     def to_dict(self) -> dict[str, Any]:
         return {name: getattr(self, name) for name in self.__dataclass_fields__}
+
+
+def returned_model_identity(model: str, returned: str | None) -> str:
+    """A matching response label is a declaration, not authenticated weights."""
+    if returned is None:
+        return "unknown"
+    if not isinstance(returned, str) or not 1 <= len(returned) <= 256:
+        raise InvalidInputError("invalid returned benchmark model identity")
+    return "matched" if returned == model else "mismatch"
 
 
 def _hash_text(value: str) -> str:
@@ -440,6 +452,11 @@ def observe_case(
             or generation.elapsed_ms < 0
         ):
             raise InvalidInputError("model returned an invalid benchmark observation")
+        identity = returned_model_identity(model.model, generation.returned_model)
+        if not isinstance(generation.origin, str) or not re.fullmatch(
+            r"[A-Za-z0-9_.:/-]{1,80}", generation.origin
+        ):
+            raise InvalidInputError("invalid generation origin")
         return Observation(
             model.id,
             model.model,
@@ -452,18 +469,21 @@ def observe_case(
             case.input_digest,
             prompt.identity,
             _hash_text(generation.text),
-            rubric_score(case, generation.text),
+            rubric_score(case, generation.text) if identity != "mismatch" else None,
             generation.elapsed_ms,
             generation.input_tokens,
             generation.output_tokens,
             generation.billed_microunits,
-            "completed",
+            "completed" if identity != "mismatch" else "identity_mismatch",
             model.backend,
             model.tier,
             str((case.context or {}).get("task_group", case.id)),
             str((case.context or {}).get("input_profile", "standard")),
             case.grader,
             generation.text if retain_response else None,
+            generation.returned_model,
+            generation.origin,
+            identity,
         )
     except Exception:
         # An attempted remote call may be billable. Never infer a failure means
@@ -526,6 +546,8 @@ class _ModelSummary(TypedDict):
     measured_billed_microunits: int | None
     missing_usage_attempts: int
     indeterminate: int
+    unknown_model_identity_attempts: int
+    mismatched_model_identity_attempts: int
     eligible_for_advisory_routing: bool
     production_qualified: bool
 
@@ -566,7 +588,7 @@ def summarise(observations: Iterable[Observation], *, minimum_samples: int = 12)
             all(score == 1 for score in scores) for scores in objective_cases.values()
         )
         times = [r.elapsed_ms for r in completed if r.elapsed_ms is not None]
-        charges = [r.billed_microunits for r in completed if r.billed_microunits is not None]
+        charges = [r.billed_microunits for r in records if r.billed_microunits is not None]
         # Quality metrics include only completed, objectively graded attempts.
         # Missing outputs block route admission; they are not silently scored 0.
         eligible = (
@@ -603,6 +625,12 @@ def summarise(observations: Iterable[Observation], *, minimum_samples: int = 12)
                 else None,
                 "missing_usage_attempts": len(records) - len(charges),
                 "indeterminate": len(records) - len(completed),
+                "unknown_model_identity_attempts": sum(
+                    r.model_identity == "unknown" for r in records
+                ),
+                "mismatched_model_identity_attempts": sum(
+                    r.model_identity == "mismatch" for r in records
+                ),
                 "eligible_for_advisory_routing": eligible,
                 "production_qualified": False,
             }
