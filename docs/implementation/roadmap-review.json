@@ -92268,7 +92268,7 @@
       "data_evidence": [
         {
           "path": "examples/registry/curated-capabilities.json",
-          "sha256": "0e9a45017309134b8551f217c4a45da38f107c6e95501e02189285d3d06cba33",
+          "sha256": "e108d0cf398f7f7959abdd55b7ce8c1d3003f99a686ddf8d0a8fe5485b24492d",
           "basis": "Twenty source-only inspection profiles with exact retained implementation evidence and optional profiles explicitly unavailable; no bundled executable distribution."
         },
         {
