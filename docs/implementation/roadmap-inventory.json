@@ -1019,12 +1019,12 @@
     },
     {
       "path": "docs/implementation/ci-postgres-partitions.md",
-      "sha256": "7a7b07eacb5cc7b3424d9d1ecb23fac2d0deb7c002a7553acb7b353a15a9579a",
-      "bytes": 5121,
+      "sha256": "31e303a74e9a48bc4a41344302711c8bbf0a1b4f66cb430da5966ed40feaa808",
+      "bytes": 5959,
       "kind": "narrative_text",
-      "text_sha256": "7a7b07eacb5cc7b3424d9d1ecb23fac2d0deb7c002a7553acb7b353a15a9579a",
-      "characters": 5121,
-      "lines": 90,
+      "text_sha256": "31e303a74e9a48bc4a41344302711c8bbf0a1b4f66cb430da5966ed40feaa808",
+      "characters": 5959,
+      "lines": 103,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36538,11 +36538,11 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "sha256": "faf9fafd815b00ec7f18cd9110ea31f8efcc1c13b1e99642e2181ec707fdef22",
-      "bytes": 23537,
+      "sha256": "3e1101cde112e0680eb08cc462a3cb2d1fc92f7af1309f22a85f687560465771",
+      "bytes": 23569,
       "kind": "narrative_text",
-      "text_sha256": "faf9fafd815b00ec7f18cd9110ea31f8efcc1c13b1e99642e2181ec707fdef22",
-      "characters": 23535,
+      "text_sha256": "3e1101cde112e0680eb08cc462a3cb2d1fc92f7af1309f22a85f687560465771",
+      "characters": 23567,
       "lines": 475,
       "interpretation": "source_content_not_runtime_evidence"
     },
@@ -36937,7 +36937,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "b636441fcbffe94f2845214b198d3e9e1bf6ee5d024f2dde46406a915f0c16e8",
+  "review_sha256": "f5fcdf506b49a8d0ca147d45c0cc64253358021870ac866e980dc72e9cdd8b48",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -116013,8 +116013,8 @@
     },
     {
       "source": "docs/implementation/ci-postgres-partitions.md",
-      "locator": "line:70-90",
-      "sha256": "9f3c5ebcb509c57501c8013d8492ae4ffb1913336f14511ff412656357246982",
+      "locator": "line:70-103",
+      "sha256": "e90a91a4ff33e0f21a8cc6f9b3f4b2a33c16d8c3f2dd8b8ac046020ad3b4d7a1",
       "excerpt": "## Follow-up failures exposed by the complete lane\n\nThe first actual partition run reached its terminal results in 742 seconds:\n195 tests passed and the tool-in",
       "review_families": [
         "audit",

@@ -88,3 +88,16 @@ It neither captures a warm-up image nor changes focus, the worker's six-second
 deadline, capture ownership, cancellation fence, fallback rules or command set.
 The existing diagram describes partition orchestration; native readiness is
 retained as JSON/JUnit state rather than a screenshot of an unverified outcome.
+
+
+The subsequent primary verification job passed 95 sandbox tests and failed the
+mandatory authored-PDF extraction test because its runner lacked `pdftotext`.
+[The retained job log](https://github.com/Synsphere/Potbot/actions/runs/45315599913/job/138181579520)
+identifies the missing `poppler-utils` prerequisite. The primary runner now
+installs that Ubuntu package beside its existing isolation prerequisites. The
+test still pins the actual executable hash, uses the existing sandbox and
+requires extraction, exact page spans and confirmed process termination. A new
+CI run must establish the real PDF pass; the missing prerequisite is not waived.
+Downstream source-inventory uploads were also absent because this sandbox
+failure stopped their explicit producer step; their original acceptance and
+artifact requirements remain in place.

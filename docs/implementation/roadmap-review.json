@@ -80705,14 +80705,14 @@
     },
     {
       "path": "docs/implementation/ci-postgres-partitions.md",
-      "sha256": "7a7b07eacb5cc7b3424d9d1ecb23fac2d0deb7c002a7553acb7b353a15a9579a",
+      "sha256": "31e303a74e9a48bc4a41344302711c8bbf0a1b4f66cb430da5966ed40feaa808",
       "families": [
         "audit",
         "stage-acceptance",
         "evaluation"
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
-      "assessment": "Source-reviewed PostgreSQL partition orchestration, same original selector, fresh databases and complete execution-accounting gate. New CI completion and elapsed-time improvement require actual run evidence; no production qualification is asserted. Actual partition results exposed a snapshot capacity failure; the single generated projection exclusion is explicit. Native-window readiness is a stronger test prerequisite, with real rendered confirmation pending.",
+      "assessment": "Source-reviewed PostgreSQL partition orchestration, same original selector, fresh databases and complete execution-accounting gate. New CI completion and elapsed-time improvement require actual run evidence; no production qualification is asserted. Actual partition results exposed a snapshot capacity failure; the single generated projection exclusion is explicit. Native-window readiness is a stronger test prerequisite, with real rendered confirmation pending. The actual primary sandbox lane exposed a missing Poppler executable: 95 tests passed and one required PDF case failed. CI now installs the dependency while preserving exact executable hashing, isolation and all existing artifact gates; the new run remains required.",
       "narrative": [
         {
           "locator": "line:1-69",
@@ -80725,8 +80725,8 @@
           ]
         },
         {
-          "locator": "line:70-90",
-          "sha256": "9f3c5ebcb509c57501c8013d8492ae4ffb1913336f14511ff412656357246982",
+          "locator": "line:70-103",
+          "sha256": "e90a91a4ff33e0f21a8cc6f9b3f4b2a33c16d8c3f2dd8b8ac046020ad3b4d7a1",
           "excerpt": "## Follow-up failures exposed by the complete lane\n\nThe first actual partition run reached its terminal results in 742 seconds:\n195 tests passed and the tool-in",
           "families": [
             "audit",
@@ -89763,7 +89763,7 @@
       },
       {
         "path": ".github/workflows/ci.yml",
-        "sha256": "faf9fafd815b00ec7f18cd9110ea31f8efcc1c13b1e99642e2181ec707fdef22",
+        "sha256": "3e1101cde112e0680eb08cc462a3cb2d1fc92f7af1309f22a85f687560465771",
         "name": "Potbot verification",
         "state": "active",
         "scope": [
