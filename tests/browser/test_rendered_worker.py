@@ -20,10 +20,12 @@ import tempfile
 from contextlib import asynccontextmanager
 from importlib.metadata import version
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 
 from potbot.tools.xpra_browser_worker import BrowserWorker
+from scripts.browser_display_readiness import wait_for_mapped_test_window
 from scripts.browser_rendered_runtime import binary_identity, selected_browser, selection_mode
 
 pytestmark = pytest.mark.skipif(
@@ -92,6 +94,15 @@ async def browser(html):
             content=(FIXTURES / "probe.js").read_text()
             + "\n//# sourceURL=https://potbot.invalid/probe.js"
         )
+        # A logically visible/focused document does not prove an X11 window
+        # has been mapped. Inspect this unique synthetic native window before
+        # requesting its first frame, without focusing/resizing or capturing it.
+        native_title = "potbot-rendered-" + uuid4().hex
+        await worker.page.evaluate("value => { document.title = value; }", native_title)
+        worker.test_native_window = await asyncio.to_thread(
+            wait_for_mapped_test_window, native_title
+        )
+        print("native_window_readiness", worker.test_native_window)
         # The worker's bounded capture verifies rendered pixels. A headful
         # document can suspend animation callbacks even after navigation commits.
         print(
@@ -130,6 +141,7 @@ def test_accessibility_role_actions_and_verified_render_change(probe_page, recor
         async with browser(probe_page) as worker:
             selected, _, _, packages = profile()
             record_property("browser_profile", selected)
+            record_property("native_window", json.dumps(worker.test_native_window, sort_keys=True))
             record_property("browser_version", worker.browser.version)
             record_property("packages", json.dumps(packages, sort_keys=True))
             mode = selection_mode()
