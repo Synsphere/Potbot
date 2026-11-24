@@ -168,10 +168,12 @@ def application(args: argparse.Namespace) -> FastAPI:
     from potbot.api.ui_operator_s13 import register_operator_routes
     from potbot.api.ui_research import register_research_routes
     from potbot.api.ui_resources import register_ui_routes
+    from potbot.api.ui_settings import register_settings_routes
     from potbot.api.ui_skills import register_skill_acquisition_routes
     from potbot.api.ui_task_discovery import register_task_discovery_routes
     from potbot.api.ui_task_execution import register_task_execution_routes
     from potbot.api.ui_tool_acquisitions import register_tool_acquisition_routes
+    from potbot.tools.local_inventory import InventoryProfile
 
     register_ui_routes(app, database, authenticate, settings.allowed_origins)
     register_operator_routes(
@@ -216,6 +218,19 @@ def application(args: argparse.Namespace) -> FastAPI:
             settings.allowed_origins,
             setup_authorizer,
         )
+    inventory_path = getattr(args, "inventory_profile", None)
+    inventory = (
+        InventoryProfile.read(inventory_path, context.workspace_id) if inventory_path else None
+    )
+    register_settings_routes(
+        app,
+        database,
+        authenticate,
+        settings.allowed_origins,
+        context.workspace_id,
+        setup_authorizer,
+        inventory,
+    )
     register_operation_workbench_routes(
         app,
         database,
@@ -303,6 +318,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="potbot serve", description=__doc__)
     add_scope_arguments(parser)
     parser.add_argument("--provider-policy", required=True, type=Path)
+    parser.add_argument(
+        "--inventory-profile", type=Path, help="native operator-selected project inventory roots"
+    )
     parser.add_argument(
         "--mcp-oauth-registration",
         type=Path,

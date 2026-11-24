@@ -1,0 +1,142 @@
+name: Native Python settings and swarm UI
+on:
+  push:
+    paths:
+      - 'src/potbot/desktop*.py'
+      - 'tests/unit/test_desktop*.py'
+      - 'tests/integration/test_desktop_settings.py'
+      - 'tests/fixtures/mypy-native-headless.toml'
+      - '.github/workflows/native-settings.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qt-widgets:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      UV_PYTHON: '3.12'
+      UV_CACHE_DIR: ${{ github.workspace }}/.potbot/uv-cache
+      QT_QPA_PLATFORM: offscreen
+      POTBOT_REQUIRE_DESKTOP_TESTS: '1'
+      POTBOT_NATIVE_UI_CAPTURE_DIR: ${{ github.workspace }}/artifacts/native-settings/qt-${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        with:
+          version: '0.12.23'
+      - name: Install Linux offscreen Qt prerequisites
+        if: runner.os == 'Linux'
+        run: |
+          bash scripts/ci_prepare_ubuntu_mirror.sh
+          sudo apt-get update
+          sudo apt-get install --yes libegl1 libopengl0 fonts-dejavu-core
+      - name: Install the existing locked desktop runtime
+        run: uv sync --locked --extra desktop --extra credentials --extra postgres --extra semantics --dev
+      - name: Verify native widgets, HTTP boundaries, navigation and recovery
+        run: >-
+          uv run --locked --extra desktop --extra credentials python -m pytest -q
+          tests/unit/test_desktop.py tests/unit/test_desktop_settings_client.py
+          tests/unit/test_desktop_settings_qt.py
+          --junitxml=artifacts/native-settings/qt.xml
+      - name: Require actual native tests without skips
+        shell: bash
+        run: |
+          uv run --locked --extra desktop --extra credentials python - <<'PY'
+          from xml.etree import ElementTree
+          cases = list(ElementTree.parse('artifacts/native-settings/qt.xml').iter('testcase'))
+          if len(cases) < 30 or any(case.find(tag) is not None for case in cases
+                                   for tag in ('skipped', 'failure', 'error')):
+              raise SystemExit('Native Qt acceptance must execute without skips')
+          print(f'{len(cases)} actual native/HTTP contract cases passed')
+          PY
+      - name: Verify formatting and types against the installed Qt runtime
+        shell: bash
+        run: |
+          files='src/potbot/desktop.py src/potbot/desktop_settings.py src/potbot/desktop_settings_client.py src/potbot/desktop_settings_state.py'
+          uv run --locked --extra desktop --extra credentials ruff check $files tests/unit/test_desktop_settings_client.py tests/unit/test_desktop_settings_qt.py tests/integration/test_desktop_settings.py
+          uv run --locked --extra desktop --extra credentials ruff format --check $files tests/unit/test_desktop_settings_client.py tests/unit/test_desktop_settings_qt.py tests/integration/test_desktop_settings.py
+          uv run --locked --extra desktop --extra credentials mypy $files
+          uv run --locked --extra desktop --extra credentials mypy --config-file tests/fixtures/mypy-native-headless.toml --cache-dir .potbot/native-settings/mypy-headless $files
+      - name: Retain native fixture captures and test results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: native-settings-${{ matrix.os }}
+          path: artifacts/native-settings/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Record completion assessment
+        if: always()
+        shell: bash
+        run: |
+          printf '%s\n' 'Blogworthiness: FAIL. Routine native regression replay; evidence is this run and its retained reports. Captures show actual Qt widgets with explicitly synthetic records, not production node qualification.' >> "$GITHUB_STEP_SUMMARY"
+  qt-postgres:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      UV_PYTHON: '3.12'
+      UV_CACHE_DIR: ${{ github.workspace }}/.potbot/uv-cache
+      QT_QPA_PLATFORM: offscreen
+      POTBOT_REQUIRE_DESKTOP_TESTS: '1'
+      POTBOT_NATIVE_UI_CAPTURE_DIR: ${{ github.workspace }}/artifacts/native-settings/sql-qt
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        with:
+          version: '0.12.23'
+      - name: Install Linux offscreen Qt prerequisites
+        run: |
+          bash scripts/ci_prepare_ubuntu_mirror.sh
+          sudo apt-get update
+          sudo apt-get install --yes libegl1 libopengl0 fonts-dejavu-core
+      - name: Install existing locked Qt and PostgreSQL dependencies
+        run: uv sync --locked --extra desktop --extra credentials --extra postgres --extra semantics --dev
+      - name: Start an owned disposable PostgreSQL fixture
+        run: docker compose -p native-settings-tests up --detach --wait --wait-timeout 90
+      - name: Verify actual Qt actions through HTTP and the protected ledger
+        run: >-
+          uv run --locked --extra desktop --extra credentials --extra postgres --extra semantics python -m pytest -q
+          tests/integration/test_desktop_settings.py tests/integration/test_ui_settings.py
+          tests/integration/test_remote_workspaces.py tests/integration/test_database.py
+          tests/integration/test_context_acl.py
+          --junitxml=artifacts/native-settings/postgres.xml
+      - name: Require actual native and database acceptance without skips
+        run: |
+          uv run --locked --extra desktop --extra credentials --extra postgres --extra semantics python - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree
+          cases = list(ElementTree.parse('artifacts/native-settings/postgres.xml').iter('testcase'))
+          native = [case for case in cases if case.get('classname', '').endswith('test_desktop_settings')]
+          if not native or any(case.find(tag) is not None for case in cases
+                               for tag in ('skipped', 'failure', 'error')):
+              raise SystemExit('Real Qt/PostgreSQL acceptance must execute without skips')
+          if not Path('artifacts/native-settings/postgres-native-http.json').is_file():
+              raise SystemExit('Missing actual native HTTP/database receipt')
+          print(f'{len(native)} native Qt and {len(cases)} total PostgreSQL cases passed')
+          PY
+      - name: Retain actual API/database results and native fixture captures
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: native-settings-postgres
+          path: artifacts/native-settings/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Remove only this job's disposable fixture
+        if: always()
+        run: docker compose -p native-settings-tests down --volumes --remove-orphans --timeout 10
+      - name: Record completion assessment
+        if: always()
+        run: |
+          printf '%s\n' 'Blogworthiness: FAIL. Routine native/SQL replay; evidence is this run and its HTTP, capture and JUnit receipts. Disposable acceptance does not qualify a real node or inference runtime.' >> "$GITHUB_STEP_SUMMARY"

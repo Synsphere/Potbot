@@ -13,6 +13,11 @@ from potbot import __version__
 def main(argv: Sequence[str] | None = None) -> int:
     """Dispatch commands without importing adapters for unrelated operations."""
     args = list(sys.argv[1:] if argv is None else argv)
+    if args and args[0] == "remote-workspace":
+        from potbot.api.remote_workspaces_cli import main as remote_workspace_main
+
+        return remote_workspace_main(args[1:])
+
     if args and args[0] == "fixture":
         from potbot.evaluation.repository_fixture import main as fixture_main
 
@@ -165,6 +170,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     commands.add_parser("fixture", help="create, check, repair, and clean up real Git fixtures")
     commands.add_parser("db", help="manage isolated PostgreSQL integration-test schemas")
     commands.add_parser("admin", help="migrate and provision application workspaces")
+    commands.add_parser(
+        "remote-workspace", help="probe native host facts and review provisioning plans"
+    )
     commands.add_parser("task", help="submit, inspect, revise, and control durable tasks")
     commands.add_parser("worker", help="run recoverable fixture outbox jobs")
     commands.add_parser("serve", help="serve the authenticated REST API, dashboard and job streams")

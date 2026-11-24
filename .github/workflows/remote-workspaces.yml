@@ -1,0 +1,78 @@
+name: Native remote workspace planning and authority
+on:
+  push:
+    paths:
+      - 'src/potbot/domain/remote_workspaces.py'
+      - 'src/potbot/cli.py'
+      - 'src/potbot/controller/remote_workspaces.py'
+      - 'src/potbot/tools/remote_preflight.py'
+      - 'src/potbot/api/remote_workspaces_cli.py'
+      - 'src/potbot/persistence/remote_workspace_schema.py'
+      - 'src/potbot/persistence/schema.py'
+      - 'tests/unit/test_remote_workspaces.py'
+      - 'tests/integration/test_remote_workspaces.py'
+      - '.github/workflows/remote-workspaces.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  planning-and-rls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_PYTHON: '3.12'
+      UV_CACHE_DIR: ${{ github.workspace }}/.potbot/uv-cache
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        with:
+          version: '0.12.23'
+      - name: Install existing locked test dependencies
+        run: uv sync --locked --extra postgres --extra semantics --dev
+      - name: Check planning contracts and non-mutating CLI
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_remote_workspaces.py tests/unit/test_cli_adapter.py
+      - name: Lint and type-check the native planning modules
+        run: |
+          uv run --locked ruff check src/potbot/domain/remote_workspaces.py src/potbot/controller/remote_workspaces.py src/potbot/tools/remote_preflight.py src/potbot/api/remote_workspaces_cli.py src/potbot/persistence/remote_workspace_schema.py tests/unit/test_remote_workspaces.py tests/integration/test_remote_workspaces.py
+          uv run --locked ruff format --check src/potbot/domain/remote_workspaces.py src/potbot/controller/remote_workspaces.py src/potbot/tools/remote_preflight.py src/potbot/api/remote_workspaces_cli.py src/potbot/persistence/remote_workspace_schema.py tests/unit/test_remote_workspaces.py tests/integration/test_remote_workspaces.py
+          uv run --locked mypy src/potbot/domain/remote_workspaces.py src/potbot/controller/remote_workspaces.py src/potbot/tools/remote_preflight.py src/potbot/api/remote_workspaces_cli.py src/potbot/persistence/remote_workspace_schema.py
+      - name: Start disposable PostgreSQL fixture
+        run: docker compose -p remote-workspace-tests up --detach --wait --wait-timeout 90
+      - name: Verify real migrations, RLS, grant revocation and concurrent cycle rejection
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/integration/test_remote_workspaces.py
+          tests/integration/test_database.py
+          tests/integration/test_context_acl.py
+          --junitxml=artifacts/remote-workspaces/postgres.xml
+      - name: Require executed PostgreSQL acceptance without skips
+        run: |
+          uv run --locked python - <<'PY'
+          from xml.etree import ElementTree
+          cases = list(ElementTree.parse('artifacts/remote-workspaces/postgres.xml').iter('testcase'))
+          remote = [case for case in cases if case.get('classname', '').endswith('test_remote_workspaces')]
+          if len(remote) < 6 or any(case.find(tag) is not None for case in cases
+                                  for tag in ('skipped', 'failure', 'error')):
+              raise SystemExit('Real PostgreSQL acceptance must execute without skips')
+          print(f'{len(remote)} remote workspace and {len(cases)} total PostgreSQL cases passed')
+          PY
+      - name: Retain PostgreSQL results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: remote-workspace-postgres
+          path: artifacts/remote-workspaces/postgres.xml
+          if-no-files-found: warn
+      - name: Record completion assessment
+        if: always()
+        run: |
+          printf '%s\n' 'Blogworthiness: FAIL. Routine test replay; evidence is this run and its test reports. Feature coverage belongs to the maintained implementation article.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Remove only the owned disposable fixture
+        if: always()
+        run: docker compose -p remote-workspace-tests down --volumes --remove-orphans --timeout 10

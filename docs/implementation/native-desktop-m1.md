@@ -1,4 +1,4 @@
-# Native desktop milestone M1
+# Native desktop implementation
 
 Potbot now has two intentional user interfaces:
 
@@ -9,10 +9,17 @@ Potbot now has two intentional user interfaces:
   `POTBOT_LOCAL_UI=web` to keep browser-first startup. Headless Linux defaults
   to web mode automatically.
 
-M1 is deliberately a shell migration rather than a rewrite cliff. The native
-window contains persistent workspace chrome, startup status and an application
-area. Chat, graph, model and Xpra-window controls move into Qt in later
-milestones while the existing web implementation remains feature complete.
+M1 established persistent workspace chrome, startup status and an application
+area. CFG02 now adds native settings, all seven saved preferences, local model and
+Python tool inventories, workspace swarm inspection and reviewed grant-revocation
+requests through the existing backend APIs. Chat, graph and Xpra application panes
+retain their next milestones.
+
+![Implemented native model inventory](../images/native-settings-models.png)
+
+*Actual offscreen Qt fixture capture with synthetic records; no inference or real
+node qualification is established. See the [native settings guide](cfg02-native-python-settings.md)
+for actions, credential boundaries and actual acceptance.*
 
 ## Startup contract
 
@@ -39,6 +46,6 @@ a stale WSL operator from intermittently calling a dead custody transport.
 1. Move native chat/session history and reasoning graph views into Qt.
 2. Add native application inventory and launch controls.
 3. Reuse the qualified Xpra protocol path for native application panes.
-4. Move models, downloads, preferences and tool/operator setup views into Qt.
+4. Extend native model/download acquisition and tool/operator setup beyond the implemented inventories and preferences.
 5. Keep API/view-model contracts shared with Next.js so remote and native clients
    cannot silently diverge.

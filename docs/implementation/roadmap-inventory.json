@@ -29,10 +29,10 @@
     },
     {
       "path": "README.md",
-      "sha256": "8d7573ed9b3b64d3f31bf7a244dd93de4bc8efb09a0963f05f171b8b4739a3e8",
+      "sha256": "ee6e78d37a6042a2bef3e1d602c27cb8e7211444bbaa324b70e8f7881ebaccb2",
       "bytes": 38557,
       "kind": "narrative_text",
-      "text_sha256": "8d7573ed9b3b64d3f31bf7a244dd93de4bc8efb09a0963f05f171b8b4739a3e8",
+      "text_sha256": "ee6e78d37a6042a2bef3e1d602c27cb8e7211444bbaa324b70e8f7881ebaccb2",
       "characters": 38553,
       "lines": 630,
       "interpretation": "source_content_not_runtime_evidence"
@@ -216,6 +216,41 @@
       "characters": 17028,
       "lines": 325,
       "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/images/native-settings-appearance.png",
+      "sha256": "a03c5faf0c6cbca97419f65507b6099301eb0fe81ca34429f5452fe97059194a",
+      "bytes": 43169,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/images/native-settings-models.png",
+      "sha256": "6691e31d3c77e9f4a33d5063749a2974582173ff7fe9bee96708275843b6e6b8",
+      "bytes": 46592,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/images/settings-inventory-swarm.svg",
+      "sha256": "a610f83a5a82be04204c33d2879a77685c8e4041a7fa3726f368bde009e3f6d7",
+      "bytes": 4038,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/images/settings-models-mobile.png",
+      "sha256": "78d3f27001ab73d63fd2ebafda50d53c17cdf6a952197e052e1f9c3e4ca4a8a9",
+      "bytes": 36850,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/images/settings-swarm-review.png",
+      "sha256": "6b3308ded341ce7bab91cc8984b9637fc6d95967c07f8fc903c5eb109dbdad8b",
+      "bytes": 93668,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
     },
     {
       "path": "docs/implementation/01-phase1-implementation.md",
@@ -1018,6 +1053,26 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "sha256": "a15b66e7a3f37d5c2b5ad12a7b79e26bacefedda2e71287f8c5175f6d549dc88",
+      "bytes": 8279,
+      "kind": "narrative_text",
+      "text_sha256": "a15b66e7a3f37d5c2b5ad12a7b79e26bacefedda2e71287f8c5175f6d549dc88",
+      "characters": 8275,
+      "lines": 151,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/cfg02-native-python-settings.md",
+      "sha256": "dc11ff043f6b8da2c8b5dc0726e7747d277f562522c5e35e4c60c16e22d05167",
+      "bytes": 6550,
+      "kind": "narrative_text",
+      "text_sha256": "dc11ff043f6b8da2c8b5dc0726e7747d277f562522c5e35e4c60c16e22d05167",
+      "characters": 6549,
+      "lines": 110,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": "docs/implementation/ci-postgres-partitions.md",
       "sha256": "1988f08f681bc657fb5f8b10115178bbb868445f25f35e14bc1514eb0a338ebc",
       "bytes": 9159,
@@ -1109,6 +1164,13 @@
       "path": "docs/implementation/media/python-profile-comparison.webm",
       "sha256": "98bb4634c5fd3fea35c858581e4affac4a4377c6122ce10593ade4f6f6a5accf",
       "bytes": 36577,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/implementation/media/remote-workspace-foundation.svg",
+      "sha256": "73d2ccec3f744c49b449d39626bee026d54a2d5e09e6418c6e3203da01d19358",
+      "bytes": 3626,
       "kind": "media",
       "interpretation": "asset_identity_only"
     },
@@ -1235,12 +1297,12 @@
     },
     {
       "path": "docs/implementation/native-desktop-m1.md",
-      "sha256": "e9a7aba01bfd83144423d168a9f3f7d49eb0a6bf492f3a1ad0cd6cf22b82fe14",
-      "bytes": 2228,
+      "sha256": "e040ed1e9e5bb4ec6154f79a6ce01a89a4e0bbc435f66fc9e0cd189dbf43c2cd",
+      "bytes": 2644,
       "kind": "narrative_text",
-      "text_sha256": "e9a7aba01bfd83144423d168a9f3f7d49eb0a6bf492f3a1ad0cd6cf22b82fe14",
-      "characters": 2223,
-      "lines": 44,
+      "text_sha256": "e040ed1e9e5bb4ec6154f79a6ce01a89a4e0bbc435f66fc9e0cd189dbf43c2cd",
+      "characters": 2639,
+      "lines": 51,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1541,6 +1603,16 @@
       "text_sha256": "f74a7edef4f4e83855709487fd1a13f1751f1a2de33a08e44471ff551443af8d",
       "characters": 69702,
       "lines": 4020,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/rw01-native-remote-workspace-foundation.md",
+      "sha256": "696af3fb2fcd51005e8a8994db406c0afa343abecd5ad3020bd723bab05adfd4",
+      "bytes": 7255,
+      "kind": "narrative_text",
+      "text_sha256": "696af3fb2fcd51005e8a8994db406c0afa343abecd5ad3020bd723bab05adfd4",
+      "characters": 7245,
+      "lines": 129,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36774,6 +36846,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": ".github/workflows/configuration-ui.yml",
+      "sha256": "86967b580146f57dc40a2f550e99e150f8930fc7c301c89ce181c18ab46df66b",
+      "bytes": 5381,
+      "kind": "narrative_text",
+      "text_sha256": "86967b580146f57dc40a2f550e99e150f8930fc7c301c89ce181c18ab46df66b",
+      "characters": 5381,
+      "lines": 101,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": ".github/workflows/context-agent-rpc.yml",
       "sha256": "a144012a3525ec736d1a0ea3fda9a7d0d3ef772b4c1b850ec3913e2b6377aa41",
       "bytes": 6762,
@@ -36854,6 +36936,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": ".github/workflows/native-settings.yml",
+      "sha256": "3f5819c204f06a57a3300d4ce98120cad3d14f70c58605751f4221d531c9a619",
+      "bytes": 7630,
+      "kind": "narrative_text",
+      "text_sha256": "3f5819c204f06a57a3300d4ce98120cad3d14f70c58605751f4221d531c9a619",
+      "characters": 7630,
+      "lines": 142,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": ".github/workflows/official-syn-monitored-workers.yml",
       "sha256": "4963fe82599daf384625583653f24020b943b4d2f76b4c7e70eaa5d6653e082f",
       "bytes": 7325,
@@ -36911,6 +37003,16 @@
       "text_sha256": "f1ce8f100941a35233c3036d040dadad4da542295f8c630324534d9698932f63",
       "characters": 3210,
       "lines": 89,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": ".github/workflows/remote-workspaces.yml",
+      "sha256": "e9cd2ee22a6f84e23eacdaf97145e771a00a4b3fbba1da618b980d0dcfb770d1",
+      "bytes": 4432,
+      "kind": "narrative_text",
+      "text_sha256": "e9cd2ee22a6f84e23eacdaf97145e771a00a4b3fbba1da618b980d0dcfb770d1",
+      "characters": 4432,
+      "lines": 78,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -37164,7 +37266,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "568f6eb4d9d56f979d985c13848deea5c9154f1860fe3a3721ee13f3c591aa55",
+  "review_sha256": "8ec39b9e269b708ce4b99345f36b5ef60286fb7b8fb44893ade594c896c86ce7",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -37215,7 +37317,7 @@
     {
       "source": "README.md",
       "locator": "line:1-194",
-      "sha256": "c62d30fcb8c57adda83946a28fb926718af5e0ba7c87d5a931843aefcd19d11f",
+      "sha256": "77f1357d417307fb4e4d0875aca5b639f0588dfbb0563fcafa49d1f9a477c3f6",
       "excerpt": "# potbot\n\nAn evidence-driven, multi-model coding agent, built in stages from the architecture\nand implementation plan in `docs/`.\n\nFor the current delivery orde",
       "review_families": [
         "durable",
@@ -116228,6 +116330,138 @@
       ]
     },
     {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:1-14",
+      "sha256": "e3cab7b6674f35d4911f30aab275349e7cfb78c0d5d5011ecfb47ece50be7620",
+      "excerpt": "# Potbot settings inventories and swarm management\n\nPotbot now has a `/settings` workbench with fourteen categories, a searchable\ncatalogue covering twenty-nine",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:15-39",
+      "sha256": "9c3ef18cbc49fe5a167aa3a42a5e9a1a76d26775cf8cf2a48b9b8ebea0369d1e",
+      "excerpt": "## Open the settings workbench\n\nUse **Menu \u2192 All settings**, **Local model inventory**, **Local tool inventory**\nor **Workspace swarm**. The workspace selector ",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:40-79",
+      "sha256": "36004d7128591cfcb57fc33910a2c431368566179cb6cc0f9f1aae5392aeba62",
+      "excerpt": "## Configure native inventory roots\n\nThe native operator selects project-relative roots in a private JSON profile.\nThe profile belongs to exactly one workspace.",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:80-118",
+      "sha256": "55ba5c82d8e2cb4662692b721883d4df960df5f405cdcabeafdf4d021b022faf",
+      "excerpt": "## Review workspace swarm records\n\nThe swarm view reads registered node identity, pinned SSH fingerprints, the\ncurrent native deployment, direct control grants ",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:119-151",
+      "sha256": "a6dec4b6460ee77b64801cf6639a68011ce7918902c43c071da9f4b787cb7c18",
+      "excerpt": "## Interfaces and verification\n\n| Next resource | Native API | Method |\n| --- | --- | --- |\n| `/api/ui/settings/catalogue` | `/v1/ui/settings/catalogue` | GET |",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg02-native-python-settings.md",
+      "locator": "line:1-7",
+      "sha256": "9e3fcd6e525afd66f1ba47aca18ee3d7e5ce82d4df6fbb63de221c29b93ae31a",
+      "excerpt": "# Native Python settings and workspace swarm controls\n\nPotbot's Python desktop now opens real Qt panels for **Settings**, **Preferences**,\n**Models**, **Tools**",
+      "review_families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg02-native-python-settings.md",
+      "locator": "line:8-28",
+      "sha256": "11db73ecd1f79daad466bd825de7594960694e84961fd731a3951680445cd927",
+      "excerpt": "## Use the native settings panels\n\nStart Potbot through the existing native desktop entry point. Select **Settings**\nin the left navigation for all fourteen cat",
+      "review_families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg02-native-python-settings.md",
+      "locator": "line:29-47",
+      "sha256": "208afbf736fe76b9f5b33092f84e7056feda819e1ee3703c0270617a01183588",
+      "excerpt": "## Inspect model and tool inventories\n\nModels and Tools display searchable native tables with separate columns for\npresence, qualification, recorded health and ",
+      "review_families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg02-native-python-settings.md",
+      "locator": "line:48-68",
+      "sha256": "b2750b536c578630fae0b7636fe56eaef8c1ee24576d522387a4212711487814",
+      "excerpt": "## Manage workspace control grants\n\nWorkspace swarm has native tabs for nodes, deployments, direct control grants\nand management requests. Registered nodes rema",
+      "review_families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg02-native-python-settings.md",
+      "locator": "line:69-86",
+      "sha256": "dc51a45142ffb2321f52d262b14a1829823c161fd135c3b11aff783d9a4811ea",
+      "excerpt": "## Connections and native credential custody\n\nThe default connection comes from the existing service configuration and its\nselected native vault profile. Option",
+      "review_families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg02-native-python-settings.md",
+      "locator": "line:87-110",
+      "sha256": "fa75732967ecc3270a053242f20676005bd05e60ff0f5ee89ae367a87a22c2a4",
+      "excerpt": "## Verification and remaining acceptance\n\nThe [native acceptance workflow](../../.github/workflows/native-settings.yml)\nrequires actual Qt tests on Windows and ",
+      "review_families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
       "source": "docs/implementation/ci-postgres-partitions.md",
       "locator": "line:1-69",
       "sha256": "46be370d18fcbd175da496cf9db6558c5d5118f18a6366d68e1dfbaf59862687",
@@ -116614,9 +116848,9 @@
     },
     {
       "source": "docs/implementation/native-desktop-m1.md",
-      "locator": "line:1-16",
-      "sha256": "e6a7893a765ee7d825891c162af7da44e5d0a53f73bea7b842094d66eda92225",
-      "excerpt": "# Native desktop milestone M1\n\nPotbot now has two intentional user interfaces:\n\n- **Native local Qt 6 client** \u2014 the default local surface on Windows, macOS and",
+      "locator": "line:1-23",
+      "sha256": "80893e26b1a81f0d8159eed92bd81ac29d3b7ad5d211722f4c83eebb6398f050",
+      "excerpt": "# Native desktop implementation\n\nPotbot now has two intentional user interfaces:\n\n- **Native local Qt 6 client** \u2014 the default local surface on Windows, macOS a",
       "review_families": [
         "frontend",
         "recovery"
@@ -116624,7 +116858,7 @@
     },
     {
       "source": "docs/implementation/native-desktop-m1.md",
-      "locator": "line:17-24",
+      "locator": "line:24-31",
       "sha256": "382eb7e2f810aadbc9d860cf7adbee7f04cb5bb735ed5c43cc086d5d4fdff174",
       "excerpt": "## Startup contract\n\nThe local process creates and shows `QMainWindow` before starting the existing\none-click provisioning path in a daemon thread. The workspac",
       "review_families": [
@@ -116634,7 +116868,7 @@
     },
     {
       "source": "docs/implementation/native-desktop-m1.md",
-      "locator": "line:25-36",
+      "locator": "line:32-43",
       "sha256": "134817c42b903aa8209dc4489e6af059a2d507d2e1b151ec6c2e10d609a7ee70",
       "excerpt": "## Credential hardening included in M1\n\nManaged Windows WSL no longer makes Potbot's own `CredentialStore` depend on\nD-Bus Secret Service readiness. Potbot call",
       "review_families": [
@@ -116644,8 +116878,8 @@
     },
     {
       "source": "docs/implementation/native-desktop-m1.md",
-      "locator": "line:37-44",
-      "sha256": "b5d8301ec5d75cc18af3b3da04e77742681b11f36d50df8eea15554941bc00ca",
+      "locator": "line:44-51",
+      "sha256": "546b7cc9c088ee88724ee65ad8b966f1ed5a8b0de26b468a8ecb37d2bc03fa8f",
       "excerpt": "## Next milestones\n\n1. Move native chat/session history and reasoning graph views into Qt.\n2. Add native application inventory and launch controls.\n3. Reuse the",
       "review_families": [
         "frontend",
@@ -118387,6 +118621,46 @@
       "excerpt": "{\n  \"schema\": \"potbot.roadmap-inventory-policy/1\",\n  \"reviewed_base\": \"95610037311c80cdf7163372998b08e1b8958926\",\n  \"programmes\": [\n    {\n      \"namespace\": \"pl",
       "review_families": [
         "audit"
+      ]
+    },
+    {
+      "source": "docs/implementation/rw01-native-remote-workspace-foundation.md",
+      "locator": "line:1-13",
+      "sha256": "9da753337ef9b37efd034c0634c3f8fa473fe4c802027252667ef78a17f6d134",
+      "excerpt": "# Native remote workspace foundation (RW01 / RW02 planning slice)\n\nThis increment starts the remote workspace plan with immutable native deployment\nrecords, dir",
+      "review_families": [
+        "audit",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/rw01-native-remote-workspace-foundation.md",
+      "locator": "line:14-54",
+      "sha256": "4ebfc8c4e02c1637539d80d920d82b0056bdfaa0c3414897fb0523254c71ca25",
+      "excerpt": "## Try the non-mutating commands\n\nUse an already installed core environment; no database, models or desktop extras\nare required for these commands:\n\n```bash\npyt",
+      "review_families": [
+        "audit",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/rw01-native-remote-workspace-foundation.md",
+      "locator": "line:55-99",
+      "sha256": "71706a64b8bbb04e2a69d40dfc2c20cf18839d5e06e0c861d31e0a4adf027b17",
+      "excerpt": "## Records and operator services\n\nMigration **58** follows the model-routing and checked-reasoning migrations.\nIt adds these records.\n\n| Record | Contract |\n| -",
+      "review_families": [
+        "audit",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/rw01-native-remote-workspace-foundation.md",
+      "locator": "line:100-129",
+      "sha256": "71ab601a333971330ff62c6a2e73b0be83de041813f3a3d3ed0d4e3a6491c61a",
+      "excerpt": "## Verification and next slice\n\nRun focused portable checks through the maintained Windows wrapper or equivalent\nLinux environment:\n\n```powershell\npwsh ./script",
+      "review_families": [
+        "audit",
+        "native-remote-workspaces"
       ]
     },
     {
@@ -126811,8 +127085,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "3fd0a230d1bce1955fec4a32a9c1a9d730545f3a891203fd6a41c5c5cfe517fa",
-          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted."
         }
       ],
       "tests": [
@@ -126888,9 +127162,11 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "3fd0a230d1bce1955fec4a32a9c1a9d730545f3a891203fd6a41c5c5cfe517fa",
-          "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
-          "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-M follow-on: Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-Q follow-on: Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-S follow-on: Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. U04-T follow-on: Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-A follow-on: Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
+          "symbol_sha256": "a20eac36b625aafa233ed31cb2e9be23acf7d99c65cef07e687e0d9079ffb190",
+          "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-M follow-on: Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-Q follow-on: Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-S follow-on: Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. U04-T follow-on: Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-A follow-on: Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted.",
+          "historical_symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
+          "symbol_sha256_basis": "UTF-8 AST source segment at the reviewed current file"
         },
         {
           "path": "src/potbot/controller/task_execution.py",
@@ -128961,7 +129237,7 @@
         {
           "path": "src/potbot/tools/inventory.py",
           "symbol": "build_inventory",
-          "sha256": "04a22c379d141a7a068cc043d6af66b03aa18da5cf5eb51887e10b3c1fe886c0",
+          "sha256": "2d64605789880687a105afceb491e2bdea509ec7923e7259137deec50b145792",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
         },
         {
@@ -129305,7 +129581,7 @@
         {
           "path": "tests/unit/test_tool_inventory.py",
           "symbol": "test_every_committed_python_path_has_an_explicit_source_inventory_owner",
-          "sha256": "2d9135811e3685fe8e46cb9bf1769b4bbb4f861325ae2f89dd168c1f935c41f1",
+          "sha256": "d38af9618106ef26e2dbe776dc9886b090d81d2085d0ca1ad5529f2cd5b5be8f",
           "basis": "Committed Python path namespace with inert synthetic bodies; all existing root modules have explicit integration owners and unknown root modules still fail closed. This is not source-body or runtime qualification."
         }
       ],
@@ -129649,9 +129925,11 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "3fd0a230d1bce1955fec4a32a9c1a9d730545f3a891203fd6a41c5c5cfe517fa",
-          "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
-          "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
+          "symbol_sha256": "a20eac36b625aafa233ed31cb2e9be23acf7d99c65cef07e687e0d9079ffb190",
+          "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted.",
+          "historical_symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
+          "symbol_sha256_basis": "UTF-8 AST source segment at the reviewed current file"
         }
       ],
       "tests": [
@@ -129883,7 +130161,7 @@
           "basis": "source inspection; test definition is not an individual executed result"
         }
       ],
-      "assessment": "The operator records observed configuration states and protects the reverse history. A watched directory move or unmount fences new launches and preserves the previous head. T05-A follow-on: exposes safe configured provider descriptors, source policy, disclosure permission, ceilings and optional pinned PDF profile without returning credentials. T05-B/R7.1 follow-on: Supports any configured subset of nine providers, optional OpenAlex/Semantic Scholar fixed-header credentials and committed npm dependency installation.",
+      "assessment": "The operator records observed configuration states and protects the reverse history. A watched directory move or unmount fences new launches and preserves the previous head. T05-A follow-on: exposes safe configured provider descriptors, source policy, disclosure permission, ceilings and optional pinned PDF profile without returning credentials. T05-B/R7.1 follow-on: Supports any configured subset of nine providers, optional OpenAlex/Semantic Scholar fixed-header credentials and committed npm dependency installation. CFG01 follow-on describes all ten current computational defaults and seven preference keys; source references remain counts and live configuration-layer writes are unavailable.",
       "support_scope": "Linux inotify regression coverage for root and nested path replacement and existing inverse-record and operator lifetime tests. Qualified sandbox and rollback evidence remains separate. T05-A follow-on: Credential installation and native profile configuration remain explicit existing operator responsibilities; browser inputs cannot add endpoints or replace policy authority. T05-B/R7.1 follow-on: Browser policy descriptors cannot replace endpoint, credential or admission authority. Installed provider/account and aggregate rate qualification remain operator responsibilities.",
       "remaining": [
         "Qualify watcher loss/overflow, rollback, restart ownership, protected /etc/ai-past and indeterminate lease retention"
@@ -131076,8 +131354,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "3fd0a230d1bce1955fec4a32a9c1a9d730545f3a891203fd6a41c5c5cfe517fa",
-          "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
+          "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted."
         },
         {
           "path": "src/potbot/controller/registry_sources.py",
@@ -131627,8 +131905,8 @@
           "basis": "Effectful CLI entry points require deliberate confirmation before constructing runtime owners."
         }
       ],
-      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences. U04-A adds a complete /skills acquisition/review/install/activation/resource/update/rollback/disable/revoke workshop with scoped durable mutation recovery. U04-X follow-on: adds the complete /setup/tools source/review/build/test/promotion/repin/postflight/rollback/recovery workflow, preserving legacy tested approvals and exact scoped uncertain-request journals. U04-D follow-on: adds /discover search, source/publisher decisions, exact review and bounded host-measurement monitoring with stable scoped uncertain-request recovery. Handoff links select the exact existing package or tool operation and do not automatically install, activate or execute it. U04-M follow-on: adds /discover/mcp for current binding review, tools/resources/templates/prompts inspection, exact reference copy, explicit queued reconciliation, monitoring and enable/disable/revoke/cancel decisions with scoped uncertain-response recovery. U04-Q follow-on: adds /discover/mcp/qualification for scoped suite/case review, exact request/control/cancel decisions, bounded GET monitoring, explicit identical-request recovery and current versus historical task report inspection. U04-S follow-on: adds /discover/tasks for explicit context review, typed constraints, lexical/pending hybrid requests, explained shortlists/exclusions, progressive inspection and exact reviewed selections/cancellation. U04-T follow-on: adds a selection-bound /tools workbench with explicit check then launch, exact job resume, independent verification, fixed BFF routes and stable-key recovery. T05-A follow-on: adds /research from task/need creation through reviewed action and disclosure admission, exact run resume, source inspection, citation verification and historical comparison readback. T05-B/R7.1 follow-on: Displays all specialist source metadata and lineage under the existing research workflow, accepts the actual PostgreSQL/HTTP fixture, and retains the safe reasoning graph projection for interrupted runs.",
-      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance. U04-A binds the browser to fixed authenticated BFF routes, exact plans/revisions and the server-only setup capability; TypeScript/Node/build checks remain distinct from rendered-browser qualification. U04-X follow-on: Fixed authenticated BFF routes accept recipe IDs, exact commits and digest/revision decisions; host commands, private claims and setup secrets are not browser authority. Actual HTTP/PostgreSQL fixture projections and Node/type/build checks remain separate from rendered-browser acceptance. U04-D follow-on: Fixed authenticated BFF routes enforce byte/query limits, current workspace/principal projection and server-only setup capability. Actual HTTP fixture projections, browser state helpers and Node/type/build checks remain separate from rendered-browser acceptance. U04-M follow-on: Actual HTTP/PostgreSQL exported envelopes feed strict frontend projections. Browser mutations accept reviewed identities and digests only; private native profiles, setup capability and worker claims stay server-side. Node/type/build evidence is separate from rendered installed-host acceptance. U04-Q follow-on: Actual HTTP/PostgreSQL envelopes feed strict DTOs, fixed BFF routes and exact suite/attempt/report joins. Browser inputs cannot execute native work, upload reports, supply private cases or dispatch receipt recovery. Node/type/build gates do not claim a rendered installed-host qualification. U04-S follow-on: Strict actual HTTP/PostgreSQL projections, fixed BFF routes, scoped exact-command recovery and bounded GET monitoring expose no browser inference or execution. Production builds and unit checks do not establish rendered installed-host qualification. U04-T follow-on: Actual HTTP/PostgreSQL export consumption, unit checks, TypeScript and production build establish the implemented contract; rendered installed-host acceptance and live provider qualification remain separate. T05-A follow-on: Fixed BFF routes, scope fencing, exact recovery, actual HTTP fixture consumption, TypeScript and production build establish the implemented contract; rendered-host and live-provider qualification remain separate. T05-B/R7.1 follow-on: Strict projectors preserve complete original provider observations and native reservation parity. Raw steering context and principal/dispatch details do not pass through the graph projection. Source/type/build checks remain distinct from rendered installed-host qualification.",
+      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences. U04-A adds a complete /skills acquisition/review/install/activation/resource/update/rollback/disable/revoke workshop with scoped durable mutation recovery. U04-X follow-on: adds the complete /setup/tools source/review/build/test/promotion/repin/postflight/rollback/recovery workflow, preserving legacy tested approvals and exact scoped uncertain-request journals. U04-D follow-on: adds /discover search, source/publisher decisions, exact review and bounded host-measurement monitoring with stable scoped uncertain-request recovery. Handoff links select the exact existing package or tool operation and do not automatically install, activate or execute it. U04-M follow-on: adds /discover/mcp for current binding review, tools/resources/templates/prompts inspection, exact reference copy, explicit queued reconciliation, monitoring and enable/disable/revoke/cancel decisions with scoped uncertain-response recovery. U04-Q follow-on: adds /discover/mcp/qualification for scoped suite/case review, exact request/control/cancel decisions, bounded GET monitoring, explicit identical-request recovery and current versus historical task report inspection. U04-S follow-on: adds /discover/tasks for explicit context review, typed constraints, lexical/pending hybrid requests, explained shortlists/exclusions, progressive inspection and exact reviewed selections/cancellation. U04-T follow-on: adds a selection-bound /tools workbench with explicit check then launch, exact job resume, independent verification, fixed BFF routes and stable-key recovery. T05-A follow-on: adds /research from task/need creation through reviewed action and disclosure admission, exact run resume, source inspection, citation verification and historical comparison readback. T05-B/R7.1 follow-on: Displays all specialist source metadata and lineage under the existing research workflow, accepts the actual PostgreSQL/HTTP fixture, and retains the safe reasoning graph projection for interrupted runs. CFG01 follow-on adds /settings, seven revisioned preference controls, workspace-scoped inventories and swarm request review while retaining the active Home context. CFG02 adds native Qt settings, preferences, model/tool inventories and swarm grant review directly over existing APIs, independent of Next.js.",
+      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance. U04-A binds the browser to fixed authenticated BFF routes, exact plans/revisions and the server-only setup capability; TypeScript/Node/build checks remain distinct from rendered-browser qualification. U04-X follow-on: Fixed authenticated BFF routes accept recipe IDs, exact commits and digest/revision decisions; host commands, private claims and setup secrets are not browser authority. Actual HTTP/PostgreSQL fixture projections and Node/type/build checks remain separate from rendered-browser acceptance. U04-D follow-on: Fixed authenticated BFF routes enforce byte/query limits, current workspace/principal projection and server-only setup capability. Actual HTTP fixture projections, browser state helpers and Node/type/build checks remain separate from rendered-browser acceptance. U04-M follow-on: Actual HTTP/PostgreSQL exported envelopes feed strict frontend projections. Browser mutations accept reviewed identities and digests only; private native profiles, setup capability and worker claims stay server-side. Node/type/build evidence is separate from rendered installed-host acceptance. U04-Q follow-on: Actual HTTP/PostgreSQL envelopes feed strict DTOs, fixed BFF routes and exact suite/attempt/report joins. Browser inputs cannot execute native work, upload reports, supply private cases or dispatch receipt recovery. Node/type/build gates do not claim a rendered installed-host qualification. U04-S follow-on: Strict actual HTTP/PostgreSQL projections, fixed BFF routes, scoped exact-command recovery and bounded GET monitoring expose no browser inference or execution. Production builds and unit checks do not establish rendered installed-host qualification. U04-T follow-on: Actual HTTP/PostgreSQL export consumption, unit checks, TypeScript and production build establish the implemented contract; rendered installed-host acceptance and live provider qualification remain separate. T05-A follow-on: Fixed BFF routes, scope fencing, exact recovery, actual HTTP fixture consumption, TypeScript and production build establish the implemented contract; rendered-host and live-provider qualification remain separate. T05-B/R7.1 follow-on: Strict projectors preserve complete original provider observations and native reservation parity. Raw steering context and principal/dispatch details do not pass through the graph projection. Source/type/build checks remain distinct from rendered installed-host qualification. CFG01 projections and the production build do not establish rendered desktop/mobile or screen-reader acceptance. Native offscreen widget interaction and recovery contracts remain distinct from manual accessibility, installed-host and remote-runtime qualification.",
       "remaining": [
         "Connect job-backed inference, principal-aware workspace discovery and resumable terminal/graph APIs",
         "Preserve exact orb, reduced-motion/accessibility and metric timing/denominator contracts"
@@ -132148,8 +132426,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "3fd0a230d1bce1955fec4a32a9c1a9d730545f3a891203fd6a41c5c5cfe517fa",
-          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted."
         },
         {
           "path": "src/potbot/service.py",
@@ -132529,6 +132807,74 @@
         "Retain independent signed-image/native-runtime and specialist qualification reports."
       ],
       "next_action": "Use the fresh source-bound report and inspect its explicit qualification_scope; run installed-host gates independently."
+    },
+    {
+      "id": "native-remote-workspaces",
+      "owners": [
+        "U01",
+        "U03",
+        "U06",
+        "U07",
+        "U13",
+        "U16"
+      ],
+      "status": "implemented_unqualified",
+      "assessment": "RW01 and RW02 planning foundation: immutable native environments/deployment registrations, operator-only RLS records, direct expiring/revocable grants, serialized cycle rejection and deterministic review-only host plans. Existing sandbox qualification remains required for its existing backend. CFG01 adds a bounded swarm read model, an owner/setup-gated immutable revocation intent and an explicit native administrative apply command.",
+      "support_scope": "56 Linux contract/CLI cases and 24 real disposable PostgreSQL cases (six new remote-workspace cases) passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54 in run 45459401549. This is source/isolated-database acceptance, not remote host, transport, inference or GUI qualification.",
+      "remaining": [
+        "Strict pinned SSH inspection and privileged apply/reconcile",
+        "Released native Syn host role/custody and directed remote transport",
+        "Dispatch/application records and live authenticated write adapters",
+        "Remote tool/model, control UI, Xpra and physically distinct two-machine acceptance",
+        "Rendered swarm acceptance, live telemetry and native node lifecycle controls"
+      ],
+      "next_action": "Continue RW01 records/adapters and RW02 authenticated SSH inspection; keep apply and remote capability readiness unavailable until the actual postconditions pass.",
+      "code": [
+        {
+          "path": "src/potbot/domain/remote_workspaces.py",
+          "symbol": "WorkspaceControlGrant",
+          "sha256": "0fdbbf3068c5febae5e940ad0c000db23dd0accd0583ae29114a97bcc9d5935e",
+          "basis": "Pure exact-source/principal/target/revision/expiry/revocation validation; caller copies grant no authority."
+        },
+        {
+          "path": "src/potbot/controller/remote_workspaces.py",
+          "symbol": "install_control_grant",
+          "sha256": "9bff51001ea249b22a70975cc95a34f817c8fb098cfef17d624d9d38fb83a309",
+          "basis": "Operator-installed direct grant revisions serialize graph reads/writes using READ COMMITTED and a schema-scoped advisory transaction lock."
+        },
+        {
+          "path": "src/potbot/controller/remote_workspaces.py",
+          "symbol": "record_provisioning_plan",
+          "sha256": "9bff51001ea249b22a70975cc95a34f817c8fb098cfef17d624d9d38fb83a309",
+          "basis": "Allowlisted reviewed manifest bytes and original idempotency identity; only planned attempts may be recorded."
+        },
+        {
+          "path": "src/potbot/tools/remote_preflight.py",
+          "symbol": "provisioning_manifest",
+          "sha256": "33ca477bdee65864b8ee8730e477a07bd7d2ff62d6f8e93a5be0da9447262cab",
+          "basis": "Deterministic base_os plan from explicitly supplied facts; all remote capability readiness remains false."
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/unit/test_remote_workspaces.py",
+          "symbol": "test_grant_requires_exact_current_direct_authority",
+          "sha256": "c4fbc2cdeafa92e11cd3be89c8da929c0121b082c15a0e4cd4851dd446fc363e",
+          "basis": "Reject forged, stale, expired, revoked and transitive authority."
+        },
+        {
+          "path": "tests/integration/test_remote_workspaces.py",
+          "symbol": "test_competing_cross_workspace_grants_cannot_commit_a_cycle",
+          "sha256": "c261350d4e78885decac1507fe92c9293f6e7c989f765dcb71b80797c5e38010",
+          "basis": "Actual concurrent PostgreSQL transactions; one inverse grant commits and the other is rejected."
+        },
+        {
+          "path": "tests/integration/test_remote_workspaces.py",
+          "symbol": "test_reviewed_manifest_replay_never_creates_another_attempt",
+          "sha256": "c261350d4e78885decac1507fe92c9293f6e7c989f765dcb71b80797c5e38010",
+          "basis": "Actual PostgreSQL original-attempt replay and changed-manifest conflict."
+        }
+      ]
     }
   ]
 }

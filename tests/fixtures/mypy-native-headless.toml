@@ -1,0 +1,14 @@
+# Reproduce the optional-desktop typing context even when Qt is installed.
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["psycopg", "psycopg.*", "syn_host_custody", "syn_host_custody.*", "dbus_next", "dbus_next.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["PySide6", "PySide6.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
+follow_imports_for_stubs = true

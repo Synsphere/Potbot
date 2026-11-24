@@ -107,6 +107,10 @@ export function MenuPanel() {
     </div>)}
     {isLive && <div className="menu-section">
       <h2>OPERATOR SETUP</h2>
+      <a className="menu-item" href={`/settings?workspace=${encodeURIComponent(workspace.id)}`}><span>All settings</span><span aria-hidden="true">↗</span></a>
+      <a className="menu-item" href={`/settings/swarm?workspace=${encodeURIComponent(workspace.id)}`}><span>Workspace swarm</span><span aria-hidden="true">↗</span></a>
+      <a className="menu-item" href={`/settings/models?workspace=${encodeURIComponent(workspace.id)}`}><span>Local model inventory</span><span aria-hidden="true">↗</span></a>
+      <a className="menu-item" href={`/settings/tools?workspace=${encodeURIComponent(workspace.id)}`}><span>Local tool inventory</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href={`/research?workspace=${encodeURIComponent(workspace.id)}`}><span>Research and cited evidence</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href={`/discover/tasks?workspace=${encodeURIComponent(workspace.id)}`}><span>Task-aware capability shortlist</span><span aria-hidden="true">↗</span></a>
       <a className="menu-item" href={`/discover?workspace=${encodeURIComponent(workspace.id)}`}><span>Capability discovery and source review</span><span aria-hidden="true">↗</span></a>
@@ -222,6 +226,7 @@ export function PreferencesPanel() {
   const { workspace, compact, setCompactPreference, graphView, updateGraphView, openPanel, demo, activityStatus, modelStatus, remotePreferences, preferencesStatus, refreshPreferences, updateUserPreferences } = useWorkspace();
   return <section className="settings-panel panel-scroll">
     <span className="eyebrow">USER PREFERENCES</span><h2>Workspace appearance</h2>
+    {!demo && <p><a href={`/settings/appearance?workspace=${encodeURIComponent(workspace.id)}`}>Open all settings ↗</a></p>}
     <div className="settings-row"><div><strong>Current workspace</strong><small>{workspace.name}</small></div><span className="status-chip">ACTIVE</span></div>
     <label className="settings-row"><div><strong>Compact information density</strong>
       <small>Saved locally and remains active when preferences are closed.</small></div>
@@ -315,6 +320,7 @@ export function InstallationsPanel() {
   }
   return <section className="settings-panel panel-scroll" aria-label="Model catalogue and installations">
     <span className="eyebrow">USER PREFERENCES / MODELS</span><h2>Model catalogue</h2>
+    {!demo && <p><a href={`/settings/models?workspace=${encodeURIComponent(workspace.id)}`}>Inspect local files and deployment records ↗</a></p>}
     <p role="status">{modelStatus}</p>
     {!demo && <p><a href={`/tools?workspace=${encodeURIComponent(workspace.id)}`}>Inspect operations, readiness and recent accounting ↗</a></p>}
     <button type="button" disabled={demo} onClick={() => refreshModels()}>Refresh catalogue</button>
