@@ -36488,12 +36488,12 @@
     },
     {
       "path": ".github/workflows/browser-rendered-acceptance.yml",
-      "sha256": "a21f1d53811f19b826c0c567db5b820dc98bbaa7524f9889bb6862c5ef9f02e1",
-      "bytes": 5778,
+      "sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
+      "bytes": 5983,
       "kind": "narrative_text",
-      "text_sha256": "a21f1d53811f19b826c0c567db5b820dc98bbaa7524f9889bb6862c5ef9f02e1",
-      "characters": 5778,
-      "lines": 133,
+      "text_sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
+      "characters": 5983,
+      "lines": 136,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36927,7 +36927,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "2d2d4f8145a3b4407797cf2168eff3361f26a691d213606ff21c46d08032df57",
+  "review_sha256": "9d80345d3cde5be3209b94f732efb44c159c2697d524472c33f00d178ab29b22",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
