@@ -65,3 +65,26 @@ Unit tests exercise receipt rejection and actual isolated child-pytest processes
 including an early stop that returns exit code zero. JSON receipts, sanitized
 logs and JUnit reports supply the evidence surface. This configuration change
 has no native UI to capture; a screenshot or video would add no execution proof.
+
+
+## Follow-up failures exposed by the complete lane
+
+The first actual partition run reached its terminal results in 742 seconds:
+195 tests passed and the tool-inventory integration case failed. Its full Git
+tree contained 34,381,932 bytes, exceeding the unchanged 32 MiB repository
+snapshot bound. That fixture now explicitly excludes only the generated
+`docs/implementation/roadmap-inventory.json` projection through the existing
+immutable snapshot profile. All Python tool sources and the original Cog,
+PostgreSQL, receipt and API assertions remain. The profile and excluded path
+are checked; production capture still refuses oversized snapshots.
+
+Separately, headed first-frame acceptance sometimes timed out after a document
+reported visible/focused. The synthetic test harness now additionally requires
+its uniquely named native X11 window to be mapped and viewable, using bounded
+read-only `xwininfo` queries. The existing pinned browser and real-pixel checks
+then run unchanged. This readiness condition is a tested diagnostic/repair;
+actual rendered CI must establish whether it resolves the cold-start failure.
+It neither captures a warm-up image nor changes focus, the worker's six-second
+deadline, capture ownership, cancellation fence, fallback rules or command set.
+The existing diagram describes partition orchestration; native readiness is
+retained as JSON/JUnit state rather than a screenshot of an unverified outcome.
