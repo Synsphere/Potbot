@@ -4931,7 +4931,7 @@
         {
           "path": "scripts/postgres_shard_plugin.py",
           "symbol": "_ShardRun",
-          "sha256": "3ca5f895cd68fe9326d61e0e21c742a08b44e070fc4df5388d5090b836200d02",
+          "sha256": "ca81c8f1588bf819041a4427fd06a91bbf0b895203605fb44fe19f133bde6baa",
           "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
         }
       ],
