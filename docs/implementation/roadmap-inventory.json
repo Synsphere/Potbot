@@ -1019,12 +1019,12 @@
     },
     {
       "path": "docs/implementation/ci-postgres-partitions.md",
-      "sha256": "3b130ff4773ab93e21bfecb1ca26dbe080ae516db0c1b01d3ade15161cb76d98",
-      "bytes": 7635,
+      "sha256": "1988f08f681bc657fb5f8b10115178bbb868445f25f35e14bc1514eb0a338ebc",
+      "bytes": 9159,
       "kind": "narrative_text",
-      "text_sha256": "3b130ff4773ab93e21bfecb1ca26dbe080ae516db0c1b01d3ade15161cb76d98",
-      "characters": 7635,
-      "lines": 131,
+      "text_sha256": "1988f08f681bc657fb5f8b10115178bbb868445f25f35e14bc1514eb0a338ebc",
+      "characters": 9159,
+      "lines": 153,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36528,11 +36528,11 @@
     },
     {
       "path": ".github/workflows/browser-rendered-acceptance.yml",
-      "sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
-      "bytes": 5983,
+      "sha256": "25032f0485e5cedf0b34e2fbfcf21786a676662e0e63ecf8b6ad91ebde0c3af8",
+      "bytes": 6007,
       "kind": "narrative_text",
-      "text_sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
-      "characters": 5983,
+      "text_sha256": "25032f0485e5cedf0b34e2fbfcf21786a676662e0e63ecf8b6ad91ebde0c3af8",
+      "characters": 6007,
       "lines": 136,
       "interpretation": "source_content_not_runtime_evidence"
     },
@@ -36967,7 +36967,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "997c57d5bc5c6ea1540f2af35b88b3ba1d1c8caaf7129b5b8fff5be923cf2b01",
+  "review_sha256": "a4116d4360b575d308274875af3b9d71456da67861376d2c9a82055c9e8574f3",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -116043,8 +116043,8 @@
     },
     {
       "source": "docs/implementation/ci-postgres-partitions.md",
-      "locator": "line:70-131",
-      "sha256": "a80c351e051c3eee611f0145675ac333b891e2a596672194f6f4496cef766287",
+      "locator": "line:70-153",
+      "sha256": "ed25ec684dac2c28962e951a59944eee475937d7aed251500561bc89de4bba18",
       "excerpt": "## Follow-up failures exposed by the complete lane\n\nThe first actual partition run reached its terminal results in 742 seconds:\n195 tests passed and the tool-in",
       "review_families": [
         "audit",
@@ -129964,7 +129964,7 @@
         {
           "path": "src/potbot/tools/xpra_browser_worker.py",
           "symbol": "BrowserWorker",
-          "sha256": "4f0a1d611fb256b513685bf7021ddf3d8b960d146705017b31c15f8ddb0630fe",
+          "sha256": "9807c230ce3009ceb4da64d92170ac49eeae8a377a8554061f7942458d9f9725",
           "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
@@ -129996,7 +129996,7 @@
         {
           "path": "tests/unit/test_browser_capture_recovery.py",
           "symbol": "test_capture_timeout_fences_subsequent_requests",
-          "sha256": "47d31a0487a6b6d5df1c891cf6614253d83842b116f449263439fd951e6477ec",
+          "sha256": "70d27849644faa1b8f525a80a3367037bff17d99ad305d64df30bc6babf55d17",
           "basis": "New failure regression also checked against the original worker; rendered/native qualification remains open."
         }
       ],
