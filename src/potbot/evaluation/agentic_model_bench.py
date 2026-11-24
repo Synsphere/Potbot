@@ -86,7 +86,7 @@ _ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:/@-]*\Z")
 class ModelTarget:
     id: str
     model: str
-    backend: Literal["hosted", "loopback_openai"]
+    backend: Literal["hosted", "loopback_openai", "deterministic"]
     roles: tuple[str, ...]
     revision: str
     provider: str | None = None
@@ -117,6 +117,23 @@ class ModelTarget:
                 or self.base_url is not None
             ):
                 raise InvalidInputError("hosted benchmark requires a native provider identity")
+        elif self.backend == "deterministic":
+            from potbot.evaluation.agentic_reference import (
+                REFERENCE_MODEL,
+                REFERENCE_ROLES,
+                reference_identity,
+            )
+
+            if (
+                self.model != REFERENCE_MODEL
+                or self.revision != reference_identity()
+                or self.provider is not None
+                or self.base_url is not None
+                or set(self.roles) - set(REFERENCE_ROLES)
+            ):
+                raise InvalidInputError(
+                    "deterministic target requires the exact reference source pin"
+                )
         elif self.backend == "loopback_openai":
             if self.provider is not None or not self.base_url:
                 raise InvalidInputError("loopback model requires an explicitly configured base URL")
@@ -558,6 +575,7 @@ def summarise(observations: Iterable[Observation], *, minimum_samples: int = 12)
             and len(objective_cases) >= min(4, minimum_samples)
             and len({(r.case_id, r.trial) for r in records}) == len(records)
             and len({r.revision for r in records}) == 1
+            and all(r.backend != "deterministic" for r in records)
         )
         results.append(
             {

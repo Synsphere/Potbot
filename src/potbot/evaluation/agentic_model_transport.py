@@ -77,6 +77,10 @@ class BenchmarkTransport:
     def request(self, target: ModelTarget, prompt: CompiledPrompt) -> Generation:
         from potbot.evaluation.agentic_model_bench import Generation
 
+        if target.backend == "deterministic":
+            from potbot.evaluation.agentic_reference import generate_reference
+
+            return generate_reference(target, prompt)
         if target.backend == "hosted":
             if self.policy is None or self.credentials is None:
                 raise ScopeDeniedError("hosted benchmark requires an explicit policy and vault")

@@ -68,8 +68,11 @@ Offline tests exercise output tampering, missing and uncertain results, repeated
 trials, input leakage, matrix changes and CLI no-network/no-overwrite behavior.
 Synthetic observations test the protocol; they are not model benchmark results.
 
-Remaining R7.3 work includes independently reviewed task datasets across the
-atomic taxonomy; deterministic-tool baselines; real small/strong model runs;
+[R7.3-B](r7-3-b-reference-baselines.md) adds source-pinned pure reference
+algorithms and an integrity audit for public synthetic fixtures. Independent
+gold review and protected holdouts remain open. Remaining R7.3 work includes
+reviewed task datasets across the atomic taxonomy; actual tool/worker baselines;
+real small/strong model runs;
 exact host, backend, quantization and licence records; measured RAM/VRAM; and
 independent reviewer calibration with A/B inversion. R7.4 promotion remains a
 separate controller-owned gate. Existing Syn, PostgreSQL and worker authorities

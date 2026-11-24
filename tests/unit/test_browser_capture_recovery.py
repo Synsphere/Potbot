@@ -18,7 +18,7 @@ JPEG = b"\xff\xd8" + b"synthetic-evidence" * 20 + b"\xff\xd9"
 PARAMS = {
     "format": "jpeg",
     "quality": 48,
-    "fromSurface": True,
+    "fromSurface": False,
     "captureBeyondViewport": False,
 }
 
@@ -39,7 +39,7 @@ def sample(worker, *, image=True):
     return asyncio.run(worker.execute({"op": "sample", "image": image}))
 
 
-def test_private_capture_is_one_bounded_surface_request_and_exact_bytes():
+def test_private_capture_is_one_bounded_view_request_and_exact_bytes():
     worker = browser({"data": base64.b64encode(JPEG).decode("ascii")})
     value = sample(worker)
     frame = value["frame"]
@@ -259,7 +259,7 @@ def test_real_timeout_is_one_shared_budget_and_cancels_pending_capture(monkeypat
     native_error = type("Error", (Exception,), {"__module__": "playwright._impl._errors"})
 
     async def stalled(method, params):
-        if fallback and params["fromSurface"]:
+        if fallback and not params["fromSurface"]:
             raise native_error(
                 "Protocol error (Page.captureScreenshot): Unable to capture screenshot"
             )
@@ -277,14 +277,14 @@ def test_real_timeout_is_one_shared_budget_and_cancels_pending_capture(monkeypat
     with pytest.raises(TimeoutError):
         sample(worker)
     assert budgets == [6.0]
-    assert cancelled == [not fallback]
+    assert cancelled == [fallback]
     assert worker.cdp.send.await_count == 1 + int(fallback)
     with pytest.raises(RuntimeError, match="capture is unresolved"):
         sample(worker)
     assert worker.cdp.send.await_count == 1 + int(fallback)
 
 
-def test_invalid_view_fallback_is_rejected_without_third_attempt():
+def test_invalid_surface_fallback_is_rejected_without_third_attempt():
     worker = browser()
     native_error = type("Error", (Exception,), {"__module__": "playwright._impl._errors"})
     failure = native_error("Protocol error (Page.captureScreenshot): Unable to capture screenshot")
@@ -305,7 +305,7 @@ def test_native_capture_unavailable_uses_the_other_private_capture_path(engine):
     worker.cdp.send.side_effect = [failure, {"data": base64.b64encode(JPEG).decode()}]
     assert sample(worker)["frame"]["sha256"] == hashlib.sha256(JPEG).hexdigest()
     assert worker.cdp.send.await_count == 2
-    assert worker.cdp.send.await_args_list[1].args[1]["fromSurface"] is False
+    assert worker.cdp.send.await_args_list[1].args[1]["fromSurface"] is True
 
 
 def test_non_engine_error_with_similar_text_is_not_retried():

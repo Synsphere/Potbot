@@ -1019,12 +1019,12 @@
     },
     {
       "path": "docs/implementation/ci-postgres-partitions.md",
-      "sha256": "3b130ff4773ab93e21bfecb1ca26dbe080ae516db0c1b01d3ade15161cb76d98",
-      "bytes": 7635,
+      "sha256": "1988f08f681bc657fb5f8b10115178bbb868445f25f35e14bc1514eb0a338ebc",
+      "bytes": 9159,
       "kind": "narrative_text",
-      "text_sha256": "3b130ff4773ab93e21bfecb1ca26dbe080ae516db0c1b01d3ade15161cb76d98",
-      "characters": 7635,
-      "lines": 131,
+      "text_sha256": "1988f08f681bc657fb5f8b10115178bbb868445f25f35e14bc1514eb0a338ebc",
+      "characters": 9159,
+      "lines": 153,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1335,12 +1335,22 @@
     },
     {
       "path": "docs/implementation/r7-3-a-paired-atomic-benchmarks.md",
-      "sha256": "8ac5f648f1ae1f4f7e08e2afd943aa87b4d8301b85903ac0e8d6760f98c4b14e",
-      "bytes": 4572,
+      "sha256": "84665b937695d014edc414150128a93b47802eef60a75559034b00214d0d5aeb",
+      "bytes": 4757,
       "kind": "narrative_text",
-      "text_sha256": "8ac5f648f1ae1f4f7e08e2afd943aa87b4d8301b85903ac0e8d6760f98c4b14e",
-      "characters": 4572,
-      "lines": 81,
+      "text_sha256": "84665b937695d014edc414150128a93b47802eef60a75559034b00214d0d5aeb",
+      "characters": 4757,
+      "lines": 84,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-3-b-reference-baselines.md",
+      "sha256": "bff0cbecfeb9fd5fbf02db6973ab6258992329002ae8213dbe4bf9646750c532",
+      "bytes": 5840,
+      "kind": "narrative_text",
+      "text_sha256": "bff0cbecfeb9fd5fbf02db6973ab6258992329002ae8213dbe4bf9646750c532",
+      "characters": 5840,
+      "lines": 104,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36418,12 +36428,12 @@
     },
     {
       "path": ".github/workflows/agentic-model-benchmark.yml",
-      "sha256": "d7125f28fa125306cd9fc3b30d3da59b6eec89422c44b444bc8d4c5561a63b91",
-      "bytes": 2320,
+      "sha256": "068ba84fa2bf92f2c712a14ade7b5c11ffa7a8c3fcf86f6e9612be2c42572218",
+      "bytes": 3372,
       "kind": "narrative_text",
-      "text_sha256": "d7125f28fa125306cd9fc3b30d3da59b6eec89422c44b444bc8d4c5561a63b91",
-      "characters": 2320,
-      "lines": 56,
+      "text_sha256": "068ba84fa2bf92f2c712a14ade7b5c11ffa7a8c3fcf86f6e9612be2c42572218",
+      "characters": 3372,
+      "lines": 71,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36468,11 +36478,11 @@
     },
     {
       "path": ".github/workflows/browser-rendered-acceptance.yml",
-      "sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
-      "bytes": 5983,
+      "sha256": "25032f0485e5cedf0b34e2fbfcf21786a676662e0e63ecf8b6ad91ebde0c3af8",
+      "bytes": 6007,
       "kind": "narrative_text",
-      "text_sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
-      "characters": 5983,
+      "text_sha256": "25032f0485e5cedf0b34e2fbfcf21786a676662e0e63ecf8b6ad91ebde0c3af8",
+      "characters": 6007,
       "lines": 136,
       "interpretation": "source_content_not_runtime_evidence"
     },
@@ -36907,7 +36917,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "9ad4305e8205bc98a95e2855bd0bc3a44ab4fa21341c4b32c71264e8a4683184",
+  "review_sha256": "6ebcaaa7c39a080785a67d221a25838351b24b4ed64465f48b6e29a0ee97604b",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -115983,8 +115993,8 @@
     },
     {
       "source": "docs/implementation/ci-postgres-partitions.md",
-      "locator": "line:70-131",
-      "sha256": "a80c351e051c3eee611f0145675ac333b891e2a596672194f6f4496cef766287",
+      "locator": "line:70-153",
+      "sha256": "ed25ec684dac2c28962e951a59944eee475937d7aed251500561bc89de4bba18",
       "excerpt": "## Follow-up failures exposed by the complete lane\n\nThe first actual partition run reached its terminal results in 742 seconds:\n195 tests passed and the tool-in",
       "review_families": [
         "audit",
@@ -117033,9 +117043,42 @@
     },
     {
       "source": "docs/implementation/r7-3-a-paired-atomic-benchmarks.md",
-      "locator": "line:65-81",
-      "sha256": "4268cc7c03c3f244a09d3b8bd439f1292b9a421df4cd9a64a4fd3e50f420ef49",
+      "locator": "line:65-84",
+      "sha256": "57f2f4278b38f45f34475a6a5e8e3c3eeaa2d021aee1c6c3e87eb76358463400",
       "excerpt": "## Qualification and next work\n\nOffline tests exercise output tampering, missing and uncertain results, repeated\ntrials, input leakage, matrix changes and CLI n",
+      "review_families": [
+        "evaluation",
+        "reasoning",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-3-b-reference-baselines.md",
+      "locator": "line:1-25",
+      "sha256": "182813630de8b03a182cb0f226c0f4301f027d7cc1350685deea4920f8f12b32",
+      "excerpt": "# R7.3-B: reproducible atomic reference baselines\n\nImplemented on 24 November 2026. This extends the existing opt-in benchmark\nrunner and [paired analysis](r7-3",
+      "review_families": [
+        "evaluation",
+        "reasoning",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-3-b-reference-baselines.md",
+      "locator": "line:26-70",
+      "sha256": "a588b6dadd567cdd51567cb00fae9661c0998bad73fba8e2d6f79c2d9b98bc5e",
+      "excerpt": "## Run the offline reference\n\n```sh\npython scripts/benchmark_agentic_models.py pin-reference \\\n  --output private/reference-models.json\npython scripts/benchmark",
+      "review_families": [
+        "evaluation",
+        "reasoning",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-3-b-reference-baselines.md",
+      "locator": "line:71-104",
+      "sha256": "239935718097381ef5ebcc8560633e78645e73121c59fa9ee737a6251182564c",
+      "excerpt": "## Dataset integrity and review boundary\n\nThe source-pinned card labels the supplied cases as **public synthetic fixtures**\nwith **independent review pending**.",
       "review_families": [
         "evaluation",
         "reasoning",
@@ -129688,7 +129731,7 @@
         {
           "path": "src/potbot/tools/xpra_browser_worker.py",
           "symbol": "BrowserWorker",
-          "sha256": "4f0a1d611fb256b513685bf7021ddf3d8b960d146705017b31c15f8ddb0630fe",
+          "sha256": "9807c230ce3009ceb4da64d92170ac49eeae8a377a8554061f7942458d9f9725",
           "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
@@ -129720,7 +129763,7 @@
         {
           "path": "tests/unit/test_browser_capture_recovery.py",
           "symbol": "test_capture_timeout_fences_subsequent_requests",
-          "sha256": "47d31a0487a6b6d5df1c891cf6614253d83842b116f449263439fd951e6477ec",
+          "sha256": "70d27849644faa1b8f525a80a3367037bff17d99ad305d64df30bc6babf55d17",
           "basis": "New failure regression also checked against the original worker; rendered/native qualification remains open."
         }
       ],
@@ -130098,7 +130141,7 @@
         {
           "path": "src/potbot/evaluation/agentic_model_bench.py",
           "symbol": "ModelTarget",
-          "sha256": "ea073e33b23f3cb7d56f35122e459c92535474e9fe21a1be12b2c839ae9e1908",
+          "sha256": "a0cd604c37e401581084828cb4f8a3d2fb6a9fe9067577f9b483e7eb5322c5d8",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
         },
         {
@@ -130162,6 +130205,18 @@
           "sha256": "9968f657737f7da3b65e224748e1a787cfd1d8263b3c8c33980099202629267a",
           "symbol_sha256": "d3722723590c81a3d92f3aac700cd80bdd098fd8b3e3737421fc379a7ea8a17d",
           "basis": "Groups exact URLs first, then only complete pairwise-compatible work lineages without DOI-less bridging."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_reference.py",
+          "symbol": "evaluate_reference",
+          "sha256": "21afa9c9c6b63f2459316dc2054ef4dbaeaa8545488d6daa88b6b95d98222ae4",
+          "basis": "R7.3-B pure reference and public-fixture contract checks; no independent gold or deployed-model qualification"
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_dataset.py",
+          "symbol": "audit_atomic_dataset",
+          "sha256": "9ee81d92c0e2dcffeb8a617ca39607af253a28827dd1673cd8ad159b1c2ca9aa",
+          "basis": "R7.3-B pure reference and public-fixture contract checks; no independent gold or deployed-model qualification"
         }
       ],
       "tests": [
@@ -130261,15 +130316,27 @@
           "sha256": "f090cb76524f243a5d4e20b2618d421881245a8826da37f4bed227e101909959",
           "symbol_sha256": "3fbd2e8e13e6c71d7c39704f82197c34c362388737a0e3235207809f2aa7c5a8",
           "basis": "Exact URL grouping prevents conflicting late metadata from creating duplicate group identity or false cross-URL joins."
+        },
+        {
+          "path": "tests/unit/test_agentic_reference.py",
+          "symbol": "test_all_literal_fixtures_run_without_network_or_gold_input",
+          "sha256": "eb64125b4ecabd39ace3571a27fe60fbb4409e3d5f2674e4c7fdd2969fbf12a6",
+          "basis": "R7.3-B pure reference and public-fixture contract checks; no independent gold or deployed-model qualification"
+        },
+        {
+          "path": "tests/unit/test_agentic_reference.py",
+          "symbol": "test_changed_gold_changes_score_but_never_reference_output_or_prompt",
+          "sha256": "eb64125b4ecabd39ace3571a27fe60fbb4409e3d5f2674e4c7fdd2969fbf12a6",
+          "basis": "R7.3-B pure reference and public-fixture contract checks; no independent gold or deployed-model qualification"
         }
       ],
-      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons.",
+      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route.",
       "support_scope": "Current fixture, judge/calibration and ledger definitions, not completed B00-B10 external benchmark campaigns. U04-D follow-on: The deterministic forty-request discovery set checks class selection and hard exclusions, with adversarial name/popularity/keyword repetition and exact installed-owner preference. These retrieval fixtures are not general reasoning, tool execution or task-success benchmarks. U04-Q follow-on: Failed assertions, peer errors, malformed/changed outputs and missing stopped evidence cannot produce a successful task report. Server-provided success flags and hashes are not independent expected results. U04-S follow-on: Retrieval score, installation and provider-authored text are not general success measurements. Passing synthetic fixtures do not substitute for independent deployed model/task evidence. U04-T follow-on: Passing applies only to fixed assertions. It does not complete a whole task, independently qualify a deployed provider/host, or turn a truncated UI preview into outcome evidence. T05-A follow-on: Supported means verified cited-source agreement only. Different values remain unresolved; retrieval time does not replace publication time, and no need or task is automatically resolved.",
       "remaining": [
         "Freeze chronological tasks, independent graders, exact returned patch and real cost/time/resource provenance",
         "Compare roles/prompts/routing with uncertainty, regression/security gates and reversible promotion"
       ],
-      "next_action": "Extend existing evaluation authority and B00-B10 adapters; keep synthetic, live, held-out and unsupported results separate. U04-T follow-on: Advance the supported T05 research/evidence path through existing information-need, disclosure, budget and transport owners: approved external search/fetch, immutable extracted source artifacts, traceable citations, contradiction handling and ambiguous-call recovery. Keep deployed native/provider/task qualification and broader workflow/connector/local-model dispatch open under their existing owners. The historical global next milestone remains U01-A. T05-A follow-on: Qualify configured live providers and the real isolated PDF profile with explicit credential, policy and transport evidence before making deployment claims. The next coherent implementation batch is T05.3 specialist connectors against the same admitted research lifecycle, subject to final roadmap audit. Full T05/G07 and deployed-profile qualification remain open. The historical global next milestone remains U01-A. T05-B/R7.1 follow-on: Continue R7.2 admitted atomic task scheduling through existing operation discovery, selected execution, graph and budget owners, then R7.3-R7.6 agentic evaluation and routing. New Syn integration, custody/enrollment rollout, transport cutovers and independent Agent installations are deferred at the user's request until Syn is ready for a release; resume by pinning and qualifying the released package. Existing authority checks remain enforced. Live research/provider/account quality, aggregate rate coordination, installed PDF/native host qualification and broader G07 formats retain separate gates. The historical U00 next milestone remains U01-A."
+      "next_action": "Continue R7.3 with independent gold review, protected holdouts, exact small/strong deployments, measured resources and A/B reviewer calibration; preserve R7.4 promotion gates. Historical U00 requirements and runtime dispositions remain unchanged."
     },
     {
       "id": "automation",

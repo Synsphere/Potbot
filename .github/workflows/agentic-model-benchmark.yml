@@ -32,6 +32,7 @@ jobs:
       - name: Verify offline model-role and judge calibration contracts
         run: |
           uv run --locked python -m pytest -q \
+            tests/unit/test_agentic_reference.py \
             tests/unit/test_agentic_atomic_bench.py \
             tests/unit/test_agentic_model_bench.py \
             tests/unit/test_agentic_benchmark_transport.py \
@@ -43,6 +44,20 @@ jobs:
             --models examples/agentic-benchmark/local-models.json \
             --suite examples/agentic-benchmark/role-suite.json \
             > artifacts/agentic-benchmark/preflight.json
+      - name: Execute source-pinned pure reference baseline
+        run: |
+          uv run --locked python scripts/benchmark_agentic_models.py pin-reference \
+            --output artifacts/agentic-benchmark/reference-models.json
+          uv run --locked python scripts/benchmark_agentic_models.py run \
+            --models artifacts/agentic-benchmark/reference-models.json \
+            --suite examples/agentic-benchmark/atomic-reference-suite.json \
+            --dataset-card examples/agentic-benchmark/atomic-reference-card.json \
+            --output-dir artifacts/agentic-benchmark/reference-runs --store-text \
+            > artifacts/agentic-benchmark/reference-run.json
+          uv run --locked python scripts/benchmark_agentic_models.py audit-atomic-suite \
+            --suite examples/agentic-benchmark/atomic-reference-suite.json \
+            --dataset-card examples/agentic-benchmark/atomic-reference-card.json \
+            --output artifacts/agentic-benchmark/dataset-audit.json
       - name: Upload unqualified plan evidence
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

@@ -15,7 +15,7 @@ import os
 import random
 import sys
 from collections.abc import Callable
-from dataclasses import replace
+from dataclasses import asdict, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -44,7 +44,8 @@ _VARIANTS: tuple[PromptVariant, ...] = ("generic", "family", "model_role")
 
 
 def _read(path: Path, *, limit: int = 1024 * 1024) -> Any:
-    raw = path.read_bytes()
+    with path.open("rb") as handle:
+        raw = handle.read(limit + 1)
     if len(raw) > limit:
         raise InvalidInputError("benchmark input exceeds the size limit")
     return json.loads(raw.decode("utf-8"))
@@ -159,11 +160,17 @@ def _preflight(
         for _, _, mid, _, _ in matrix
         if next(m for m in models if m.id == mid).backend == "hosted"
     )
+    local = sum(
+        1
+        for _, _, mid, _, _ in matrix
+        if next(m for m in models if m.id == mid).backend == "loopback_openai"
+    )
     return {
         "suite_sha256": suite.identity,
         "matrix_attempts": len(matrix),
         "possible_hosted_calls": paid,
-        "possible_local_calls": len(matrix) - paid,
+        "possible_local_calls": local,
+        "deterministic_attempts": len(matrix) - paid - local,
         "network_started": False,
         "qualified": False,
     }
@@ -195,7 +202,12 @@ def _execute(
     plan = _preflight(models, suite, variants, args.repeat)
     if not plan["matrix_attempts"] or plan["matrix_attempts"] > 1600:
         raise InvalidInputError("benchmark matrix is empty or exceeds 1600 attempts")
-    if not args.confirm_prompt_disclosure:
+    dataset_audit = None
+    if getattr(args, "dataset_card", None) is not None:
+        from potbot.evaluation.agentic_dataset import audit_atomic_dataset
+
+        dataset_audit = audit_atomic_dataset(suite, _read(args.dataset_card))
+    if any(m.backend != "deterministic" for m in models) and not args.confirm_prompt_disclosure:
         raise InvalidInputError("running any model requires explicit prompt disclosure consent")
     if plan["possible_hosted_calls"]:
         if (
@@ -361,7 +373,11 @@ def _execute(
         "run_id": run_id or str(uuid4()),
         "created_at": datetime.now(UTC).isoformat(),
         "suite_sha256": suite.identity,
-        "mode": "measured_requests",
+        "mode": "measured_reference_algorithms"
+        if all(m.backend == "deterministic" for m in models)
+        else "measured_requests",
+        "dataset_audit": dataset_audit,
+        "reference_runtime": None,
         "admission_ceiling_microunits": args.max_cost_microunits,
         "reserved_ceiling_microunits": cost_reserved,
         "hosted_attempted_calls": paid_attempts,
@@ -374,6 +390,10 @@ def _execute(
         "qualified": False,
         "auto_promoted": False,
     }
+    if any(m.backend == "deterministic" for m in models):
+        from potbot.evaluation.agentic_reference import reference_runtime
+
+        report["reference_runtime"] = reference_runtime()
     return report
 
 
@@ -384,6 +404,7 @@ def main(argv: list[str] | None = None) -> int:
         group = command.add_parser(name)
         group.add_argument("--suite", type=Path, required=True)
         group.add_argument("--models", type=Path, required=True)
+        group.add_argument("--dataset-card", type=Path)
         group.add_argument("--variants", default="generic,family,model_role")
         group.add_argument("--repeat", type=int, default=1)
         if name == "run":
@@ -398,6 +419,12 @@ def main(argv: list[str] | None = None) -> int:
             group.add_argument("--shuffle-seed", type=int, default=42)
             group.add_argument("--min-samples", type=int, default=12)
             group.add_argument("--store-text", action="store_true")
+    pin = command.add_parser("pin-reference")
+    pin.add_argument("--output", required=True, type=Path)
+    audit = command.add_parser("audit-atomic-suite")
+    audit.add_argument("--suite", type=Path, required=True)
+    audit.add_argument("--dataset-card", type=Path, required=True)
+    audit.add_argument("--output", type=Path, required=True)
     compare = command.add_parser("compare-atomic")
     compare.add_argument("--suite", required=True, type=Path)
     compare.add_argument("--models", required=True, type=Path)
@@ -416,6 +443,41 @@ def main(argv: list[str] | None = None) -> int:
     )
     try:
         args = parser.parse_args(argv)
+        if args.command == "pin-reference":
+            from potbot.evaluation.agentic_reference import (
+                REFERENCE_MODEL,
+                REFERENCE_ROLES,
+                reference_identity,
+            )
+
+            target = ModelTarget(
+                "atomic-reference",
+                REFERENCE_MODEL,
+                "deterministic",
+                REFERENCE_ROLES,
+                reference_identity(),
+            )
+            _private_write(
+                args.output,
+                canonical_json(
+                    {
+                        "schema_version": 1,
+                        "models": [asdict(target)],
+                    }
+                )
+                + "\n",
+            )
+            print("Reference source pin retained; no model or network request.")
+            return 0
+        if args.command == "audit-atomic-suite":
+            from potbot.evaluation.agentic_dataset import audit_atomic_dataset
+
+            payload = audit_atomic_dataset(
+                RoleSuite.from_dict(_read(args.suite)), _read(args.dataset_card)
+            )
+            _private_write(args.output, canonical_json(payload) + "\n")
+            print("Atomic fixture integrity audited; independent gold review remains pending.")
+            return 0
         if args.command == "compare-atomic":
             from potbot.evaluation.agentic_atomic_bench import compare_atomic
 
@@ -461,7 +523,12 @@ def main(argv: list[str] | None = None) -> int:
         if not 1 <= args.repeat <= 5:
             raise InvalidInputError("invalid repeat count")
         if args.command == "preflight":
-            print(json.dumps(_preflight(models, suite, variants, args.repeat), indent=2))
+            plan = _preflight(models, suite, variants, args.repeat)
+            if args.dataset_card is not None:
+                from potbot.evaluation.agentic_dataset import audit_atomic_dataset
+
+                plan["dataset_audit"] = audit_atomic_dataset(suite, _read(args.dataset_card))
+            print(json.dumps(plan, indent=2))
             return 0
         if (
             not 1 <= args.max_judge_pairs <= 30

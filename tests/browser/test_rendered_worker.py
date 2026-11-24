@@ -126,6 +126,26 @@ def decode_frame(observation):
     assert image.startswith(b"\xff\xd8") and image.endswith(b"\xff\xd9")
     assert len(image) == frame["bytes"]
     assert hashlib.sha256(image).hexdigest() == frame["sha256"]
+    # Read the bounded JPEG frame header, independently of DOM or CDP claims.
+    # Native view capture must contain exactly the configured page viewport,
+    # not desktop/browser chrome or a larger emulated surface.
+    offset = 2
+    dimensions = None
+    while offset + 4 <= len(image):
+        assert image[offset] == 0xFF
+        marker = image[offset + 1]
+        length = int.from_bytes(image[offset + 2 : offset + 4], "big")
+        assert length >= 2 and offset + 2 + length <= len(image)
+        if marker in {0xC0, 0xC1, 0xC2}:
+            assert length >= 8
+            dimensions = (
+                int.from_bytes(image[offset + 7 : offset + 9], "big"),
+                int.from_bytes(image[offset + 5 : offset + 7], "big"),
+            )
+            break
+        assert marker != 0xDA, "JPEG scan has no bounded frame header"
+        offset += 2 + length
+    assert dimensions == (1280, 800)
     return image
 
 
