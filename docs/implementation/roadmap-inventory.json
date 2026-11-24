@@ -36897,7 +36897,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "176bacb41469522d13c853daa16999cbfbbea39508a8c9e36de857d13edf0cfa",
+  "review_sha256": "bdde63d07a1822b2972bcee3710f9bfc512a0e53799df7fb7b75bd3275888bc3",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -128116,7 +128116,7 @@
         {
           "path": "tests/unit/test_persistent_service.py",
           "symbol": "test_debugger_child_is_started_once_and_requires_explicit_recovery",
-          "sha256": "292cafa1b8bf811a3328449e8828f34c505227baed1b835a3fa85a3e1c4e45bd",
+          "sha256": "feeb56525e5106af9fda3c7af4ecc12ac248bb02346b29a88d978db929a72d30",
           "basis": "Source inspection of the installed debugger service and its focused tests"
         },
         {
