@@ -44,6 +44,7 @@ from potbot.domain.jobs import (
     safe_integer,
 )
 from potbot.domain.serialization import canonical_json
+from potbot.models.registry import DeploymentSpec
 from potbot.persistence.database import Database, idempotent_command
 
 _PUBLIC_FIELDS = (
@@ -626,8 +627,11 @@ class JobService:
         lease: JobLease,
         *,
         cog_max_wall_ms: int | None = None,
+        cog_model_deployment: DeploymentSpec | None = None,
         check_cog_grant: Callable[[Any], dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
+        from psycopg.errors import ObjectNotInPrerequisiteState
+
         with self.database.transaction(context) as conn:
             old = self._lease_row(conn, context, lease)
             if old["cancellation_requested"]:
@@ -644,6 +648,8 @@ class JobService:
                 if old["job_type"] == COG_JOB:
                     raise StateMismatchError("A native Cog dispatch cannot be repeated.")
                 return _public(old)
+            if cog_model_deployment is not None and old["job_type"] != COG_JOB:
+                raise ScopeDeniedError("Only a native Cog can dispatch an installed model.")
             decision = None
             if old["job_type"] == COG_JOB:
                 from potbot.controller.budgets import BudgetLedger
@@ -653,6 +659,17 @@ class JobService:
                         "Native Cog dispatch requires an installed wall-time bound."
                     )
                 spec = CogJobInput.parse(old["input"])
+                amounts = {"concurrency": 1, "calls": 1, "tool_ms": cog_max_wall_ms}
+                if cog_model_deployment is not None:
+                    from potbot.models.native_results import REQUEST, validate_native_request
+
+                    if (
+                        not isinstance(cog_model_deployment, DeploymentSpec)
+                        or spec.type_ref != REQUEST
+                    ):
+                        raise ScopeDeniedError("Native inference needs an exact installed model.")
+                    validate_native_request(spec.value, cog_model_deployment)
+                    amounts["tokens"] = cog_model_deployment.usable_context_tokens
                 episode = lock_episode(conn, context, old["episode_id"])
                 contract = conn.execute(
                     "SELECT content FROM contract_revisions "
@@ -679,16 +696,25 @@ class JobService:
                     conn,
                     context,
                     lease.episode_id,
-                    {"concurrency": 1, "calls": 1, "tool_ms": cog_max_wall_ms},
+                    amounts,
                     f"native-cog-{lease.job_id}",
                 )
-            row = _update_leased(
-                conn,
-                context,
-                lease,
-                "dispatched_at=clock_timestamp(),updated_at=clock_timestamp(),"
-                "update_token=update_token+1,progress=jsonb_build_object('stage','dispatching')",
-            )
+            try:
+                row = _update_leased(
+                    conn,
+                    context,
+                    lease,
+                    "dispatched_at=clock_timestamp(),updated_at=clock_timestamp(),"
+                    "update_token=update_token+1,progress=jsonb_build_object('stage','dispatching')",
+                )
+            except ObjectNotInPrerequisiteState:
+                if cog_model_deployment is None or lease.operation_check_id is None:
+                    raise
+                # A database dispatch fence can veto a still-owned lease.
+                # Failing the unsent job also rolls back its reservation above.
+                raise StateMismatchError(
+                    "The checked native model no longer has dispatch authority."
+                ) from None
             public = _public(dict(row))
             evidence = {"job": public}
             if decision is not None:
@@ -697,7 +723,12 @@ class JobService:
             return public
 
     def _settle_cog(
-        self, conn: Any, context: WorkspaceContext, job: dict[str, Any], state: str
+        self,
+        conn: Any,
+        context: WorkspaceContext,
+        job: dict[str, Any],
+        state: str,
+        result: dict[str, Any] | None = None,
     ) -> None:
         if job["job_type"] != COG_JOB or job["dispatched_at"] is None:
             return
@@ -722,6 +753,27 @@ class JobService:
             actual = {
                 name: amount for name, amount in row["amounts"].items() if name != "concurrency"
             }
+            if "tokens" in actual:
+                if (
+                    result is None
+                    or result.get("operation_id") != str(job["id"])
+                    or "artifact_id" not in result
+                    or "usage" not in result
+                ):
+                    raise StateMismatchError("Native model completion requires its metered result.")
+                usage = result["usage"]
+                request = CogJobInput.parse(job["input"]).value
+                if (
+                    set(usage) != {"input_tokens", "output_tokens", "tokens"}
+                    or usage["input_tokens"] < 1
+                    or not 1 <= usage["output_tokens"] <= request["max_output_tokens"]
+                    or usage["tokens"] != usage["input_tokens"] + usage["output_tokens"]
+                    or usage["tokens"] > actual["tokens"]
+                ):
+                    raise StateMismatchError(
+                        "Native model usage exceeds or differs from admission."
+                    )
+                actual["tokens"] = usage["tokens"]
             ledger.settle(context, row["id"], actual, "conservative_estimate", connection=conn)
         else:
             ledger.mark_indeterminate(
@@ -881,7 +933,7 @@ class JobService:
                 raise StateMismatchError("Only operation checks may publish a check report")
             if state == JobState.CANCELLED and not old["cancellation_requested"]:
                 raise StateMismatchError("Cancellation completion needs a cancellation request.")
-            self._settle_cog(conn, context, old, state)
+            self._settle_cog(conn, context, old, state, metadata)
             row = _update_leased(
                 conn,
                 context,

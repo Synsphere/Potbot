@@ -290,6 +290,10 @@ def _checked_route_binding(
             or compiled["binding_sha256"] != compilation_digest(decision, compiled)
         ):
             raise StateMismatchError("Compiled route identity differs")
+        if exact["job_type"] == "cog.execute":
+            from potbot.controller.model_reasoning_results import native_reasoning_deployment
+
+            native_reasoning_deployment(conn, actor, exact["input"], recipe["recipe"])
         runtime = worker_admission_identity(target, observed)
         if runtime != target["runtime_identity_sha256"]:
             raise StateMismatchError("Observed worker admission differs from the accepted route")

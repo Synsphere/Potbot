@@ -19,7 +19,13 @@ from potbot.controller.reasoning_result_contracts import validate_reasoning_outp
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import InvalidInputError, ScopeDeniedError, StateMismatchError
 from potbot.domain.serialization import canonical_json, content_hash
-from potbot.models.native_results import MAX_RESULT_BYTES, REQUEST, RESULT, parse_native_result
+from potbot.models.native_results import (
+    MAX_RESULT_BYTES,
+    REQUEST,
+    RESULT,
+    parse_native_result,
+    validate_native_request,
+)
 from potbot.models.providers.contracts import ProviderUsage
 from potbot.models.registry import DeploymentSpec
 from potbot.persistence.artifacts import ArtifactStore, LocalArtifactBackend
@@ -46,6 +52,36 @@ def deployment_from_content(content: dict[str, Any]) -> DeploymentSpec:
         return spec
     except (TypeError, KeyError, ValueError, AttributeError):
         raise InvalidInputError("Stored deployment contract is invalid") from None
+
+
+def native_reasoning_deployment(
+    conn: Any, actor: WorkspaceContext, native_input: dict[str, Any], recipe: dict[str, Any]
+) -> DeploymentSpec:
+    if native_input["type_ref"] != REQUEST or not isinstance(native_input["value"], dict):
+        raise StateMismatchError("Native job has no declared model request port")
+    value = native_input["value"]
+    selected = conn.execute(
+        "SELECT content,content_hash FROM model_deployments WHERE workspace_id=%s AND content_hash=%s",
+        (actor.workspace_id, value.get("deployment_sha256")),
+    ).fetchone()
+    if selected is None:
+        raise ScopeDeniedError("Original native deployment is unavailable")
+    spec = deployment_from_content(selected["content"])
+    version = (
+        "model-aware-reasoning-json-object-v1"
+        if recipe["output_contract"]
+        else "model-aware-reasoning-v1"
+    )
+    if (
+        spec.fingerprint != selected["content_hash"]
+        or "reasoning" not in spec.roles
+        or spec.output_adapter != "potbot.native-model-result/1"
+        or RESULT not in spec.response_schemas
+        or dict(spec.prompt_versions).get(recipe["role"]) != version
+    ):
+        raise StateMismatchError("Native deployment or declared reasoning prompt differs")
+    validate_native_request(value, spec)
+    return spec
 
 
 class ModelReasoningResultReader:
@@ -138,31 +174,7 @@ class ModelReasoningResultReader:
                 finish = observed["finish_reason"]
                 native = None
             else:
-                if exact["input"]["type_ref"] != REQUEST:
-                    raise StateMismatchError("Native job has no declared model request port")
-                value = exact["input"]["value"]
-                deployment = conn.execute(
-                    "SELECT content,content_hash FROM model_deployments WHERE workspace_id=%s AND content_hash=%s",
-                    (actor.workspace_id, value.get("deployment_sha256")),
-                ).fetchone()
-                if deployment is None:
-                    raise ScopeDeniedError("Original native deployment is unavailable")
-                spec = deployment_from_content(deployment["content"])
-                version = (
-                    "model-aware-reasoning-json-object-v1"
-                    if recipe["recipe"]["output_contract"]
-                    else "model-aware-reasoning-v1"
-                )
-                if (
-                    spec.fingerprint != deployment["content_hash"]
-                    or "reasoning" not in spec.roles
-                    or spec.output_adapter != "potbot.native-model-result/1"
-                    or RESULT not in spec.response_schemas
-                    or dict(spec.prompt_versions).get(recipe["recipe"]["role"]) != version
-                ):
-                    raise StateMismatchError(
-                        "Native deployment or declared reasoning prompt differs"
-                    )
+                spec = native_reasoning_deployment(conn, actor, exact["input"], recipe["recipe"])
                 if job["result"].get("operation_id") != str(job["id"]):
                     raise StateMismatchError(
                         "Native artifact publication belongs to a different operation"

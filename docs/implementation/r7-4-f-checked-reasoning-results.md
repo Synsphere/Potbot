@@ -103,3 +103,6 @@ the existing Syn worker; token reservation/settlement through the existing job
 ledger; native outcome capture/review; and the production reasoning dispatch
 adapter. Protected paired holdouts, bounded canaries, explicit promotion and
 qualified rollback remain separate R7.4 gates. Candidate execution stays blocked.
+
+The [native model worker and checked controller increment](r7-4-g-native-model-workers.md)
+implements these source contracts and records the remaining installed qualification.

@@ -1,8 +1,8 @@
 """Observe original jobs; explicitly share output; retain independent verdicts.
 
 This service never invokes models, changes terminal jobs, releases reservations,
-replays a lost reply or admits candidates. Hosted output events are supported;
-native artifact contracts require a separate typed reader before acceptance.
+replays a lost reply or admits candidates. It snapshots hosted output events or
+typed native result artifacts and retains their original completion boundaries.
 """
 
 from __future__ import annotations
@@ -11,12 +11,17 @@ from datetime import UTC
 from typing import Any
 from uuid import UUID
 
+from potbot.controller.model_reasoning_results import deployment_from_content
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import InvalidInputError, ScopeDeniedError, StateMismatchError
+from potbot.domain.jobs import COG_JOB
 from potbot.domain.operation_workbench import operation_id
 from potbot.domain.serialization import content_hash
 from potbot.evaluation.model_route_outcomes import VERDICTS, assess_output, summarize_outcomes
+from potbot.models.native_results import MAX_RESULT_BYTES, REQUEST, RESULT, parse_native_result
+from potbot.persistence.artifacts import ArtifactStore, LocalArtifactBackend
 from potbot.persistence.database import Database
+from potbot.workspace_sandbox import load_workspace_sandbox
 
 
 def _uuid(value: UUID) -> UUID:
@@ -41,6 +46,11 @@ def _payload(row: dict[str, Any]) -> dict[str, Any]:
         "finished_at": row["finished_at"].astimezone(UTC).isoformat(),
         "output_contract": row["output_contract"],
         "provider_receipts": row["provider_receipts"],
+        **(
+            {"native_result": row["native_evidence"] or None}
+            if row["native_evidence"] is not None
+            else {}
+        ),
     }
 
 
@@ -57,6 +67,7 @@ def _view(row: dict[str, Any]) -> dict[str, Any]:
             row["output_text"],
             row["output_contract"],
             row["provider_receipts"],
+            native_evidence=row["native_evidence"],
         ),
     }
 
@@ -72,8 +83,63 @@ def _read(conn: Any, context: WorkspaceContext, decision_id: UUID) -> dict[str, 
 
 
 class ModelRouteOutcomeService:
-    def __init__(self, database: Database) -> None:
-        self.database = database
+    def __init__(self, database: Database, artifacts: ArtifactStore | None = None) -> None:
+        if artifacts is not None and artifacts.db is not database:
+            raise ScopeDeniedError("Model artifact reader belongs to a different database")
+        self.database, self.artifacts = database, artifacts
+
+    def _native_evidence(
+        self, conn: Any, actor: WorkspaceContext, job: dict[str, Any]
+    ) -> tuple[str, dict[str, Any], str | None]:
+        if job["job_type"] != COG_JOB or job["input"].get("type_ref") != REQUEST:
+            raise InvalidInputError("Route outcome has no declared native model request port")
+        if job["state"] != "succeeded":
+            return "", {}, None
+        if (
+            job["dispatched_at"] is None
+            or not isinstance(job["result"], dict)
+            or job["result"].get("operation_id") != str(job["id"])
+        ):
+            raise StateMismatchError("Original native artifact publication is unavailable")
+        try:
+            artifact_id = UUID(job["result"]["artifact_id"])
+        except (KeyError, TypeError, ValueError, AttributeError):
+            raise StateMismatchError("Original native artifact identity is invalid") from None
+        request = job["input"]["value"]
+        deployment = conn.execute(
+            "SELECT content,content_hash FROM model_deployments WHERE workspace_id=%s AND content_hash=%s",
+            (actor.workspace_id, request.get("deployment_sha256")),
+        ).fetchone()
+        if deployment is None:
+            raise ScopeDeniedError("Original native deployment is unavailable")
+        spec = deployment_from_content(deployment["content"])
+        if (
+            spec.fingerprint != deployment["content_hash"]
+            or spec.output_adapter != "potbot.native-model-result/1"
+            or RESULT not in spec.response_schemas
+        ):
+            raise StateMismatchError("Original deployment does not declare a native model result")
+        artifacts = self.artifacts
+        if artifacts is None:
+            sandbox = load_workspace_sandbox(self.database, actor)
+            artifacts = ArtifactStore(
+                self.database, LocalArtifactBackend(sandbox.path("artifacts"), create_root=False)
+            )
+        metadata = artifacts._metadata(conn, actor, artifact_id)
+        if (
+            not 1 <= metadata["byte_length"] <= MAX_RESULT_BYTES
+            or metadata["media_type"] != "application/json"
+        ):
+            raise StateMismatchError("Native model artifact exceeds its typed bound")
+        raw = artifacts.read_in_transaction(conn, actor, artifact_id)
+        parsed = parse_native_result(raw, request=request, job_id=job["id"], deployment=spec)
+        evidence = {k: v for k, v in parsed.items() if k not in {"schema", "invocation_id", "text"}}
+        evidence.update(
+            artifact_id=str(artifact_id),
+            artifact_sha256=metadata["digest"],
+            usage_origin="worker_reported",
+        )
+        return parsed["text"], evidence, raw.decode("utf-8")
 
     def capture(self, context: WorkspaceContext, decision_id: UUID) -> dict[str, Any]:
         """Copy one terminal original job, without demanding an active old route."""
@@ -105,18 +171,19 @@ class ModelRouteOutcomeService:
                 or job["state"] not in {"succeeded", "failed", "cancelled", "indeterminate"}
             ):
                 raise StateMismatchError("Original route job has no terminal outcome")
-            if job["job_type"] != "model.generate":
-                raise InvalidInputError(
-                    "Native artifact outcomes need their qualified typed reader"
-                )
-            text = conn.execute(
-                "SELECT COALESCE(string_agg(data->>'text','' ORDER BY sequence),'') AS text FROM job_events WHERE workspace_id=%s AND job_id=%s AND event_type='job.output'",
-                (context.workspace_id, job["id"]),
-            ).fetchone()["text"]
-            receipts = conn.execute(
-                "SELECT h.id,i.status,i.result->>'finish_reason' AS finish_reason FROM hosted_requests h JOIN hosted_invocations i ON i.workspace_id=h.workspace_id AND i.id=h.id WHERE h.workspace_id=%s AND h.job_id=%s ORDER BY h.ordinal",
-                (context.workspace_id, job["id"]),
-            ).fetchall()
+            native_evidence, raw = None, None
+            if job["job_type"] == "model.generate":
+                text = conn.execute(
+                    "SELECT COALESCE(string_agg(data->>'text','' ORDER BY sequence),'') AS text FROM job_events WHERE workspace_id=%s AND job_id=%s AND event_type='job.output'",
+                    (context.workspace_id, job["id"]),
+                ).fetchone()["text"]
+                receipts = conn.execute(
+                    "SELECT h.id,i.status,i.result->>'finish_reason' AS finish_reason FROM hosted_requests h JOIN hosted_invocations i ON i.workspace_id=h.workspace_id AND i.id=h.id WHERE h.workspace_id=%s AND h.job_id=%s ORDER BY h.ordinal",
+                    (context.workspace_id, job["id"]),
+                ).fetchall()
+            else:
+                receipts = []
+                text, native_evidence, raw = self._native_evidence(conn, context, dict(job))
             recipe = conn.execute(
                 "SELECT recipe FROM model_route_prompt_recipes WHERE workspace_id=%s AND policy_id=%s",
                 (context.workspace_id, decision["policy_id"]),
@@ -134,13 +201,18 @@ class ModelRouteOutcomeService:
                 "finished_at": job["finished_at"],
                 "output_contract": recipe["recipe"]["output_contract"] if recipe else None,
                 "provider_receipts": [{**dict(v), "id": str(v["id"])} for v in receipts],
+                "native_evidence": native_evidence,
             }
-            assess_output(
-                row["state"], row["result"], text, row["output_contract"], row["provider_receipts"]
-            )
             row["outcome_sha256"] = content_hash(_payload(row))
+            view = _view(row)
+            # The insert trigger verifies the exact artifact bytes and keeps only the receipt.
+            evidence_for_insert = (
+                {**native_evidence, "artifact_body": raw}
+                if native_evidence is not None and raw is not None
+                else native_evidence
+            )
             conn.execute(
-                "INSERT INTO model_route_outcomes(workspace_id,decision_id,policy_id,principal_id,job_id,state,result,output_text,dispatched_at,finished_at,output_contract,outcome_sha256,provider_receipts) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                "INSERT INTO model_route_outcomes(workspace_id,decision_id,policy_id,principal_id,job_id,state,result,output_text,dispatched_at,finished_at,output_contract,outcome_sha256,provider_receipts,native_evidence) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                 (
                     *[
                         row[k]
@@ -165,9 +237,10 @@ class ModelRouteOutcomeService:
                         )
                     ],
                     Jsonb(row["provider_receipts"]),
+                    Jsonb(evidence_for_insert) if evidence_for_insert is not None else None,
                 ),
             )
-            return _view(row)
+            return view
 
     def inspect(self, context: WorkspaceContext, decision_id: UUID) -> dict[str, Any]:
         with self.database.transaction(context) as conn:

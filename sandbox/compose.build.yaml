@@ -9,3 +9,4 @@ services:
       args:
         BASE_IMAGE: ${POTBOT_SANDBOX_BASE:?Supply a digest-pinned Debian base image}
         SOURCE_COMMIT: ${POTBOT_SOURCE_COMMIT:?Supply an exact source commit}
+        NATIVE_INFERENCE: ${POTBOT_NATIVE_INFERENCE:-0}

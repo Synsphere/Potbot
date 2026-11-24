@@ -21,22 +21,25 @@ def assess_output(
     text: str,
     output_contract: str | None,
     provider_receipts: list[dict[str, Any]],
+    *,
+    native_evidence: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """A complete provider reply and literal JSON are separate from correctness."""
+    """A complete observed reply and literal JSON are separate from correctness."""
     if state not in TERMINAL_STATES or output_contract not in (None, "json_object_v1"):
         raise InvalidInputError("Unsupported route outcome state or contract")
     if not isinstance(text, str) or len(text.encode()) > 32768:
         raise InvalidInputError("Route outcome text exceeds the review bound")
-    complete = (
-        state == "succeeded"
-        and isinstance(result, dict)
-        and (
-            result.get("completed_models") == 1
+    if native_evidence is None:
+        complete_reply = (
+            isinstance(result, dict)
+            and result.get("completed_models") == 1
             and len(provider_receipts) == 1
             and provider_receipts[0].get("status") == "completed"
             and provider_receipts[0].get("finish_reason") == "stop"
         )
-    )
+    else:
+        complete_reply = native_evidence.get("finish_reason") == "stop"
+    complete = state == "succeeded" and complete_reply
     literal = evaluate_json_object_v1(text) if output_contract else None
     return {
         "schema": "potbot-route-output-assessment/v1",

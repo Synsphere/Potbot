@@ -306,7 +306,101 @@ def test_check_reports_uninstalled_native_handler_as_unsupported(app_env):
         value.http.close()
 
 
-def native(app_env, tmp_path, monkeypatch):
+def _installed_model_fixture(actor, runtime, profile, state, tmp_path, model_prompt_version):
+    from potbot.controller.native_cog_dispatch import installed_cog_operations
+    from potbot.tools.native_model_worker import (
+        BACKEND,
+        BACKEND_VERSION,
+        ENGINE_LIBRARY,
+        ENGINE_ROOT,
+        EXECUTABLE,
+        REQUEST,
+        RESULT,
+        blob_path,
+    )
+    from potbot.tools.operator_cli import parse_manifest
+    from tests.unit.test_model_reasoning_results import deployment
+
+    def asset(path, data, mode):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        path.chmod(mode)
+        return hashlib.sha256(data).hexdigest()
+
+    executable = runtime.rootfs / EXECUTABLE.lstrip("/")
+    pin = asset(executable, b"synthetic installed model worker", 0o555)
+    engine = runtime.rootfs / ENGINE_ROOT.relative_to("/") / ENGINE_LIBRARY
+    engine_sha256 = asset(engine, b"synthetic pinned native engine", 0o444)
+    model_files = tmp_path / "installed-model-files"
+    weights = b"GGUF\x03\x00\x00\x00" + bytes(16)
+    template = b"synthetic installed chat template"
+    weights_hash = hashlib.sha256(weights).hexdigest()
+    template_hash = hashlib.sha256(template).hexdigest()
+    asset(model_files / blob_path(weights_hash), weights, 0o444)
+    asset(model_files / blob_path(template_hash), template, 0o444)
+    original = deployment()
+    spec = replace(
+        original,
+        prompt_versions=(
+            (("investigator", model_prompt_version),)
+            if model_prompt_version is not None
+            else original.prompt_versions
+        ),
+        weights_digest=weights_hash,
+        backend=BACKEND,
+        backend_version=BACKEND_VERSION,
+        tokenizer_revision=weights_hash,
+        chat_template_digest=template_hash,
+    )
+    host_paths = {
+        "rootfs": runtime.rootfs,
+        "home": runtime.home,
+        "shared_models": model_files,
+        "shared_tools": runtime.shared_tools,
+        "model_staging": tmp_path / "staging",
+        "ai_config_dir": tmp_path / "ai-config",
+        "ai_history_dir": tmp_path / "ai-history",
+        "controller_ledger": tmp_path / "private/leases.sqlite",
+    }
+    for name in ("model_staging", "ai_config_dir", "ai_history_dir"):
+        host_paths[name].mkdir()
+    host_paths["controller_ledger"].touch()
+    manifest = tmp_path / "operator-manifest.json"
+    manifest.write_text(
+        canonical_json(
+            {
+                "workspace_id": str(actor.workspace_id),
+                "image_digest": runtime.image_digest,
+                "qualification_sha256": runtime.qualification_sha256,
+                **{name: str(path) for name, path in host_paths.items()},
+                "tool_entrypoints": {EXECUTABLE: pin},
+            }
+        ),
+        encoding="utf-8",
+    )
+    paths = parse_manifest(manifest)
+    installation = {
+        "workspace_id": str(actor.workspace_id),
+        "image_digest": runtime.image_digest,
+        "qualification_sha256": runtime.qualification_sha256,
+        "profile": "potbot.hosted-native-cog/3",
+        "operations": [
+            {
+                "operation_ref": "syn://thing/fixture",
+                "entrypoint": EXECUTABLE,
+                "input_type_ref": REQUEST,
+                "output_type_ref": RESULT,
+                "repository_digest": state["content_digest"],
+                "max_wall_ms": 1000,
+                "model_deployment": {"deployment": spec.to_dict(), "engine_sha256": engine_sha256},
+            }
+        ],
+    }
+    (operation,) = installed_cog_operations(installation, profile, paths)
+    return paths.runtime(), operation, spec, executable
+
+
+def native(app_env, tmp_path, monkeypatch, *, installed_model=False, model_prompt_version=None):
     _, _, _, _, state, _ = setup(app_env, tmp_path)
     actor, agent = app_env.context, uuid4()
     rootfs, home, private, tools = (
@@ -327,6 +421,11 @@ def native(app_env, tmp_path, monkeypatch):
         shared_tools=tools,
         tool_entrypoints=((entrypoint, binary_hash),),
     )
+    profile, model_deployment = "f" * 64, None
+    if installed_model:
+        runtime, operation, model_deployment, executable = _installed_model_fixture(
+            actor, runtime, profile, state, tmp_path, model_prompt_version
+        )
     ledger = WorkspaceLeaseLedger(private / "leases.sqlite", workspace_home=home)
     ledger.pin_image(
         actor.workspace_id,
@@ -368,27 +467,27 @@ def native(app_env, tmp_path, monkeypatch):
     executor = SandboxedCogExecutor(
         runtime, ledger, homes, ProcessSupervisor(backend), mesh, syn_context_route=route
     )
-    profile = "f" * 64
-    operation = SandboxedCogOperation(
-        WorkBinding(
-            "tool",
-            "syn://thing/fixture",
-            "syn://type/in",
-            "syn://type/out",
-            binary_hash,
-            "read_only",
-            ExecutionPolicy(
-                profile,
-                runtime.qualification_sha256,
-                state["content_digest"],
-                "fixture",
-                max_wall_ms=1000,
+    if not installed_model:
+        operation = SandboxedCogOperation(
+            WorkBinding(
+                "tool",
+                "syn://thing/fixture",
+                "syn://type/in",
+                "syn://type/out",
+                binary_hash,
+                "read_only",
+                ExecutionPolicy(
+                    profile,
+                    runtime.qualification_sha256,
+                    state["content_digest"],
+                    "fixture",
+                    max_wall_ms=1000,
+                ),
             ),
-        ),
-        (entrypoint,),
-        binary_hash,
-        protocol="context-rpc/v1",
-    )
+            (entrypoint,),
+            binary_hash,
+            protocol="context-rpc/v1",
+        )
     executor.bind_context(app_env.db, actor, (operation,))
     task_service = TaskService(app_env.db)
     task = task_service.submit(
@@ -402,7 +501,12 @@ def native(app_env, tmp_path, monkeypatch):
             change_scope=(),
             capabilities=("read", "cog.execute:" + operation.binding.operation_ref),
             verification_policy="checks-v1",
-            budget=(("tokens", 0), ("calls", 2), ("tool_ms", 2000), ("concurrency", 1)),
+            budget=(
+                ("tokens", model_deployment.usable_context_tokens if model_deployment else 0),
+                ("calls", 2),
+                ("tool_ms", 2000),
+                ("concurrency", 1),
+            ),
         ),
         "native-check-task",
     )
@@ -456,6 +560,7 @@ def native(app_env, tmp_path, monkeypatch):
         spec=spec,
         reference=operation.binding.operation_ref,
         runtime=runtime,
+        model_deployment=model_deployment,
         ledger=ledger,
         executor=executor,
         dispatcher=dispatcher,
