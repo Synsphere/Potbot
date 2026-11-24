@@ -191,6 +191,7 @@ def native_route(
             port = SimpleNamespace(
                 work_input=lambda: {
                     "schema_version": 1,
+                    "operation_ref": op.binding.operation_ref,
                     "invocation_id": str(context.invocation_id),
                     "input": {"type_ref": value.type_ref, "value": value.value},
                 },
@@ -446,6 +447,8 @@ def test_checked_native_reasoning_recovers_same_sealed_job_and_budget(
     queued = checked_reasoning.launch(r.actor, decision, setup_token=TOKEN)
     job = r.runner.run_once(r.actor, "installed-model")
     assert job["id"] == queued["job_id"]
+    expected_state = "indeterminate" if lost else "succeeded"
+    assert job["state"] == expected_state, job["error_code"]
     recovered = CheckedReasoning(app_env.db)
     status = recovered.status(r.actor, decision)
     assert status["job_id"] == queued["job_id"]

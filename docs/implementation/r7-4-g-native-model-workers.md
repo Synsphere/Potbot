@@ -33,3 +33,5 @@ Migration 53 extends the existing outcome store with optional native evidence. P
 A disposable offline WSL smoke test loaded the existing SmolLM2 360M F16 GGUF through the opt-in Debian engine stage. It returned a normal stop, 32 input tokens and six output tokens, and rejected a different engine digest. The smoke test used a synthetic Context client. The separate integration tests exercised real PostgreSQL, the normal controller and dispatcher, and the typed worker protocol with simulated transport and inference.
 
 The checked controller adapter is available for explicit reasoning calls. Wiring it into the automated temporal investigator still requires durable per-stage continuation and cancellation. Signed image and managed installed-worker acceptance, protected paired holdouts, live canaries, and an independently qualified promotion and fallback policy remain separate gates. The benchmark scores and current route activation are unchanged.
+
+The [restartable checked investigation](r7-4-h-routed-investigations.md) adds a durable hypothesis, critique and synthesis path through this adapter.

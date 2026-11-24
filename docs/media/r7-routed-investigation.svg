@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="420" viewBox="0 0 1040 420" role="img" aria-labelledby="title description">
+  <title id="title">Restartable checked reasoning</title>
+  <desc id="description">An immutable plan binds three stages. Each stage checks its route, queues one ordinary model job, verifies the original reply, and checkpoints before the next role. Failed or interrupted work cannot release a successor.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="8" refY="5" orient="auto">
+      <path d="M 1 1 L 9 5 L 1 9 z" fill="#4b6584"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, sans-serif; fill: #132340; }
+      .heading { font-weight: 740; font-size: 28px; }
+      .name { font-size: 20px; font-weight: 700; }
+      .detail { font-size: 16px; }
+      .small { font-size: 15px; fill: #445874; }
+      .arrow { stroke: #4b6584; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1040" height="420" rx="24" fill="#eef3fa"/>
+  <text x="32" y="51" class="heading">One run, three recoverable reasoning stages</text>
+  <rect x="32" y="75" width="976" height="56" rx="12" fill="#dce9f9" stroke="#9ab3d0"/>
+  <text x="54" y="110" class="name">Frozen plan</text>
+  <text x="204" y="110" class="detail">One task revision, fixed role policies, private facts and a stable run ID</text>
+  <path class="arrow" d="M 170 131 V 153"/>
+  <path class="arrow" d="M 473 131 V 153"/>
+  <path class="arrow" d="M 793 131 V 153"/>
+  <rect x="32" y="156" width="269" height="87" rx="12" fill="#fff" stroke="#9ab3d0"/>
+  <text x="54" y="190" class="name">Hypotheses</text>
+  <text x="54" y="219" class="detail">Propose and name branches</text>
+  <path class="arrow" d="M 301 196 H 364"/>
+  <rect x="367" y="156" width="270" height="87" rx="12" fill="#fff" stroke="#9ab3d0"/>
+  <text x="389" y="190" class="name">Critique</text>
+  <text x="389" y="219" class="detail">Assess each named branch</text>
+  <path class="arrow" d="M 637 196 H 700"/>
+  <rect x="703" y="156" width="305" height="87" rx="12" fill="#fff" stroke="#9ab3d0"/>
+  <text x="725" y="190" class="name">Synthesis</text>
+  <text x="725" y="219" class="detail">Answer using retained context</text>
+  <rect x="32" y="264" width="976" height="55" rx="12" fill="#dff0e9" stroke="#8fb6a2"/>
+  <text x="54" y="298" class="name">Each stage</text>
+  <text x="183" y="298" class="detail">Check the route → queue one job → verify the original reply → commit its receipt</text>
+  <rect x="32" y="335" width="976" height="55" rx="12" fill="#fff0dd" stroke="#c8a784"/>
+  <text x="54" y="369" class="name">Stop condition</text>
+  <text x="230" y="369" class="detail">Invalid or missing reply, changed task revision, or an explicit interrupt</text>
+  <text x="34" y="410" class="small">Architecture illustration · Worker jobs and PostgreSQL retain their original accounting authority</text>
+</svg>
