@@ -80777,14 +80777,14 @@
     },
     {
       "path": "docs/implementation/ci-postgres-partitions.md",
-      "sha256": "e62b7f52ee38e62239623ba2f72918e511c4598819beb7a3b219e27ba21c0582",
+      "sha256": "3b130ff4773ab93e21bfecb1ca26dbe080ae516db0c1b01d3ade15161cb76d98",
       "families": [
         "audit",
         "stage-acceptance",
         "evaluation"
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
-      "assessment": "Source-reviewed PostgreSQL partition orchestration, same original selector, fresh databases and complete execution-accounting gate. New CI completion and elapsed-time improvement require actual run evidence; no production qualification is asserted. Actual partition results exposed a snapshot capacity failure; the single generated projection exclusion is explicit. Native-window readiness is a stronger test prerequisite, with real rendered confirmation pending. The actual primary sandbox lane exposed a missing Poppler executable: 95 tests passed and one required PDF case failed. CI now installs the dependency while preserving exact executable hashing, isolation and all existing artifact gates; the new run remains required. The actual partition exposed eight existing native root modules absent from explicit source ownership. They now reuse entrypoint/persistence owners; a committed-path namespace regression retains unknown-root refusal. Actual source/host qualification remains separate.",
+      "assessment": "Source-reviewed PostgreSQL partition orchestration, same original selector, fresh databases and complete execution-accounting gate. New CI completion and elapsed-time improvement require actual run evidence; no production qualification is asserted. Actual partition results exposed a snapshot capacity failure; the single generated projection exclusion is explicit. Native-window readiness is a stronger test prerequisite, with real rendered confirmation pending. The actual primary sandbox lane exposed a missing Poppler executable: 95 tests passed and one required PDF case failed. CI now installs the dependency while preserving exact executable hashing, isolation and all existing artifact gates; the new run remains required. The actual partition exposed eight existing native root modules absent from explicit source ownership. They now reuse entrypoint/persistence owners; a committed-path namespace regression retains unknown-root refusal. Actual source/host qualification remains separate. Discovery exposed four stale dependent inventory evidence pins. Only those inspect-only profiles receive new immutable source versions/digests; existing runtime and admission authority is unchanged. All twenty curated profile pins are checked before CI.",
       "narrative": [
         {
           "locator": "line:1-69",
@@ -80797,8 +80797,8 @@
           ]
         },
         {
-          "locator": "line:70-120",
-          "sha256": "21868a30a27b5fec2ca652d3ccd67233d26681c1d944c46bc0513c6718ef7b31",
+          "locator": "line:70-131",
+          "sha256": "a80c351e051c3eee611f0145675ac333b891e2a596672194f6f4496cef766287",
           "excerpt": "## Follow-up failures exposed by the complete lane\n\nThe first actual partition run reached its terminal results in 742 seconds:\n195 tests passed and the tool-in",
           "families": [
             "audit",
