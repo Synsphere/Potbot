@@ -210,7 +210,7 @@
         {
           "path": "src/potbot/controller/routed_reasoning.py",
           "symbol": "advance",
-          "sha256": "2a391853cc23296921ac76410bfcb54cbe233823a14193c87aab36351ef4ce45",
+          "sha256": "7398f7371fb1ff6c08ad54714b1f07248ef83ea9fa67ba6c8a4f9a331bf969db",
           "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
         },
         {
@@ -218,6 +218,12 @@
           "symbol": "checked_output_spec",
           "sha256": "f7db2e7075c9a4cbe593db4ff7afb4c2cfe0534e6881920986c45d8c31d397d1",
           "basis": "Opt-in immutable role schema binding through the existing hosted queue with independent role validation. Exact backend wire checked offline and through the local Ollama adapter. Four completed local cases with three correct answers. Live OpenAI and managed native Syn remain separate gates."
+        },
+        {
+          "path": "src/potbot/api/ui_checked_reasoning.py",
+          "symbol": "register_checked_reasoning_routes",
+          "sha256": "a1713ab0fc38eecafc967b4c62b73db2095281212a03e680b6326d2493ad888e",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
         }
       ],
       "tests": [
@@ -519,9 +525,21 @@
           "symbol": "test_verified_synthesis_uses_frozen_facts_and_preserves_settlement",
           "sha256": "83b761be04229bb0070671268d1fa6a821349af861e9d60a1637409adbf4160b",
           "basis": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open."
+        },
+        {
+          "path": "tests/integration/test_ui_checked_reasoning.py",
+          "symbol": "test_operator_finishes_and_reopens_three_checked_stages",
+          "sha256": "bf1c4e49485f28f18429b96356f741b41c5656fbc624571958f62b9bd37fa642",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
+        },
+        {
+          "path": "tests/integration/test_ui_checked_reasoning.py",
+          "symbol": "test_operator_interrupt_fences_through_same_owned_scope",
+          "sha256": "bf1c4e49485f28f18429b96356f741b41c5656fbc624571958f62b9bd37fa642",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
         }
       ],
-      "assessment": "Existing action intents, durable receipts, recovery claims, at-least-once outbox and generation fences already cover the local supervised-tool path. This is not exactly-once execution across arbitrary remote producers. U04-E also retains purpose-signed checks, a unique run per check, immutable request bindings and same-key recovery on the existing queue; possible effects are never replayed automatically. U04-X follow-on: uses original committed command receipts and fenced phase/action claims on the existing approval owner. Recovery invalidates delayed build, promotion and postflight claims; uncertain effects are held, not automatically rescheduled. U04-D follow-on: retains original source/control/review/handoff command receipts and fences one explicit measurement attempt. Same-key recovery reads committed evidence before native setup; an incomplete attempt is not dispatched again and cancellation does not prove process stop. U04-M follow-on: retains exact admitted reconciliation requests, one fenced native claim, immutable complete snapshots, current terminal recovery and stopped invocation receipts. Original command recovery never silently dispatches a second native attempt. U04-Q follow-on: retains prepared case identities before dispatch and joins finished results to existing actions, reservations, artifacts and stopped receipts. Exact command recovery never repeats native tool calls. U04-S follow-on: retains exact reviewed commands, fenced native claims, immutable shortlists/selections and original receipts through existing signed persistence and idempotency owners. U04-T follow-on: uses additive migration 46 and the existing jobs queue for immutable selected provenance, one run per check, exact original receipts and bounded retained history. T05-A follow-on: extends the existing research queue with additive migration 47, immutable external authorization and request receipts, original command recovery and bounded history. T05-B/R7.1 follow-on: Uses the existing research queue and PostgreSQL reasoning run/inbox owners. Additive migration 48 stores temporal source/dispatch state without a second scheduler. R7.4-C implements persistent baseline-only shadow admission and opt-in literal JSON prompt contracts; candidate execution and production routing qualification remain blocked. R7.4-D binds opt-in compiled shadow requests to their private input provenance and observed worker admission configuration; independently qualified model/server identity, canary and rollback remain unfinished. R7.4-E adds private terminal outcome snapshots, explicit reviewer disclosure and independently recorded regression fencing; model/server qualification, protected paired holdouts, canaries and qualified fallback remain unfinished. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts.",
+      "assessment": "Existing action intents, durable receipts, recovery claims, at-least-once outbox and generation fences already cover the local supervised-tool path. This is not exactly-once execution across arbitrary remote producers. U04-E also retains purpose-signed checks, a unique run per check, immutable request bindings and same-key recovery on the existing queue; possible effects are never replayed automatically. U04-X follow-on: uses original committed command receipts and fenced phase/action claims on the existing approval owner. Recovery invalidates delayed build, promotion and postflight claims; uncertain effects are held, not automatically rescheduled. U04-D follow-on: retains original source/control/review/handoff command receipts and fences one explicit measurement attempt. Same-key recovery reads committed evidence before native setup; an incomplete attempt is not dispatched again and cancellation does not prove process stop. U04-M follow-on: retains exact admitted reconciliation requests, one fenced native claim, immutable complete snapshots, current terminal recovery and stopped invocation receipts. Original command recovery never silently dispatches a second native attempt. U04-Q follow-on: retains prepared case identities before dispatch and joins finished results to existing actions, reservations, artifacts and stopped receipts. Exact command recovery never repeats native tool calls. U04-S follow-on: retains exact reviewed commands, fenced native claims, immutable shortlists/selections and original receipts through existing signed persistence and idempotency owners. U04-T follow-on: uses additive migration 46 and the existing jobs queue for immutable selected provenance, one run per check, exact original receipts and bounded retained history. T05-A follow-on: extends the existing research queue with additive migration 47, immutable external authorization and request receipts, original command recovery and bounded history. T05-B/R7.1 follow-on: Uses the existing research queue and PostgreSQL reasoning run/inbox owners. Additive migration 48 stores temporal source/dispatch state without a second scheduler. R7.4-C implements persistent baseline-only shadow admission and opt-in literal JSON prompt contracts; candidate execution and production routing qualification remain blocked. R7.4-D binds opt-in compiled shadow requests to their private input provenance and observed worker admission configuration; independently qualified model/server identity, canary and rollback remain unfinished. R7.4-E adds private terminal outcome snapshots, explicit reviewer disclosure and independently recorded regression fencing; model/server qualification, protected paired holdouts, canaries and qualified fallback remain unfinished. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection.",
       "support_scope": "Actual tests define lost-ack receipt recovery, unknown mutation quarantine, expiry, duplicate delivery and restart for the existing owners. Operation jobs and events now enforce the submitting principal in both controller queries and PostgreSQL RLS. U04-X follow-on: Real PostgreSQL tests cover principal privacy, same-key recovery after progress, competing claims, active-tool serialization, setup-key rotation and native-outcome acknowledgment. This does not establish arbitrary distributed exactly-once execution. U04-D follow-on: Source/publisher refresh and revocation, report expiry, changed runtime/claim bindings and key rotation invalidate new actions without erasing retained evidence. Atomic existing-owner handoff does not establish distributed exactly-once arbitrary remote execution. U04-M follow-on: Concurrent claim, cancellation, disable/revoke, failed refresh, TTL, replacement and changed-profile cases preserve history while withdrawing new authority. A cancellation record does not claim process stop, and uncertain effects remain held for explicit recovery. U04-Q follow-on: Real claim races, explicit cancellation, prepared-only recovery, stopped receipt reconciliation and older-attempt recovery preserve lifetime and current-history boundaries; unknown outcomes remain indeterminate. U04-S follow-on: One fresh native claim wins a race. Exact retries recover original receipts without a second inference; cancellation and uncertain outcomes remain explicit. U04-T follow-on: There is no second scheduler or attempt owner. Recovery reuses original jobs and keys; cancellation remains negative authority when positive admission is unavailable. T05-A follow-on: There is no new scheduler. Local and external claim paths remain separated, and every later send rechecks the existing current scope and lease. T05-B/R7.1 follow-on: Exact source records and component decisions are retained; expired writers cannot consume components or authorize new dispatch, and uncertain effects are never automatically replayed.",
       "remaining": [
         "Cross-producer crash boundaries and durable approval/cancellation adoption remain incomplete",
@@ -1122,9 +1140,15 @@
           "symbol": "test_verified_synthesis_uses_frozen_facts_and_preserves_settlement",
           "sha256": "83b761be04229bb0070671268d1fa6a821349af861e9d60a1637409adbf4160b",
           "basis": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open."
+        },
+        {
+          "path": "tests/integration/test_ui_checked_reasoning.py",
+          "symbol": "test_operator_lost_provider_reply_preserves_original_job_and_hold",
+          "sha256": "bf1c4e49485f28f18429b96356f741b41c5656fbc624571958f62b9bd37fa642",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
         }
       ],
-      "assessment": "The worker audit joins namespaced forks to operator-side trace and TASKSTATS identities. A positive receipt also requires terminal task traces and recursive cgroup release. The Linux fixture checks cancellation fencing, cleanup of a timed-out worker alongside a live peer, and renewal of both leases while concurrent workers remain isolated. The context RPC fixture checks durable results against audited worker exits. Qualification of the deployed worker routes remains open. U04-Q follow-on: runs every prepared qualification case through the existing task budget reservation, candidate lease, execution and usage-settlement owners. U04-S follow-on: runs transient query/document embeddings through the existing combined task budget reservation, usage-origin and settlement owners under one bounded runtime deadline. U04-T follow-on: verifies selected results against the existing settled task usage and gateway/native invocation receipts before evaluating declared assertions. T05-A follow-on: reserves bounded requests, bytes, runtime and declared monetary ceilings before disclosure and settles confirmed usage through the existing budget ledger. T05-B/R7.1 follow-on: Accounts for specialist rate floors and PubMed metadata before disclosure and checks durable urgent state before budgeted model dispatch. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts.",
+      "assessment": "The worker audit joins namespaced forks to operator-side trace and TASKSTATS identities. A positive receipt also requires terminal task traces and recursive cgroup release. The Linux fixture checks cancellation fencing, cleanup of a timed-out worker alongside a live peer, and renewal of both leases while concurrent workers remain isolated. The context RPC fixture checks durable results against audited worker exits. Qualification of the deployed worker routes remains open. U04-Q follow-on: runs every prepared qualification case through the existing task budget reservation, candidate lease, execution and usage-settlement owners. U04-S follow-on: runs transient query/document embeddings through the existing combined task budget reservation, usage-origin and settlement owners under one bounded runtime deadline. U04-T follow-on: verifies selected results against the existing settled task usage and gateway/native invocation receipts before evaluating declared assertions. T05-A follow-on: reserves bounded requests, bytes, runtime and declared monetary ceilings before disclosure and settles confirmed usage through the existing budget ledger. T05-B/R7.1 follow-on: Accounts for specialist rate floors and PubMed metadata before disclosure and checks durable urgent state before budgeted model dispatch. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection.",
       "support_scope": "Process-start identity, attribution and measured-versus-unavailable metric contracts; no blanket every-route production result. U04-Q follow-on: Budget exhaustion blocks dispatch; verified stopped runs settle existing reservations. Qualification creates no extra task budget or execution permission. U04-S follow-on: Budget denial prevents preparation; confirmed work is charged, and uncertain supervised outcomes hold the original reservation. Discovery creates no additional budget or model permission. U04-T follow-on: Execution success, partial output, unsettled usage and mutable coordination fields cannot manufacture an assertion pass or a new budget grant. T05-A follow-on: Synthetic usage is explicit. Declared tariffs are conservative estimates, not provider invoices; ambiguous sent requests retain an indeterminate hold and are never silently retried. T05-B/R7.1 follow-on: A prepared but unsent reasoning reservation can be released only on confirmed nondispatch; possible or uncertain calls keep existing conservative settlement rules. Declared research tariffs remain ceilings rather than invoices.",
       "remaining": [
         "Complete real loss-aware syscall/task-exit accounting for every executable Cog route",
@@ -3533,8 +3557,14 @@
         {
           "path": "src/potbot/controller/routed_reasoning.py",
           "symbol": "_check_facts",
-          "sha256": "2a391853cc23296921ac76410bfcb54cbe233823a14193c87aab36351ef4ce45",
+          "sha256": "7398f7371fb1ff6c08ad54714b1f07248ef83ea9fa67ba6c8a4f9a331bf969db",
           "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
+        },
+        {
+          "path": "src/potbot/controller/routed_reasoning_evidence.py",
+          "symbol": "freeze_citations",
+          "sha256": "89a412fc6c1e2c9a58f4c4706c72dd7aebc970256e6837f2e2985d89fdee2260",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
         }
       ],
       "tests": [
@@ -3639,9 +3669,15 @@
           "symbol": "test_verified_synthesis_uses_frozen_facts_and_preserves_settlement",
           "sha256": "83b761be04229bb0070671268d1fa6a821349af861e9d60a1637409adbf4160b",
           "basis": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open."
+        },
+        {
+          "path": "tests/integration/test_routed_reasoning_evidence.py",
+          "symbol": "test_citation_pin_survives_concurrent_start_and_source_unavailability",
+          "sha256": "1d5a0a43936323226303f334c61a97c98e2032ac40ed565cfb2fbcef8357ae1c",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
         }
       ],
-      "assessment": "Bounded R6 reasoning, PostgreSQL checkpoints/steering and R6.1 task accounting exist. Shared ensemble selection, independent candidates, full temporal scheduling and safe cross-branch composition remain partial. T05-B/R7.1 follow-on: Connects urgent/deferred/background components to the existing single reasoning owner with immutable source ranges, explicit predecessors, context epochs and dispatch fencing. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts.",
+      "assessment": "Bounded R6 reasoning, PostgreSQL checkpoints/steering and R6.1 task accounting exist. Shared ensemble selection, independent candidates, full temporal scheduling and safe cross-branch composition remain partial. T05-B/R7.1 follow-on: Connects urgent/deferred/background components to the existing single reasoning owner with immutable source ranges, explicit predecessors, context epochs and dispatch fencing. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection.",
       "support_scope": "Current graph/store/lease contracts and real database restart/stale-writer tests, not a new scheduler or proof of live model superiority. T05-B/R7.1 follow-on: An accepted urgent directive fences subsequent work; in-flight outcomes and task budget holds retain their actual receipts. Current-goal changes wait for a confirmed predecessor, next-goal work remains pending for a future admitted scheduler, and background facts never become independently verified evidence.",
       "remaining": [
         "R7.1 supplies bounded urgent/deferred/background integration; R7.2 atomic leaves, admitted next-goal execution and parallel scheduling remain to be connected to the existing owners.",
@@ -82017,7 +82053,7 @@
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
       "assessment": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open.",
-      "sha256": "84e5f209dee697a16f753c3b8057662a1b24028e2ccaa93cd5bb2bbccdea1d6c",
+      "sha256": "9559cf46d2ad338401cdd800f39f77ac49daaeb03ad5fbefd9bdb8edab666333",
       "narrative": [
         {
           "locator": "line:1-8",
@@ -82050,8 +82086,8 @@
           ]
         },
         {
-          "locator": "line:36-42",
-          "sha256": "f6cd57f9625d76e0008a43e6d051ab624393eee963e86f3871a0d0b04e76fc4e",
+          "locator": "line:36-44",
+          "sha256": "6365131c345d836d611a571807a78360c34b0c481268f7209ae922ae41ecf3f1",
           "excerpt": "## Verification boundary\n\nThe PostgreSQL acceptance tests exercise normal workbench checks and worker calls with controlled provider responses. They include fre",
           "families": [
             "durable",
@@ -82141,7 +82177,7 @@
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
       "assessment": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open.",
-      "sha256": "63ab2b84a02b7738e925fe1f897aa6c5d10c7ebd406827b08a1ec645e35dd49f",
+      "sha256": "7489dbf7757f09a1287679fc54365644c8f77db50314ff5b886f6f4002fe68e0",
       "narrative": [
         {
           "locator": "line:1-8",
@@ -82188,8 +82224,8 @@
           ]
         },
         {
-          "locator": "line:46-50",
-          "sha256": "2d4697bad1415c8aa2eb8f1daf6cf72e51e6e9769809625389fed47689d77180",
+          "locator": "line:46-52",
+          "sha256": "f318afb369a891c7d39b679c8d2cc85a660d6dbe0a32c7dd2179811be4f80ee5",
           "excerpt": "## Native image qualification\n\nThe sandbox system image workflow accepts a manual `native_inference` input. It builds the `native-inference-v1` variant for each",
           "families": [
             "durable",
@@ -82210,6 +82246,75 @@
       "disposition": "implemented_contract_with_separate_runtime_gates",
       "assessment": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open.",
       "sha256": "dd1de11bfc9cf38b135cb89d30dbcf2c9f63b0de38123802836fd48b29dd6162",
+      "narrative": []
+    },
+    {
+      "path": "docs/implementation/r7-4-k-checked-reasoning-workbench.md",
+      "families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open.",
+      "sha256": "e4d943fd4c2d05131db8151bcad4060e25e48b37185ddb22c86392450f776625",
+      "narrative": [
+        {
+          "locator": "line:1-8",
+          "sha256": "924a175f8fa7bb31a4176d502dd1de22dc3d43cbe64c51dd1cd5a69ef6b5e593",
+          "excerpt": "# R7.4-K checked reasoning workbench\n\nAn operator can open a durable investigation from the Research console, review its current stage and advance it explicitly",
+          "families": [
+            "durable",
+            "models",
+            "reasoning",
+            "accounting"
+          ]
+        },
+        {
+          "locator": "line:9-21",
+          "sha256": "e9d76da4095ca376886ba3a976621d8da9a89bc5a3911653e94db09355917fcb",
+          "excerpt": "## Open and control a run\n\nUse **Research \u2192 Checked reasoning** with the normal authenticated operator session and loopback Potbot controller. Select your exist",
+          "families": [
+            "durable",
+            "models",
+            "reasoning",
+            "accounting"
+          ]
+        },
+        {
+          "locator": "line:22-47",
+          "sha256": "9641d15d54bd7526ccd14a73310c1fda3fc4018b5888652224c4b00643a996da",
+          "excerpt": "## Include a settled research citation\n\nAdd `evidence_citations` to the usual plan to select one to four exact excerpts. Use the existing research citation pick",
+          "families": [
+            "durable",
+            "models",
+            "reasoning",
+            "accounting"
+          ]
+        },
+        {
+          "locator": "line:48-52",
+          "sha256": "024edff8bb2b60603cc96aafe5e2d3f58b37cf466f0f2d7b64a9806c8ae8ae1b",
+          "excerpt": "## Verification\n\nDisposable PostgreSQL tests drive all three roles through the operator adapter, restart, reject a stale advance, and recover the original settl",
+          "families": [
+            "durable",
+            "models",
+            "reasoning",
+            "accounting"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/media/r7-checked-reasoning-workbench.png",
+      "families": [
+        "durable",
+        "reasoning"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open.",
+      "sha256": "8f476fb7cbcc438c19a55a70604ee24ef9a0989202439c6316fe88cacd7501b3",
       "narrative": []
     }
   ],
@@ -96425,6 +96530,15 @@
       "review_family": "reasoning",
       "runtime_qualified": false,
       "evidence_boundary": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open."
+    },
+    {
+      "id": "R7.4-K/checked-reasoning-workbench",
+      "implementation_base": "0daf29076c65d162bc22bd84683bd67d16049b7b",
+      "reviewed_on": "2026-11-24",
+      "source": "docs/implementation/r7-4-k-checked-reasoning-workbench.md",
+      "review_family": "reasoning",
+      "runtime_qualified": false,
+      "evidence_boundary": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
     }
   ],
   "current_delivery_order": {
@@ -96449,7 +96563,8 @@
       "R7.4-G/source-implemented-native-model-workers",
       "R7.4-H/source-implemented-routed-investigations",
       "R7.4-I/source-implemented-structured-reasoning",
-      "R7.4-J/source-implemented-verified-synthesis"
+      "R7.4-J/source-implemented-verified-synthesis",
+      "R7.4-K/source-implemented-checked-reasoning-workbench"
     ],
     "next_implementation_milestone": {
       "id": "R7.3",

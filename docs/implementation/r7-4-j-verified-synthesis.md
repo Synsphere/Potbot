@@ -48,3 +48,5 @@ The local run used an Ollama adapter that passed the exact provider-shaped schem
 The sandbox system image workflow accepts a manual `native_inference` input. It builds the `native-inference-v1` variant for each architecture using a separate tag bound to the source commit. A dispatch from a branch builds for inspection. Main can sign and publish through the existing release mechanism. Ordinary runs continue using `system-v1`.
 
 R7.4 rollout still requires the signed native image to pass the installed TASKSTATS launcher over directed Syn, including reply loss and collector-loss fencing. The quality decision also requires an independently reviewed protected holdout and a bounded canary with a rollback procedure. The local results above cover two cases through a test adapter.
+
+The [checked reasoning workbench](r7-4-k-checked-reasoning-workbench.md) adds an operator surface for inspecting the original verified answer.

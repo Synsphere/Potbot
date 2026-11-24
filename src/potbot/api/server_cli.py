@@ -197,9 +197,18 @@ def application(args: argparse.Namespace) -> FastAPI:
             changed=directory.invalidate_provider,
         )
         from potbot.api.ui_api_setup import ApiSetupCredentials
+        from potbot.api.ui_checked_reasoning import register_checked_reasoning_routes
         from potbot.api.ui_tool_upgrades import register_tool_upgrade_routes
 
         setup_authorizer = ApiSetupCredentials(credentials).authorize_setup
+        register_checked_reasoning_routes(
+            app,
+            database,
+            authenticate,
+            settings.allowed_origins,
+            context.workspace_id,
+            setup_authorizer,
+        )
         register_tool_upgrade_routes(
             app,
             database,

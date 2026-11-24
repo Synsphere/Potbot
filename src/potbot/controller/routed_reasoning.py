@@ -9,6 +9,14 @@ from uuid import UUID
 from potbot.controller.checked_reasoning import CheckedReasoning
 from potbot.controller.model_reasoning_results import ReasoningFactCheckError
 from potbot.controller.model_route_bindings import compile_route_request
+from potbot.controller.research_evidence import ResearchEvidence
+from potbot.controller.research_workbench import ResearchWorkbench
+from potbot.controller.routed_reasoning_evidence import (
+    citation_selection,
+    freeze_citations,
+    is_citation_packet,
+    matches_frozen_plan,
+)
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import (
     InvalidInputError,
@@ -39,9 +47,10 @@ def _key(run_id: UUID, stage: int) -> str:
     return f"rrun-v1:{run_id}:{stage}"
 
 
-def _plan(value: object) -> tuple[dict[str, Any], UUID]:
+def _plan(value: object) -> tuple[dict[str, Any], UUID, dict[str, Any] | None]:
     required = {"task", "constraints", "evidence", "stages"}
-    if not isinstance(value, dict) or set(value) not in (required, required | {"answer_check"}):
+    fields = required | {"answer_check", "evidence_citations"}
+    if not isinstance(value, dict) or not required <= set(value) <= fields:
         raise InvalidInputError("Routed reasoning needs one task, evidence and its stage plan")
     try:
         raw = canonical_json(value)
@@ -52,6 +61,9 @@ def _plan(value: object) -> tuple[dict[str, Any], UUID]:
         raise InvalidInputError("Routed reasoning plan exceeds its JSON bounds") from None
     if "answer_check" in plan:
         plan["answer_check"] = fact_check(plan["answer_check"])
+    citations = (
+        citation_selection(plan.pop("evidence_citations")) if "evidence_citations" in plan else None
+    )
     stages = plan["stages"]
     if not isinstance(stages, list) or len(stages) != len(ROLES):
         raise InvalidInputError("Routed reasoning requires the three ordered roles")
@@ -70,7 +82,7 @@ def _plan(value: object) -> tuple[dict[str, Any], UUID]:
         episodes.add(spec.episode_id)
     if len(episodes) != 1 or len(policies) != len(ROLES):
         raise InvalidInputError("Stages require one shared task and distinct policies")
-    return plan, episodes.pop()
+    return plan, episodes.pop(), citations
 
 
 def _facts(plan: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
@@ -80,9 +92,12 @@ def _facts(plan: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
 class RoutedReasoning:
     """A finite, resumable hypothesis, critique and synthesis sequence."""
 
-    def __init__(self, database: Database) -> None:
+    def __init__(self, database: Database, *, research: ResearchWorkbench | None = None) -> None:
+        if research is not None and research.database is not database:
+            raise ScopeDeniedError("Citation reader belongs to a different database")
         self.database = database
         self.checked = CheckedReasoning(database)
+        self.research = ResearchEvidence(research or ResearchWorkbench(database))
 
     @staticmethod
     def _read(conn: Any, actor: WorkspaceContext, run_id: UUID) -> dict[str, Any]:
@@ -132,8 +147,7 @@ class RoutedReasoning:
 
         if not isinstance(run_id, UUID):
             raise InvalidInputError("Routed reasoning requires a run UUID")
-        selected, episode_id = _plan(plan)
-        digest = content_hash(selected)
+        selected, episode_id, citations = _plan(plan)
         with self.database.transaction(actor) as conn:
             # Serialize repeated starts even before a row exists. The task and
             # route triggers retain responsibility for actual admission.
@@ -142,14 +156,29 @@ class RoutedReasoning:
                 (f"{actor.workspace_id}/routed-reasoning/{run_id}",),
             )
             prior = conn.execute(
-                "SELECT plan_sha256 FROM routed_reasoning_runs "
+                "SELECT plan,plan_sha256 FROM routed_reasoning_runs "
                 "WHERE workspace_id=%s AND principal_id=%s AND id=%s",
                 (actor.workspace_id, actor.principal_id, run_id),
             ).fetchone()
             if prior is not None:
-                if prior["plan_sha256"] != digest:
+                if not matches_frozen_plan(
+                    prior["plan"], prior["plan_sha256"], selected, citations
+                ):
                     raise StateMismatchError("A reasoning run cannot be rebound to a new plan")
                 return self._view(self._read(conn, actor, run_id))
+
+            evidence = selected["evidence"]
+            if not isinstance(evidence, list) or any(is_citation_packet(item) for item in evidence):
+                raise InvalidInputError("Supply literal evidence or select its original citations")
+            if citations is not None:
+                if not citations["allow_hosted_disclosure"] and any(
+                    stage["request"]["job_type"] == "model.generate" for stage in selected["stages"]
+                ):
+                    raise ScopeDeniedError("Selected citations need explicit hosted disclosure")
+                selected["evidence"] = [
+                    *evidence,
+                    freeze_citations(conn, actor, episode_id, citations, self.research),
+                ]
 
             for stage in selected["stages"]:
                 policy = conn.execute(
@@ -185,7 +214,7 @@ class RoutedReasoning:
                     run_id,
                     actor.principal_id,
                     Jsonb(selected),
-                    digest,
+                    content_hash(selected),
                     actor.workspace_id,
                     episode_id,
                 ),
@@ -261,14 +290,27 @@ class RoutedReasoning:
             )
             return self._view(self._read(conn, actor, row["id"]))
 
-    def advance(self, actor: WorkspaceContext, run_id: UUID, *, setup_token: str) -> dict[str, Any]:
+    def advance(
+        self,
+        actor: WorkspaceContext,
+        run_id: UUID,
+        *,
+        setup_token: str,
+        expected_stage: int | None = None,
+    ) -> dict[str, Any]:
         """Take one queue/checkpoint step. External work remains with the job worker."""
+        if expected_stage is not None and (
+            type(expected_stage) is not int or not 0 <= expected_stage < len(ROLES)
+        ):
+            raise InvalidInputError("Invalid expected checked reasoning stage")
         row = self._read_owned(actor, run_id)
         if row["state"] != "active":
             return self._view(row)
+        stage_index = row["stage_index"]
+        if expected_stage is not None and stage_index != expected_stage:
+            raise StateMismatchError("The reasoning stage changed; inspect before advancing")
         if not row["current_contract"]:
             return self._close(actor, row, "contract_changed")
-        stage_index = row["stage_index"]
         stage = row["plan"]["stages"][stage_index]
         try:
             decision_id = row["decision_id"]

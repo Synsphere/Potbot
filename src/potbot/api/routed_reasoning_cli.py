@@ -17,7 +17,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     add_scope_arguments(parser)
     commands = parser.add_subparsers(dest="command", required=True)
     start = commands.add_parser("start", help="freeze a checked plan without queuing work")
-    start.add_argument("--plan", type=Path, required=True)
+    start.add_argument(
+        "--plan",
+        type=Path,
+        required=True,
+        help="JSON plan with optional explicit evidence_citations selection",
+    )
     commands.add_parser("inspect", help="inspect original phase and job identities")
     commands.add_parser("advance", help="take one controller step through the ordinary job queue")
     commands.add_parser("result", help="read the retained completed synthesis")

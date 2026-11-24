@@ -40,3 +40,5 @@ The PostgreSQL acceptance tests exercise normal workbench checks and worker call
 The preceding [sealed native worker increment](r7-4-g-native-model-workers.md) documents installation and model accounting.
 
 The [schema-constrained reasoning increment](r7-4-i-structured-reasoning.md) shows how hosted hypothesis and critique stages can opt into strict decoding.
+
+The [checked reasoning workbench](r7-4-k-checked-reasoning-workbench.md) adds an operator surface and explicit retained citation selection.
