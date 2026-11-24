@@ -123,11 +123,11 @@ jobs:
         run: uv run --locked python scripts/check_memory_graph_plan.py
       - name: Verify temporary storage and complete pytest teardown
         run: uv run --locked python -m pytest -q tests/unit/test_temporary.py tests/unit/test_temporary_cleanup.py tests/unit/test_pytest_temp_isolation.py
-      - name: Install required Linux process isolation
+      - name: Install required Linux process isolation and PDF extractor
         run: |
           bash scripts/ci_prepare_ubuntu_mirror.sh
           sudo apt-get update
-          sudo apt-get install --yes bubblewrap libseccomp2 apparmor-profiles
+          sudo apt-get install --yes bubblewrap libseccomp2 apparmor-profiles poppler-utils
       - name: Load Ubuntu's Bubblewrap user-namespace profile
         shell: bash
         run: |
