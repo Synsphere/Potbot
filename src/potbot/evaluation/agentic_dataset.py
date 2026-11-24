@@ -12,7 +12,19 @@ from typing import Any
 from potbot.controller.atomic_tasks import ATOMIC_KINDS
 from potbot.domain.errors import InvalidInputError
 from potbot.domain.serialization import content_hash
-from potbot.evaluation.agentic_model_bench import RoleSuite
+from potbot.evaluation.agentic_model_bench import RoleCase, RoleSuite
+
+
+def atomic_input_identity(case: RoleCase) -> str:
+    """Shared duplicate identity, including reworded structured reference inputs."""
+    context = case.context or {}
+    return (
+        content_hash(
+            {"atomic_kind": context.get("atomic_kind"), "input": context["reference_input"]}
+        )
+        if "reference_input" in context
+        else case.input_digest
+    )
 
 
 def audit_atomic_dataset(suite: RoleSuite, card: object) -> dict[str, Any]:
@@ -40,11 +52,7 @@ def audit_atomic_dataset(suite: RoleSuite, card: object) -> dict[str, Any]:
         if case.grader == "json_shape":
             raise InvalidInputError("atomic fixture references need substantive expected values")
         # Reference inputs cannot gain independence through rewording or split IDs.
-        identity = (
-            content_hash({"atomic_kind": kind, "input": context["reference_input"]})
-            if "reference_input" in context
-            else case.input_digest
-        )
+        identity = atomic_input_identity(case)
         if identity in seen:
             raise InvalidInputError(
                 "duplicate dataset input, including development/holdout leakage"

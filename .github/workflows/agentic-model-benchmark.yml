@@ -32,6 +32,8 @@ jobs:
       - name: Verify offline model-role and judge calibration contracts
         run: |
           uv run --locked python -m pytest -q \
+            tests/unit/test_agentic_candidate_dataset.py \
+            tests/unit/test_agentic_candidate_edges.py \
             tests/unit/test_agentic_deployments.py \
             tests/unit/test_agentic_deployment_reports.py \
             tests/unit/test_model_preflight.py \
