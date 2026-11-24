@@ -32,6 +32,8 @@ PATHS = {
     "swarm": "/v1/ui/swarm/nodes",
     "preferences": "/v1/ui/preferences",
     "requests": "/v1/ui/swarm/revocations",
+    "live_configuration": "/v1/ui/settings/live",
+    "node_controls": "/v1/ui/swarm/control",
 }
 MAX_RESPONSE = 524288
 Transport = Callable[[str, str, dict[str, str], bytes | None], tuple[int, bytes]]
@@ -141,7 +143,7 @@ def _values(raw: Any) -> list[dict[str, Any]]:
 
 
 def project_preferences(raw: Any) -> dict[str, Any]:
-    from potbot.api.ui_resources import validate_preferences
+    from potbot.domain.ui_preferences import validate_preferences
 
     value = _object(raw)
     return {
@@ -549,9 +551,9 @@ class NativeSettingsClient:
         if method != "GET":
             headers.update({"Origin": self.connection.origin, "Content-Type": "application/json"})
             encoded = json.dumps(body, sort_keys=True, allow_nan=False).encode()
-            if len(encoded) > 4096:
+            if len(encoded) > (32768 if resource == "live_configuration" else 4096):
                 raise NativeSettingsError("configuration")
-        if resource == "requests":
+        if method != "GET" and resource in {"requests", "live_configuration", "node_controls"}:
             try:
                 headers["X-Potbot-Setup-Token"] = _token(self.connection.setup())
             except Exception:
@@ -559,7 +561,11 @@ class NativeSettingsClient:
         status, raw = self.transport(
             method, self.connection.base + PATHS[resource], headers, encoded
         )
-        if status != (202 if resource == "requests" else 200):
+        if status != (
+            202
+            if resource == "requests" or resource == "node_controls" and method == "POST"
+            else 200
+        ):
             raise NativeSettingsError(
                 "conflict" if status == 409 else "scope" if status in {401, 403} else "unavailable"
             )
@@ -585,6 +591,46 @@ class NativeSettingsClient:
             self.connection.workspace_id,
             principal_id or self.connection.principal_id,
         )
+
+    def read_live(self, resource: str, principal_id: str | None = None) -> dict[str, Any]:
+        from potbot.desktop_live_settings import project_live
+
+        if resource not in {"configuration", "nodes"}:
+            raise NativeSettingsError("configuration")
+        actor = self.read("catalogue", principal_id)["principalId"]
+        path = "live_configuration" if resource == "configuration" else "node_controls"
+        return project_live(resource, self._call(path), self.connection.workspace_id, actor)
+
+    def write_live(self, resource: str, principal_id: str, review: Any) -> dict[str, Any]:
+        from potbot.desktop_live_settings import project_live
+        from potbot.domain.live_controls import configuration_review, node_review
+
+        if resource not in {"configuration", "nodes"}:
+            raise NativeSettingsError("configuration")
+        accepted = (
+            configuration_review(review) if resource == "configuration" else node_review(review)
+        )
+        self.read("catalogue", principal_id)
+        result = project_live(
+            "configuration_saved" if resource == "configuration" else "node_requested",
+            self._call(
+                "live_configuration" if resource == "configuration" else "node_controls",
+                "PUT" if resource == "configuration" else "POST",
+                accepted,
+            ),
+            self.connection.workspace_id,
+            principal_id,
+        )
+        if resource == "configuration":
+            if (
+                result["requestId"] != accepted["requestId"]
+                or result["revision"] != accepted["expectedRevision"] + 1
+                or result["values"] != accepted["values"]
+            ):
+                raise NativeSettingsError("invalid_response")
+        elif result["review"] != accepted:
+            raise NativeSettingsError("invalid_response")
+        return result
 
     def save_preferences(self, principal_id: str, revision: int, settings: Any) -> dict[str, Any]:
         self.read("catalogue", principal_id)

@@ -53,6 +53,7 @@ ROOT_OWNERS = {
     "desktop_settings.py": "entrypoints",
     "desktop_settings_client.py": "entrypoints",
     "desktop_settings_state.py": "entrypoints",
+    "desktop_live_settings.py": "entrypoints",
     "frontend_worker.py": "entrypoints",
     "native_postgres.py": "persistence",
     "oneclick.py": "entrypoints",
