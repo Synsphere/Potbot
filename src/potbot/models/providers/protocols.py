@@ -69,6 +69,11 @@ def request_body(request: ProviderRequest) -> tuple[str, dict[str, Any]]:
                 config[target] = value
         model = selection.model.removeprefix("models/")
         return f"/v1beta/models/{quote(model, safe='')}:streamGenerateContent?alt=sse", body
+    if request.reasoning_effort is not None:
+        if protocol == "responses":
+            body["reasoning"] = {"effort": request.reasoning_effort}
+        else:
+            body["reasoning_effort"] = request.reasoning_effort
     for name in ("temperature", "top_p", "seed"):
         value = getattr(request, name)
         if value is not None:

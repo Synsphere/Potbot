@@ -176,7 +176,8 @@ def _preflight(
     local = sum(
         1
         for _, _, mid, _, _ in matrix
-        if next(m for m in models if m.id == mid).backend == "loopback_openai"
+        if next(m for m in models if m.id == mid).backend
+        in {"loopback_openai", "loopback_ollama_v1"}
     )
     return {
         "suite_sha256": suite.identity,
@@ -313,6 +314,7 @@ def _experiment_admission(
         repeat=args.repeat,
         shuffle_seed=args.shuffle_seed,
         evidence=_experiment_evidence(args),
+        execution_order=getattr(args, "execution_order", "shuffled"),
     )
 
 
@@ -427,8 +429,19 @@ def _execute(
         for trial in range(1, args.repeat + 1)
     ]
     randomizer.shuffle(grid)
+    execution_order = getattr(args, "execution_order", "shuffled")
+    if execution_order not in {"shuffled", "model_blocks_v1"}:
+        raise InvalidInputError("Unknown benchmark execution order")
+    if execution_order == "model_blocks_v1":
+        # Stable grouping preserves the randomized cell order within a model,
+        # and randomizes block order. This avoids loading weights for each cell.
+        model_order = list(models)
+        randomizer.shuffle(model_order)
+        rank = {model.id: index for index, model in enumerate(model_order)}
+        grid.sort(key=lambda cell: rank[cell[1].id])
     observations: list[Observation] = []
     identity_mismatch = False
+    transport_blocked = False
     for index, (case, model, variant, trial) in enumerate(grid, start=1):
         key = {"case_id": case.id, "model_id": model.id, "variant": variant, "trial": trial}
         if on_event:
@@ -451,11 +464,14 @@ def _execute(
             f"[Potbot benchmark] {index}/{len(grid)} {model.id} {case.role} {variant} {row.status}",
             file=sys.stderr,
         )
+        if getattr(transport, "execution_blocked", False):
+            transport_blocked = True
+            break
         if row.status == "identity_mismatch":
             identity_mismatch = True
             break
     judge_rows: list[Observation] = []
-    if args.judge_derived and not identity_mismatch:
+    if args.judge_derived and not identity_mismatch and not transport_blocked:
         from potbot.evaluation.agentic_reviewers import model_revision_identity
 
         # Only derive a pair when independently graded outputs have different
@@ -536,7 +552,11 @@ def _execute(
         "candidate_dataset_review": candidate_review,
         "deployment_inspection": deployment_inspection,
         "execution": {
-            "status": "stopped_model_identity_mismatch" if identity_mismatch else "completed",
+            "status": "stopped_model_identity_mismatch"
+            if identity_mismatch
+            else "stopped_transport_failure"
+            if transport_blocked
+            else "completed",
             "scheduled_primary_attempts": len(grid),
             "unattempted_primary_attempts": len(grid) - len(observations),
             "no_automatic_replay": True,
@@ -557,6 +577,17 @@ def _execute(
         "qualified": False,
         "auto_promoted": False,
     }
+    if execution_order != "shuffled":
+        report["execution"]["execution_order"] = execution_order
+    if any(m.backend == "loopback_ollama_v1" for m in models):
+        from potbot.evaluation.agentic_ollama_transport import transport_profile
+
+        report["transport_profiles"] = {"loopback_ollama_v1": transport_profile()}
+    from potbot.evaluation.agentic_openai_profile import profile_for_target
+
+    openai_profiles = {m.id: p for m in models if (p := profile_for_target(m)) is not None}
+    if openai_profiles:
+        report.setdefault("transport_profiles", {})["openai_cheap_v1"] = openai_profiles
     if any(m.backend == "deterministic" for m in models):
         from potbot.evaluation.agentic_reference import reference_runtime
 
@@ -580,6 +611,9 @@ def main(argv: list[str] | None = None) -> int:
         group.add_argument("--experiment-plan", type=Path)
         group.add_argument("--shadow-policy", type=Path)
         group.add_argument("--shuffle-seed", type=int, default=42)
+        group.add_argument(
+            "--execution-order", choices=("shuffled", "model_blocks_v1"), default="shuffled"
+        )
         group.add_argument("--variants", default="generic,family,model_role")
         group.add_argument("--repeat", type=int, default=1)
         if name == "run":
@@ -611,6 +645,9 @@ def main(argv: list[str] | None = None) -> int:
             experiment.add_argument("--variants", default="generic,family,model_role")
             experiment.add_argument("--repeat", type=int, default=1)
             experiment.add_argument("--shuffle-seed", type=int, default=42)
+            experiment.add_argument(
+                "--execution-order", choices=("shuffled", "model_blocks_v1"), default="shuffled"
+            )
         else:
             experiment.add_argument("--experiment-plan", type=Path, required=True)
             experiment.add_argument("--results", type=Path, required=True)
@@ -684,6 +721,7 @@ def main(argv: list[str] | None = None) -> int:
                     repeat=args.repeat,
                     shuffle_seed=args.shuffle_seed,
                     evidence=evidence,
+                    execution_order=args.execution_order,
                 )
             elif args.command == "shadow-routing":
                 from potbot.evaluation.agentic_shadow import evaluate_atomic_shadow
@@ -962,7 +1000,7 @@ def main(argv: list[str] | None = None) -> int:
                 indent=2,
             )
         )
-        return 2 if report["execution"]["status"] == "stopped_model_identity_mismatch" else 0
+        return 0 if report["execution"]["status"] == "completed" else 2
     except (
         InvalidInputError,
         SchemaViolationError,

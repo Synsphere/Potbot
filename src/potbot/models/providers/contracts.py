@@ -136,6 +136,7 @@ class ProviderRequest:
     seed: int | None = None
     max_response_bytes: int = MAX_TEXT_BYTES
     response_format: str = "text"
+    reasoning_effort: str | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.selection, ProviderSelection):
@@ -172,12 +173,20 @@ class ProviderRequest:
         if self.seed is not None and self.selection.protocol in {"messages", "responses"}:
             raise InvalidInputError("The selected protocol has no supported seed parameter.")
 
+        if self.reasoning_effort is not None and (
+            self.selection.provider != "openai"
+            or self.selection.protocol not in {"responses", "chat_completions"}
+            or self.reasoning_effort
+            not in {"none", "minimal", "low", "medium", "high", "xhigh", "max"}
+        ):
+            raise InvalidInputError("Reasoning effort requires a supported native OpenAI protocol")
+
     @property
     def fingerprint(self) -> str:
         return content_hash(self.to_dict())
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        value: dict[str, Any] = {
             "schema_version": 1,
             "selection": self.selection.to_dict(),
             "prompt": self.prompt,
@@ -190,6 +199,9 @@ class ProviderRequest:
             "max_response_bytes": self.max_response_bytes,
             "response_format": self.response_format,
         }
+        if self.reasoning_effort is not None:
+            value["reasoning_effort"] = self.reasoning_effort
+        return value
 
 
 @dataclass(frozen=True, slots=True)

@@ -1404,6 +1404,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "sha256": "ec215f077ee233b797d64b999ece6e3e8350d082818021d3d52a47e1de7fdb9e",
+      "bytes": 9286,
+      "kind": "narrative_text",
+      "text_sha256": "ec215f077ee233b797d64b999ece6e3e8350d082818021d3d52a47e1de7fdb9e",
+      "characters": 9286,
+      "lines": 161,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": "docs/implementation/recent-potbot-development-reconciliation.md",
       "sha256": "d59f71e908931fd516d8c4de4f5c3e19b849e20555328a54dbde37d80315fca5",
       "bytes": 55034,
@@ -1834,6 +1844,13 @@
       "path": "docs/media/plugin-discovery-strategy.svg",
       "sha256": "8d830816d3144e70a62ff93c8507c113c7abe2913b45e8be961eeeca7ce2b910",
       "bytes": 2369,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-small-local-atomic.svg",
+      "sha256": "5b11df4cb755214fcaea77f134f973ed7edec729b2f74f7797cf8c2adee83ad0",
+      "bytes": 2654,
       "kind": "media",
       "interpretation": "asset_identity_only"
     },
@@ -36478,12 +36495,12 @@
     },
     {
       "path": ".github/workflows/agentic-model-benchmark.yml",
-      "sha256": "52bffeab33b5b1dbf0c84c3252e4d47577800a7a1b530c10ad58bdea1c5a77f9",
-      "bytes": 5260,
+      "sha256": "e8ce18d9505710189ee3164c9fa3b718c660174a04e7621ca6b0f31ab0a169b7",
+      "bytes": 5374,
       "kind": "narrative_text",
-      "text_sha256": "52bffeab33b5b1dbf0c84c3252e4d47577800a7a1b530c10ad58bdea1c5a77f9",
-      "characters": 5260,
-      "lines": 104,
+      "text_sha256": "e8ce18d9505710189ee3164c9fa3b718c660174a04e7621ca6b0f31ab0a169b7",
+      "characters": 5374,
+      "lines": 106,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36967,7 +36984,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "a4116d4360b575d308274875af3b9d71456da67861376d2c9a82055c9e8574f3",
+  "review_sha256": "7c453d1a8ab13095fd329ce0e883870bed84f392b075705c497bf8d4c5ba7982",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -117319,6 +117336,61 @@
       ]
     },
     {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:1-24",
+      "sha256": "6f675e382e578d5519aee47bee1999596e3788b049e74a3574c1b9ce5d6853d3",
+      "excerpt": "# R7.4-B: reproducible local and inexpensive hosted trials\n\nThe opt-in benchmark can compare installed Ollama packages with explicitly\nselected OpenAI snapshots",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:25-66",
+      "sha256": "9c4d23a657d0cbf6a0168d18ae50517ddcb5a8fa2ccd4ea2d74398b776ff977e",
+      "excerpt": "## Freeze generation settings and reduce repeated weight loading\n\n`loopback_ollama_v1` accepts an explicit HTTP loopback `/api` endpoint and a\n`sha256:<original",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:67-109",
+      "sha256": "de680c8858a9d80447ba73d26b1e2c0f98b89747316f92c2e001e1df529022a4",
+      "excerpt": "## Explicit inexpensive OpenAI configurations\n\nThe ordinary hosted backend retains its previous defaults. A revision of\n`openai-cheap-v1:<exact-model-id>` expli",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:110-141",
+      "sha256": "e013ea2bd292e795bc7f1eb5c08c96bfc7af86aecbbf105f337f52851992c6b6",
+      "excerpt": "## Actual first local trial\n\n![Actual local protocol matches and separate Markdown-format diagnostic](../media/r7-small-local-atomic.svg)\n\n*Generated chart from",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:142-161",
+      "sha256": "425960f42f3e74b423b0dbdd04400c9a140f7eacb2c378dcd9be28fd41f07cc3",
+      "excerpt": "## Reproduce and interpret\n\nUse the existing `prepare-experiment`, `preflight`, `run`, `audit-experiment` and\n`compare-atomic` commands, with identical suite, c",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
       "source": "docs/implementation/recent-potbot-development-reconciliation.md",
       "locator": "line:1-14",
       "sha256": "89924394f3dbaac8e30f4e41cddcb3276ad41637303bb596648260787484be6a",
@@ -128954,6 +129026,18 @@
           "symbol": "_hosted",
           "sha256": "c5e8841e72138f925a891225a4250b9645c2127a5d272a37944f71478ac00849",
           "basis": "Selected configured provider policy/credential/prompt/budget checks without inference calls U04-T current-source review: Selected worker checks bind the exact discovery selection and execution digest, enforce canonical native ports and revalidate current selected authority before existing readiness checks."
+        },
+        {
+          "path": "src/potbot/models/providers/contracts.py",
+          "symbol": "ProviderRequest",
+          "sha256": "d47ce89ec4d0f81f642e3d9bd9c106491095fe4f8807d9cfc7479349b621f913",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/models/providers/protocols.py",
+          "symbol": "request_body",
+          "sha256": "5ee51f8eb7ed1ea250558fae4037c7e69bbe94498df94b42ae109c26c945809a",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
         }
       ],
       "tests": [
@@ -128974,9 +129058,15 @@
           "symbol": "test_hosted_linked_launch_revalidates_before_any_provider_or_reservation",
           "sha256": "548523ba08b60c717508d0ef06880898c9c6e8155b3f894ef0aa54b5caad122f",
           "basis": "Changed hosted policy/credential/task/budget/setup/expiry blocks before mocked provider or reservation"
+        },
+        {
+          "path": "tests/unit/test_agentic_openai_profile.py",
+          "symbol": "test_legacy_provider_request_identity_omits_new_optional_control",
+          "sha256": "a310f479a6f05d3b896b540cba961d65f01f96c3d9de9c3ece5e55094a63a0f5",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
         }
       ],
-      "assessment": "Model catalogs, typed generation/invocation, provider adapters and budget boundaries exist. Listed/default/tiny/hosted models remain distinct from measured host-qualified deployments; no paid or weight-loading calls occur in this audit. U04-E checks selected hosted policy/disclosure/credential/budget admission in the configured worker and revalidates before launching through the existing hosted gateway.",
+      "assessment": "Model catalogs, typed generation/invocation, provider adapters and budget boundaries exist. Listed/default/tiny/hosted models remain distinct from measured host-qualified deployments; no paid or weight-loading calls occur in this audit. U04-E checks selected hosted policy/disclosure/credential/budget admission in the configured worker and revalidates before launching through the existing hosted gateway. Optional native OpenAI reasoning effort is fingerprinted and protocol-bounded; omitting it preserves legacy request identities and grants no new operation authority.",
       "support_scope": "Provider and model protocol definitions and deterministic fixture evidence, not all five default model quality/capacity qualification. Eligibility does not call a provider or establish actual model quality/capacity.",
       "remaining": [
         "Qualify actual tokenizer/template/model revision, low-VRAM capacity and cost/latency",
@@ -130374,7 +130464,7 @@
         {
           "path": "src/potbot/evaluation/agentic_model_bench.py",
           "symbol": "ModelTarget",
-          "sha256": "a5a159b67e100a32bb22cb397a01c425a1ed3491e8d4ff602682191f99534e0d",
+          "sha256": "1b9d5238f1da5e9fa34c36c226e16bc3110d23314d278c6fddb605dc3c9bae4f",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
         },
         {
@@ -130472,13 +130562,13 @@
         {
           "path": "src/potbot/evaluation/agentic_deployments.py",
           "symbol": "inspect_benchmark_deployments",
-          "sha256": "db51255503e5e469628fa9b21b8956a7f7ea4f15fbc67dcc04655b4c048eabc0",
+          "sha256": "1ea799f5b0b05826cc0cd48ba5cd113ba7687d3b8edc48e5b2c8d6bf95a4aef4",
           "basis": "R7.3-D offline file/deployment binding and synthetic no-replay mismatch accounting. Caller-local file checks and returned labels do not authenticate the serving process or qualify model routing."
         },
         {
           "path": "src/potbot/evaluation/agentic_model_bench.py",
           "symbol": "returned_model_identity",
-          "sha256": "a5a159b67e100a32bb22cb397a01c425a1ed3491e8d4ff602682191f99534e0d",
+          "sha256": "1b9d5238f1da5e9fa34c36c226e16bc3110d23314d278c6fddb605dc3c9bae4f",
           "basis": "R7.3-D offline file/deployment binding and synthetic no-replay mismatch accounting. Caller-local file checks and returned labels do not authenticate the serving process or qualify model routing."
         },
         {
@@ -130496,19 +130586,19 @@
         {
           "path": "src/potbot/evaluation/agentic_experiments.py",
           "symbol": "freeze_atomic_experiment",
-          "sha256": "37fe3ec2743bbbae49eb1d245a1369c68690e979ae826efdaab7e957590c4e43",
+          "sha256": "8afd0f953101dfaf8762def70fa8d36b8e0d0b17c0a9f7449713282213f4f17d",
           "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
         },
         {
           "path": "src/potbot/evaluation/agentic_experiments.py",
           "symbol": "audit_atomic_experiment",
-          "sha256": "37fe3ec2743bbbae49eb1d245a1369c68690e979ae826efdaab7e957590c4e43",
+          "sha256": "8afd0f953101dfaf8762def70fa8d36b8e0d0b17c0a9f7449713282213f4f17d",
           "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
         },
         {
           "path": "scripts/benchmark_agentic_models.py",
           "symbol": "_experiment_admission",
-          "sha256": "5d5608c54a8560f495a66e2fd9f93cbc05f362d5c963b32c6908e396a2ec94d2",
+          "sha256": "de93957eab31c6f7c38a3eda0c8e5889d52eaa081fd4c87d474238b18d4b8bf6",
           "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
         },
         {
@@ -130522,6 +130612,30 @@
           "symbol": "evaluate_atomic_shadow",
           "sha256": "b27fecd4598d604db1bfb75ceed0425453a023b2e3ef65ffb735581ecbd03fd3",
           "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_ollama_transport.py",
+          "symbol": "generate_ollama",
+          "sha256": "5a7c935cd717bf3bdcde12515ff51928a9f28d2e8943abe47ff6ce27ea11799e",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_ollama_transport.py",
+          "symbol": "transport_profile",
+          "sha256": "5a7c935cd717bf3bdcde12515ff51928a9f28d2e8943abe47ff6ce27ea11799e",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_openai_profile.py",
+          "symbol": "profile_for_target",
+          "sha256": "cfb51c0bfc65fee206aac23f1d5cb2f0b2a53d45ec98cc5ea3335b7dd1c9415d",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_model_transport.py",
+          "symbol": "BenchmarkTransport",
+          "sha256": "cf4e716332ce7a27ab8776f241edfe2045662794cd2d50e1b41382285628fb69",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
         }
       ],
       "tests": [
@@ -130717,9 +130831,39 @@
           "symbol": "test_policy_is_detached_and_changed_criteria_cannot_reinterpret_an_old_run",
           "sha256": "0467f1a163eacc7c1cb9488d665e297ef91857ee4fc4cde051c7bdded382ea45",
           "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "tests/unit/test_agentic_ollama_transport.py",
+          "symbol": "test_changed_installed_or_loaded_manifest_is_refused_without_replacement_call",
+          "sha256": "df0bdcf9f809a28f7961c938e29b77bbf38acd4f5dd7fd2eec0e30e281df2302",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_agentic_ollama_transport.py",
+          "symbol": "test_lost_generation_reply_has_one_post_and_no_ps_or_replay",
+          "sha256": "df0bdcf9f809a28f7961c938e29b77bbf38acd4f5dd7fd2eec0e30e281df2302",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_agentic_ollama_transport.py",
+          "symbol": "test_grouped_schedule_runs_each_cell_once_in_stable_model_blocks",
+          "sha256": "df0bdcf9f809a28f7961c938e29b77bbf38acd4f5dd7fd2eec0e30e281df2302",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_agentic_openai_profile.py",
+          "symbol": "test_unresolved_native_api_failure_stops_further_paid_cells",
+          "sha256": "a310f479a6f05d3b896b540cba961d65f01f96c3d9de9c3ece5e55094a63a0f5",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_agentic_openai_profile.py",
+          "symbol": "test_known_token_limit_preserves_actual_usage_without_replaying",
+          "sha256": "a310f479a6f05d3b896b540cba961d65f01f96c3d9de9c3ece5e55094a63a0f5",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
         }
       ],
-      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route. R7.3-C adds frozen anonymous reviewer task pairs, exact bundle admission before inference and complete retained-matrix calibration. Repeated verdicts and reversed positions count as one source task; declared self-model aliases are refused. Synthetic correctness and self-consistent gold do not authenticate a provider, independent oracle or deployed model. R7.3-D reuses the existing LocalHostProfile/DeploymentSpec preflight, binds exact target configuration and retains returned labels/origins. A known mismatch stops primary and derived requests with partial journals, observed charges and held admission reservations preserved; offline paired/reviewer quality excludes those rows. Short pytest IDs preserve the original oversized malformed-input tests on Windows. Real server identity/loading, protected independent gold, resource measurements and promotion remain separate. R7.3-E separates proposed gold and oracle controls from blind task/context review, reuses the existing duplicate-input and rubric owners, and blocks candidate experiments on missing, uncertain or conflicting declared answers. Exact reviewer identity, access isolation, representative protected data and actual model/worker quality remain unqualified. R7.3-F freezes the complete primary experiment and supporting input digests before runner dispatch, retains its exact plan, and audits all planned denominators without replay. Historical prior registration, independent gold, host resource measurement and live routing remain separately unqualified. R7.4-A adds policy-bound offline routing shadow analysis over the existing frozen experiment and paired evidence, with explicit independent runtime/promotion blockers and zero dispatch or routing mutations.",
+      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route. R7.3-C adds frozen anonymous reviewer task pairs, exact bundle admission before inference and complete retained-matrix calibration. Repeated verdicts and reversed positions count as one source task; declared self-model aliases are refused. Synthetic correctness and self-consistent gold do not authenticate a provider, independent oracle or deployed model. R7.3-D reuses the existing LocalHostProfile/DeploymentSpec preflight, binds exact target configuration and retains returned labels/origins. A known mismatch stops primary and derived requests with partial journals, observed charges and held admission reservations preserved; offline paired/reviewer quality excludes those rows. Short pytest IDs preserve the original oversized malformed-input tests on Windows. Real server identity/loading, protected independent gold, resource measurements and promotion remain separate. R7.3-E separates proposed gold and oracle controls from blind task/context review, reuses the existing duplicate-input and rubric owners, and blocks candidate experiments on missing, uncertain or conflicting declared answers. Exact reviewer identity, access isolation, representative protected data and actual model/worker quality remain unqualified. R7.3-F freezes the complete primary experiment and supporting input digests before runner dispatch, retains its exact plan, and audits all planned denominators without replay. Historical prior registration, independent gold, host resource measurement and live routing remain separately unqualified. R7.4-A adds policy-bound offline routing shadow analysis over the existing frozen experiment and paired evidence, with explicit independent runtime/promotion blockers and zero dispatch or routing mutations. R7.4-B adds versioned native generation controls, frozen grouped execution and finite hosted comparison over existing journals. Actual public synthetic local trials and separate format diagnostics do not qualify runtime routing.",
       "support_scope": "Current fixture, judge/calibration and ledger definitions, not completed B00-B10 external benchmark campaigns. U04-D follow-on: The deterministic forty-request discovery set checks class selection and hard exclusions, with adversarial name/popularity/keyword repetition and exact installed-owner preference. These retrieval fixtures are not general reasoning, tool execution or task-success benchmarks. U04-Q follow-on: Failed assertions, peer errors, malformed/changed outputs and missing stopped evidence cannot produce a successful task report. Server-provided success flags and hashes are not independent expected results. U04-S follow-on: Retrieval score, installation and provider-authored text are not general success measurements. Passing synthetic fixtures do not substitute for independent deployed model/task evidence. U04-T follow-on: Passing applies only to fixed assertions. It does not complete a whole task, independently qualify a deployed provider/host, or turn a truncated UI preview into outcome evidence. T05-A follow-on: Supported means verified cited-source agreement only. Different values remain unresolved; retrieval time does not replace publication time, and no need or task is automatically resolved.",
       "remaining": [
         "Freeze chronological tasks, independent graders, exact returned patch and real cost/time/resource provenance",

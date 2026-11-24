@@ -77,10 +77,12 @@ def freeze_atomic_experiment(
     repeat: int,
     shuffle_seed: int,
     evidence: dict[str, Any],
+    execution_order: str = "shuffled",
 ) -> dict[str, Any]:
     """Bind exact inputs, targets, prompt bytes, evidence and bounded cell order."""
     _require(
-        type(repeat) is int
+        execution_order in {"shuffled", "model_blocks_v1"}
+        and type(repeat) is int
         and 1 <= repeat <= 5
         and type(shuffle_seed) is int
         and 0 <= shuffle_seed < 2**32
@@ -135,7 +137,7 @@ def freeze_atomic_experiment(
         for variant in variants
         for trial in range(1, repeat + 1)
     ]
-    payload = {
+    payload: dict[str, Any] = {
         "schema": "potbot.atomic-experiment-plan/1",
         "suite_sha256": suite.identity,
         "targets_sha256": content_hash([asdict(model) for model in models]),
@@ -151,6 +153,19 @@ def freeze_atomic_experiment(
         },
         "cells": cells,
     }
+    if any(model.backend == "loopback_ollama_v1" for model in models):
+        from potbot.evaluation.agentic_ollama_transport import transport_profile
+
+        payload["transport_profiles"] = {"loopback_ollama_v1": transport_profile()}
+    from potbot.evaluation.agentic_openai_profile import profile_for_target
+
+    openai_profiles = {
+        model.id: profile for model in models if (profile := profile_for_target(model)) is not None
+    }
+    if openai_profiles:
+        payload.setdefault("transport_profiles", {})["openai_cheap_v1"] = openai_profiles
+    if execution_order != "shuffled":
+        payload["execution_order"] = execution_order
     return {**payload, "plan_sha256": content_hash(payload)}
 
 
@@ -163,6 +178,7 @@ def admit_atomic_experiment(
     repeat: int,
     shuffle_seed: int,
     evidence: dict[str, Any],
+    execution_order: str = "shuffled",
 ) -> dict[str, Any]:
     """Rebuild instead of trusting a rehashed caller-provided cell list."""
     rebuilt = freeze_atomic_experiment(
@@ -172,6 +188,7 @@ def admit_atomic_experiment(
         repeat=repeat,
         shuffle_seed=shuffle_seed,
         evidence=evidence,
+        execution_order=execution_order,
     )
     _require(
         isinstance(document, dict) and canonical_json(document) == canonical_json(rebuilt),
@@ -200,6 +217,7 @@ def audit_atomic_experiment(
         repeat=plan.get("repeat", 0),
         shuffle_seed=plan.get("shuffle_seed", -1),
         evidence=evidence,
+        execution_order=plan.get("execution_order", "shuffled"),
     )
     _require(
         isinstance(document, dict)

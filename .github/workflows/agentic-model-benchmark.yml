@@ -33,6 +33,8 @@ jobs:
         run: |
           uv run --locked python -m pytest -q \
             tests/unit/test_agentic_shadow.py \
+            tests/unit/test_agentic_ollama_transport.py \
+            tests/unit/test_agentic_openai_profile.py \
             tests/unit/test_agentic_experiments.py \
             tests/unit/test_agentic_experiment_json.py \
             tests/unit/test_agentic_candidate_dataset.py \
