@@ -137,9 +137,7 @@ def _failure_summary(
     if not isinstance(smoke, dict) or smoke.get("qualified_smoke") is not True:
         return {
             "stage": "workspace-smoke",
-            "failed_tests": _failed_names(
-                smoke.get("tests") if isinstance(smoke, dict) else None
-            ),
+            "failed_tests": _failed_names(smoke.get("tests") if isinstance(smoke, dict) else None),
         }
     if not isinstance(operator, dict) or operator.get("qualified") is not True:
         return {
@@ -182,9 +180,7 @@ def main() -> int:
         if candidate.resolve(strict=True) != candidate or not candidate.is_file():
             raise ValueError(f"unexpected installed path for {source}")
         digest = hashlib.sha256(candidate.read_bytes()).hexdigest()
-        expected = hashlib.sha256(
-            _canonical_source_bytes(source_root / source)
-        ).hexdigest()
+        expected = hashlib.sha256(_canonical_source_bytes(source_root / source)).hexdigest()
         if digest != expected:
             raise ValueError(f"published image bytes differ for {source}")
         shipped[guest] = digest
@@ -242,27 +238,27 @@ def main() -> int:
             if smoke["qualified_smoke"] is True:
                 report_path = private / "worker.json"
                 command = [
-                sys.executable,
-                "-B",
-                "scripts/qualify_operator_workers.py",
-                "--rootfs",
-                str(rootfs),
-                "--home",
-                str(home),
-                "--model-staging",
-                str(staging),
-                "--shared-models",
-                str(models),
-                "--shared-tools",
-                str(tools),
-                "--ai-config",
-                str(ai),
-                "--ai-past",
-                str(history),
-                "--image-digest",
-                args.image_digest,
-                "--qualification-sha256",
-                str(smoke["receipt_sha256"]),
+                    sys.executable,
+                    "-B",
+                    "scripts/qualify_operator_workers.py",
+                    "--rootfs",
+                    str(rootfs),
+                    "--home",
+                    str(home),
+                    "--model-staging",
+                    str(staging),
+                    "--shared-models",
+                    str(models),
+                    "--shared-tools",
+                    str(tools),
+                    "--ai-config",
+                    str(ai),
+                    "--ai-past",
+                    str(history),
+                    "--image-digest",
+                    args.image_digest,
+                    "--qualification-sha256",
+                    str(smoke["receipt_sha256"]),
                     "--report",
                     str(report_path),
                 ]

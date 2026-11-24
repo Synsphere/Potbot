@@ -13,9 +13,9 @@ function request(method = 'GET', body, options = {}) { return new Request(`${aut
 test('selected-task BFF exposes only fixed owner routes with bounded scoped responses', async t => {
   const prior = { ...process.env }, priorFetch = globalThis.fetch; Object.assign(process.env, env); delete process.env.POTBOT_UI_WORKSPACES_JSON;
   t.after(() => { globalThis.fetch = priorFetch; for (const key of [...Object.keys(env), 'POTBOT_UI_WORKSPACES_JSON']) if (prior[key] === undefined) delete process.env[key]; else process.env[key] = prior[key]; });
-  await t.test('session, origin, workspace and route checks precede backend access', async () => {
+  await t.test('loopback, origin, workspace and route checks precede backend access', async () => {
     let calls = 0; globalThis.fetch = async () => { calls++; throw Error('unexpected network'); };
-    assert.equal((await GET(new Request(auth.publicOrigin + '/api/ui/task-execution'), params(base + '/context'))).status, 401);
+    assert.equal((await GET(new Request('http://remote.invalid:3100' + '/api/ui/task-execution'), params(base + '/context'))).status, 403);
     assert.equal((await GET(request('GET', undefined, { headers: { Origin: 'https://evil.example' } }), params(base + '/context'))).status, 403);
     assert.equal((await GET(request('GET', undefined, { headers: { 'X-Potbot-Workspace': other } }), params(base + '/context'))).status, 503);
     assert.equal((await taskExecutionRoute(request('PUT'), [base, 'checks'])).status, 400);

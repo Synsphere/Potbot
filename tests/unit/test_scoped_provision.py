@@ -11,13 +11,9 @@ from potbot.tools import scoped_provision as provision
 
 
 def test_wsl_prefixed_cgroup_membership_resolves_the_delegated_keeper() -> None:
-    raw = (
-        "0::/wsl-user/distro-280/system.slice/"
-        "potbot-scoped-worker-cgroups.service/keeper\n"
-    )
+    raw = "0::/wsl-user/distro-280/system.slice/potbot-scoped-worker-cgroups.service/keeper\n"
     assert provision._delegated_cgroup_from_membership(raw) == Path(
-        "/sys/fs/cgroup/wsl-user/distro-280/system.slice/"
-        "potbot-scoped-worker-cgroups.service"
+        "/sys/fs/cgroup/wsl-user/distro-280/system.slice/potbot-scoped-worker-cgroups.service"
     )
 
 
@@ -54,9 +50,7 @@ def test_runtime_units_use_discovered_cgroup_and_distinct_auditor_gid() -> None:
     assert not any(item.startswith("--groups=") for item in worker_credentials)
 
 
-def test_existing_private_audit_directory_migrates_only_its_group(
-    tmp_path, monkeypatch
-) -> None:
+def test_existing_private_audit_directory_migrates_only_its_group(tmp_path, monkeypatch) -> None:
     audit = tmp_path / "audit"
     audit.mkdir(mode=0o700)
     audit.chmod(0o700)
@@ -206,9 +200,7 @@ def test_legacy_potbot_keeper_is_upgradeable_but_foreign_unit_is_refused(
         provision._inspect(keeper, desired)
 
 
-def test_stale_managed_file_is_atomically_replaced_and_restorable(
-    tmp_path, monkeypatch
-) -> None:
+def test_stale_managed_file_is_atomically_replaced_and_restorable(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(provision, "UNIT_DIR", tmp_path)
     monkeypatch.setattr(provision, "_protected", lambda path: None)
     keeper = tmp_path / provision.KEEPER
@@ -244,11 +236,7 @@ def test_wsl_scope_detaches_only_known_infrastructure_9p_mounts(tmp_path, monkey
         removed.append(argv[-1])
         target = argv[-1]
         mountinfo.write_text(
-            "\n".join(
-                row
-                for row in mountinfo.read_text().splitlines()
-                if row.split()[4] != target
-            )
+            "\n".join(row for row in mountinfo.read_text().splitlines() if row.split()[4] != target)
             + "\n",
             encoding="utf-8",
         )
@@ -256,15 +244,14 @@ def test_wsl_scope_detaches_only_known_infrastructure_9p_mounts(tmp_path, monkey
 
     monkeypatch.setattr(scoped_launcher.subprocess, "run", run)
     scoped_launcher._detach_wsl_infrastructure_shares(mountinfo)
-    assert removed[:3] == [
-        "/mnt/wslg/distro",
-        "/mnt/wslg/doc",
-        "/mnt/wslg/versions.txt",
-    ]
-    assert "/mnt/wslg" in removed
-    assert "/usr/lib/wsl/drivers" in removed
-    assert "/usr/lib/wsl/lib" in removed
-    assert "/init" in removed
+    expected = {row.split()[4] for row in rows}
+    assert set(removed) == expected
+    assert len(removed) == len(expected)
+    # Mount depth governs safe detachment; unrelated peers need no fixed order.
+    for mountpoint in expected:
+        for child in expected:
+            if child.startswith(mountpoint + "/"):
+                assert removed.index(child) < removed.index(mountpoint)
 
 
 def test_wsl_scope_rejects_arbitrary_remaining_drvfs_mount(tmp_path, monkeypatch) -> None:
@@ -276,9 +263,7 @@ def test_wsl_scope_rejects_arbitrary_remaining_drvfs_mount(tmp_path, monkeypatch
     monkeypatch.setattr(
         scoped_launcher.subprocess,
         "run",
-        lambda *args, **kwargs: (_ for _ in ()).throw(
-            AssertionError("must not unmount /mnt/c")
-        ),
+        lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("must not unmount /mnt/c")),
     )
     with pytest.raises(CapabilityUnavailableError, match="Windows filesystems"):
         scoped_launcher._detach_wsl_infrastructure_shares(mountinfo)

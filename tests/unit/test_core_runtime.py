@@ -43,5 +43,5 @@ def test_private_policy_writer_never_follows_symlink(tmp_path: Path) -> None:
         link.symlink_to(target)
     except OSError:
         pytest.skip("symlink creation unavailable")
-    with pytest.raises(Exception):
+    with pytest.raises(InvalidInputError):
         core_runtime._private_write(link, {"safe": True})

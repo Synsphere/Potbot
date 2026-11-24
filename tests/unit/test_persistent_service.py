@@ -217,8 +217,11 @@ def test_installed_worker_waits_for_live_scoped_accounting(
         scoped_worker_launcher=True,
     )
     assert service._supervise(config) == 0
-    assert sequence == ["operator", "serve", "probe"] + (
-        (["jobs"] if probe_results[0] else []) + (["probe"] if worker_exits else [])
+    assert sequence == (
+        ["operator", "serve", "probe"]
+        + (["jobs"] if probe_results[0] else [])
+        + ["atomic-graphs"]
+        + (["probe"] if worker_exits else [])
     )
     records = (service.service_home() / "supervisor.jsonl").read_text().splitlines()
     events = [json.loads(line)["event"] for line in records]

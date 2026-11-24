@@ -9,8 +9,8 @@ consumes a budget, or treats an in-memory claim as a durable lease.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Mapping
 
 from potbot.cogs.contracts import CogSignature, TypedCogValue, check_cog_input
 from potbot.controller.atomic_tasks import AtomicOperation, TaskGraph
@@ -147,9 +147,8 @@ class AtomicAdmissionPlanner:
             from potbot.domain.serialization import canonical_json
 
             size = len(canonical_json(proposal.value.value).encode("utf-8"))
-            if (
-                size > binding.operation.max_input_bytes
-                or (binding.operation.requires_approval and proposal.task_id not in approved_nodes)
+            if size > binding.operation.max_input_bytes or (
+                binding.operation.requires_approval and proposal.task_id not in approved_nodes
             ):
                 raise InvalidInputError("atomic leaf exceeds limits or lacks approval")
             candidate = DispatchCandidate(
@@ -167,9 +166,7 @@ class AtomicAdmissionPlanner:
             self.graph.admit_leaf(
                 task_id,
                 operation=binding.operation,
-                estimated_input_bytes=len(
-                    canonical_json(proposal.value.value).encode("utf-8")
-                ),
+                estimated_input_bytes=len(canonical_json(proposal.value.value).encode("utf-8")),
                 approved=task_id in approved_nodes,
             )
             self._admitted[task_id] = candidate
@@ -179,9 +176,7 @@ class AtomicAdmissionPlanner:
 
         This is not a dispatch authorization or a durable worker claim.
         """
-        return tuple(
-            self._admitted[key] for key in self.graph.nodes if key in self._admitted
-        )
+        return tuple(self._admitted[key] for key in self.graph.nodes if key in self._admitted)
 
     def ready(
         self,

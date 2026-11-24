@@ -85,10 +85,7 @@ def managed_host(monkeypatch, tmp_path):
             return "WSL version: 2.6.3.0\n"
         if "--install" in argv and "--no-distribution" not in argv:
             current.add(host.DISTRO)
-        return (
-            "POTBOT_WSL_CONFIG_CHANGED=0\n"
-            "syn-native-prerequisites-ready\n"
-        )
+        return "POTBOT_WSL_CONFIG_CHANGED=0\nsyn-native-prerequisites-ready\n"
 
     monkeypatch.setattr(host, "run_host", run)
     monkeypatch.setattr(
@@ -474,9 +471,7 @@ def test_wsl_controller_retries_same_pin_and_keeps_previous_selection_on_failure
             f"/home/synoperator/.local/share/potbot/incoming/{expected}.whl"
         ),
     )
-    monkeypatch.setattr(
-        wsl_controller, "_remove_staged_controller", lambda _manager, _native: None
-    )
+    monkeypatch.setattr(wsl_controller, "_remove_staged_controller", lambda _manager, _native: None)
     manager, _, _ = managed_host
     wheel = tmp_path / "potbot-0.5.0.dev12-py3-none-any.whl"
     wheel.write_bytes(b"first reviewed wheel")
@@ -531,9 +526,7 @@ def test_windows_setup_resumes_the_pinned_controller_after_restart(
             f"/home/synoperator/.local/share/potbot/incoming/{expected}.whl"
         ),
     )
-    monkeypatch.setattr(
-        wsl_controller, "_remove_staged_controller", lambda _manager, _native: None
-    )
+    monkeypatch.setattr(wsl_controller, "_remove_staged_controller", lambda _manager, _native: None)
     manager, _, calls = managed_host
     ready_run = host.run_host
     wheel = tmp_path / "potbot-0.5.0.dev12-py3-none-any.whl"
@@ -668,10 +661,7 @@ def test_revision5_host_migrates_workspace_group_and_restarts_only_managed_distr
     def migrating_run(argv, *, timeout=30):
         calls.append((argv, timeout))
         if argv[-1:] == [host.PROVISION_UBUNTU]:
-            return (
-                "POTBOT_WSL_CONFIG_CHANGED=1\n"
-                "syn-native-prerequisites-ready\n"
-            )
+            return "POTBOT_WSL_CONFIG_CHANGED=1\nsyn-native-prerequisites-ready\n"
         if argv[1:] == ["--terminate", host.DISTRO]:
             return ""
         return base_run(argv, timeout=timeout)
@@ -680,20 +670,12 @@ def test_revision5_host_migrates_workspace_group_and_restarts_only_managed_distr
     migrated = manager.setup()
 
     assert migrated["prerequisite_revision"] == host.PREREQUISITE_REVISION
-    terminate_calls = [
-        argv for argv, _ in calls if argv[1:] == ["--terminate", host.DISTRO]
-    ]
+    terminate_calls = [argv for argv, _ in calls if argv[1:] == ["--terminate", host.DISTRO]]
     assert terminate_calls == [[manager.wsl, "--terminate", host.DISTRO]]
-    assert not any(
-        argv[1:2] == ["--shutdown"]
-        for argv, _ in calls
-    )
+    assert not any(argv[1:2] == ["--shutdown"] for argv, _ in calls)
 
 
 def test_wsl_policy_no_change_does_not_restart_managed_distro(managed_host) -> None:
     manager, _, calls = managed_host
     manager.setup()
-    assert not any(
-        argv[1:] == ["--terminate", host.DISTRO]
-        for argv, _ in calls
-    )
+    assert not any(argv[1:] == ["--terminate", host.DISTRO] for argv, _ in calls)

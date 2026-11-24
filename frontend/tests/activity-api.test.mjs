@@ -21,11 +21,12 @@ test('Activity and model routes are authenticated, scoped and refuse raw backend
   t.after(() => { globalThis.fetch = originalFetch; for (const k of Object.keys(env)) {
     if (k in defaults) process.env[k] = defaults[k]; else delete process.env[k];
   }});
-  assert.equal((await jobsRoute(request('/api/ui/activity'))).status, 401);
+  assert.equal((await jobsRoute(new Request('http://remote.invalid:3100/api/ui/activity'))).status, 403);
   const auth = await login(request('/api/ui/auth/login', {method:'POST',
     headers:{origin,'Content-Type':'application/json'},body:JSON.stringify({password:env.POTBOT_UI_PASSWORD})}));
   assert.equal(auth.status, 200);
-  const cookie = auth.headers.get('set-cookie').split(';')[0];
+  assert.equal(auth.headers.get('set-cookie'), null);
+  const cookie = '';
   await t.test('job status and cursor, not raw job input or private event payload', async () => {
     const calls=[];
     globalThis.fetch = async (url, init) => {
@@ -58,7 +59,7 @@ test('Activity and model routes are authenticated, scoped and refuse raw backend
   });
   await t.test('read-only model catalogue distinguishes qualified from installed', async () => {
     globalThis.fetch = async (url) => {
-      assert.equal(new URL(url).pathname,'/v1/models');
+      assert.equal(new URL(url).pathname,'/v1/potbot/models');
       return Response.json(wrap({local:[{
         canonical_model:'Qwen/Qwen3-0.6B', role:'reasoning', qualified:false,
         deployment_configured:false, private_path:'/mnt/private', access_token:'hidden',

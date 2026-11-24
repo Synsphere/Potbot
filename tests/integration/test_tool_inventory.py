@@ -20,7 +20,7 @@ from potbot.domain.errors import ScopeDeniedError
 from potbot.persistence.artifacts import ArtifactStore, LocalArtifactBackend
 from potbot.semantics.service import SynService
 from potbot.tools.inventory import OWNERS
-from potbot.tools.repository import RepositoryStateStore
+from potbot.tools.repository import RepositoryStateStore, SnapshotProfile
 from tests.integration.test_repository_states import environment
 
 pytestmark = pytest.mark.postgres
@@ -36,6 +36,17 @@ def test_committed_inventory_cog_durable_stats_and_workspace_api(app_env, tmp_pa
         Path(__file__).resolve().parents[2],
         environment(app_env),
         committed_ref="HEAD",
+        # The generated roadmap projection is not a tool source. The complete
+        # checkout now exceeds the snapshot's unchanged 32 MiB bound; disclose
+        # this one exclusion in its existing immutable capture profile.
+        profile=SnapshotProfile(excluded_paths=("docs/implementation/roadmap-inventory.json",)),
+    )
+    assert state["manifest"]["profile"]["excluded_paths"] == [
+        "docs/implementation/roadmap-inventory.json"
+    ]
+    assert all(
+        entry["path"] != "docs/implementation/roadmap-inventory.json"
+        for entry in state["manifest"]["files"]
     )
     sealed = SynService(app_env.db, artifacts).import_snapshot(
         app_env.context, app_env.repository_id, "installed-tool-inventory-v1", registry.snapshot

@@ -27,8 +27,7 @@ def custody_policy() -> dict[str, object]:
 def test_windows_custody_pins_exact_signed_syn_0110_release() -> None:
     assert windows_custody.SYN_HOST_CUSTODY_VERSION == "0.11.0"
     assert (
-        windows_custody.SYN_HOST_CUSTODY_SOURCE_COMMIT
-        == "3ed8a43c7e08480b4e5ce13c9e4720c3001b70dc"
+        windows_custody.SYN_HOST_CUSTODY_SOURCE_COMMIT == "3ed8a43c7e08480b4e5ce13c9e4720c3001b70dc"
     )
     assert (
         windows_custody.SYN_HOST_CUSTODY_MANIFEST_SHA256
@@ -69,6 +68,17 @@ def test_windows_custody_environment_fails_closed_without_bridge(monkeypatch, tm
         root = tmp_path
         policy = SimpleNamespace(value=custody_policy())
 
+    # Exercise the WSL environment contract with an explicit POSIX fixture even
+    # when the controller-side test runner is native Windows.
+    import os
+    import sys
+
+    monkeypatch.setitem(
+        sys.modules,
+        "pwd",
+        SimpleNamespace(getpwuid=lambda _uid: SimpleNamespace(pw_dir="/home/synoperator")),
+    )
+    monkeypatch.setattr(os, "getuid", lambda: 1000, raising=False)
     monkeypatch.setenv(windows_custody.REQUIRED_MARKER, "1")
     for name in windows_custody.CUSTODY_ENVIRONMENT:
         monkeypatch.delenv(name, raising=False)
@@ -120,8 +130,9 @@ def test_live_parent_keystore_quiesces_the_exact_legacy_task_before_vault_open()
     assert "Stop-ScheduledTask -TaskName $taskName" in script
     assert "Potbot managed Syn operator with Windows DPAPI custody; host " in script
     assert "Potbot managed Syn operator; host " in script
-    assert '"is-active", "--quiet", "potbot-syn-operator.service"' in source
-    assert '"stop", "potbot-syn-operator.service"' in source
+    assert 'unit = "potbot-syn-operator.service"' in source
+    assert '["--user", "is-active", "--quiet", unit]' in source
+    assert '["--user", "stop", unit]' in source
     assert "_quiesce_windows_lifetime(manager)" in source
     assert source.index("_quiesce_windows_lifetime(manager)") < source.index(
         "runtime = prepare_windows_host_custody(manager.root)",
@@ -131,19 +142,19 @@ def test_live_parent_keystore_quiesces_the_exact_legacy_task_before_vault_open()
 
 
 def test_parent_keystore_server_waits_for_retired_vault_owner() -> None:
-    source = (
-        Path(windows_custody.__file__).with_name("parent_keystore_server.py")
-    ).read_text(encoding="utf-8")
+    source = (Path(windows_custody.__file__).with_name("parent_keystore_server.py")).read_text(
+        encoding="utf-8"
+    )
     assert "except VaultInUseError:" in source
     assert "deadline = time.monotonic() + 10.0" in source
     assert "Parent keystore vault is still owned by another Syn authority" in source
 
 
 def test_parent_keystore_server_restores_only_verified_source_under_isolated_python() -> None:
-    source = (
-        Path(windows_custody.__file__).with_name("parent_keystore_server.py")
-    ).read_text(encoding="utf-8")
-    insert = 'sys.path.insert(0, str(_SOURCE_ROOT))'
+    source = (Path(windows_custody.__file__).with_name("parent_keystore_server.py")).read_text(
+        encoding="utf-8"
+    )
+    insert = "sys.path.insert(0, str(_SOURCE_ROOT))"
     imported = "from syn_host_custody.broker import"
     assert "_SOURCE_ROOT = Path(__file__).resolve(strict=True).parent" in source
     assert 'raise RuntimeError("Parent keystore source root is redirected")' in source
@@ -151,9 +162,7 @@ def test_parent_keystore_server_restores_only_verified_source_under_isolated_pyt
     assert source.index(insert) < source.index(imported)
 
 
-def test_windows_service_can_replace_only_the_exact_legacy_helper(
-    tmp_path, monkeypatch
-) -> None:
+def test_windows_service_can_replace_only_the_exact_legacy_helper(tmp_path, monkeypatch) -> None:
     path = tmp_path / "operator-user-task.ps1"
     legacy = b"known legacy helper"
     path.write_bytes(legacy)

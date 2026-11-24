@@ -14,7 +14,7 @@ from potbot.controller.atomic_tasks import AtomicOperation, TaskGraph
 from potbot.controller.jobs import JobService
 from potbot.controller.tasks import TaskService
 from potbot.domain.errors import RevisionConflictError, ScopeDeniedError, StateMismatchError
-from potbot.domain.jobs import COG_JOB, CHECK_JOB
+from potbot.domain.jobs import CHECK_JOB, COG_JOB
 from potbot.domain.syn import SynRef
 from potbot.domain.tasks import ContractSpec, DeliverableType, Requirement
 
@@ -41,29 +41,40 @@ def _fixture(app_env, *, max_parallel=2, locks=()):
     )
     episode = UUID(task["task_id"])
     graph = TaskGraph("Three bounded operations")
-    graph.decompose("root", (
-        ("first", "First", ()),
-        ("second", "Independent", ()),
-        ("third", "Depends on first", ("first",)),
-    ))
-    registry = {"run_registered_tool": RegisteredLeaf(
-        AtomicOperation("run_registered_tool", "execution", 1024, 1000),
-        CogSignature(
-            SynRef(COG), "syn://type/potbot-atomic-cog",
-            "syn://type/potbot-atomic-request", "syn://type/potbot-atomic-response",
-            "potbot.cogs.execution.atomic", 1,
+    graph.decompose(
+        "root",
+        (
+            ("first", "First", ()),
+            ("second", "Independent", ()),
+            ("third", "Depends on first", ("first",)),
         ),
-        locks,
-    )}
+    )
+    registry = {
+        "run_registered_tool": RegisteredLeaf(
+            AtomicOperation("run_registered_tool", "execution", 1024, 1000),
+            CogSignature(
+                SynRef(COG),
+                "syn://type/potbot-atomic-cog",
+                "syn://type/potbot-atomic-request",
+                "syn://type/potbot-atomic-response",
+                "potbot.cogs.execution.atomic",
+                1,
+            ),
+            locks,
+        )
+    }
     planner = AtomicAdmissionPlanner(graph, registry, max_parallel=max_parallel)
     requests = {}
     proposals = []
     for name in ("first", "second", "third"):
         value = {"task": name}
-        proposals.append(ProposedLeaf(
-            name, "run_registered_tool",
-            TypedCogValue("syn://type/potbot-atomic-request", value),
-        ))
+        proposals.append(
+            ProposedLeaf(
+                name,
+                "run_registered_tool",
+                TypedCogValue("syn://type/potbot-atomic-request", value),
+            )
+        )
         requests[name] = {
             "job_type": COG_JOB,
             "episode_id": str(episode),
@@ -114,7 +125,10 @@ def _fixture(app_env, *, max_parallel=2, locks=()):
 
 def _launch(app_env, jobs, binding, *, key=None):
     return jobs.submit(
-        app_env.context, binding.request, key or str(uuid4()), trusted_operation=True,
+        app_env.context,
+        binding.request,
+        key or str(uuid4()),
+        trusted_operation=True,
         operation_check_id=binding.check_job_id,
         operation_authorization={"expires_at": 2000000000, "mac": "a" * 64},
     )
@@ -134,7 +148,8 @@ def test_graph_is_idempotent_and_owner_scoped(app_env):
     again = service.admit(app_env.context, identity, planner, bindings)
     assert again["replayed"] is True
     assert [row["node_id"] for row in service.ready(app_env.context, identity)] == [
-        "first", "second"
+        "first",
+        "second",
     ]
     with pytest.raises(ScopeDeniedError):
         service.inspect(app_env.other_context, identity)
@@ -171,12 +186,25 @@ def test_two_workers_cannot_bypass_exclusive_locks(app_env):
             except RevisionConflictError:
                 outcomes.append(None)
     assert sum(item is not None for item in outcomes) == 1
-    assert len([item for item in service.inspect(app_env.context, identity)["nodes"]
-                if item["job_id"] is not None]) == 1
+    assert (
+        len(
+            [
+                item
+                for item in service.inspect(app_env.context, identity)["nodes"]
+                if item["job_id"] is not None
+            ]
+        )
+        == 1
+    )
     _succeed(app_env, next(item for item in outcomes if item is not None))
-    remaining = [name for name in ("first", "second")
-                 if not any(row["node_id"] == name and row["job_id"]
-                            for row in service.inspect(app_env.context, identity)["nodes"])]
+    remaining = [
+        name
+        for name in ("first", "second")
+        if not any(
+            row["node_id"] == name and row["job_id"]
+            for row in service.inspect(app_env.context, identity)["nodes"]
+        )
+    ]
     assert len(remaining) == 1
     assert _launch(app_env, jobs, bindings[remaining[0]])["state"] == "queued"
 
@@ -209,8 +237,9 @@ def test_failed_or_indeterminate_leaf_never_implicitly_requeues(app_env):
             "WHERE workspace_id=%s AND id=%s",
             (app_env.context.workspace_id, UUID(first["id"])),
         )
-    third = next(n for n in service.inspect(app_env.context, identity)["nodes"]
-                 if n["node_id"] == "third")
+    third = next(
+        n for n in service.inspect(app_env.context, identity)["nodes"] if n["node_id"] == "third"
+    )
     assert third["state"] == "blocked_dependency"
     with pytest.raises(RevisionConflictError):
         _launch(app_env, jobs, bindings["third"])
@@ -234,8 +263,7 @@ def test_workspace_resource_holds_span_independent_graphs_and_survive_uncertaint
             (app_env.context.workspace_id, UUID(first["id"])),
         )
     assert (
-        first_service.inspect(app_env.context, first_graph)["nodes"][0]["state"]
-        == "indeterminate"
+        first_service.inspect(app_env.context, first_graph)["nodes"][0]["state"] == "indeterminate"
     )
     # The owner cannot manufacture a release for work whose effects are unknown.
     with pytest.raises(RevisionConflictError):

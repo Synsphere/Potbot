@@ -3,6 +3,7 @@
 This module is deliberately stdlib-only.  The same client is used by the Syn
 host-custody compatibility executable and by the Secret Service façade.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -154,9 +155,7 @@ def request_with_config(
 
 def request(body: dict[str, Any], *, surface: str, timeout: float = 30.0) -> Any:
     host, port, session, token = _configuration()
-    return request_with_config(
-        host, port, session, token, body, surface=surface, timeout=timeout
-    )
+    return request_with_config(host, port, session, token, body, surface=surface, timeout=timeout)
 
 
 def secret_get(service: str, account: str) -> str | None:
@@ -216,7 +215,7 @@ def _legacy_failure(label: str) -> int:
 def _legacy_main() -> int:
     # Syn 0.11 invokes this compatibility executable with PowerShell-shaped
     # arguments. They are deliberately ignored except that the retained pipe
-    #/session identifier must agree with the authenticated parent session.
+    # /session identifier must agree with the authenticated parent session.
     try:
         if "-Pipe" in sys.argv:
             index = sys.argv.index("-Pipe")
@@ -231,8 +230,7 @@ def _legacy_main() -> int:
             return _legacy_failure("input-invalid")
         result = request(body, surface=_legacy_surface(body), timeout=310.0)
         sys.stdout.write(
-            json.dumps({"ok": True, "result": result}, sort_keys=True, separators=(",", ":"))
-            + "\n"
+            json.dumps({"ok": True, "result": result}, sort_keys=True, separators=(",", ":")) + "\n"
         )
         return 0
     except ParentKeystoreError:

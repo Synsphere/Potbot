@@ -1,4 +1,5 @@
 """Mandatory Potbot operator/Xpra runtime inside the owned WSL distribution."""
+
 from __future__ import annotations
 
 import argparse
@@ -15,6 +16,7 @@ import sys
 import threading
 import time
 from pathlib import Path
+from typing import Any, TypedDict
 from uuid import UUID
 
 from potbot.domain.errors import CapabilityUnavailableError, InvalidInputError
@@ -23,8 +25,7 @@ from potbot.tools.workspace_concurrency import WorkspaceLeaseLedger
 
 IMAGE = "ghcr.io/synsphere/potbot-sandbox"
 IMAGE_SIGNER = (
-    "https://github.com/Synsphere/Potbot/"
-    ".github/workflows/sandbox-system-image.yml@refs/heads/main"
+    "https://github.com/Synsphere/Potbot/.github/workflows/sandbox-system-image.yml@refs/heads/main"
 )
 COSIGN = Path("/usr/local/libexec/potbot-cosign")
 SCOPED_SOCKET = Path("/run/potbot-scoped-worker.sock")
@@ -41,10 +42,21 @@ _MONITOR_KEYS = {
 }
 
 
-def _run(argv: list[str], *, timeout: int = 300, cwd: Path | None = None,
-         env: dict[str, str] | None = None, capture: bool = True) -> subprocess.CompletedProcess[str]:
+def _run(
+    argv: list[str],
+    *,
+    timeout: int = 300,
+    cwd: Path | None = None,
+    env: dict[str, str] | None = None,
+    capture: bool = True,
+) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(
-        argv, cwd=cwd, env=env, check=False, timeout=timeout, text=True,
+        argv,
+        cwd=cwd,
+        env=env,
+        check=False,
+        timeout=timeout,
+        text=True,
         stdout=subprocess.PIPE if capture else None,
         stderr=subprocess.PIPE if capture else None,
     )
@@ -76,8 +88,15 @@ def _ensure_user() -> tuple[pwd.struct_passwd, pwd.struct_passwd]:
         auditor = pwd.getpwnam("potbot-auditor")
     except KeyError:
         _run(
-            ["/usr/sbin/useradd", "--system", "--user-group", "--no-create-home",
-             "--shell", "/usr/sbin/nologin", "potbot-auditor"],
+            [
+                "/usr/sbin/useradd",
+                "--system",
+                "--user-group",
+                "--no-create-home",
+                "--shell",
+                "/usr/sbin/nologin",
+                "potbot-auditor",
+            ],
             timeout=30,
         )
         auditor = pwd.getpwnam("potbot-auditor")
@@ -93,8 +112,9 @@ def _sha(path: Path) -> str:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
-def _ensure_scoped_launcher(source: Path, python: Path, service: pwd.struct_passwd,
-                            auditor: pwd.struct_passwd) -> None:
+def _ensure_scoped_launcher(
+    source: Path, python: Path, service: pwd.struct_passwd, auditor: pwd.struct_passwd
+) -> None:
     helper_source = source / "native/potbot-cgroup-join/cgroup_join.c"
     if not helper_source.is_file():
         raise CapabilityUnavailableError("Scoped launcher native source is missing")
@@ -102,9 +122,19 @@ def _ensure_scoped_launcher(source: Path, python: Path, service: pwd.struct_pass
     with TemporaryDirectory(prefix="potbot-join-", dir=Path("/var/tmp")) as directory:
         built = Path(directory) / "potbot-cgroup-join"
         _run(
-            ["/usr/bin/cc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
-             "-fstack-protector-strong", "-D_FORTIFY_SOURCE=2",
-             "-o", str(built), str(helper_source)],
+            [
+                "/usr/bin/cc",
+                "-std=c11",
+                "-O2",
+                "-Wall",
+                "-Wextra",
+                "-Werror",
+                "-fstack-protector-strong",
+                "-D_FORTIFY_SOURCE=2",
+                "-o",
+                str(built),
+                str(helper_source),
+            ],
             timeout=60,
         )
         payload = built.read_bytes()
@@ -117,15 +147,24 @@ def _ensure_scoped_launcher(source: Path, python: Path, service: pwd.struct_pass
             os.replace(temporary, target)
     tracer = Path("/usr/bin/strace").resolve(strict=True)
     from potbot.tools import scoped_provision
-    code = scoped_provision.main([
-        "install",
-        "--service-user", service.pw_name,
-        "--auditor-user", auditor.pw_name,
-        "--join", str(target),
-        "--join-sha256", _sha(target),
-        "--strace", str(tracer),
-        "--strace-sha256", _sha(tracer),
-    ])
+
+    code = scoped_provision.main(
+        [
+            "install",
+            "--service-user",
+            service.pw_name,
+            "--auditor-user",
+            auditor.pw_name,
+            "--join",
+            str(target),
+            "--join-sha256",
+            _sha(target),
+            "--strace",
+            str(tracer),
+            "--strace-sha256",
+            _sha(tracer),
+        ]
+    )
     if code:
         raise CapabilityUnavailableError("Scoped worker launcher could not be provisioned")
 
@@ -193,9 +232,7 @@ def _prepare_image_cache_access(
         try:
             info = directory.stat()
         except OSError as exc:
-            raise CapabilityUnavailableError(
-                "Sandbox image cache wrapper is unavailable"
-            ) from exc
+            raise CapabilityUnavailableError("Sandbox image cache wrapper is unavailable") from exc
         if (
             not stat.S_ISDIR(info.st_mode)
             or info.st_uid != 0
@@ -224,20 +261,35 @@ def _prepare_image_cache_access(
         )
 
 
+class _ImagePinArguments(TypedDict):
+    digest: str
+    image_ref: str
+    build_commit: str
+    platform: str
+    rootfs_path: Path
+    qualification_sha256: str
+
+
 def _verify_image(
     source: Path,
     source_sha: str,
     image_source: str,
     service: pwd.struct_passwd,
-) -> tuple[Path, dict]:
+) -> tuple[Path, dict[str, str]]:
     image_digest = _resolve_image_digest(image_source)
     ref = f"{IMAGE}@sha256:{image_digest}"
-    _run([
-        str(COSIGN), "verify",
-        "--certificate-identity", IMAGE_SIGNER,
-        "--certificate-oidc-issuer", "https://token.actions.githubusercontent.com",
-        ref,
-    ], timeout=180)
+    _run(
+        [
+            str(COSIGN),
+            "verify",
+            "--certificate-identity",
+            IMAGE_SIGNER,
+            "--certificate-oidc-issuer",
+            "https://token.actions.githubusercontent.com",
+            ref,
+        ],
+        timeout=180,
+    )
     inspected = json.loads(
         _run(
             ["/usr/bin/skopeo", "inspect", "--config", "docker://" + ref],
@@ -293,15 +345,7 @@ def _verify_image(
 
     kernel = os.uname().release
     key = hashlib.sha256(
-        (
-            source_sha
-            + "\0"
-            + kernel
-            + "\0"
-            + image_digest
-            + "\0"
-            + image_source
-        ).encode()
+        (source_sha + "\0" + kernel + "\0" + image_digest + "\0" + image_source).encode()
     ).hexdigest()
     qroot = Path("/var/lib/potbot/core-qualification") / key
     report = qroot / "summary.json"
@@ -375,10 +419,7 @@ def _verify_image(
                 try:
                     failed_report = json.loads(report.read_text(encoding="utf-8"))
                     candidate = failed_report.get("failure_summary")
-                    if (
-                        isinstance(candidate, dict)
-                        and isinstance(candidate.get("stage"), str)
-                    ):
+                    if isinstance(candidate, dict) and isinstance(candidate.get("stage"), str):
                         summary = candidate
                 except (OSError, ValueError, TypeError):
                     pass
@@ -432,7 +473,7 @@ def _ensure_directory(path: Path, uid: int, gid: int, mode: int) -> None:
     os.chmod(path, mode)
 
 
-def _write_private(path: Path, value: dict) -> None:
+def _write_private(path: Path, value: dict[str, Any]) -> None:
     if path.is_symlink():
         raise CapabilityUnavailableError("Core runtime control file is redirected")
     data = (json.dumps(value, sort_keys=True, indent=2) + "\n").encode()
@@ -466,7 +507,7 @@ def _activate_workspace_image_pin(
     CAS-refresh only the qualification receipt when those immutable fields match.
     """
     image_ref = f"{IMAGE}@sha256:{image_digest}"
-    arguments = {
+    arguments: _ImagePinArguments = {
         "digest": image_digest,
         "image_ref": image_ref,
         "build_commit": image_source,
@@ -538,52 +579,71 @@ def _finalize(args: argparse.Namespace) -> int:
     )
 
     manifest = private / "operator.json"
-    _write_private(manifest, {
-        "workspace_id": str(workspace),
-        "image_digest": image_digest,
-        "qualification_sha256": qualification,
-        "rootfs": str(rootfs),
-        **{name: str(value) for name, value in paths.items()},
-    })
-    policy = private / "xpra-apps.json"
-    _write_private(policy, {
-        "workspaceId": str(workspace),
-        "principalId": str(principal),
-        "ledger": str(paths["controller_ledger"]),
-        "runtime": {
-            "imageDigest": image_digest,
-            "qualificationSha256": qualification,
+    _write_private(
+        manifest,
+        {
+            "workspace_id": str(workspace),
+            "image_digest": image_digest,
+            "qualification_sha256": qualification,
             "rootfs": str(rootfs),
-            "home": str(home),
-            "modelStaging": str(paths["model_staging"]),
-            "sharedModels": str(paths["shared_models"]),
-            "sharedTools": str(paths["shared_tools"]),
-            "aiConfig": str(paths["ai_config_dir"]),
-            "aiPast": str(paths["ai_history_dir"]),
+            **{name: str(value) for name, value in paths.items()},
         },
-        "browserLeases": True,
-        "strictXpraInput": True,
-        "recipes": [
-            {"kind": "terminal", "title": "Bash (xterm)",
-             "argv": ["/usr/bin/xterm", "-fa", "Monospace", "-e", "/bin/bash"]},
-            {"kind": "controlled-browser", "title": "Controlled Chromium",
-             "argv": ["/opt/potbot/browser/bin/python",
-                      "/opt/potbot/browser_worker.py", "--engine", "playwright"]},
-        ],
-    })
+    )
+    policy = private / "xpra-apps.json"
+    _write_private(
+        policy,
+        {
+            "workspaceId": str(workspace),
+            "principalId": str(principal),
+            "ledger": str(paths["controller_ledger"]),
+            "runtime": {
+                "imageDigest": image_digest,
+                "qualificationSha256": qualification,
+                "rootfs": str(rootfs),
+                "home": str(home),
+                "modelStaging": str(paths["model_staging"]),
+                "sharedModels": str(paths["shared_models"]),
+                "sharedTools": str(paths["shared_tools"]),
+                "aiConfig": str(paths["ai_config_dir"]),
+                "aiPast": str(paths["ai_history_dir"]),
+            },
+            "browserLeases": True,
+            "strictXpraInput": True,
+            "recipes": [
+                {
+                    "kind": "terminal",
+                    "title": "Bash (xterm)",
+                    "argv": ["/usr/bin/xterm", "-fa", "Monospace", "-e", "/bin/bash"],
+                },
+                {
+                    "kind": "controlled-browser",
+                    "title": "Controlled Chromium",
+                    "argv": [
+                        "/opt/potbot/browser/bin/python",
+                        "/opt/potbot/browser_worker.py",
+                        "--engine",
+                        "playwright",
+                    ],
+                },
+            ],
+        },
+    )
     state = private / "core-state.json"
-    _write_private(state, {
-        "workspaceId": str(workspace),
-        "principalId": str(principal),
-        "manifest": str(manifest),
-        "policy": str(policy),
-        "home": str(home),
-        "private": str(private),
-        "python": str(Path(sys.executable).resolve()),
-        "imageDigest": image_digest,
-        "imageSource": image_source,
-        "qualificationSha256": qualification,
-    })
+    _write_private(
+        state,
+        {
+            "workspaceId": str(workspace),
+            "principalId": str(principal),
+            "manifest": str(manifest),
+            "policy": str(policy),
+            "home": str(home),
+            "private": str(private),
+            "python": str(Path(sys.executable).resolve()),
+            "imageDigest": image_digest,
+            "imageSource": image_source,
+            "qualificationSha256": qualification,
+        },
+    )
     print(json.dumps({"state": str(state)}, sort_keys=True))
     return 0
 
@@ -596,7 +656,9 @@ def _qualification_stage(name: str) -> None:
 def _prepare(args: argparse.Namespace) -> int:
     _qualification_stage("runtime-preflight")
     if not sys.platform.startswith("linux") or os.geteuid() != 0 or not sys.flags.isolated:
-        raise CapabilityUnavailableError("Core runtime preparation requires isolated root Python in WSL")
+        raise CapabilityUnavailableError(
+            "Core runtime preparation requires isolated root Python in WSL"
+        )
     if (
         _HEX.fullmatch(args.source_sha256) is None
         or _COMMIT.fullmatch(args.consumer_commit) is None
@@ -647,21 +709,42 @@ def _prepare(args: argparse.Namespace) -> int:
 
     _qualification_stage("finalize")
     command = [
-        "/usr/sbin/runuser", "-u", service.pw_name, "--",
-        str(python), "-I", "-B", "-m", "potbot.wsl_core_runtime", "finalize",
-        "--workspace-id", args.workspace_id,
-        "--principal-id", args.principal_id,
-        "--rootfs", str(rootfs),
-        "--image-digest", image["digest"],
-        "--image-source", image["source"],
-        "--qualification-sha256", image["qualification"],
-        "--home", str(home),
-        "--private", str(private),
-        "--model-staging", str(staging),
-        "--shared-models", str(models),
-        "--shared-tools", str(tools),
-        "--ai-config", str(ai),
-        "--ai-past", str(past),
+        "/usr/sbin/runuser",
+        "-u",
+        service.pw_name,
+        "--",
+        str(python),
+        "-I",
+        "-B",
+        "-m",
+        "potbot.wsl_core_runtime",
+        "finalize",
+        "--workspace-id",
+        args.workspace_id,
+        "--principal-id",
+        args.principal_id,
+        "--rootfs",
+        str(rootfs),
+        "--image-digest",
+        image["digest"],
+        "--image-source",
+        image["source"],
+        "--qualification-sha256",
+        image["qualification"],
+        "--home",
+        str(home),
+        "--private",
+        str(private),
+        "--model-staging",
+        str(staging),
+        "--shared-models",
+        str(models),
+        "--shared-tools",
+        str(tools),
+        "--ai-config",
+        str(ai),
+        "--ai-past",
+        str(past),
     ]
     result = subprocess.run(
         command,
@@ -731,12 +814,14 @@ def _core_child_environment(token: str) -> dict[str, str]:
     return env
 
 
-def _start_secret_service(source: Path, env: dict[str, str]) -> subprocess.Popen:
+def _start_secret_service(source: Path, env: dict[str, str]) -> subprocess.Popen[bytes]:
     if source != source.resolve(strict=True) or source.is_symlink():
         raise CapabilityUnavailableError("Core source root for Secret Service is invalid")
     code = (
         "import sys;"
-        + "sys.path.insert(0," + repr(str(source)) + ");"
+        + "sys.path.insert(0,"
+        + repr(str(source))
+        + ");"
         + "from potbot.syn_release.secret_service_proxy import main;"
         + "raise SystemExit(main())"
     )
@@ -770,8 +855,11 @@ def _run_core(args: argparse.Namespace) -> int:
         raise CapabilityUnavailableError("Core operator/Xpra runtime must be unprivileged")
     state = Path(args.state)
     if (
-        not state.is_absolute() or state.is_symlink() or not state.is_file()
-        or state.resolve(strict=True) != state or state.stat().st_uid != os.geteuid()
+        not state.is_absolute()
+        or state.is_symlink()
+        or not state.is_file()
+        or state.resolve(strict=True) != state
+        or state.stat().st_uid != os.geteuid()
         or stat.S_IMODE(state.stat().st_mode) & 0o077
     ):
         raise InvalidInputError("Core runtime state is not private")
@@ -788,6 +876,7 @@ def _run_core(args: argparse.Namespace) -> int:
 
     from potbot.tools.operator_attachment_s13 import OperatorAttachmentClient, mount_fingerprint
     from potbot.tools.operator_cli import parse_manifest
+
     paths = parse_manifest(manifest)
     socket_path = private / "operator.sock"
     attachment = OperatorAttachmentClient(
@@ -800,23 +889,36 @@ def _run_core(args: argparse.Namespace) -> int:
     source = python.parents[2].resolve(strict=True)
     _protected_root(source)
     env = _core_child_environment(token)
-    env.update({
-        "POTBOT_OPERATOR_REQUIRED": "1",
-        "POTBOT_OPERATOR_SOCKET": str(socket_path),
-        "POTBOT_OPERATOR_WORKSPACE_ID": str(workspace),
-        "POTBOT_OPERATOR_IMAGE_DIGEST": paths.image_digest,
-        "POTBOT_OPERATOR_QUALIFICATION_SHA256": paths.qualification_sha256,
-        "POTBOT_OPERATOR_MOUNTS_SHA256": attachment.mounts_sha256,
-        "POTBOT_OPERATOR_SCOPED_LAUNCHER": str(SCOPED_SOCKET),
-        "POTBOT_GUI_AUDIT_REQUIRED": "1",
-        "POTBOT_XPRA_BRIDGE_TOKEN": token,
-    })
+    env.update(
+        {
+            "POTBOT_OPERATOR_REQUIRED": "1",
+            "POTBOT_OPERATOR_SOCKET": str(socket_path),
+            "POTBOT_OPERATOR_WORKSPACE_ID": str(workspace),
+            "POTBOT_OPERATOR_IMAGE_DIGEST": paths.image_digest,
+            "POTBOT_OPERATOR_QUALIFICATION_SHA256": paths.qualification_sha256,
+            "POTBOT_OPERATOR_MOUNTS_SHA256": attachment.mounts_sha256,
+            "POTBOT_OPERATOR_SCOPED_LAUNCHER": str(SCOPED_SOCKET),
+            "POTBOT_GUI_AUDIT_REQUIRED": "1",
+            "POTBOT_XPRA_BRIDGE_TOKEN": token,
+        }
+    )
     secret_service = _start_secret_service(source, env)
     operator = None
     try:
         operator = subprocess.Popen(
-            [str(python), "-I", "-B", "-m", "potbot.startup", "operator", "run",
-             "--manifest", str(manifest), "--socket-path", str(socket_path)],
+            [
+                str(python),
+                "-I",
+                "-B",
+                "-m",
+                "potbot.startup",
+                "operator",
+                "run",
+                "--manifest",
+                str(manifest),
+                "--socket-path",
+                str(socket_path),
+            ],
             env=env,
         )
         for _ in range(100):
@@ -830,17 +932,30 @@ def _run_core(args: argparse.Namespace) -> int:
             time.sleep(0.1)
         attachment.require_healthy()
         xpra = subprocess.Popen(
-            [str(python), "-I", "-B", "-m", "potbot.tools.x11_workspace_server",
-             "--workspace-id", str(workspace),
-             "--sandbox-root", str(home),
-             "--browser-origin", "http://127.0.0.1:3100",
-             "--port", "8766",
-             "--apps-policy", str(policy)],
+            [
+                str(python),
+                "-I",
+                "-B",
+                "-m",
+                "potbot.tools.x11_workspace_server",
+                "--workspace-id",
+                str(workspace),
+                "--sandbox-root",
+                str(home),
+                "--browser-origin",
+                "http://127.0.0.1:3100",
+                "--port",
+                "8766",
+                "--apps-policy",
+                str(policy),
+            ],
             env=env,
         )
         stopped = threading.Event()
+
         def halt(_signum: int, _frame: object) -> None:
             stopped.set()
+
         for name in ("SIGTERM", "SIGINT"):
             if hasattr(signal, name):
                 signal.signal(getattr(signal, name), halt)

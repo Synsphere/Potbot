@@ -41,7 +41,8 @@ test('authenticated BFF routes enforce workspace, origin, kinds and owned sessio
   const { POST: login }=await import('../src/app/api/ui/auth/login/route.ts');
   const auth=await login(new Request(origin+'/api/ui/auth/login',{method:'POST',headers:{origin,'Content-Type':'application/json'},body:JSON.stringify({password:env.POTBOT_UI_PASSWORD})}));
   assert.equal(auth.status,200);
-  const cookie=auth.headers.get('set-cookie').split(';')[0];
+  assert.equal(auth.headers.get('set-cookie'), null);
+  const cookie='';
   const baseHeaders={cookie,'x-potbot-workspace':workspaceId, origin};
   let called=0;
   globalThis.fetch=async (url,opts)=>{

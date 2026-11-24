@@ -29,12 +29,12 @@
     },
     {
       "path": "README.md",
-      "sha256": "984e83137f10351f349f609fdfe38d1af7568bb1274187d2fff816adc2e02974",
-      "bytes": 37877,
+      "sha256": "8615ac459873160c41600d26f41b4e18951ddb5202f81854e82ab496333fc2a5",
+      "bytes": 38557,
       "kind": "narrative_text",
-      "text_sha256": "984e83137f10351f349f609fdfe38d1af7568bb1274187d2fff816adc2e02974",
-      "characters": 37873,
-      "lines": 621,
+      "text_sha256": "8615ac459873160c41600d26f41b4e18951ddb5202f81854e82ab496333fc2a5",
+      "characters": 38553,
+      "lines": 630,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -639,12 +639,12 @@
     },
     {
       "path": "docs/implementation/38-operator-worker-qualification.md",
-      "sha256": "32d80c30bf103f3ceaff354ab4c7bb39fa01ccca086039744eb40f491d97506c",
-      "bytes": 12863,
+      "sha256": "93ed6f29bec9368853b947cbc569555bbdd35bed6232f8130a876d64202ce8b8",
+      "bytes": 13381,
       "kind": "narrative_text",
-      "text_sha256": "32d80c30bf103f3ceaff354ab4c7bb39fa01ccca086039744eb40f491d97506c",
-      "characters": 12860,
-      "lines": 263,
+      "text_sha256": "93ed6f29bec9368853b947cbc569555bbdd35bed6232f8130a876d64202ce8b8",
+      "characters": 13378,
+      "lines": 271,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1018,6 +1018,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/implementation/ci-postgres-partitions.md",
+      "sha256": "3b130ff4773ab93e21bfecb1ca26dbe080ae516db0c1b01d3ade15161cb76d98",
+      "bytes": 7635,
+      "kind": "narrative_text",
+      "text_sha256": "3b130ff4773ab93e21bfecb1ca26dbe080ae516db0c1b01d3ade15161cb76d98",
+      "characters": 7635,
+      "lines": 131,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": "docs/implementation/context-rpc-syn-route.md",
       "sha256": "27712157aee435c530575a28ed3e059b1c06e190d2bc218edea7c96e555e2daf",
       "bytes": 12831,
@@ -1224,6 +1234,26 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/implementation/native-desktop-m1.md",
+      "sha256": "e9a7aba01bfd83144423d168a9f3f7d49eb0a6bf492f3a1ad0cd6cf22b82fe14",
+      "bytes": 2228,
+      "kind": "narrative_text",
+      "text_sha256": "e9a7aba01bfd83144423d168a9f3f7d49eb0a6bf492f3a1ad0cd6cf22b82fe14",
+      "characters": 2223,
+      "lines": 44,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/one-click-startup.md",
+      "sha256": "afc8287ee59876429c775f106a67224f589325f6978d35281a03ff590d2ce883",
+      "bytes": 4939,
+      "kind": "narrative_text",
+      "text_sha256": "afc8287ee59876429c775f106a67224f589325f6978d35281a03ff590d2ce883",
+      "characters": 4939,
+      "lines": 72,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": "docs/implementation/plugin-discovery-strategy.md",
       "sha256": "53eaf1990aba41c2789d0fb63829c6442317386dfc85ecb13b517e14f038d1f9",
       "bytes": 17507,
@@ -1271,6 +1301,46 @@
       "text_sha256": "2fd96fb80c785c03da0cd64fe340ff46ecb4b32bc6a8e1db25d9be00fd9f616f",
       "characters": 9174,
       "lines": 160,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-2-atomic-scheduler-admission.md",
+      "sha256": "8baf81d3a2af6f9158ec25c06c395f60e4da56e1cd1bcd22abdec16a9ed12e57",
+      "bytes": 2361,
+      "kind": "narrative_text",
+      "text_sha256": "8baf81d3a2af6f9158ec25c06c395f60e4da56e1cd1bcd22abdec16a9ed12e57",
+      "characters": 2361,
+      "lines": 39,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-2-b-durable-atomic-graphs.md",
+      "sha256": "319030d3c3ed8f033418ec9d422dedf5ddc67afe6a6537d35b1a1d66b571523c",
+      "bytes": 5887,
+      "kind": "narrative_text",
+      "text_sha256": "319030d3c3ed8f033418ec9d422dedf5ddc67afe6a6537d35b1a1d66b571523c",
+      "characters": 5885,
+      "lines": 108,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-2-c-atomic-graph-operations.md",
+      "sha256": "8ab3b040963b583981489078ee5ef45348053468891efe32bd726fa1c1077797",
+      "bytes": 2928,
+      "kind": "narrative_text",
+      "text_sha256": "8ab3b040963b583981489078ee5ef45348053468891efe32bd726fa1c1077797",
+      "characters": 2928,
+      "lines": 50,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-3-a-paired-atomic-benchmarks.md",
+      "sha256": "8ac5f648f1ae1f4f7e08e2afd943aa87b4d8301b85903ac0e8d6760f98c4b14e",
+      "bytes": 4572,
+      "kind": "narrative_text",
+      "text_sha256": "8ac5f648f1ae1f4f7e08e2afd943aa87b4d8301b85903ac0e8d6760f98c4b14e",
+      "characters": 4572,
+      "lines": 81,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1635,12 +1705,32 @@
     },
     {
       "path": "docs/implementation/unified-development-roadmap.md",
-      "sha256": "8543127133f44bba68571f1a8eeb828ebce6e7bb0723dd4e72a0e1b95c733c99",
-      "bytes": 44252,
+      "sha256": "11cb0d2713c67a4f35ffe96623f5a232f30779610265a23e2d79d17019b215ed",
+      "bytes": 45013,
       "kind": "narrative_text",
-      "text_sha256": "8543127133f44bba68571f1a8eeb828ebce6e7bb0723dd4e72a0e1b95c733c99",
-      "characters": 44092,
-      "lines": 389,
+      "text_sha256": "11cb0d2713c67a4f35ffe96623f5a232f30779610265a23e2d79d17019b215ed",
+      "characters": 44853,
+      "lines": 401,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/windows-dpapi-host-setup.md",
+      "sha256": "602ffe0a61f176a64d46c758c7c73342587e33951ea1acc0ce5105520d6aca47",
+      "bytes": 1666,
+      "kind": "narrative_text",
+      "text_sha256": "602ffe0a61f176a64d46c758c7c73342587e33951ea1acc0ce5105520d6aca47",
+      "characters": 1666,
+      "lines": 32,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/windows-oneclick-wsl-core-runtime.md",
+      "sha256": "2784f291875bba9ca51980cc018a949f55abcd6aae0c3d66798dc4df401657e2",
+      "bytes": 6942,
+      "kind": "narrative_text",
+      "text_sha256": "2784f291875bba9ca51980cc018a949f55abcd6aae0c3d66798dc4df401657e2",
+      "characters": 6940,
+      "lines": 114,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -2046,12 +2136,12 @@
     },
     {
       "path": "docs/startup.md",
-      "sha256": "1e61de091d94ccf72acdaa385b9626a8ca9cecd0b4ad34932f6e7a00d4337110",
-      "bytes": 10263,
+      "sha256": "0610be0d783274ed635e9b8e276f5914769540d0cd7e98ff7d909d2892778038",
+      "bytes": 10626,
       "kind": "narrative_text",
-      "text_sha256": "1e61de091d94ccf72acdaa385b9626a8ca9cecd0b4ad34932f6e7a00d4337110",
-      "characters": 10263,
-      "lines": 197,
+      "text_sha256": "0610be0d783274ed635e9b8e276f5914769540d0cd7e98ff7d909d2892778038",
+      "characters": 10626,
+      "lines": 201,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -34106,7 +34196,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U00",
       "title": "Repository audit and roadmap reconciliation",
-      "locator": "line:219",
+      "locator": "line:231",
       "source_claim": "requirements_only",
       "requirement_sha256": "8e02c7ec68153a9ea09c732dec24853b9d7a65b2a370e9a8f4738bfa9147c8a3",
       "unified_owners": [
@@ -34138,7 +34228,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U01",
       "title": "Durable execution and provenance",
-      "locator": "line:220",
+      "locator": "line:232",
       "source_claim": "requirements_only",
       "requirement_sha256": "9acdee3308aa30755f1fe04ec78556f755c8fdaea9f3650d1e91888677f1e70d",
       "unified_owners": [
@@ -34198,7 +34288,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U02",
       "title": "Sandbox and shared filesystem",
-      "locator": "line:221",
+      "locator": "line:233",
       "source_claim": "requirements_only",
       "requirement_sha256": "f27fdf68725090cd51f00f3e8e157e472beffda2bec5975494fa151feccd2fcb",
       "unified_owners": [
@@ -34232,7 +34322,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U03",
       "title": "Worker/Cog resource supervision",
-      "locator": "line:222",
+      "locator": "line:234",
       "source_claim": "requirements_only",
       "requirement_sha256": "6fd056f50d44fd62e2b1400ccaef0bd8fa3533bf3359fc38f87327b70ac49e54",
       "unified_owners": [
@@ -34273,7 +34363,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U04",
       "title": "Semantic tool platform",
-      "locator": "line:223",
+      "locator": "line:235",
       "source_claim": "requirements_only",
       "requirement_sha256": "7f1a1e829ccf1f5ddca50253821fed65731cd7210251bfe4e3ca4a1cf0c1f083",
       "unified_owners": [
@@ -34343,7 +34433,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U05",
       "title": "Artifact transfer and GitHub concurrency",
-      "locator": "line:224",
+      "locator": "line:236",
       "source_claim": "requirements_only",
       "requirement_sha256": "ed7818d7731f55710e5596d2c7140fe8019d9f7aea09798f7beb98c9325bcd3d",
       "unified_owners": [
@@ -34378,7 +34468,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U06",
       "title": "Syn identity and security",
-      "locator": "line:225",
+      "locator": "line:237",
       "source_claim": "requirements_only",
       "requirement_sha256": "b1c9ad84bd4653b301fc1c4018085bbe1682203c76101ec7699a150a61575e86",
       "unified_owners": [
@@ -34412,7 +34502,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U07",
       "title": "Models, providers and credentials",
-      "locator": "line:226",
+      "locator": "line:238",
       "source_claim": "requirements_only",
       "requirement_sha256": "fb5a6e3ca91f5eb19db215baa1ad991f2c8dfbaef5a49235b6078a3656f438aa",
       "unified_owners": [
@@ -34447,7 +34537,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U08",
       "title": "Reasoning graph and steering",
-      "locator": "line:227",
+      "locator": "line:239",
       "source_claim": "requirements_only",
       "requirement_sha256": "acd521ce50bb19d6a89620dbd8c6b7d22c0b5fdfbfc12473defc60181486ae9b",
       "unified_owners": [
@@ -34482,7 +34572,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U09",
       "title": "Prompt/context and MODEL.md",
-      "locator": "line:228",
+      "locator": "line:240",
       "source_claim": "requirements_only",
       "requirement_sha256": "bf7f84edb02e60ef8572c505c67b36685ed81f02f76d975b7579d467aec1c647",
       "unified_owners": [
@@ -34519,7 +34609,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U10",
       "title": "Memory and embeddings",
-      "locator": "line:229",
+      "locator": "line:241",
       "source_claim": "requirements_only",
       "requirement_sha256": "b6213afccf90e68ccc7c32c0570bfb65875adfcee9e8d122c302949b726b8a53",
       "unified_owners": [
@@ -34558,7 +34648,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U11",
       "title": "Plugin and skills ecosystem",
-      "locator": "line:230",
+      "locator": "line:242",
       "source_claim": "requirements_only",
       "requirement_sha256": "322a12f1c3178717f393a21212982f61c81d989ac76dfb3750bc2aa78fb7daf7",
       "unified_owners": [
@@ -34608,7 +34698,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U12",
       "title": "Browser automation",
-      "locator": "line:231",
+      "locator": "line:243",
       "source_claim": "requirements_only",
       "requirement_sha256": "aa5729d418f9e0fe07f81549990e6b9f43eec398d40b8162c1b9b3e989e51e9f",
       "unified_owners": [
@@ -34645,7 +34735,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U13",
       "title": "Next.js operator frontend",
-      "locator": "line:232",
+      "locator": "line:244",
       "source_claim": "requirements_only",
       "requirement_sha256": "61130383fd5028063cb79292776e3db7c15abb9d82b934f4fc4ccaff5e813962",
       "unified_owners": [
@@ -34718,7 +34808,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U14",
       "title": "Evaluation and adaptation",
-      "locator": "line:233",
+      "locator": "line:245",
       "source_claim": "requirements_only",
       "requirement_sha256": "ece56c3dd0f7832182cab7633829be39bed5d475573ed31c82e1a8e61ecd69a3",
       "unified_owners": [
@@ -34754,7 +34844,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U15",
       "title": "Automation and interoperability",
-      "locator": "line:234",
+      "locator": "line:246",
       "source_claim": "requirements_only",
       "requirement_sha256": "4d287b3521c0deaa365e86a77a852cab18577f972d57b0eeb333c4133c8051f1",
       "unified_owners": [
@@ -34787,7 +34877,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U16",
       "title": "CI, release and deployment qualification",
-      "locator": "line:235",
+      "locator": "line:247",
       "source_claim": "requirements_only",
       "requirement_sha256": "6330a8cf848154f92867c2ad12aac0d10db7444dc291e3bf4026b961941c4fb2",
       "unified_owners": [
@@ -36016,12 +36106,12 @@
     },
     {
       "path": "scripts/check.py",
-      "sha256": "a5dc227b59e9b62f4a19789d8763152a942e4e1ec80bbb68f87f60b295096c9e",
-      "bytes": 15129,
+      "sha256": "23762c049eb4268799ca2e41683a3482c01db8d43f7a00c524c1e68240db3945",
+      "bytes": 17639,
       "kind": "narrative_text",
-      "text_sha256": "a5dc227b59e9b62f4a19789d8763152a942e4e1ec80bbb68f87f60b295096c9e",
-      "characters": 15129,
-      "lines": 351,
+      "text_sha256": "23762c049eb4268799ca2e41683a3482c01db8d43f7a00c524c1e68240db3945",
+      "characters": 17639,
+      "lines": 392,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36156,12 +36246,12 @@
     },
     {
       "path": "src/potbot/tools/worker_telemetry.py",
-      "sha256": "41648a7f2031ccd50a8d4e6dea70778d237ab85a943b3ab5e42183dc9eb49183",
-      "bytes": 48536,
+      "sha256": "4170dc76b86f68329de1f66b3d65abeb620cd9a5df56395b11278ca2540cbc8c",
+      "bytes": 50013,
       "kind": "narrative_text",
-      "text_sha256": "41648a7f2031ccd50a8d4e6dea70778d237ab85a943b3ab5e42183dc9eb49183",
-      "characters": 48534,
-      "lines": 1147,
+      "text_sha256": "4170dc76b86f68329de1f66b3d65abeb620cd9a5df56395b11278ca2540cbc8c",
+      "characters": 50011,
+      "lines": 1193,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36196,12 +36286,12 @@
     },
     {
       "path": "tests/unit/test_check_runner.py",
-      "sha256": "573aad6bea5d42656546413946a89c470aaf47b0b4571636944151f74affd601",
-      "bytes": 5911,
+      "sha256": "38a890e8a017fb5dce7097b3fa47e8812851a5ebcb981ed0761850a75fd27d08",
+      "bytes": 7905,
       "kind": "narrative_text",
-      "text_sha256": "573aad6bea5d42656546413946a89c470aaf47b0b4571636944151f74affd601",
-      "characters": 5911,
-      "lines": 141,
+      "text_sha256": "38a890e8a017fb5dce7097b3fa47e8812851a5ebcb981ed0761850a75fd27d08",
+      "characters": 7905,
+      "lines": 195,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36328,12 +36418,12 @@
     },
     {
       "path": ".github/workflows/agentic-model-benchmark.yml",
-      "sha256": "387ef2fb4cb6e782344f1913829ab6785da67c222b86a80bc61e357bb0376389",
-      "bytes": 1865,
+      "sha256": "d7125f28fa125306cd9fc3b30d3da59b6eec89422c44b444bc8d4c5561a63b91",
+      "bytes": 2320,
       "kind": "narrative_text",
-      "text_sha256": "387ef2fb4cb6e782344f1913829ab6785da67c222b86a80bc61e357bb0376389",
-      "characters": 1865,
-      "lines": 49,
+      "text_sha256": "d7125f28fa125306cd9fc3b30d3da59b6eec89422c44b444bc8d4c5561a63b91",
+      "characters": 2320,
+      "lines": 56,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36378,12 +36468,12 @@
     },
     {
       "path": ".github/workflows/browser-rendered-acceptance.yml",
-      "sha256": "3a73b522f4ac2bba3725c24858272377b0d706825fb41ed8a7399fe73ac2beee",
-      "bytes": 5515,
+      "sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
+      "bytes": 5983,
       "kind": "narrative_text",
-      "text_sha256": "3a73b522f4ac2bba3725c24858272377b0d706825fb41ed8a7399fe73ac2beee",
-      "characters": 5515,
-      "lines": 128,
+      "text_sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
+      "characters": 5983,
+      "lines": 136,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36418,12 +36508,12 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "sha256": "344fe2e8ee5c3937b90a3cdfc06290dbcfeaba617d1a8373dc7c853e48177fce",
-      "bytes": 18073,
+      "sha256": "3e1101cde112e0680eb08cc462a3cb2d1fc92f7af1309f22a85f687560465771",
+      "bytes": 23569,
       "kind": "narrative_text",
-      "text_sha256": "344fe2e8ee5c3937b90a3cdfc06290dbcfeaba617d1a8373dc7c853e48177fce",
-      "characters": 18071,
-      "lines": 358,
+      "text_sha256": "3e1101cde112e0680eb08cc462a3cb2d1fc92f7af1309f22a85f687560465771",
+      "characters": 23567,
+      "lines": 475,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36588,12 +36678,12 @@
     },
     {
       "path": ".github/workflows/sandbox-system-image.yml",
-      "sha256": "2710a92225d72308f98c61c9bc9b3bfc48ad4d5951ee9f5c240638aab74cf107",
-      "bytes": 8153,
+      "sha256": "c11a43b15262aeb49cc6d4022f556d791e20a29ee3c7f93dc0789d8ca88f2ae6",
+      "bytes": 8255,
       "kind": "narrative_text",
-      "text_sha256": "2710a92225d72308f98c61c9bc9b3bfc48ad4d5951ee9f5c240638aab74cf107",
-      "characters": 8153,
-      "lines": 184,
+      "text_sha256": "c11a43b15262aeb49cc6d4022f556d791e20a29ee3c7f93dc0789d8ca88f2ae6",
+      "characters": 8255,
+      "lines": 186,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36817,7 +36907,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "78a450c6604f84de2682000b8bb4f51fbcb1043035cb2f56edcb945d80d50e2b",
+  "review_sha256": "9ad4305e8205bc98a95e2855bd0bc3a44ab4fa21341c4b32c71264e8a4683184",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -36867,227 +36957,310 @@
     },
     {
       "source": "README.md",
-      "locator": "line:1-189",
-      "sha256": "43c682936af2e8464752e70ed265963267b7cdcf9c8027d962032d13bce0fb15",
+      "locator": "line:1-194",
+      "sha256": "d0c482d8d0618f522d6407771b17b380162013172c6dad3076210bff99fc10e3",
       "excerpt": "# potbot\n\nAn evidence-driven, multi-model coding agent, built in stages from the architecture\nand implementation plan in `docs/`.\n\nFor the current delivery orde",
       "review_families": [
-        "research",
-        "reasoning",
         "durable",
-        "identity"
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:190-262",
-      "sha256": "5f26eccfd87920c2708fbeaed5cbb98b75156b1d34439b5a3f335cbab91bd731",
-      "excerpt": "## Install and check\n\nRun the entry point for your platform from the extracted checkout:\n\n```powershell\n# Windows Command Prompt: start.bat\n# Windows PowerShell",
+      "locator": "line:195-271",
+      "sha256": "394b8c050a40ba5cdbc86900df8b70b04e7543e6796d86b8b1bb5c1057c1c8d6",
+      "excerpt": "## Install and check\n\n**Just run `start.bat`, `.\\start.ps1`, or `bash ./start.sh` with no arguments.**\nThe default entry point sets up and launches the backend,",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:263-278",
+      "locator": "line:272-287",
       "sha256": "5689f55fe90f94c53113dd0b1bbda33d5657a0f6c1c93e4a556178e094a78299",
       "excerpt": "## Work with tasks\n\nProvision the application schema, a workspace, and a restricted database principal\nwith `potbot admin`. Then submit and inspect tasks throug",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:279-297",
+      "locator": "line:288-306",
       "sha256": "4036e8789e575a45036555c7457f49d9bea65e48b66bb2118f94f4c27b4e27f0",
       "excerpt": "## First verified patch\n\nThe [Phase 4 guide](docs/phase-4.md) documents the full scripted fixture, its\ncheckpoint/resume commands, exported manifest, and accept",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:298-318",
+      "locator": "line:307-327",
       "sha256": "4133870806c1292b693f0a1dc54d1b0e284520d91d8f995e4f8e1799f71e12a3",
       "excerpt": "## Model foundation\n\nThe [Phase 5 guide](docs/phase-5.md) describes model proposal admission, exact\nrecipient contexts, separately budgeted schema repair, resta",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:319-341",
+      "locator": "line:328-350",
       "sha256": "f6eb0f8ce0d9553bd770e3aa012be90acdf0ba12894b7c4f0668ac37c6dcba85",
       "excerpt": "## OpenAI-compatible client API and persistent service\n\nThe [OpenAI compatibility and persistent service guide](docs/openai-compatible-service.md)\nadds `/v1/cha",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:342-354",
+      "locator": "line:351-363",
       "sha256": "fab7a8976917a66451ea5cd7555038ba69463d2a9821c64a3d9a668f00baea42",
       "excerpt": "## Model-aware prompting and R3/R4 reasoning\n\nThe [R3/R4 integration guide](docs/implementation/18-model-prompts-r3-r4.md)\nadds a versioned, model-aware prompt ",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:355-375",
+      "locator": "line:364-384",
       "sha256": "96ad153d1dfaad68b6947f9cc63ac4b79f9bcea33512fd344719df58447d3cfb",
       "excerpt": "## Hosted models, API and job dashboard\n\nThe [hosted jobs guide](docs/hosted-jobs.md) covers credentials, operator policy,\ntask startup, accounting and this inc",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:376-384",
+      "locator": "line:385-393",
       "sha256": "f9d2022de0886f2ecdcf84e5e40516d96e024979eb788867c36955d4d064356c",
       "excerpt": "## DanceFlow KeywordMoves workflow acceptance\n\nThe [pinned KeywordMoves workflow acceptance guide](docs/implementation/22-danceflow-keywordmoves-workflow-accept",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:385-412",
+      "locator": "line:394-421",
       "sha256": "28ea5a68406567ec887ab4bdd1c37858f30910ac26eec99967a054b251c26d6b",
       "excerpt": "## Repository capture and controlled execution\n\nThe [Phase 3 guide](docs/phase-3.md) describes its original migration history and the complete\n`prepare`, `run`,",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:413-446",
+      "locator": "line:422-455",
       "sha256": "9688c327140530736187000f2da4c9c4cc01789f4f1aa49e0ab76a9130548057",
       "excerpt": "## Standard local vector embeddings\n\nThe reference integration uses **Qwen/Qwen3-Embedding-0.6B**, pinned to revision\n`97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3`",
       "review_families": [
-        "audit",
-        "catalogue",
-        "retrieval",
+        "durable",
+        "evaluation",
         "frontend",
-        "durable"
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:447-468",
+      "locator": "line:456-477",
       "sha256": "10c9775a16cb363018ded062b71dd42564189ff410d9144aacfe9c168151f9b5",
       "excerpt": "## SYN semantic catalogs and exact inventories\n\nImport public SYN snapshots, resolve scoped references, enumerate instances by\ndeclared type, and rank selected ",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:469-492",
+      "locator": "line:478-501",
       "sha256": "28b05a6ab181b79140a25d2968a553d6bb3c9885d8b5775b671076ba6f372449",
       "excerpt": "### Expanded hierarchy and native primitive placement\n\nThe opt-in [Potbot hierarchy](docs/type-hierarchy-and-syn-primitives.md) adds the\n80 APS 0.2 declarations",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:493-506",
+      "locator": "line:502-515",
       "sha256": "c135f44d97c795b7faf116038158946f2ae2fe6321dba49b9de062187114e376",
       "excerpt": "## Semantic types and release identities\n\nThe committed [vocabulary package](vocab/) supplies 45 data types, including six\nabstract families, plus entity types,",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:507-514",
+      "locator": "line:516-523",
       "sha256": "d383330052d8a2c31d599506dcf027476ab5741cc5b449c06a32763bb06023e6",
       "excerpt": "## Object memory implementation plan\n\nThe [per-object memory implementation plan](docs/object-memory/implementation-plan.md)\nspecifies a separate memory graph f",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:515-528",
+      "locator": "line:524-537",
       "sha256": "b6e2a9c05e76b61c49a7a8dc33fd6af1a3dd21ee02892d3ad0e2ff482d585d29",
       "excerpt": "## Package boundaries\n\n| Package | Responsibility |\n| --- | --- |\n| `potbot.domain` | Immutable contracts, provenance, configuration, identity, error taxonomy |",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:529-538",
+      "locator": "line:538-547",
       "sha256": "39865c858d7b046cd4d93a5d3853113f664f3ac62b8f905400ab8d77f54d9214",
       "excerpt": "## Reuse before implementation\n\nThe standard reasoning policy requires discovery of existing libraries, tools, and\ninternal workflows before proposing new code.",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:539-551",
+      "locator": "line:548-560",
       "sha256": "730b080416e9551dc00d2bf5ebf2ab7bed609895618fa82c3e9256717376f0d6",
       "excerpt": "## Live steering and evidence-ranked reasoning (R2.5/R5)\n\nThe `potbot` virtual model now evaluates queued user steering prompts at\nreasoning checkpoints and ran",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:552-559",
+      "locator": "line:561-568",
       "sha256": "5fa95998ef21805fb03a8636768bda09e5bfb2afec8acfd6bac63502c83be5fc",
       "excerpt": "### PostgreSQL-backed reasoning and upstream OpenAI/Gemini models\n\nThe [reasoning runtime/provider guide](docs/implementation/20-postgres-reasoning-and-model-pr",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:560-579",
+      "locator": "line:569-588",
       "sha256": "cd32e5febea707573895f57831105edf5ecfe8aaf31fa720ca9ef013d275556a",
       "excerpt": "## Model-role benchmarks and agentic graph monitoring\n\nPotbot includes an **opt-in**, source-reproducible benchmark runner for comparing\nsmall local models and ",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:580-601",
+      "locator": "line:589-610",
       "sha256": "f2da1273708cc6fb7522280c8d6764c1aebac6274b58bbc317d9d5d8721845f5",
       "excerpt": "## Atomic task planning and small specialist models (R7 foundation)\n\nPotbot also supplies a bounded atomic-operation taxonomy, non-executing recursive\nDAG valid",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
       "source": "README.md",
-      "locator": "line:602-621",
+      "locator": "line:611-630",
       "sha256": "bd90755f628c0be09c13ec76abd84d62275d698f99e8d97352c2a12ce7e32d14",
       "excerpt": "## Reliable Python tests on Windows\n\nRun focused tests through `pwsh ./scripts/Invoke-Tests.ps1 <test-path> [...]`.\nThe wrapper probes create/read/atomic-rename",
       "review_families": [
-        "audit",
-        "foundation"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research"
       ]
     },
     {
@@ -113504,8 +113677,8 @@
     },
     {
       "source": "docs/implementation/38-operator-worker-qualification.md",
-      "locator": "line:49-70",
-      "sha256": "07cd50aa818f9e61fdc4b2fc7f9e0f7f64e5ef4e07233a6f8515db59d4fcea5c",
+      "locator": "line:49-78",
+      "sha256": "9f88ae14cf49482cc182c3a60bb976696e6fb7d083ce42a8b1ade1a2f012df39",
       "excerpt": "### Qualify the installed scoped launcher\n\nRun the same release-gate command as the installed service user with its\nprovisioned monitor environment. Set\n`POTBOT",
       "review_families": [
         "accounting"
@@ -113513,7 +113686,7 @@
     },
     {
       "source": "docs/implementation/38-operator-worker-qualification.md",
-      "locator": "line:71-100",
+      "locator": "line:79-108",
       "sha256": "57d7e8b6def46f35cf835368dd67d9f8d5659df2a7a9b42563e13dc19a97b5eb",
       "excerpt": "## U03-Q completion evidence\n\nThe worker tracer keeps the terminal line for each task. A process tree is\ncomplete only when each task has one unambiguous termin",
       "review_families": [
@@ -113522,7 +113695,7 @@
     },
     {
       "source": "docs/implementation/38-operator-worker-qualification.md",
-      "locator": "line:101-141",
+      "locator": "line:109-149",
       "sha256": "3e9dfa4e71a506846cf5a67faa7959e431902968b3581f4ab05d5c38de26fcc3",
       "excerpt": "### Worker PID namespaces\n\nA fork inside Bubblewrap returns a PID from the worker namespace. The audit\ntracer and TASKSTATS identify that child using the operat",
       "review_families": [
@@ -113531,7 +113704,7 @@
     },
     {
       "source": "docs/implementation/38-operator-worker-qualification.md",
-      "locator": "line:142-159",
+      "locator": "line:150-167",
       "sha256": "49ffff9f712c0da125cf1d7dd25906c733eaef89dc24ea9a8867ab0de292aeb1",
       "excerpt": "### Timeout while a second workspace is active\n\nThe concurrent Linux case starts two registered Cogs in separate disposable\nworkspaces. Both reach a live detach",
       "review_families": [
@@ -113540,7 +113713,7 @@
     },
     {
       "source": "docs/implementation/38-operator-worker-qualification.md",
-      "locator": "line:160-175",
+      "locator": "line:168-183",
       "sha256": "1e67e441a26a3464f39b4dc0dea39bb2b03b09fdacf6a1dfbe6c2eacc6351d6d",
       "excerpt": "### Concurrent work across lease renewal\n\nThe Linux renewal case holds two registered Cogs in separate workspaces until\nboth ledgers record a later lease expiry",
       "review_families": [
@@ -113549,7 +113722,7 @@
     },
     {
       "source": "docs/implementation/38-operator-worker-qualification.md",
-      "locator": "line:176-200",
+      "locator": "line:184-208",
       "sha256": "8abf85e87ee0c07fa2e8916d8c083f5b10d1ab13c86f2abb6dba2cc3619ff325",
       "excerpt": "### Context RPC through the monitored worker\n\nThe context acceptance job uses the shipped guest client, a disposable\nPostgreSQL database, Bubblewrap, strace, cg",
       "review_families": [
@@ -113558,7 +113731,7 @@
     },
     {
       "source": "docs/implementation/38-operator-worker-qualification.md",
-      "locator": "line:201-227",
+      "locator": "line:209-235",
       "sha256": "476e0b4bd2cfabb0142a6b161a7cfd55a17e23908a619e1f8f1e86e28b6aebc0",
       "excerpt": "### Authorization with official Syn packages\n\nThe official Syn worker job installs v0.7.0 and v0.8.0 in separate Ubuntu\nfixtures. It pins the source commit, sig",
       "review_families": [
@@ -113567,7 +113740,7 @@
     },
     {
       "source": "docs/implementation/38-operator-worker-qualification.md",
-      "locator": "line:228-263",
+      "locator": "line:236-271",
       "sha256": "f637b2e5d75307a75eb6afaa2619e76a70307a1653a001d537f5fd1f312f863e",
       "excerpt": "### Context RPC with official Syn authorization\n\nThe existing official-release fixture qualifies native Syn admission and\nworker stdio Context RPC. Its receipt ",
       "review_families": [
@@ -115798,6 +115971,28 @@
       ]
     },
     {
+      "source": "docs/implementation/ci-postgres-partitions.md",
+      "locator": "line:1-69",
+      "sha256": "46be370d18fcbd175da496cf9db6558c5d5118f18a6366d68e1dfbaf59862687",
+      "excerpt": "# Complete PostgreSQL test coverage in isolated CI partitions\n\nThe [PR94 verification run](https://github.com/Synsphere/Potbot/actions/runs/45298121057)\npassed ",
+      "review_families": [
+        "audit",
+        "stage-acceptance",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/ci-postgres-partitions.md",
+      "locator": "line:70-131",
+      "sha256": "a80c351e051c3eee611f0145675ac333b891e2a596672194f6f4496cef766287",
+      "excerpt": "## Follow-up failures exposed by the complete lane\n\nThe first actual partition run reached its terminal results in 742 seconds:\n195 tests passed and the tool-in",
+      "review_families": [
+        "audit",
+        "stage-acceptance",
+        "evaluation"
+      ]
+    },
+    {
       "source": "docs/implementation/context-rpc-syn-route.md",
       "locator": "line:1-47",
       "sha256": "85bfd54ea1247af75e5bc4702d66bc8c497aa740e7932191c093f2046e3fb16a",
@@ -116158,6 +116353,57 @@
         "identity",
         "journal",
         "syn-mesh"
+      ]
+    },
+    {
+      "source": "docs/implementation/native-desktop-m1.md",
+      "locator": "line:1-16",
+      "sha256": "e6a7893a765ee7d825891c162af7da44e5d0a53f73bea7b842094d66eda92225",
+      "excerpt": "# Native desktop milestone M1\n\nPotbot now has two intentional user interfaces:\n\n- **Native local Qt 6 client** \u2014 the default local surface on Windows, macOS and",
+      "review_families": [
+        "frontend",
+        "recovery"
+      ]
+    },
+    {
+      "source": "docs/implementation/native-desktop-m1.md",
+      "locator": "line:17-24",
+      "sha256": "382eb7e2f810aadbc9d860cf7adbee7f04cb5bb735ed5c43cc086d5d4fdff174",
+      "excerpt": "## Startup contract\n\nThe local process creates and shows `QMainWindow` before starting the existing\none-click provisioning path in a daemon thread. The workspac",
+      "review_families": [
+        "frontend",
+        "recovery"
+      ]
+    },
+    {
+      "source": "docs/implementation/native-desktop-m1.md",
+      "locator": "line:25-36",
+      "sha256": "134817c42b903aa8209dc4489e6af059a2d507d2e1b151ec6c2e10d609a7ee70",
+      "excerpt": "## Credential hardening included in M1\n\nManaged Windows WSL no longer makes Potbot's own `CredentialStore` depend on\nD-Bus Secret Service readiness. Potbot call",
+      "review_families": [
+        "frontend",
+        "recovery"
+      ]
+    },
+    {
+      "source": "docs/implementation/native-desktop-m1.md",
+      "locator": "line:37-44",
+      "sha256": "b5d8301ec5d75cc18af3b3da04e77742681b11f36d50df8eea15554941bc00ca",
+      "excerpt": "## Next milestones\n\n1. Move native chat/session history and reasoning graph views into Qt.\n2. Add native application inventory and launch controls.\n3. Reuse the",
+      "review_families": [
+        "frontend",
+        "recovery"
+      ]
+    },
+    {
+      "source": "docs/implementation/one-click-startup.md",
+      "locator": "line:1-72",
+      "sha256": "3e2d48d01c7f0b93f2c6933f37d9ed98629cd836d59844d072ade965848556ac",
+      "excerpt": "# Potbot one-command startup (Windows, Linux and macOS)\n\nRun `start.bat`, `./start.ps1`, or `bash ./start.sh` **without arguments**. The\nlaunchers still bootstr",
+      "review_families": [
+        "recovery",
+        "downloads",
+        "models"
       ]
     },
     {
@@ -116675,6 +116921,125 @@
         "frontend",
         "recovery",
         "syn-release"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-2-atomic-scheduler-admission.md",
+      "locator": "line:1-22",
+      "sha256": "4701540e24dea83d318448e5bdc37c1efb027e6d9f52267b2bf951cf9e28a43f",
+      "excerpt": "# R7.2-A: deterministic atomic leaf admission and dispatch planning\n\nThis increment bridges the 41-kind R7 taxonomy and bounded `TaskGraph` to exact\nCog signatu",
+      "review_families": [
+        "reasoning",
+        "durable"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-2-atomic-scheduler-admission.md",
+      "locator": "line:23-39",
+      "sha256": "ad0105e997ad6cc2d74b0be90aa432b581213a9df72c4c5d46e403e577cf7be9",
+      "excerpt": "## Next closure gates for R7.2-B\n\n- Persist immutable admitted graph revision, node dependencies, input hashes,\n  resource keys and operation bindings in the ex",
+      "review_families": [
+        "reasoning",
+        "durable"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-2-b-durable-atomic-graphs.md",
+      "locator": "line:1-6",
+      "sha256": "159bae1ef733f14097c66c2d9e89cf614bc4b2a6ed8bb10898eb3ba9a89a74af",
+      "excerpt": "# R7.2-B \u2014 Durable atomic graph admission and checked job scheduling\n\n**Baseline:** `8a23cceed525ea91d8265e69f63f49efdd2948c7` (`7.2`, after R7.2-A).\n**Schema:*",
+      "review_families": [
+        "reasoning",
+        "durable",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-2-b-durable-atomic-graphs.md",
+      "locator": "line:7-54",
+      "sha256": "c6b51c4bb96a8289db78147627c54755be47689d765c94a60e84cf3b95ad355c",
+      "excerpt": "## Architecture and ownership\n\nThe R7.2-A `AtomicAdmissionPlanner` remains non-executing. A controller must\nbind each proposed leaf to one installed `CogSignatu",
+      "review_families": [
+        "reasoning",
+        "durable",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-2-b-durable-atomic-graphs.md",
+      "locator": "line:55-89",
+      "sha256": "c278dda02148427cb377ddb3a15d7a73d915894382c985b883065b48005fc1da",
+      "excerpt": "## Integration example (trusted controller, not model-generated Python)\n\n```python\nfrom uuid import uuid4\nfrom potbot.controller.atomic_graph_runtime import Ato",
+      "review_families": [
+        "reasoning",
+        "durable",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-2-b-durable-atomic-graphs.md",
+      "locator": "line:90-108",
+      "sha256": "9e760aebbc009991e9042d18b8514039ad68189dc31cbdaddcb08639f7a85129",
+      "excerpt": "## Acceptance / limitations\n\n- Unit: typed request and Cog identity mismatch, duplicate checks, request\n  mutation, native wall bounds, migration triggers and r",
+      "review_families": [
+        "reasoning",
+        "durable",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-2-c-atomic-graph-operations.md",
+      "locator": "line:1-30",
+      "sha256": "ac305fa28aae5e62b6c5466233944e4a80a289fd30b2a77340fb307614d84eb8",
+      "excerpt": "# R7.2-C: bounded atomic graph pump and inspection\n\nThis increment connects the already admitted R7.2-A/B graph to an **explicitly\nstarted** polling scheduler a",
+      "review_families": [
+        "reasoning",
+        "durable",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-2-c-atomic-graph-operations.md",
+      "locator": "line:31-50",
+      "sha256": "4585ab230704803ba7a65fe2ba6b8b08408e6091ff75d3509b97ac6998d833b2",
+      "excerpt": "## Installation and qualification\n\nApply migration 49 before running. Use an existing restricted workspace principal\nand an explicitly configured `api.setup_tok",
+      "review_families": [
+        "reasoning",
+        "durable",
+        "frontend"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-3-a-paired-atomic-benchmarks.md",
+      "locator": "line:1-39",
+      "sha256": "bcde95d0365bf324d871118f44c0be6f649101ec5211f161ac23e39ef2a6bbf6",
+      "excerpt": "# R7.3-A: paired atomic-role benchmark evidence\n\nImplemented on 24 November 2026, extending the existing opt-in model benchmark\nrunner. This increment compares ",
+      "review_families": [
+        "evaluation",
+        "reasoning",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-3-a-paired-atomic-benchmarks.md",
+      "locator": "line:40-64",
+      "sha256": "e46ce2f65a46b52b5f861be6d7a5fb549a8b22e9d358a0793e183923234e03ac",
+      "excerpt": "## Evidence rules\n\n- Verify suite, target, revision, input, prompt, output and rubric identities.\n  Altered scores, duplicate attempts, undeclared cases and une",
+      "review_families": [
+        "evaluation",
+        "reasoning",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-3-a-paired-atomic-benchmarks.md",
+      "locator": "line:65-81",
+      "sha256": "4268cc7c03c3f244a09d3b8bd439f1292b9a421df4cd9a64a4fd3e50f420ef49",
+      "excerpt": "## Qualification and next work\n\nOffline tests exercise output tampering, missing and uncertain results, repeated\ntrials, input leakage, matrix changes and CLI n",
+      "review_families": [
+        "evaluation",
+        "reasoning",
+        "models"
       ]
     },
     {
@@ -120109,336 +120474,396 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:1-8",
-      "sha256": "08df1fafa69af8ea73560a408117017da6a8dd00a5d3756648186628b35da9bf",
-      "excerpt": "# Potbot unified development roadmap\n\n**U00-A completed, 2 November 2026:** the [closeout](u00-a-closeout.md) reconciles\nthe pinned main `95610037311c80cdf71633",
+      "locator": "line:1-20",
+      "sha256": "d452e21d69050deed557ed56806c8e1b4f2818359ee0fc5586e9dc3775fa7d2c",
+      "excerpt": "# Potbot unified development roadmap\n\n**24 November 2026 cleanup and R7.3-A:** R7.2-A/B/C are source-implemented;\ninstalled atomic-scheduler qualification remai",
       "review_families": [
         "audit",
-        "research",
-        "reasoning",
         "durable",
+        "evaluation",
+        "frontend",
         "identity",
-        "syn-release",
-        "frontend"
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:9-172",
+      "locator": "line:21-184",
       "sha256": "535f53b812e2861b68a5f26913b82d310e59e1aeb4d109dfaa142254e784a6cc",
       "excerpt": "## Current delivery order \u2014 18 November 2026\n\nThe current batch finishes the remaining supported T05 implementation with\n[T05-B specialist research](t05-b-speci",
       "review_families": [
         "audit",
-        "research",
-        "reasoning",
         "durable",
+        "evaluation",
+        "frontend",
         "identity",
-        "syn-release",
-        "frontend"
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:173-180",
+      "locator": "line:185-192",
       "sha256": "076016b54fff41fb78ff8fdcc90229d963fc5d746b89b7706eeebb49f54312c8",
       "excerpt": "## Baseline and source-of-truth rules\n\nOlder README phase summaries (`0.5.0.dev8`/`dev9`) are historical; the reviewed main reports `0.5.0.dev11`. They are not ",
       "review_families": [
         "audit",
-        "foundation",
         "durable",
-        "events",
-        "sandbox",
-        "accounting",
-        "identity",
-        "syn-release",
-        "syn-mesh",
-        "syn-operations",
-        "journal",
-        "tool-schema",
-        "mcp",
-        "api",
-        "catalogue",
-        "devices",
-        "artifacts",
-        "tool-upgrade",
-        "guest-logs",
-        "configuration",
-        "models",
-        "downloads",
-        "prompt",
-        "reasoning",
-        "patches",
-        "research",
-        "memory-admission",
-        "retrieval",
-        "semantic",
-        "object-memory",
-        "context",
-        "skills",
-        "compatibility",
-        "browser",
-        "frontend",
         "evaluation",
-        "automation",
-        "recovery",
-        "training"
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:181-214",
+      "locator": "line:193-226",
       "sha256": "4c193a4a608fa975564b4f8db4bfe008307a41cf3d1b25c33882bcb783543194",
       "excerpt": "## Existing plans to reconcile\n\n| Source | Scope |\n|---|---|\n| `docs/implementation/09-tool-plan-gap-audit.md` | 18 additional requirement groups and independen",
       "review_families": [
         "audit",
-        "foundation",
         "durable",
-        "events",
-        "sandbox",
-        "accounting",
-        "identity",
-        "syn-release",
-        "syn-mesh",
-        "syn-operations",
-        "journal",
-        "tool-schema",
-        "mcp",
-        "api",
-        "catalogue",
-        "devices",
-        "artifacts",
-        "tool-upgrade",
-        "guest-logs",
-        "configuration",
-        "models",
-        "downloads",
-        "prompt",
-        "reasoning",
-        "patches",
-        "research",
-        "memory-admission",
-        "retrieval",
-        "semantic",
-        "object-memory",
-        "context",
-        "skills",
-        "compatibility",
-        "browser",
-        "frontend",
         "evaluation",
-        "automation",
-        "recovery",
-        "training"
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:215-236",
+      "locator": "line:227-248",
       "sha256": "3a83e4a3a3332d3ef4289fcfc3504ed4ab122ebf1cf45fdf94886f89bda19cce",
       "excerpt": "## Unified work packages\n\n| ID | Workstream | Remaining / qualification scope | Modernization | Dependencies |\n|---|---|---|---|---|\n| U00 | Repository audit an",
       "review_families": [
-        "accounting",
-        "artifacts",
         "audit",
-        "automation",
-        "browser",
-        "context",
         "durable",
         "evaluation",
         "frontend",
         "identity",
-        "models",
-        "object-memory",
         "reasoning",
-        "recovery",
-        "sandbox",
-        "skills",
-        "tool-schema"
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:237-238",
+      "locator": "line:249-250",
       "sha256": "730dc617da00361212299c3f3bf7caa292eeb8375c4645a26f895fe255a9c69d",
       "excerpt": "## Delivery waves and gates",
       "review_families": [
-        "audit"
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:239-244",
+      "locator": "line:251-256",
       "sha256": "092663dafe878c1956a3843788aa7a58148603391dc7efc03a2ab4bf50b05224",
       "excerpt": "### Wave 0 \u2014 Inventory, reconcile and pin (U00)\n\nPin current main SHA. Enumerate every `docs/` plan, issue, PR, stage-status document and CI acceptance job. Bui",
       "review_families": [
-        "audit"
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:245-250",
+      "locator": "line:257-262",
       "sha256": "382e3775074d6d89fbfe589167a208ad320459466fe816e1e619c4a2326bceab",
       "excerpt": "### Wave 1 \u2014 Secure durable foundation (U01\u2013U03, U06)\n\nExtend existing PostgreSQL/Syn execution rather than introducing a second job engine. Add fenced leases, ",
       "review_families": [
+        "audit",
         "durable",
-        "sandbox",
-        "accounting",
+        "evaluation",
+        "frontend",
         "identity",
-        "journal"
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:251-254",
+      "locator": "line:263-266",
       "sha256": "ee0b5d377f44b86a968882f762dcddf5486951504484fae6f57bbdc4b5d897cf",
       "excerpt": "### Wave 2 \u2014 Tools, plugins, transport and browser (U04\u2013U05, U11\u2013U12)\n\nComplete existing T01\u2013T04 milestones, typed Cog contracts, debugger, discovery, concurren",
       "review_families": [
-        "tool-schema",
-        "catalogue",
-        "mcp",
-        "api",
-        "artifacts",
-        "skills",
-        "browser"
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:255-258",
+      "locator": "line:267-270",
       "sha256": "9b8568dc87a1fd913d2775e2cea463e8cc54271de5fdbd471a3846c47413462e",
       "excerpt": "### Wave 3 \u2014 Intelligence and memory (U07\u2013U10)\n\nQualify actual local/hosted models and inference costs. Integrate live multi-model reasoning graphs, scheduling,",
       "review_families": [
-        "models",
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
         "reasoning",
-        "prompt",
-        "context",
-        "memory-admission",
-        "retrieval",
-        "semantic"
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:259-264",
+      "locator": "line:271-276",
       "sha256": "9a38ce04ac2df10970d4c69ae459dab6757ed121e4c0135233670ccf0927cca1",
       "excerpt": "### Wave 4 \u2014 Frontend and empirical optimization (U13\u2013U14)\n\nFinish real backend streaming, workspace controls, monitoring sprite, graph checkpoint timeline, pro",
       "review_families": [
+        "audit",
+        "durable",
+        "evaluation",
         "frontend",
-        "evaluation"
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:265-270",
+      "locator": "line:277-282",
       "sha256": "80b60f56644c374154018b6472010f50693d60ee0bd0831560224d401b134c72",
       "excerpt": "### Wave 5 \u2014 Automation and release (U15\u2013U16)\n\nAdd durable event subscriptions, schedules, A2A and channels under the same operator policy. Qualify all supporte",
       "review_families": [
-        "automation",
-        "recovery"
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:271-280",
+      "locator": "line:283-292",
       "sha256": "4b39689d3f86890624016437f1019a9f443b42259c348acd3976344d39f5cb18",
       "excerpt": "## Critical engineering invariants\n\n1. Do not create parallel authoritative PostgreSQL stores, schedulers, plugin registries or Syn event logs.\n2. Preserve the ",
       "review_families": [
+        "audit",
         "durable",
-        "sandbox",
+        "evaluation",
+        "frontend",
         "identity",
-        "memory-admission"
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:281-291",
+      "locator": "line:293-303",
       "sha256": "73ea150baabe9d4392b6c75e6ac5978672584992ebe9d0d26ba1c428568a0f6a",
       "excerpt": "### Syn transport for application RPC\n\n**Deferred pending a Syn release, 18 November 2026.** The following sequence is\nretained for resumption; the active deliv",
       "review_families": [
         "audit",
-        "research",
-        "reasoning",
         "durable",
+        "evaluation",
+        "frontend",
         "identity",
-        "syn-release",
-        "frontend"
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:292-319",
+      "locator": "line:304-331",
       "sha256": "cbc4b785f9baeac0b04d3321ea4a8fed61bf8a1816999c534cb2eb9667797027",
       "excerpt": "## First next milestone\n\n**U01-A: durable side-effect and crash recovery gap closure.** U00-A's\n[reviewed closeout](u00-a-closeout.md) is complete. Preserve the",
       "review_families": [
         "audit",
-        "transport-recovery"
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:320-333",
+      "locator": "line:332-345",
       "sha256": "fad8ad3bc0f5c2f2834281f8aaa52d60a6cf39c7bbfccd4fae9aee0a7b60f130",
       "excerpt": "## Required follow-through from the monitoring chat\n\n| Work item | Existing U owner | Deliverable and gate |\n|---|---|---|\n| U03-Q | U03, U02, U16 | Qualify eve",
       "review_families": [
-        "accounting",
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
         "identity",
-        "journal",
-        "tool-upgrade",
-        "guest-logs",
-        "context",
-        "frontend"
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:334-358",
+      "locator": "line:346-370",
       "sha256": "964a68bc75a782ed821c3d4699dc79a85a3112888516cbf8487f770be9a63938",
       "excerpt": "## Required follow-through from the other recent development conversations\n\n| Work item | Existing U owner | Deliverable and gate in the recent-development reco",
       "review_families": [
         "audit",
-        "research",
-        "reasoning",
         "durable",
+        "evaluation",
+        "frontend",
         "identity",
-        "syn-release",
-        "frontend"
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:359-370",
+      "locator": "line:371-382",
       "sha256": "8fd9aa45ac7a56661637b71fa0a5607b1b2b45780bdea5c35f0434b61d7925a3",
       "excerpt": "## References\n\n- `docs/implementation/agent-runtime-modernization.md`\n- `docs/implementation/09-tool-plan-gap-audit.md`\n- `docs/implementation/plugin-discovery-",
       "review_families": [
-        "audit"
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:371-375",
+      "locator": "line:383-387",
       "sha256": "c6f1c77f80e48b91c4a197f815afa2760f516f5eff7fc07b87bbbe7ffc5b2197",
       "excerpt": "## Cross-agent ecosystem compatibility (C00\u2013C09)\n\nAdd the companion [cross-agent compatibility plan](cross-agent-compatibility.md) as a required cross-cutting w",
       "review_families": [
-        "compatibility"
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:376-384",
+      "locator": "line:388-396",
       "sha256": "a3a63964c24da210b3a841a4fa93e2529b30a3e255e67e78853aea0f4d0192ad",
       "excerpt": "## External skill ecosystem discovery and native execution (S00\u2013S10)\n\nThe cross-agent C00\u2013C09 programme is extended by [external skill ecosystem integration](po",
       "review_families": [
-        "compatibility",
-        "skills"
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
       ]
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:385-389",
+      "locator": "line:397-401",
       "sha256": "28dfd2784d97841df10d40c27bf4c7f21bc278c11ace17b0339a9ee74ece1daa",
       "excerpt": "## Agent benchmarking and testing (B00\u2013B10)\n\nAdd [Potbot agent benchmarking and testing](potbot-agent-benchmarking-plan.md) as the qualification specification f",
       "review_families": [
-        "evaluation"
+        "audit",
+        "durable",
+        "evaluation",
+        "frontend",
+        "identity",
+        "reasoning",
+        "research",
+        "syn-release"
+      ]
+    },
+    {
+      "source": "docs/implementation/windows-dpapi-host-setup.md",
+      "locator": "line:1-26",
+      "sha256": "cadb608aadf8e9831346144a1fff471a46ad0ece953521b63cc6be9fdcae4650",
+      "excerpt": "# Windows managed WSL host custody cleanup\n\nThe managed `Potbot-SynOperator` WSL distribution is a Linux execution host,\nnot the Windows Operator keystore. Wind",
+      "review_families": [
+        "identity",
+        "syn-release",
+        "recovery"
+      ]
+    },
+    {
+      "source": "docs/implementation/windows-dpapi-host-setup.md",
+      "locator": "line:27-32",
+      "sha256": "87aeaec85380c707d96563426228b355b4e7cb2d798ca8c8513a725adc6d60ba",
+      "excerpt": "## Acceptance\n\n- Fresh Windows WSL provisioning contains no GNOME Keyring dependency.\n- An existing ready Windows receipt migrates custody without invoking WSL.",
+      "review_families": [
+        "identity",
+        "syn-release",
+        "recovery"
+      ]
+    },
+    {
+      "source": "docs/implementation/windows-oneclick-wsl-core-runtime.md",
+      "locator": "line:1-71",
+      "sha256": "c19040fbdf47841d419f2960ce6ae9a1ab0285407d90c80dc1805f85f31448de",
+      "excerpt": "# Windows one-click mandatory WSL core runtime\n\nThe normal Windows launcher keeps PostgreSQL, the API and Next.js native while\nPotbot's mandatory operator, scop",
+      "review_families": [
+        "identity",
+        "syn-release",
+        "sandbox",
+        "recovery"
+      ]
+    },
+    {
+      "source": "docs/implementation/windows-oneclick-wsl-core-runtime.md",
+      "locator": "line:72-97",
+      "sha256": "004264462481a8895ba687219b789ca090b3167f3c6d4ce74ecf5e50f73aa2dc",
+      "excerpt": "## Windows Operator custody\n\nWindows Operator custody is host-owned. Potbot requires the exact signed Syn\n`v0.11.0` operator policy (source\n`3ed8a43c7e08480b4e5",
+      "review_families": [
+        "identity",
+        "syn-release",
+        "sandbox",
+        "recovery"
+      ]
+    },
+    {
+      "source": "docs/implementation/windows-oneclick-wsl-core-runtime.md",
+      "locator": "line:98-114",
+      "sha256": "1ba3f9294a264509500fa955b366808e670e6faccbcfebfd3289c7cfce7ac039",
+      "excerpt": "### Planned release-flow improvement \u2014 not implemented\n\nA future Syn release milestone should emit Potbot-specific signed artifacts for\nthe Windows integration ",
+      "review_families": [
+        "identity",
+        "syn-release",
+        "sandbox",
+        "recovery"
       ]
     },
     {
@@ -123564,9 +123989,9 @@
     },
     {
       "source": "docs/startup.md",
-      "locator": "line:1-7",
-      "sha256": "8d53f4f0508a912e6ec1c7aa2ad7e42375107852a49ef3719df6355372cf1b1c",
-      "excerpt": "# Startup, dependency downloads and credentials\n\nPotbot 0.4 adds a common startup flow for Windows BAT, Windows PowerShell and Bash.\nThe entry scripts live at t",
+      "locator": "line:1-12",
+      "sha256": "f4e297dc031fc0e688a4edcb44b57681e37e3bd55a0a51f16fa82f64e6991bcb",
+      "excerpt": "# Startup, dependency downloads and credentials\n\n**Default launch now starts the complete application** (backend, worker and\nNext.js GUI) and opens <http://127.",
       "review_families": [
         "recovery",
         "models",
@@ -123575,7 +124000,7 @@
     },
     {
       "source": "docs/startup.md",
-      "locator": "line:8-42",
+      "locator": "line:13-47",
       "sha256": "0ec315d6053134208f249928d3fee7b7aad0b876d4b17ef63918b865be11c4d5",
       "excerpt": "## Starting the application\n\n| Platform | Entry point |\n| --- | --- |\n| Windows Command Prompt | `start.bat` |\n| Windows PowerShell 5.1 or PowerShell 7 | `.\\sta",
       "review_families": [
@@ -123586,9 +124011,9 @@
     },
     {
       "source": "docs/startup.md",
-      "locator": "line:43-98",
-      "sha256": "d8e60ade2810a853616fea7aeaa20e0d24213ef41f253b8c96f86e7d9c133410",
-      "excerpt": "## PostgreSQL on first startup\n\nWith no command-line arguments, startup resolves the application connection in this\norder:\n\n1. `POTBOT_DSN`, when explicitly set",
+      "locator": "line:48-102",
+      "sha256": "0d1f9f21169bf862c2128defcdb6884970763bb8a2c07fb4ee11235101d8831a",
+      "excerpt": "## PostgreSQL on first startup\n\nThe default launcher now configures the application rather than printing CLI help.\nIt uses a stored PostgreSQL admin connection ",
       "review_families": [
         "recovery",
         "models",
@@ -123597,7 +124022,7 @@
     },
     {
       "source": "docs/startup.md",
-      "locator": "line:99-133",
+      "locator": "line:103-137",
       "sha256": "cfb337c2297abc971da39a6cfb4c0e5025dea281ea0f35bc3eaf18e3c6bf3401",
       "excerpt": "## Integrated model downloader\n\nThe initial download profile is the already qualified standard embedding model:\n`Qwen/Qwen3-Embedding-0.6B`, revision\n`97b0c614b",
       "review_families": [
@@ -123608,7 +124033,7 @@
     },
     {
       "source": "docs/startup.md",
-      "locator": "line:134-157",
+      "locator": "line:138-161",
       "sha256": "258a0a8ca24ff6468d6a78c4aecdb901cc857c31e56320a608b219ec062450a3",
       "excerpt": "## Host services and platform qualification\n\nuv installs Python and Python packages. It cannot provision an operating-system\ncredential service, PostgreSQL serv",
       "review_families": [
@@ -123619,7 +124044,7 @@
     },
     {
       "source": "docs/startup.md",
-      "locator": "line:158-171",
+      "locator": "line:162-175",
       "sha256": "d5cead59adff211b3811f257cd9044a36cc88cdc0e1b8475fdd8d5882287b267",
       "excerpt": "## Implementation boundaries\n\n`credentials.py` owns the OS-vault adapter, credential selection, hidden prompts and\nsanitized connectivity probe. `startup.py` ow",
       "review_families": [
@@ -123630,7 +124055,7 @@
     },
     {
       "source": "docs/startup.md",
-      "locator": "line:172-197",
+      "locator": "line:176-201",
       "sha256": "9941250c63ef16e8aa229bdf5576659068a60c725b74258eae7a328932f86ef0",
       "excerpt": "## Diagnose a rejected PostgreSQL connection\n\nA failed first connection is not saved. The public error now includes a fixed\ndiagnostic label while keeping the c",
       "review_families": [
@@ -125327,8 +125752,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         }
       ],
       "tests": [
@@ -125404,9 +125829,9 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
           "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
-          "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-M follow-on: Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-Q follow-on: Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-S follow-on: Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. U04-T follow-on: Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-A follow-on: Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-M follow-on: Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-Q follow-on: Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-S follow-on: Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. U04-T follow-on: Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-A follow-on: Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/controller/task_execution.py",
@@ -126067,8 +126492,8 @@
         {
           "path": "src/potbot/tools/worker_telemetry.py",
           "symbol": "WorkerMonitorConfig",
-          "sha256": "41648a7f2031ccd50a8d4e6dea70778d237ab85a943b3ab5e42183dc9eb49183",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "4170dc76b86f68329de1f66b3d65abeb620cd9a5df56395b11278ca2540cbc8c",
+          "basis": "inspected integration owner; not whole-requirement implementation proof 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/tools/gateway.py",
@@ -127291,7 +127716,7 @@
         {
           "path": "src/potbot/tools/inventory.py",
           "symbol": "build_inventory",
-          "sha256": "67f3218d14e95a772c65556c6a4acc5408ebe422c026063ac9da70b5f8630ce6",
+          "sha256": "04a22c379d141a7a068cc043d6af66b03aa18da5cf5eb51887e10b3c1fe886c0",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
         },
         {
@@ -127430,7 +127855,7 @@
         {
           "path": "tests/integration/test_tool_inventory.py",
           "symbol": "test_committed_inventory_cog_durable_stats_and_workspace_api",
-          "sha256": "5df669e90e6cb0c49e6d428959e64f539002a3dda824976c9df072760baa446e",
+          "sha256": "282f351373922ada8ec48c49d84c159c8109e08470f6b242d6da13063732341e",
           "basis": "source inspection; test definition is not an individual executed result"
         },
         {
@@ -127631,9 +128056,15 @@
           "sha256": "8a6b9250f9924e42b948520a198eed96ed66f567dbb59f2d15e8a4bf8d570288",
           "symbol_sha256": "a3dcf384702c0e5286abd5e1166045a9d86929498e7398b7c44c3582ea8ebdb9",
           "basis": "Source-authored authority claims cannot add capabilities or execution permission. U04-T current-source review: Adds failed-integrity, budget-denied, distinct-source and successful-cache cases proving attempted reads consume bounded byte/source allowances without rereading corruption or double-charging cached verified bytes. U04-T follow-on: Source-authored authority claims cannot add capabilities or execution permission."
+        },
+        {
+          "path": "tests/unit/test_tool_inventory.py",
+          "symbol": "test_every_committed_python_path_has_an_explicit_source_inventory_owner",
+          "sha256": "2d9135811e3685fe8e46cb9bf1769b4bbb4f861325ae2f89dd168c1f935c41f1",
+          "basis": "Committed Python path namespace with inert synthetic bodies; all existing root modules have explicit integration owners and unknown root modules still fail closed. This is not source-body or runtime qualification."
         }
       ],
-      "assessment": "The merged U04-C read-only catalogue and partial linked accounting are retained. U04-E completes the supported operation workbench: signed worker eligibility, explicit one-check/one-run launch, current dispatch revalidation, owned progress, cancellation and verified results for existing native Cog and hosted model handlers. Fixture/database acceptance does not qualify a deployed host or live provider. U04-A adds acquired skill installation/control records and the complete portable-data workshop while retaining conservative operation readiness. Actual imported Context reads independently verify the current signed approval and complete package. U04-X follow-on: adds a complete executable acquisition workbench while keeping pretest records outside operation readiness and reporting withdrawn installations as unavailable. Released records still require existing task, Cog, credential and resource admission. U04-D follow-on: completes the supported source-to-acquisition review: bounded curated/ClawHub/skills.sh/MCP observations, independent source/publisher admission, deterministic task search, verified installed-skill preference, exact package/recipe inspection, sandbox prerequisite measurements and same-transaction U04-A/U04-X handoffs. Every candidate remains non-executable. U04-M follow-on: adds a principal-scoped retained live MCP catalogue with exact definitions, currentness, admitted configured-tool matching and metadata-only references. Registry discovery remains separate from installed owner and task execution authority. U04-Q follow-on: binds admitted qualification suites to exact installed discovery references and existing task, repository and semantic-release identities. Newer active or failed attempts prevent older reports from appearing current. U04-S follow-on: composes current retained registry observations, installed operations and configured live MCP references into one bounded task-bound corpus with progressive existing-owner inspection and exact reviewed handoffs. U04-T follow-on: adds verified canonical Cog descriptions and ports plus the hosted-generation handler description to existing discovery sources, then preserves the exact selected owner through execution review.",
+      "assessment": "The merged U04-C read-only catalogue and partial linked accounting are retained. U04-E completes the supported operation workbench: signed worker eligibility, explicit one-check/one-run launch, current dispatch revalidation, owned progress, cancellation and verified results for existing native Cog and hosted model handlers. Fixture/database acceptance does not qualify a deployed host or live provider. U04-A adds acquired skill installation/control records and the complete portable-data workshop while retaining conservative operation readiness. Actual imported Context reads independently verify the current signed approval and complete package. U04-X follow-on: adds a complete executable acquisition workbench while keeping pretest records outside operation readiness and reporting withdrawn installations as unavailable. Released records still require existing task, Cog, credential and resource admission. U04-D follow-on: completes the supported source-to-acquisition review: bounded curated/ClawHub/skills.sh/MCP observations, independent source/publisher admission, deterministic task search, verified installed-skill preference, exact package/recipe inspection, sandbox prerequisite measurements and same-transaction U04-A/U04-X handoffs. Every candidate remains non-executable. U04-M follow-on: adds a principal-scoped retained live MCP catalogue with exact definitions, currentness, admitted configured-tool matching and metadata-only references. Registry discovery remains separate from installed owner and task execution authority. U04-Q follow-on: binds admitted qualification suites to exact installed discovery references and existing task, repository and semantic-release identities. Newer active or failed attempts prevent older reports from appearing current. U04-S follow-on: composes current retained registry observations, installed operations and configured live MCP references into one bounded task-bound corpus with progressive existing-owner inspection and exact reviewed handoffs. U04-T follow-on: adds verified canonical Cog descriptions and ports plus the hosted-generation handler description to existing discovery sources, then preserves the exact selected owner through execution review. Current root installer/desktop modules now reuse explicit startup/persistence owners; a committed-path namespace regression catches later omissions before the full PostgreSQL lane. No fallback owner or runtime qualification is added.",
       "support_scope": "API/CLI/UI operation lifecycle over existing JobService, worker, native installation, persistent grant, hosted policy and budget owners. Migration 39 binds private principal ownership and immutable check/run authority. Checks do not execute, call providers, issue one-use Syn grants, reserve or settle budget. U04-A uses the existing skill registry; catalogue observations perform no credential lookup or execution admission and do not claim package runtime qualification. U04-X follow-on: The maintenance workflow extends existing S11/S12 records; the ordinary catalogue remains a read-only observation and does not start a host worker or perform runtime admission. U04-D follow-on: Twenty source-only inspection profiles and forty golden task requests exercise declared capability classes and explained ranking. Real PostgreSQL and HTTP fixtures exercise signed admission and owner composition; fixture registry transport and runtime outcomes do not qualify live providers, installed integrations or useful task execution. U04-M follow-on: Bounded collections, TTL/notification/schema/removal invalidation and exact snapshot references are implemented. Arbitrary metadata cannot install a server, authorize a new tool, change an endpoint or manufacture a task grant. U04-Q follow-on: Suite/report reads preserve historical evidence without granting installation, runtime, task or provider authority. Private arguments, expected values and native configuration remain outside public catalogue projections. U04-S follow-on: Candidate ownership, source registration and retrieval ranking grant no installation or execution authority. Historical records remain inspectable, and current task/source drift blocks fresh selection. U04-T follow-on: Metadata remains a bounded source observation. Names, mutable instructions, registration and selection do not authorize provider or native execution.",
       "remaining": [
         "Qualify installed native hosts and exact MCP vendor/task profiles through the existing runtime, Syn, credential and execution owners, including interruption, revocation, schema changes and verified task outcomes; retain broader semantic retrieval and interoperability as open work.",
@@ -127723,7 +128154,7 @@
         {
           "path": "tests/unit/test_persistent_service.py",
           "symbol": "test_debugger_child_is_started_once_and_requires_explicit_recovery",
-          "sha256": "292cafa1b8bf811a3328449e8828f34c505227baed1b835a3fa85a3e1c4e45bd",
+          "sha256": "feeb56525e5106af9fda3c7af4ecc12ac248bb02346b29a88d978db929a72d30",
           "basis": "Source inspection of the installed debugger service and its focused tests"
         },
         {
@@ -127973,9 +128404,9 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
           "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
-          "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         }
       ],
       "tests": [
@@ -129094,8 +129525,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
+          "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/controller/registry_sources.py",
@@ -129872,14 +130303,14 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/service.py",
           "symbol": "ServiceConfig",
-          "sha256": "ec632c106b04c53064552581e9e26bef497e9225244ec563ed61ea9113c74948",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "975e47297a61771ff6fb7107a7ace37c68b373ad65fb21302b2d64c3f12ef772",
+          "basis": "inspected integration owner; not whole-requirement implementation proof 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/tools/tool_acquisition.py",
@@ -129927,9 +130358,9 @@
       "tests": [
         {
           "path": "tests/unit/test_startup.py",
-          "symbol": "test_explicit_commands_are_forwarded_without_postgres_or_model_preparation",
-          "sha256": "46edfc13e8e3cc8188fb2032ff8a9eb361c5e2fc46b86fae562034d545560909",
-          "basis": "source inspection; test definition is not an individual executed result"
+          "symbol": "test_explicit_commands_are_forwarded_without_install_or_database",
+          "sha256": "e68beef7f7270c3f3a4c0551e3c83b51bd31a90a265bedcec86156c082faca10",
+          "basis": "source inspection; test definition is not an individual executed result 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "tests/integration/test_tool_acquisition.py",
@@ -130194,6 +130625,24 @@
           "symbol": "run_gate",
           "sha256": "64a168320c473f2ada34330d7b5ade1dd94772d22ea9928a28ff1a4c32761c19",
           "basis": "Reviewed source/report identity and required JUnit acceptance path."
+        },
+        {
+          "path": "src/potbot/evaluation/postgres_test_shards.py",
+          "symbol": "verify_postgres_shards",
+          "sha256": "56fbaf53ac2861a5b07ca24dec1349e8bb2cd4c45cbbdc0dd9af545bcca2c19d",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
+        },
+        {
+          "path": "scripts/postgres_shard_plugin.py",
+          "symbol": "_ShardRun",
+          "sha256": "ca81c8f1588bf819041a4427fd06a91bbf0b895203605fb44fe19f133bde6baa",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
+        },
+        {
+          "path": "scripts/browser_display_readiness.py",
+          "symbol": "wait_for_mapped_test_window",
+          "sha256": "b27800ed1d2f85c1d2a9af01158ecba6b6a1ac4122fcc3a4114cf9a4f76bf243",
+          "basis": "Bounded read-only native mapping checks for uniquely named synthetic windows. All actual browser pixels, capture deadline and cancellation fencing remain independently required."
         }
       ],
       "tests": [
@@ -130208,9 +130657,27 @@
           "symbol": "test_inconsistent_junit_counters_never_establish_a_pass",
           "sha256": "ba5b13a46ec39e2f4e6ea9f35ad00a31a8f82df7d2c702cbb58f08b2aa4d9efc",
           "basis": "Actual testcase/counter reconciliation rejects malformed acceptance evidence."
+        },
+        {
+          "path": "tests/unit/test_postgres_shards.py",
+          "symbol": "test_actual_pytest_partitions_preserve_the_original_selector_and_all_terminal_cases",
+          "sha256": "d7a88f35908e6c160a1ccc666e4d283072358fd7ec7e0e0d69a0ceaca6db1de6",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
+        },
+        {
+          "path": "tests/unit/test_postgres_shards.py",
+          "symbol": "test_actual_incomplete_or_failed_pytest_run_cannot_supply_a_green_receipt",
+          "sha256": "d7a88f35908e6c160a1ccc666e4d283072358fd7ec7e0e0d69a0ceaca6db1de6",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
+        },
+        {
+          "path": "tests/unit/test_browser_display_readiness.py",
+          "symbol": "test_logical_title_is_insufficient_until_its_native_window_is_viewable",
+          "sha256": "7e377d19e2dba0adaaee5058bc5a919c82138aa9accba728831b7c810aa29705",
+          "basis": "Bounded read-only native mapping checks for uniquely named synthetic windows. All actual browser pixels, capture deadline and cancellation fencing remain independently required."
         }
       ],
-      "assessment": "T01.4 now invalidates stale reports before execution, retains unique run directories and actual source manifests, and checks source stability plus real nonempty unskipped PostgreSQL/sandbox JUnit cases. Fully-qualified is explicitly limited to application PostgreSQL and sandbox tests; production_runtime_qualified stays false.",
+      "assessment": "T01.4 now invalidates stale reports before execution, retains unique run directories and actual source manifests, and checks source stability plus real nonempty unskipped PostgreSQL/sandbox JUnit cases. Fully-qualified is explicitly limited to application PostgreSQL and sandbox tests; production_runtime_qualified stays false. The full PostgreSQL lane exceeded 1800 seconds at roughly84% in PR94. CI now configures four isolated deterministic partitions and an exact-source, disjoint full-union completion gate, preserving the original selector and explicit T01 evidence producers. Local child-pytest rejection tests cover incomplete, failed and zero-exit aborted runs; actual partitioned PostgreSQL CI remains required. Follow-up CI exposed the committed-tree snapshot crossing its unchanged 32 MiB bound. The T01 fixture explicitly excludes only the generated roadmap inventory via its existing immutable profile. Browser acceptance additionally checks native window mapping before requesting its first pixels; actual rendered CI must determine whether it resolves cold-start timeouts. Production snapshot limits and capture fencing remain unchanged.",
       "support_scope": "Acceptance-report contract tests and offline gate; no implicit native, image, custody, provider or specialist qualification.",
       "remaining": [
         "Run the full application qualified gate at the final commit on its required PostgreSQL/sandbox host.",

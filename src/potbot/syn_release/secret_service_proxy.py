@@ -4,6 +4,9 @@ The façade keeps no secret values. It implements the bounded subset used by
 SecretStorage/keyring: the default collection, plain sessions, exact
 service/username searches, create/replace, read, update and delete.
 """
+
+# D-Bus wire-signature annotations and decorated properties are not Python types.
+# mypy: disable-error-code="valid-type,name-defined,no-redef,misc,untyped-decorator"
 from __future__ import annotations
 
 import asyncio
@@ -11,7 +14,7 @@ import hashlib
 import os
 import time
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 from potbot.syn_release.parent_keystore_client import (
     ParentKeystoreError,
@@ -43,8 +46,7 @@ def _item_path(service: str, account: str) -> str:
 def _keyring_identity(attributes: dict[str, str]) -> tuple[str, str | None]:
     """Extract keyring's stable service/username identity from Secret Service attrs."""
     if not isinstance(attributes, dict) or any(
-        not isinstance(key, str) or not isinstance(value, str)
-        for key, value in attributes.items()
+        not isinstance(key, str) or not isinstance(value, str) for key, value in attributes.items()
     ):
         raise ValueError("Secret Service attributes must be text pairs")
     service = attributes.get("service", "")
@@ -121,10 +123,11 @@ class ProxyState:
 
 # dbus-next is intentionally imported only by the daemon. The rest of Potbot's
 # source tree and CI do not gain a mandatory D-Bus dependency.
-def _dbus_types():
-    from dbus_next import DBusError, Variant
+def _dbus_types() -> Any:
     from dbus_next.constants import PropertyAccess
+    from dbus_next.errors import DBusError
     from dbus_next.service import ServiceInterface, dbus_property, method
+    from dbus_next.signature import Variant
 
     return DBusError, Variant, PropertyAccess, ServiceInterface, dbus_property, method
 
@@ -137,14 +140,15 @@ ServiceInterface: Any
 
 
 def _error(message: str) -> Exception:
-    return DBusError("org.freedesktop.Secret.Error.IsLocked", message)
+    return cast(Exception, DBusError("org.freedesktop.Secret.Error.IsLocked", message))
 
 
 class _DeferredInterface:
     """Marker replaced with a real ServiceInterface base during module bootstrap."""
 
 
-def _build_interfaces() -> tuple[type, type, type, type]:
+# D-Bus decorators consume wire-signature strings, not Python type annotations.
+def _build_interfaces() -> tuple[type[Any], type[Any], type[Any], type[Any]]:
     global DBusError, Variant, PropertyAccess, ServiceInterface
     DBusError, Variant, PropertyAccess, ServiceInterface, dbus_property, method = _dbus_types()
 
@@ -220,9 +224,7 @@ def _build_interfaces() -> tuple[type, type, type, type]:
             _session, raw, _content_type = _plain_secret(secret)
             try:
                 value = raw.decode("utf-8")
-                await asyncio.to_thread(
-                    secret_set, self.record.service, self.record.account, value
-                )
+                await asyncio.to_thread(secret_set, self.record.service, self.record.account, value)
             except (ParentKeystoreError, UnicodeError) as error:
                 raise _error(str(error)) from error
             self.record.modified = int(time.time())
@@ -231,9 +233,7 @@ def _build_interfaces() -> tuple[type, type, type, type]:
         @method(name="Delete")
         async def delete(self) -> "o":
             try:
-                await asyncio.to_thread(
-                    secret_delete, self.record.service, self.record.account
-                )
+                await asyncio.to_thread(secret_delete, self.record.service, self.record.account)
             except ParentKeystoreError as error:
                 raise _error(str(error)) from error
             self.state.forget(self.path)
@@ -287,9 +287,7 @@ def _build_interfaces() -> tuple[type, type, type, type]:
             ]
 
         @method(name="CreateItem")
-        async def create_item(
-            self, properties: "a{sv}", secret: "(oayays)", replace: "b"
-        ) -> "oo":
+        async def create_item(self, properties: "a{sv}", secret: "(oayays)", replace: "b") -> "oo":
             try:
                 attrs_variant = properties.get("org.freedesktop.Secret.Item.Attributes")
                 label_variant = properties.get("org.freedesktop.Secret.Item.Label")
@@ -313,9 +311,7 @@ def _build_interfaces() -> tuple[type, type, type, type]:
                 )
             except (ParentKeystoreError, ValueError, UnicodeError) as error:
                 raise _error(str(error)) from error
-            path = self.state.record(
-                service, account, attributes=attributes, label=label
-            )
+            path = self.state.record(service, account, attributes=attributes, label=label)
             return [path, NO_PROMPT]
 
         @method(name="Delete")
@@ -396,7 +392,7 @@ SecretItem: Any = None
 
 
 async def _serve() -> None:
-    from dbus_next.aio import MessageBus
+    from dbus_next.aio.message_bus import MessageBus
     from dbus_next.constants import RequestNameReply
 
     _SecretSession, _SecretItem, SecretCollection, SecretService = _build_interfaces()
@@ -413,7 +409,7 @@ async def _serve() -> None:
     reply = await bus.request_name(BUS_NAME)
     if reply != RequestNameReply.PRIMARY_OWNER:
         raise RuntimeError("Another Secret Service already owns the WSL session bus")
-    await bus.wait_for_disconnect()
+    await cast(Any, bus).wait_for_disconnect()
 
 
 def main() -> int:

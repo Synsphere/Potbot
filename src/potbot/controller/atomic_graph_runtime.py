@@ -11,8 +11,9 @@ states. Failed/indeterminate effects are never automatically retried.
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any
 from uuid import UUID
 
 from potbot.cogs.contracts import TypedCogValue
@@ -138,9 +139,7 @@ class AtomicGraphService:
             "objective": planner.graph.nodes["root"].description,
             "max_parallel": planner.max_parallel,
             "structure": structure,
-            "leaves": [
-                {**leaf, "check_job_id": str(leaf["check_job_id"])} for leaf in leaves
-            ],
+            "leaves": [{**leaf, "check_job_id": str(leaf["check_job_id"])} for leaf in leaves],
         }
         if len(canonical_json(document).encode("utf-8")) > 262_144:
             raise InvalidInputError("Atomic graph manifest exceeds the durable bound")
@@ -205,8 +204,11 @@ class AtomicGraphService:
             used = conn.execute(
                 "SELECT 1 FROM jobs WHERE workspace_id=%s AND owner_principal_id=%s "
                 "AND operation_check_id=ANY(%s) LIMIT 1",
-                (context.workspace_id, context.principal_id,
-                 [leaf["check_job_id"] for leaf in leaves]),
+                (
+                    context.workspace_id,
+                    context.principal_id,
+                    [leaf["check_job_id"] for leaf in leaves],
+                ),
             ).fetchone()
             if used is not None:
                 raise StateMismatchError("Atomic admission cannot reuse an already launched check")
@@ -396,12 +398,19 @@ class AtomicGraphService:
             )
         job_states = [row["job_state"] for row in rows]
         outcome = (
-            "interrupted" if graph["state"] == "interrupted"
-            else "succeeded" if all(state == "succeeded" for state in job_states)
-            else "needs_reconciliation" if "indeterminate" in job_states
-            else "running" if any(state in _ACTIVE for state in job_states)
-            else "blocked" if any(state in _FAILED for state in job_states)
-            else "ready" if eligible else "waiting"
+            "interrupted"
+            if graph["state"] == "interrupted"
+            else "succeeded"
+            if all(state == "succeeded" for state in job_states)
+            else "needs_reconciliation"
+            if "indeterminate" in job_states
+            else "running"
+            if any(state in _ACTIVE for state in job_states)
+            else "blocked"
+            if any(state in _FAILED for state in job_states)
+            else "ready"
+            if eligible
+            else "waiting"
         )
         return {
             "schema": "potbot-atomic-graph-status/v1",
@@ -443,14 +452,22 @@ class AtomicGraphService:
         for row in jobs:
             try:
                 job = self.jobs.cancel(
-                    context, row["job_id"],
+                    context,
+                    row["job_id"],
                     f"atomic-stop-{graph_id.hex}-{row['node_id']}",
                 )
-                outcomes.append({"node_id": row["node_id"], "job_id": str(row["job_id"]),
-                                 "state": job["state"]})
+                outcomes.append(
+                    {"node_id": row["node_id"], "job_id": str(row["job_id"]), "state": job["state"]}
+                )
             except Exception as exc:
                 # Never report cancellation if the underlying job owner could
                 # not confirm it. The dispatch fence remains committed.
-                outcomes.append({"node_id": row["node_id"], "job_id": str(row["job_id"]),
-                                 "state": "cancellation_unconfirmed", "error_type": type(exc).__name__})
+                outcomes.append(
+                    {
+                        "node_id": row["node_id"],
+                        "job_id": str(row["job_id"]),
+                        "state": "cancellation_unconfirmed",
+                        "error_type": type(exc).__name__,
+                    }
+                )
         return {"graph_id": str(graph_id), "state": "interrupted", "jobs": outcomes}

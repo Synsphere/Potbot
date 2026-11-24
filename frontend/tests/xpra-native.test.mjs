@@ -51,11 +51,12 @@ test('BFF issues only operator-scoped single-use capabilities with origin valida
   t.after(()=>{globalThis.fetch=originalFetch; for(const [k,v] of Object.entries(savedEnv)){if(v===undefined)delete process.env[k];else process.env[k]=v;}});
   assert.equal(xpraBridgeConfig()?.workspaceId,workspaceId);
   assert.equal(xpraBridgeConfig({...environment,POTBOT_UI_XPRA_PUBLIC_WS_URL:'ws://evil.test/v1/xpra/ws'}),null);
-  // Authenticate via the UI session service, not a browser-visible API token.
+  // The loopback compatibility route exposes no browser-visible API token.
   const { POST:login }=await import('../src/app/api/ui/auth/login/route.ts');
   const auth = await login(new Request(origin+'/api/ui/auth/login',{method:'POST',headers:{origin,'Content-Type':'application/json'},body:JSON.stringify({password:environment.POTBOT_UI_PASSWORD})}));
   assert.equal(auth.status,200);
-  const cookie=auth.headers.get('set-cookie').split(';')[0];
+  assert.equal(auth.headers.get('set-cookie'), null);
+  const cookie='';
   let called=0;
   globalThis.fetch=async(_url,opts)=>{called++;assert.equal(opts.headers.Authorization,`Bearer ${token}`);return Response.json({workspaceId,ticket,expiresInSeconds:30});};
   const bad=await issueTicket(new Request(origin+'/api/ui/xpra/ticket',{method:'POST',headers:{origin:'https://malicious.example',cookie}}));

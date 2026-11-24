@@ -36,7 +36,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         from potbot.oneclick import main as oneclick_main
 
         return oneclick_main(arguments)
-    if arguments in (["stop"], ["restart"], ["status"], ["logs"], ["ui-password"], ["change-password"]):
+    if arguments in (
+        ["stop"],
+        ["restart"],
+        ["status"],
+        ["logs"],
+        ["ui-password"],
+        ["change-password"],
+    ):
         from potbot.oneclick import main as oneclick_main
 
         return oneclick_main(arguments)

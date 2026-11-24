@@ -22,3 +22,6 @@ artifacts/
 # Local test scratch is never source or release evidence.
 .pytest_cache/
 .test-tmp/
+
+# Vim persistent undo files are local editor state.
+*.un~

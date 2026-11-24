@@ -24,6 +24,7 @@ from potbot.domain.serialization import canonical_json
 
 if TYPE_CHECKING:
     from fastapi import FastAPI
+
     from potbot.persistence.database import Database
 
 _UUID = re.compile(r"[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}\Z")
@@ -54,15 +55,22 @@ def register_atomic_graph_routes(
 ) -> None:
     if service is None:
         from potbot.controller.atomic_graph_runtime import AtomicGraphService
+
         service = AtomicGraphService(database)
     if pump is None:
         from potbot.controller.atomic_graph_pump import AtomicGraphPump
+
         pump = AtomicGraphPump(service)
 
     def actor(request: Request, *, mutation: bool = False) -> WorkspaceContext:
         if len(request.headers.getlist("authorization")) != 1 or any(
             len(request.headers.getlist(name)) > 1
-            for name in ("origin", "x-potbot-setup-token", "x-potbot-expected-principal", "idempotency-key")
+            for name in (
+                "origin",
+                "x-potbot-setup-token",
+                "x-potbot-expected-principal",
+                "idempotency-key",
+            )
         ):
             raise ScopeDeniedError("Ambiguous graph authorization")
         origin = request.headers.getlist("origin")
@@ -108,8 +116,11 @@ def register_atomic_graph_routes(
             raise ValueError
 
         try:
-            value = json.loads(raw.decode("utf-8", "strict"), object_pairs_hook=unique,
-                               parse_constant=reject_constant)
+            value = json.loads(
+                raw.decode("utf-8", "strict"),
+                object_pairs_hook=unique,
+                parse_constant=reject_constant,
+            )
             canonical_json(value).encode("utf-8", "strict")
         except (ValueError, UnicodeError, RecursionError):
             raise InvalidInputError("Graph mutation needs unambiguous finite JSON") from None
@@ -147,10 +158,15 @@ def register_atomic_graph_routes(
         state = values.get("activeOnly", "false")
         if state not in {"true", "false"}:
             raise InvalidInputError("Invalid graph state filter")
-        return reply(await run_in_threadpool(
-            pump.list, context, after=values.get("after"), limit=int(raw_limit),
-            active_only=state == "true",
-        ))
+        return reply(
+            await run_in_threadpool(
+                pump.list,
+                context,
+                after=values.get("after"),
+                limit=int(raw_limit),
+                active_only=state == "true",
+            )
+        )
 
     @app.get("/v1/ui/atomic-graphs/{graph_id}")
     async def inspect(request: Request, graph_id: str) -> JSONResponse:
@@ -166,10 +182,16 @@ def register_atomic_graph_routes(
         value = await body(request, keys={"confirm", "limit"})
         if type(value["limit"]) is not int or not 1 <= value["limit"] <= 8:
             raise InvalidInputError("Graph tick exceeds the per-call launch bound")
-        return reply(await run_in_threadpool(
-            pump.tick_graph, context, _uuid(graph_id), setup_token=token,
-            limit=value["limit"],
-        ), accepted=True)
+        return reply(
+            await run_in_threadpool(
+                pump.tick_graph,
+                context,
+                _uuid(graph_id),
+                setup_token=token,
+                limit=value["limit"],
+            ),
+            accepted=True,
+        )
 
     @app.post("/v1/ui/atomic-graphs/{graph_id}/interrupt")
     async def interrupt(request: Request, graph_id: str) -> JSONResponse:

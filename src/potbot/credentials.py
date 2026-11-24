@@ -109,13 +109,12 @@ class ParentKeystoreBackend:
 def native_backend(platform_name: str | None = None) -> KeyringBackend:
     """Select a bundled native adapter without loading configurable plugin chains."""
     platform_name = sys.platform if platform_name is None else platform_name
-    if (
-        platform_name == "linux"
-        and os.environ.get("POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED") == "1"
-    ):
+    if platform_name == "linux" and os.environ.get("POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED") == "1":
         required = (
-            "POTBOT_PARENT_KEYSTORE_HOST", "POTBOT_PARENT_KEYSTORE_PORT",
-            "POTBOT_PARENT_KEYSTORE_SESSION", "POTBOT_PARENT_KEYSTORE_TOKEN",
+            "POTBOT_PARENT_KEYSTORE_HOST",
+            "POTBOT_PARENT_KEYSTORE_PORT",
+            "POTBOT_PARENT_KEYSTORE_SESSION",
+            "POTBOT_PARENT_KEYSTORE_TOKEN",
         )
         if any(not os.environ.get(name) for name in required):
             raise CapabilityUnavailableError(

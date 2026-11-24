@@ -17,11 +17,11 @@ from potbot.domain.errors import CapabilityUnavailableError, InvalidInputError, 
 def test_application_url_uses_separate_restricted_login_and_encodes_password() -> None:
     result = oneclick._application_url(
         "postgresql://admin:old@localhost:55432/potbot?sslmode=require",
-        "potbot_role", "private@:%secret",
+        "potbot_role",
+        "private@:%secret",
     )
     assert result == (
-        "postgresql://potbot_role:private%40%3A%25secret@localhost:55432/potbot"
-        "?sslmode=require"
+        "postgresql://potbot_role:private%40%3A%25secret@localhost:55432/potbot?sslmode=require"
     )
     with pytest.raises(InvalidInputError):
         oneclick._application_url("dbname=potbot user=postgres", "user", "secret")
@@ -29,19 +29,26 @@ def test_application_url_uses_separate_restricted_login_and_encodes_password() -
 
 def test_generated_credentials_are_reused_and_never_written_to_frontend(monkeypatch) -> None:
     memory = {}
+
     class Store:
         def __init__(self, _profile):
             pass
+
         def get(self, key):
             return memory.get(key)
+
         def set(self, key, value):
             memory[key] = value
+
     monkeypatch.setattr(oneclick, "CredentialStore", Store)
     monkeypatch.setattr(oneclick, "_prompt_gui_password", lambda: "a passphrase I actually chose")
     assert oneclick._ensure_secrets() is True
     assert memory["ui.password"] == "a passphrase I actually chose"
     assert memory["ui.password_confirmed"] == "operator-chosen-v1"
-    assert all(len(memory[key]) >= 32 for key in ("api.access_token", "api.setup_token", "ui.cookie_secret"))
+    assert all(
+        len(memory[key]) >= 32
+        for key in ("api.access_token", "api.setup_token", "ui.cookie_secret")
+    )
     assert oneclick._ensure_secrets() is False
     assert len(memory) == 5
 
@@ -58,8 +65,10 @@ def test_confirmed_legacy_short_cookie_secret_rotates_without_password_prompt(mo
     class Store:
         def __init__(self, _profile):
             pass
+
         def get(self, key):
             return memory.get(key)
+
         def set(self, key, value):
             memory[key] = value
 
@@ -77,8 +86,12 @@ def test_confirmed_legacy_short_cookie_secret_rotates_without_password_prompt(mo
 
 
 def test_frontend_environment_uses_vault_not_checkout_files(monkeypatch):
-    content = {"api.access_token": "s" * 48, "ui.password": "p" * 48,
-               "ui.cookie_secret": "c" * 48, "api.setup_token": "t" * 48}
+    content = {
+        "api.access_token": "s" * 48,
+        "ui.password": "p" * 48,
+        "ui.cookie_secret": "c" * 48,
+        "api.setup_token": "t" * 48,
+    }
     store = SimpleNamespace(get=content.get)
     config = SimpleNamespace(host="127.0.0.1", port=8765, workspace_id=str(uuid4()))
     monkeypatch.setenv("POTBOT_UI_WORKSPACES_JSON", '[{"id":"wrong"}]')
@@ -117,9 +130,9 @@ def test_frontend_fingerprint_does_not_include_env_or_built_artifacts(tmp_path: 
 
 
 def test_supervised_next_start_does_not_build_standalone_output() -> None:
-    config = (
-        frontend_worker.project_root() / "frontend" / "next.config.ts"
-    ).read_text(encoding="utf-8")
+    config = (frontend_worker.project_root() / "frontend" / "next.config.ts").read_text(
+        encoding="utf-8"
+    )
     assert 'output: "standalone"' not in config
 
 
@@ -134,24 +147,36 @@ def test_untrusted_node_archive_path_is_rejected(tmp_path: Path):
 
 def test_status_has_no_setup_side_effect(monkeypatch, tmp_path, capsys):
     from potbot import service
+
     monkeypatch.setattr(service, "config_path", lambda: tmp_path / "missing.json")
     assert oneclick.main(["status"]) == 0
     assert json.loads(capsys.readouterr().out) == {
-        "configured": False, "backend_and_gui_healthy": False, "gui_url": None,
+        "configured": False,
+        "backend_and_gui_healthy": False,
+        "gui_url": None,
     }
 
 
 def test_default_launcher_never_starts_work_on_failed_frontend_setup(monkeypatch, tmp_path):
     from potbot import service
+
     calls = []
     monkeypatch.setattr(oneclick, "project_root", lambda: tmp_path)
-    monkeypatch.setattr(oneclick, "_provision_database", lambda _: SimpleNamespace(workspace_id=uuid4(), principal_id=uuid4()))
+    monkeypatch.setattr(
+        oneclick,
+        "_provision_database",
+        lambda _: SimpleNamespace(workspace_id=uuid4(), principal_id=uuid4()),
+    )
     monkeypatch.setattr(oneclick, "_policy_path", lambda _: tmp_path / "policy.json")
     monkeypatch.setattr(oneclick, "_ensure_secrets", lambda: None)
     monkeypatch.setattr(service, "config_path", lambda: tmp_path / "service.json")
     monkeypatch.setattr(service, "install_manager", lambda **kw: calls.append("install"))
     monkeypatch.setattr(service, "_atomic_configuration", lambda _: calls.append("save"))
-    monkeypatch.setattr(frontend_worker, "prepare_frontend", lambda _: (_ for _ in ()).throw(CapabilityUnavailableError("build failed")))
+    monkeypatch.setattr(
+        frontend_worker,
+        "prepare_frontend",
+        lambda _: (_ for _ in ()).throw(CapabilityUnavailableError("build failed")),
+    )
     assert oneclick.main([]) == 1
     assert calls == []
 
@@ -193,7 +218,9 @@ def test_native_bootstrap_recovers_a_saved_administrator_as_application_login(
         raise ScopeDeniedError("Administrator cannot act as the application")
 
     monkeypatch.setattr(oneclick, "_verified_application_role", reject_role)
-    monkeypatch.setattr(oneclick, "_existing_context", lambda *args, **kwargs: pytest.fail("Do not bind admin"))
+    monkeypatch.setattr(
+        oneclick, "_existing_context", lambda *args, **kwargs: pytest.fail("Do not bind admin")
+    )
     monkeypatch.setattr(oneclick, "_new_workspace", lambda *args: pytest.fail("Do not bind admin"))
 
     def create_restricted(admin: str, schema: str, role_root: Path):
@@ -217,13 +244,21 @@ def test_explicit_admin_override_does_not_get_replaced_silently(
     monkeypatch.setattr(native_postgres, "provision_if_needed", lambda root: True)
     monkeypatch.setattr(oneclick, "resolve_postgres_dsn", lambda purpose: admin_url)
     monkeypatch.setattr(database, "migrate", lambda *args: None)
-    monkeypatch.setattr(oneclick, "CredentialStore", lambda profile: SimpleNamespace(get=lambda key: None))
-    monkeypatch.setattr(oneclick, "_verified_application_role", lambda *args: (_ for _ in ()).throw(
-        ScopeDeniedError("Administrator cannot be application login")
-    ))
-    monkeypatch.setattr(oneclick, "_create_restricted_login", lambda *args: pytest.fail(
-        "Explicit connection must never be replaced"
-    ))
+    monkeypatch.setattr(
+        oneclick, "CredentialStore", lambda profile: SimpleNamespace(get=lambda key: None)
+    )
+    monkeypatch.setattr(
+        oneclick,
+        "_verified_application_role",
+        lambda *args: (_ for _ in ()).throw(
+            ScopeDeniedError("Administrator cannot be application login")
+        ),
+    )
+    monkeypatch.setattr(
+        oneclick,
+        "_create_restricted_login",
+        lambda *args: pytest.fail("Explicit connection must never be replaced"),
+    )
     with pytest.raises(InvalidInputError, match="POTBOT_DSN"):
         oneclick._provision_database(tmp_path)
 
@@ -231,9 +266,10 @@ def test_explicit_admin_override_does_not_get_replaced_silently(
 def test_native_bootstrap_reuses_a_valid_existing_application_login(
     monkeypatch, tmp_path: Path
 ) -> None:
+    from contextlib import nullcontext
+
     from potbot import native_postgres
     from potbot.persistence import database
-    from contextlib import nullcontext
 
     admin_url = "postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?sslmode=disable"
     app_url = "postgresql://potbot_app_test:secret@127.0.0.1:55436/potbot?sslmode=disable"
@@ -242,37 +278,52 @@ def test_native_bootstrap_reuses_a_valid_existing_application_login(
     monkeypatch.setattr(native_postgres, "provision_if_needed", lambda root: True)
     monkeypatch.setattr(oneclick, "resolve_postgres_dsn", lambda purpose: admin_url)
     monkeypatch.setattr(database, "migrate", lambda *args: None)
-    monkeypatch.setattr(oneclick, "CredentialStore", lambda profile: SimpleNamespace(
-        get=lambda key: app_url if key == "postgres.application" else None
-    ))
+    monkeypatch.setattr(
+        oneclick,
+        "CredentialStore",
+        lambda profile: SimpleNamespace(
+            get=lambda key: app_url if key == "postgres.application" else None
+        ),
+    )
     monkeypatch.setattr(oneclick, "_verified_application_role", lambda *args: "potbot_app_test")
     monkeypatch.setattr(oneclick, "_existing_context", lambda *args, **kwargs: scope)
-    monkeypatch.setattr(oneclick, "_create_restricted_login", lambda *args: pytest.fail(
-        "Existing restricted login must be reused"
-    ))
-    monkeypatch.setattr(database, "Database", lambda *args: SimpleNamespace(transaction=lambda ctx: nullcontext()))
+    monkeypatch.setattr(
+        oneclick,
+        "_create_restricted_login",
+        lambda *args: pytest.fail("Existing restricted login must be reused"),
+    )
+    monkeypatch.setattr(
+        database, "Database", lambda *args: SimpleNamespace(transaction=lambda ctx: nullcontext())
+    )
     assert oneclick._provision_database(tmp_path) is scope
 
 
-@pytest.mark.parametrize("url,expected", [
-    ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?sslmode=disable", True),
-    ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot", True),
-    ("postgresql://potbot_admin:secret@127.0.0.1:55436/other", False),
-    ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?host=elsewhere", False),
-    ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?sslmode=disable&port=9999", False),
-    ("postgresql://potbot_admin:secret@example.com:55436/potbot", False),
-    ("postgresql://potbot_admin:secret@127.0.0.1:55437/potbot", False),
-])
+@pytest.mark.parametrize(
+    "url,expected",
+    [
+        ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?sslmode=disable", True),
+        ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot", True),
+        ("postgresql://potbot_admin:secret@127.0.0.1:55436/other", False),
+        ("postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?host=elsewhere", False),
+        (
+            "postgresql://potbot_admin:secret@127.0.0.1:55436/potbot?sslmode=disable&port=9999",
+            False,
+        ),
+        ("postgresql://potbot_admin:secret@example.com:55436/potbot", False),
+        ("postgresql://potbot_admin:secret@127.0.0.1:55437/potbot", False),
+    ],
+)
 def test_native_endpoint_check_rejects_redirects(url: str, expected: bool) -> None:
     assert oneclick._is_native_database_url(url) is expected
 
 
 def test_verified_application_role_rejects_privileged_identity_before_workspace_lookup(
-    monkeypatch
+    monkeypatch,
 ) -> None:
     """A successful password login is not enough to authorize a workspace."""
     import sys
     from contextlib import nullcontext
+
     from potbot.persistence import database
 
     class Connection:
@@ -287,7 +338,9 @@ def test_verified_application_role_rejects_privileged_identity_before_workspace_
             return SimpleNamespace(fetchone=lambda: ("potbot_admin",))
 
     monkeypatch.setitem(
-        sys.modules, "psycopg", SimpleNamespace(connect=lambda *args, **kwargs: Connection(), Error=Exception)
+        sys.modules,
+        "psycopg",
+        SimpleNamespace(connect=lambda *args, **kwargs: Connection(), Error=Exception),
     )
     monkeypatch.setattr(database, "admin_connection", lambda *_: nullcontext("checked-admin"))
     validated: list[str] = []
@@ -309,8 +362,10 @@ def test_existing_generated_gui_password_is_replaced_on_next_launch(monkeypatch)
     class Store:
         def __init__(self, _profile):
             pass
+
         def get(self, key):
             return memory.get(key)
+
         def set(self, key, value):
             memory[key] = value
 
@@ -331,7 +386,14 @@ def test_password_prompt_requires_interactive_hidden_confirmation(monkeypatch):
     std_in.isatty = lambda: True
     std_err.isatty = lambda: True
     monkeypatch.setattr(oneclick, "sys", SimpleNamespace(stdin=std_in, stderr=std_err))
-    values = iter(["my first secure password", "wrong confirmation", "my final secure password", "my final secure password"])
+    values = iter(
+        [
+            "my first secure password",
+            "wrong confirmation",
+            "my final secure password",
+            "my final secure password",
+        ]
+    )
     seen = []
 
     def hidden(label):
@@ -341,8 +403,10 @@ def test_password_prompt_requires_interactive_hidden_confirmation(monkeypatch):
     monkeypatch.setattr(oneclick, "_hidden_prompt", hidden)
     assert oneclick._prompt_gui_password() == "my final secure password"
     assert seen == [
-        "New Potbot GUI password: ", "Confirm Potbot GUI password: ",
-        "New Potbot GUI password: ", "Confirm Potbot GUI password: ",
+        "New Potbot GUI password: ",
+        "Confirm Potbot GUI password: ",
+        "New Potbot GUI password: ",
+        "Confirm Potbot GUI password: ",
     ]
     assert "my first secure password" not in std_err.getvalue()
     assert "my final secure password" not in std_err.getvalue()
@@ -352,11 +416,17 @@ def test_password_prompt_requires_interactive_hidden_confirmation(monkeypatch):
 def test_no_gui_password_is_automatically_generated_in_headless_mode(monkeypatch):
     from types import SimpleNamespace
 
-    monkeypatch.setattr(oneclick, "sys", SimpleNamespace(
-        stdin=SimpleNamespace(isatty=lambda: False),
-        stderr=SimpleNamespace(isatty=lambda: False),
-    ))
-    monkeypatch.setattr(oneclick, "_hidden_prompt", lambda *_: pytest.fail("No hidden input on headless host"))
+    monkeypatch.setattr(
+        oneclick,
+        "sys",
+        SimpleNamespace(
+            stdin=SimpleNamespace(isatty=lambda: False),
+            stderr=SimpleNamespace(isatty=lambda: False),
+        ),
+    )
+    monkeypatch.setattr(
+        oneclick, "_hidden_prompt", lambda *_: pytest.fail("No hidden input on headless host")
+    )
     with pytest.raises(InvalidInputError, match="interactive terminal"):
         oneclick._prompt_gui_password()
 
@@ -368,7 +438,11 @@ def test_mismatched_passwords_do_not_change_the_native_vault(monkeypatch):
     stdin, stderr = StringIO(), StringIO()
     stdin.isatty = stderr.isatty = lambda: True
     monkeypatch.setattr(oneclick, "sys", SimpleNamespace(stdin=stdin, stderr=stderr))
-    monkeypatch.setattr(oneclick, "_hidden_prompt", lambda label: "correct long string" if label.startswith("New") else "incorrect long string")
+    monkeypatch.setattr(
+        oneclick,
+        "_hidden_prompt",
+        lambda label: "correct long string" if label.startswith("New") else "incorrect long string",
+    )
     changes = []
     with pytest.raises(InvalidInputError, match="not confirmed"):
         oneclick._set_gui_password(SimpleNamespace(set=lambda *args: changes.append(args)))
@@ -406,7 +480,9 @@ def test_change_password_command_restarts_native_service(monkeypatch, tmp_path):
     monkeypatch.setattr(service, "config_path", lambda: path)
     monkeypatch.setattr(oneclick, "_set_gui_password", lambda store: events.append("chosen"))
     monkeypatch.setattr(service, "manager_action", events.append)
-    monkeypatch.setattr(service.ServiceConfig, "load", lambda path: SimpleNamespace(frontend_enabled=True))
+    monkeypatch.setattr(
+        service.ServiceConfig, "load", lambda path: SimpleNamespace(frontend_enabled=True)
+    )
     monkeypatch.setattr(oneclick, "_healthy", lambda config: True)
     monkeypatch.setattr(oneclick, "_gui_accepts_current_password", lambda: True)
     assert oneclick.main(["change-password"]) == 0
@@ -430,17 +506,33 @@ def test_legacy_password_command_does_not_display_chosen_password(monkeypatch, c
 
 def test_gui_login_is_probed_on_loopback_using_vault_and_exact_origin(monkeypatch):
     from types import SimpleNamespace
+
     secret = "my chosen local-only password"
-    monkeypatch.setattr(oneclick, "CredentialStore", lambda profile: SimpleNamespace(get=lambda key: secret))
+    monkeypatch.setattr(
+        oneclick, "CredentialStore", lambda profile: SimpleNamespace(get=lambda key: secret)
+    )
     requests = []
+
     class Response:
         status = 200
-        def __enter__(self):return self
-        def __exit__(self, *args):return False
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
         def read(self, maximum):
             assert maximum == 4097
             return b'{"authenticated":true}'
-    monkeypatch.setattr(oneclick.urllib.request, "build_opener", lambda *parts: SimpleNamespace(open=lambda req, timeout: (requests.append((req, timeout)), Response())[1]))
+
+    monkeypatch.setattr(
+        oneclick.urllib.request,
+        "build_opener",
+        lambda *parts: SimpleNamespace(
+            open=lambda req, timeout: (requests.append((req, timeout)), Response())[1]
+        ),
+    )
     assert oneclick._gui_accepts_current_password() is True
     assert len(requests) == 1
     request, timeout = requests[0]
@@ -451,13 +543,20 @@ def test_gui_login_is_probed_on_loopback_using_vault_and_exact_origin(monkeypatc
 
 
 def test_gui_login_rejects_stale_process_without_exposing_password(monkeypatch):
-    from types import SimpleNamespace
     import urllib.error
+    from types import SimpleNamespace
+
     secret = "another private passphrase"
-    monkeypatch.setattr(oneclick, "CredentialStore", lambda profile: SimpleNamespace(get=lambda key: secret))
+    monkeypatch.setattr(
+        oneclick, "CredentialStore", lambda profile: SimpleNamespace(get=lambda key: secret)
+    )
+
     def fail(*args, **kwargs):
         raise urllib.error.HTTPError("http://127.0.0.1:3100/", 401, "invalid password", {}, None)
-    monkeypatch.setattr(oneclick.urllib.request, "build_opener", lambda *parts: SimpleNamespace(open=fail))
+
+    monkeypatch.setattr(
+        oneclick.urllib.request, "build_opener", lambda *parts: SimpleNamespace(open=fail)
+    )
     assert oneclick._gui_accepts_current_password() is False
     with pytest.raises(CapabilityUnavailableError) as result:
         oneclick._require_gui_login()
@@ -467,15 +566,30 @@ def test_gui_login_rejects_stale_process_without_exposing_password(monkeypatch):
 
 def test_confirmed_password_reused_without_prompt(monkeypatch):
     secret = "operator-chosen-v1"
-    memory = {"api.access_token": "a" * 42, "api.setup_token": "s" * 42,
-              "ui.password": "my own chosen password", "ui.cookie_secret": "c" * 48,
-              "ui.password_confirmed": secret}
+    memory = {
+        "api.access_token": "a" * 42,
+        "api.setup_token": "s" * 42,
+        "ui.password": "my own chosen password",
+        "ui.cookie_secret": "c" * 48,
+        "ui.password_confirmed": secret,
+    }
+
     class Store:
-        def __init__(self, _profile): pass
-        def get(self, key): return memory.get(key)
-        def set(self, key, value): memory[key] = value
+        def __init__(self, _profile):
+            pass
+
+        def get(self, key):
+            return memory.get(key)
+
+        def set(self, key, value):
+            memory[key] = value
+
     monkeypatch.setattr(oneclick, "CredentialStore", Store)
-    monkeypatch.setattr(oneclick, "_prompt_gui_password", lambda: pytest.fail("Must not re-prompt confirmed password"))
+    monkeypatch.setattr(
+        oneclick,
+        "_prompt_gui_password",
+        lambda: pytest.fail("Must not re-prompt confirmed password"),
+    )
     assert oneclick._ensure_secrets() is False
     assert len(memory) == 5
 
@@ -490,9 +604,14 @@ def test_interrupted_password_rotation_requires_fresh_prompt(monkeypatch):
     }
 
     class Store:
-        def __init__(self, _profile): pass
-        def get(self, key): return memory.get(key)
-        def set(self, key, value): memory[key] = value
+        def __init__(self, _profile):
+            pass
+
+        def get(self, key):
+            return memory.get(key)
+
+        def set(self, key, value):
+            memory[key] = value
 
     monkeypatch.setattr(oneclick, "CredentialStore", Store)
     monkeypatch.setattr(oneclick, "_prompt_gui_password", lambda: "new explicit choice here")
@@ -503,6 +622,7 @@ def test_interrupted_password_rotation_requires_fresh_prompt(monkeypatch):
 
 def test_failed_password_vault_write_cannot_leave_confirmed_marker(monkeypatch):
     from types import SimpleNamespace
+
     writes = []
     secret = "new chosen password now"
     monkeypatch.setattr(oneclick, "_prompt_gui_password", lambda: secret)

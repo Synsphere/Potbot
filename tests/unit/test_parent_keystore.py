@@ -17,9 +17,9 @@ def test_parent_keystore_request_is_scoped_hmac_and_replay_nonce() -> None:
     unsigned = {key: first[key] for key in ("profile", "session", "request_id", "surface", "body")}
     expected = hmac.new(
         token,
-        json.dumps(
-            unsigned, ensure_ascii=True, sort_keys=True, separators=(",", ":")
-        ).encode("ascii"),
+        json.dumps(unsigned, ensure_ascii=True, sort_keys=True, separators=(",", ":")).encode(
+            "ascii"
+        ),
         hashlib.sha256,
     ).hexdigest()
     assert hmac.compare_digest(first["mac"], expected)

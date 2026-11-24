@@ -36,7 +36,9 @@ def test_windows_npm_uses_node_js_directly_for_spaced_paths(monkeypatch, tmp_pat
     monkeypatch.setattr(frontend_worker, "os", SimpleNamespace(name="nt"))
     monkeypatch.setattr(frontend_worker.subprocess, "run", run)
     env = {"PATH": "test"}
-    frontend_worker._run_npm(npm, ["ci", "--no-audit", "--no-fund"], cwd=tmp_path, env=env, node=node)
+    frontend_worker._run_npm(
+        npm, ["ci", "--no-audit", "--no-fund"], cwd=tmp_path, env=env, node=node
+    )
     frontend_worker._run_npm(npm, ["run", "build"], cwd=tmp_path, env=env, node=node)
     assert [item[0] for item in seen] == [
         [str(node), str(cli), "ci", "--no-audit", "--no-fund"],
@@ -51,7 +53,8 @@ def test_windows_without_npm_cli_fails_before_starting_any_process(monkeypatch, 
     cli.unlink()
     monkeypatch.setattr(frontend_worker, "os", SimpleNamespace(name="nt"))
     monkeypatch.setattr(
-        frontend_worker.subprocess, "run",
+        frontend_worker.subprocess,
+        "run",
         lambda *args, **kwargs: pytest.fail("Do not run broken npm.cmd"),
     )
     with pytest.raises(CapabilityUnavailableError, match="npm-cli.js"):
@@ -61,7 +64,11 @@ def test_windows_without_npm_cli_fails_before_starting_any_process(monkeypatch, 
 def test_posix_npm_still_executes_its_native_binary(monkeypatch, tmp_path):
     calls = []
     monkeypatch.setattr(frontend_worker, "os", SimpleNamespace(name="posix"))
-    monkeypatch.setattr(frontend_worker.subprocess, "run", lambda command, **kw: (calls.append(command), SimpleNamespace(returncode=0))[1])
+    monkeypatch.setattr(
+        frontend_worker.subprocess,
+        "run",
+        lambda command, **kw: (calls.append(command), SimpleNamespace(returncode=0))[1],
+    )
     npm = tmp_path / "node runtime" / "bin" / "npm"
     frontend_worker._run_npm(npm, ["ci"], cwd=tmp_path, env={})
     assert calls == [[str(npm), "ci"]]

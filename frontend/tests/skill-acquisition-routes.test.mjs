@@ -29,7 +29,7 @@ test('skill BFF keeps source import and lifecycle authority within fixed scoped 
   }});
   await t.test('requires authentication, exact origins, allowlisted workspaces and fixed methods before network',async()=>{
     let calls=0;globalThis.fetch=async()=>{calls++;throw Error('unexpected');};
-    assert.equal((await list(new Request(auth.publicOrigin+'/api/ui/skills'))).status,401);
+    assert.equal((await list(new Request('http://remote.invalid:3100'+'/api/ui/skills'))).status, 403);
     assert.equal((await list(request('GET',undefined,{headers:{Origin:'https://evil.example'}}))).status,403);
     assert.equal((await list(request('GET',undefined,{headers:{'X-Potbot-Workspace':principalId}}))).status,503);
     assert.equal((await skillAcquisitionRoute(request('PUT'),[])).status,400);

@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from potbot.dependencies import project_root
-from potbot.domain.errors import CapabilityUnavailableError
+from potbot.domain.errors import CapabilityUnavailableError, StateMismatchError
 from potbot.windows_core_runtime import (
     _MAX_PROCESS_LOG_BYTES,
     _ROOT_BOOTSTRAP,
@@ -19,7 +19,6 @@ from potbot.windows_core_runtime import (
     WSL_KERNEL_PUBLIC_KEY,
     WSL_KERNEL_RELEASE,
     WSL_KERNEL_TAG,
-    _ensure_required_wsl_kernel,
     _failed_bootstrap_stage,
     _failed_qualification_stage,
     _runtime_secret_environment,
@@ -76,11 +75,20 @@ def test_windows_core_runtime_forwards_only_scoped_runtime_secrets(monkeypatch) 
     assert "POTBOT_ADMIN_DSN" not in result["WSLENV"]
     assert "DBUS_SESSION_BUS_ADDRESS" not in result
     assert set(result) <= {
-        "SystemRoot", "PATH", "SYN_HOST_CUSTODY_PIPE", "SYN_HOST_CUSTODY_CLIENT_WIN",
-        "SYN_HOST_CUSTODY_POWERSHELL", "POTBOT_PARENT_KEYSTORE_HOST",
-        "POTBOT_PARENT_KEYSTORE_PORT", "POTBOT_PARENT_KEYSTORE_SESSION",
-        "POTBOT_PARENT_KEYSTORE_TOKEN", "POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED",
-        "POTBOT_XPRA_BRIDGE_TOKEN", "POTBOT_DSN", "POTBOT_NON_INTERACTIVE", "WSLENV",
+        "SystemRoot",
+        "PATH",
+        "SYN_HOST_CUSTODY_PIPE",
+        "SYN_HOST_CUSTODY_CLIENT_WIN",
+        "SYN_HOST_CUSTODY_POWERSHELL",
+        "POTBOT_PARENT_KEYSTORE_HOST",
+        "POTBOT_PARENT_KEYSTORE_PORT",
+        "POTBOT_PARENT_KEYSTORE_SESSION",
+        "POTBOT_PARENT_KEYSTORE_TOKEN",
+        "POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED",
+        "POTBOT_XPRA_BRIDGE_TOKEN",
+        "POTBOT_DSN",
+        "POTBOT_NON_INTERACTIVE",
+        "WSLENV",
     }
 
 
@@ -89,7 +97,7 @@ def test_windows_core_runtime_rejects_bad_bridge_tokens(monkeypatch, token: str)
     from potbot.syn_release import host
 
     monkeypatch.setattr(host, "windows_environment", lambda: {"SystemRoot": r"C:\\Windows"})
-    with pytest.raises(Exception):
+    with pytest.raises(StateMismatchError):
         _runtime_secret_environment(token, "postgresql://restricted@127.0.0.1/potbot")
 
 
@@ -137,9 +145,11 @@ def test_root_bootstrap_enables_universe_and_marks_failure_stages() -> None:
     assert 'chmod -R u+rwX,g+rX,g-w,o-rwx "$UV_PROJECT_ENVIRONMENT"' in _ROOT_BOOTSTRAP
     assert 'service_gid="$(id -g synoperator)"' in _ROOT_BOOTSTRAP
     assert '-path "$UV_PROJECT_ENVIRONMENT" -prune' in _ROOT_BOOTSTRAP
-    assert 'chmod u+rwX,g+rX,g-w,o-rwx' in _ROOT_BOOTSTRAP
-    assert 'chmod g+s' in _ROOT_BOOTSTRAP
-    assert 'install -d -m 2750 -o root -g "$service_gid" "$UV_PROJECT_ENVIRONMENT"' in _ROOT_BOOTSTRAP
+    assert "chmod u+rwX,g+rX,g-w,o-rwx" in _ROOT_BOOTSTRAP
+    assert "chmod g+s" in _ROOT_BOOTSTRAP
+    assert (
+        'install -d -m 2750 -o root -g "$service_gid" "$UV_PROJECT_ENVIRONMENT"' in _ROOT_BOOTSTRAP
+    )
     assert "umask 0027" in _ROOT_BOOTSTRAP
     assert "/usr/sbin/runuser -u synoperator --" in _ROOT_BOOTSTRAP
     assert "import potbot.tools.scoped_provision" in _ROOT_BOOTSTRAP
@@ -156,8 +166,7 @@ def test_wsl_source_bundle_covers_all_wheel_force_includes() -> None:
         source
         for source in forced
         if not any(
-            Path(source) == candidate or candidate in Path(source).parents
-            for candidate in staged
+            Path(source) == candidate or candidate in Path(source).parents for candidate in staged
         )
     ]
     assert missing == []
@@ -183,18 +192,26 @@ def test_process_log_is_bounded_and_retained_under_service_home(tmp_path) -> Non
     assert payload.startswith(b"[older diagnostic output truncated]\n")
     assert b"e" * 1024 in payload
 
+
 def test_windows_core_pins_the_signed_taskstats_kernel_release() -> None:
     assert WSL_KERNEL_TAG == "v0.5.0.dev13"
     assert WSL_KERNEL_RELEASE.endswith("-potbot-ns-taskstats")
-    assert WSL_KERNEL_ARCHIVE_SHA256 == "b814f2e50df83aa7fd0c5b7ca7ea8df3fa0b8694bb62ef8b8721033f1788f0c4"
-    assert WSL_KERNEL_MANIFEST_SHA256 == "7da3d6b6bbc778df001f557107c66d377c676a1e1d2410043ac843cebf81554e"
-    assert WSL_KERNEL_PUBLIC_KEY == "945786a5587110a061a6b73a02057b327f1ce819db4b0b5850201fbca41149cb"
+    assert (
+        WSL_KERNEL_ARCHIVE_SHA256
+        == "b814f2e50df83aa7fd0c5b7ca7ea8df3fa0b8694bb62ef8b8721033f1788f0c4"
+    )
+    assert (
+        WSL_KERNEL_MANIFEST_SHA256
+        == "7da3d6b6bbc778df001f557107c66d377c676a1e1d2410043ac843cebf81554e"
+    )
+    assert (
+        WSL_KERNEL_PUBLIC_KEY == "945786a5587110a061a6b73a02057b327f1ce819db4b0b5850201fbca41149cb"
+    )
 
 
 def test_failed_qualification_stage_uses_last_marker() -> None:
     stderr = (
-        "POTBOT_QUALIFICATION_STAGE=scoped-launcher\n"
-        "POTBOT_QUALIFICATION_STAGE=sandbox-image\n"
+        "POTBOT_QUALIFICATION_STAGE=scoped-launcher\nPOTBOT_QUALIFICATION_STAGE=sandbox-image\n"
     )
     assert _failed_qualification_stage(stderr) == "sandbox-image"
     assert _failed_qualification_stage("ordinary error") == "unknown"
@@ -239,20 +256,15 @@ def test_sandbox_image_source_is_git_derived_and_tracks_workflow_triggers() -> N
     assert "src/potbot/tools/queue_transport_worker.py" in _SANDBOX_IMAGE_INPUTS
     assert "tests/unit/test_workspace_qualification_smoke.py" in _SANDBOX_IMAGE_INPUTS
 
-    workflow = (
-        project_root() / ".github/workflows/sandbox-system-image.yml"
-    ).read_text(encoding="utf-8")
+    workflow = (project_root() / ".github/workflows/sandbox-system-image.yml").read_text(
+        encoding="utf-8"
+    )
     push_block = workflow.split("  pull_request:", 1)[0]
     paths_block = push_block.split("    paths:", 1)[1]
     workflow_paths = {
-        line.strip()[2:]
-        for line in paths_block.splitlines()
-        if line.strip().startswith("- ")
+        line.strip()[2:] for line in paths_block.splitlines() if line.strip().startswith("- ")
     }
-    normalized = {
-        item[:-3] if item.endswith("/**") else item
-        for item in workflow_paths
-    }
+    normalized = {item[:-3] if item.endswith("/**") else item for item in workflow_paths}
     assert set(_SANDBOX_IMAGE_INPUTS) == normalized
 
     value = _sandbox_image_source(project_root())
@@ -312,8 +324,8 @@ def test_wsl_root_prepares_qualification_scratch_before_privilege_drop() -> None
     assert '("private", service.pw_gid, 0o700)' in source
     assert '("audit", service.pw_gid, 0o700)' in source
     assert "os.chown(path, service.pw_uid, gid)" in source
-    assert 'str(service.pw_uid)' in source
-    assert 'str(service.pw_gid)' in source
+    assert "str(service.pw_uid)" in source
+    assert "str(service.pw_gid)" in source
 
 
 def test_wsl_workspace_shared_tools_are_gid69_setgid() -> None:
@@ -328,7 +340,8 @@ def test_wsl_workspace_ai_config_matches_qualified_group_writable_layout() -> No
     source = (project_root() / "src/potbot/wsl_core_runtime.py").read_text(encoding="utf-8")
     # The disposable image qualifier and the persistent workspace must enforce
     # the same writable /etc/ai contract. Keep history operator-private.
-    assert source.count("(ai, service.pw_gid, 0o775)") == 2
+    assert "(ai, service.pw_gid, 0o775)" in source
+    assert '("ai", service.pw_gid, 0o775)' in source
     assert "(ai, service.pw_gid, 0o700)" not in source
     assert "(past, service.pw_gid, 0o700)" in source
 
@@ -344,6 +357,7 @@ def test_wsl_terminal_recipe_dependency_is_in_sandbox_image() -> None:
     assert "xterm" in install.split()
 
 
+@pytest.mark.skipif(os.name != "posix", reason="Linux-only WSL runtime module")
 def test_wsl_finalize_refreshes_qualification_without_treating_it_as_image_change(
     tmp_path: Path,
 ) -> None:

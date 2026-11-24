@@ -7,6 +7,7 @@ operator/Xpra/sandbox layer inside Potbot's already-owned WSL distribution.
 No UI/API/database secret is copied into WSL.  Only the ephemeral Xpra bridge
 bearer is inherited by the one WSL child through WSLENV.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -21,7 +22,7 @@ import threading
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TextIO
 
 from potbot.dependencies import project_root
 from potbot.domain.errors import CapabilityUnavailableError, StateMismatchError
@@ -83,8 +84,15 @@ _SANDBOX_IMAGE_INPUTS = (
     ".github/workflows/sandbox-system-image.yml",
 )
 _SKIP_NAMES = {
-    "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".git",
-    ".venv", ".potbot", "node_modules", ".next",
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".git",
+    ".venv",
+    ".potbot",
+    "node_modules",
+    ".next",
 }
 _MAX_SOURCE_BYTES = 160 * 1024 * 1024
 _MAX_PROCESS_LOG_BYTES = 128 * 1024
@@ -96,14 +104,11 @@ _QUALIFICATION_STAGE = re.compile(r"^POTBOT_QUALIFICATION_STAGE=([a-z0-9-]+)$", 
 
 UV_VERSION = "0.12.23"
 UV_URL = (
-    "https://github.com/astral-sh/uv/releases/download/0.12.23/"
-    "uv-x86_64-unknown-linux-gnu.tar.gz"
+    "https://github.com/astral-sh/uv/releases/download/0.12.23/uv-x86_64-unknown-linux-gnu.tar.gz"
 )
 UV_SHA256 = "9167d72b3319674b6303c4cbe071854bba13ebdf3d76b1a7cbdc175471fb66d6"
 COSIGN_VERSION = "3.1.3"
-COSIGN_URL = (
-    "https://github.com/sigstore/cosign/releases/download/v3.1.3/cosign-linux-amd64"
-)
+COSIGN_URL = "https://github.com/sigstore/cosign/releases/download/v3.1.3/cosign-linux-amd64"
 COSIGN_SHA256 = "4629c757b7618056f8ddd7e2625ae9fdd94c0372a65049520bc7d9df9efc7f71"
 
 WSL_KERNEL_TAG = "v0.5.0.dev13"
@@ -335,7 +340,7 @@ finally:
 
 
 def _copy_private_file_to_wsl(
-    manager: "WslOperatorHost",
+    manager: WslOperatorHost,
     source: Path,
     target: str,
     *,
@@ -372,8 +377,7 @@ def _copy_private_file_to_wsl(
             expected,
         ],
         input=payload,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         timeout=300,
         check=False,
         env=windows_environment(),
@@ -486,7 +490,7 @@ def _stream_process(
     sizes = {"stdout": 0, "stderr": 0}
     lock = threading.Lock()
 
-    def pump(name: str, stream, sink) -> None:
+    def pump(name: str, stream: TextIO, sink: TextIO) -> None:
         for line in iter(stream.readline, ""):
             print(line, end="", file=sink, flush=True)
             with lock:
@@ -521,9 +525,7 @@ def _stream_process(
     )
 
 
-def _write_process_log(
-    root: Path, name: str, result: subprocess.CompletedProcess[str]
-) -> Path:
+def _write_process_log(root: Path, name: str, result: subprocess.CompletedProcess[str]) -> Path:
     directory = root / ".potbot" / "service"
     if directory.exists() and directory.is_symlink():
         raise CapabilityUnavailableError("Core runtime service log directory is redirected")
@@ -563,7 +565,7 @@ def _failed_qualification_stage(stderr: str) -> str:
     return matches[-1] if matches else "unknown"
 
 
-def _ensure_required_wsl_kernel(manager: "WslOperatorHost") -> None:
+def _ensure_required_wsl_kernel(manager: WslOperatorHost) -> None:
     """Boot the owned WSL runtime on Potbot's signed TASKSTATS kernel."""
     from potbot.syn_release.host import DISTRO, run_host
     from potbot.wsl_kernel import download_bundle, verify_bundle
@@ -618,7 +620,10 @@ def _ensure_required_wsl_kernel(manager: "WslOperatorHost") -> None:
 def _head(root: Path) -> str:
     result = subprocess.run(
         ["git", "-C", str(root), "rev-parse", "HEAD"],
-        capture_output=True, text=True, timeout=10, check=False,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
     )
     value = result.stdout.strip()
     if result.returncode or _COMMIT.fullmatch(value) is None:
@@ -730,11 +735,11 @@ def _supervise_windows_core_runtime(python: str, state: str) -> int:
     return result.returncode
 
 
-def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> WindowsCoreRuntime:
+def prepare_windows_core_runtime(config: ServiceConfig, token: str) -> WindowsCoreRuntime:
     if os.name != "nt":
         raise CapabilityUnavailableError("Windows core runtime handoff requires Windows")
     from potbot.credentials import resolve_postgres_dsn
-    from potbot.syn_release.host import DISTRO, WslOperatorHost, run_host
+    from potbot.syn_release.host import DISTRO, WslOperatorHost
 
     root = project_root()
     files = _source_files(root)
@@ -758,9 +763,22 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
     )
 
     root_command = [
-        manager.wsl, "--distribution", DISTRO, "--user", "root", "--exec",
-        "/bin/sh", "-c", _ROOT_BOOTSTRAP, "potbot-core",
-        native, source_sha, UV_URL, UV_SHA256, COSIGN_URL, COSIGN_SHA256,
+        manager.wsl,
+        "--distribution",
+        DISTRO,
+        "--user",
+        "root",
+        "--exec",
+        "/bin/sh",
+        "-c",
+        _ROOT_BOOTSTRAP,
+        "potbot-core",
+        native,
+        source_sha,
+        UV_URL,
+        UV_SHA256,
+        COSIGN_URL,
+        COSIGN_SHA256,
     ]
     print("[Potbot startup] WSL bootstrap: preparing the managed Linux runtime", flush=True)
     result = _stream_process(
@@ -789,14 +807,30 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
     )
     prepare = _stream_process(
         [
-            manager.wsl, "--distribution", DISTRO, "--user", "root", "--exec",
-            python, "-I", "-B", "-m", "potbot.wsl_core_runtime", "prepare",
-            "--workspace-id", config.workspace_id,
-            "--principal-id", config.principal_id,
-            "--source-root", f"/var/lib/potbot/core-source/{source_sha}",
-            "--source-sha256", source_sha,
-            "--consumer-commit", _head(root),
-            "--image-source", image_source,
+            manager.wsl,
+            "--distribution",
+            DISTRO,
+            "--user",
+            "root",
+            "--exec",
+            python,
+            "-I",
+            "-B",
+            "-m",
+            "potbot.wsl_core_runtime",
+            "prepare",
+            "--workspace-id",
+            config.workspace_id,
+            "--principal-id",
+            config.principal_id,
+            "--source-root",
+            f"/var/lib/potbot/core-source/{source_sha}",
+            "--source-sha256",
+            source_sha,
+            "--consumer-commit",
+            _head(root),
+            "--image-source",
+            image_source,
         ],
         timeout=1800,
         env={**os.environ, "PATH": os.environ.get("PATH", "")},
@@ -809,10 +843,13 @@ def prepare_windows_core_runtime(config: "ServiceConfig", token: str) -> Windows
         )
     try:
         import json
+
         record = json.loads(prepare.stdout.strip().splitlines()[-1])
         state = record["state"]
     except (ValueError, KeyError, IndexError, TypeError):
-        raise CapabilityUnavailableError("Managed WSL core runtime returned an invalid receipt") from None
+        raise CapabilityUnavailableError(
+            "Managed WSL core runtime returned an invalid receipt"
+        ) from None
     if not isinstance(state, str) or not state.startswith("/home/synoperator/"):
         raise CapabilityUnavailableError("Managed WSL core runtime state escaped its private owner")
 

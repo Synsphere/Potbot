@@ -7,7 +7,7 @@ import json
 import os
 import re
 import subprocess
-from contextlib import nullcontext
+from contextlib import AbstractContextManager, nullcontext
 from pathlib import Path
 
 from potbot.domain.errors import ScopeDeniedError, StateMismatchError
@@ -169,8 +169,7 @@ def _stage_controller_wheel(
             expected,
         ],
         input=wheel.read_bytes(),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         timeout=120,
         check=False,
         env=windows_environment(),
@@ -264,16 +263,21 @@ def forward(manager: WslOperatorHost, command: str, arguments: list[str]) -> int
         raise StateMismatchError("Install the exact reviewed native Potbot controller wheel first")
 
     install_service = command == "syn-operator" and arguments and arguments[0] == "install-service"
+    custody_names: tuple[str, ...]
+    environment_context: AbstractContextManager[dict[str, str]]
     if command == "syn-operator":
         from .windows_custody import (
-            CUSTODY_ENVIRONMENT,
+            CUSTODY_ENVIRONMENT as WINDOWS_CUSTODY_ENVIRONMENT,
+        )
+        from .windows_custody import (
             REQUIRED_MARKER,
             windows_host_custody,
         )
 
+        custody_names = WINDOWS_CUSTODY_ENVIRONMENT
         environment_context = windows_host_custody(manager)
     else:
-        CUSTODY_ENVIRONMENT = ()
+        custody_names = ()
         REQUIRED_MARKER = ""
         environment_context = nullcontext(windows_environment())
 
@@ -294,7 +298,7 @@ def forward(manager: WslOperatorHost, command: str, arguments: list[str]) -> int
                     [
                         "--user",
                         "import-environment",
-                        *CUSTODY_ENVIRONMENT,
+                        *custody_names,
                         REQUIRED_MARKER,
                     ],
                 ),

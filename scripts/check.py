@@ -13,6 +13,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from potbot.evaluation.diagnostics import sanitize_text
+from potbot.evaluation.postgres_test_shards import PostgresShard
 from potbot.tools.temporary import TemporaryDirectory, allocate_file
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,8 +27,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--with-postgres", action="store_true")
     parser.add_argument("--with-sandbox", action="store_true")
+    parser.add_argument("--postgres-shard", type=PostgresShard.parse)
+    parser.add_argument("--postgres-shard-only", action="store_true")
     parser.add_argument("--artifacts", type=Path, default=ROOT / "artifacts")
     args = parser.parse_args()
+    if args.postgres_shard is not None and not args.with_postgres:
+        parser.error("--postgres-shard requires --with-postgres")
+    if args.postgres_shard_only and (args.postgres_shard is None or args.with_sandbox):
+        parser.error("--postgres-shard-only requires a PostgreSQL partition and no sandbox lane")
     artifacts = args.artifacts.resolve()
     artifacts.mkdir(parents=True, exist_ok=True)
     results: list[dict[str, object]] = []
@@ -88,23 +95,31 @@ def main() -> int:
         process_scratch = TemporaryDirectory(
             prefix="potbot-check-process-", dir=ROOT / ".potbot/temporary"
         )
-        cache = str(process_scratch.path / "ruff-cache")
-        run("lint", [sys.executable, "-m", "ruff", "check", "--cache-dir", cache, "."])
-        run(
-            "format", [sys.executable, "-m", "ruff", "format", "--cache-dir", cache, "--check", "."]
-        )
-        run(
-            "types",
-            [sys.executable, "-m", "mypy", "--cache-dir", str(process_scratch.path / "mypy-cache")],
-        )
-        run(
-            "hierarchy-assets",
-            [sys.executable, str(ROOT / "scripts/generate_type_hierarchy.py"), "--check"],
-        )
-        run(
-            "agent-security-assets",
-            [sys.executable, str(ROOT / "scripts/generate_agent_security.py"), "--check"],
-        )
+        if not args.postgres_shard_only:
+            cache = str(process_scratch.path / "ruff-cache")
+            run("lint", [sys.executable, "-m", "ruff", "check", "--cache-dir", cache, "."])
+            run(
+                "format",
+                [sys.executable, "-m", "ruff", "format", "--cache-dir", cache, "--check", "."],
+            )
+            run(
+                "types",
+                [
+                    sys.executable,
+                    "-m",
+                    "mypy",
+                    "--cache-dir",
+                    str(process_scratch.path / "mypy-cache"),
+                ],
+            )
+            run(
+                "hierarchy-assets",
+                [sys.executable, str(ROOT / "scripts/generate_type_hierarchy.py"), "--check"],
+            )
+            run(
+                "agent-security-assets",
+                [sys.executable, str(ROOT / "scripts/generate_agent_security.py"), "--check"],
+            )
         with TemporaryDirectory(prefix="potbot-check-", dir=process_scratch.path) as temporary:
             temp = Path(temporary)
             junit = temp / "tests.xml"
@@ -120,6 +135,17 @@ def main() -> int:
                     if os.name == "posix" and os.environ.get("GITHUB_ACTIONS") == "true"
                     else None
                 )
+                shard_arguments: list[str] = []
+                if label == "postgres" and args.postgres_shard is not None:
+                    shard = args.postgres_shard
+                    shard_arguments = [
+                        "-p",
+                        "scripts.postgres_shard_plugin",
+                        "--postgres-shard",
+                        f"{shard.index}/{shard.count}",
+                        "--postgres-shard-report",
+                        str(artifacts / "postgres-shards" / f"shard-{shard.index}.json"),
+                    ]
                 try:
                     run(
                         label,
@@ -131,6 +157,7 @@ def main() -> int:
                             selector,
                             "--durations=10",
                             f"--junitxml={junit}",
+                            *shard_arguments,
                         ],
                         # The sandbox selection has a measured green baseline of
                         # roughly 165 seconds on GitHub-hosted Linux runners. A
@@ -139,13 +166,17 @@ def main() -> int:
                         # The complete PostgreSQL lane now includes the skill,
                         # operation and executable lifecycle migrations. Its
                         # prior 15-minute bound expired at 89% on merged U04-A.
-                        # Keep a finite process deadline without dropping gates.
+                        # Its 30-minute successor reached ~84% at PR94. CI now
+                        # uses isolated complete partitions; an explicit local full
+                        # run keeps a bounded one-hour allowance for the whole lane.
                         # The 4,484-test unit/git selection reached 85% when its
                         # four-minute deadline expired on merged U04-D. Allow
                         # ten minutes for that growing lane and runner contention.
-                        timeout={"unit-and-git": 600, "postgres": 1800, "sandbox": 360}.get(
-                            label, 240
-                        ),
+                        timeout={
+                            "unit-and-git": 600,
+                            "postgres": 1800 if args.postgres_shard is not None else 3600,
+                            "sandbox": 360,
+                        }.get(label, 240),
                         temporary_root=pytest_root,
                     )
                 finally:
@@ -155,124 +186,125 @@ def main() -> int:
                         )
                         junit.unlink()
 
-            tests("unit-and-git", "not postgres and not sandbox")
-            run("wheel-build", ["uv", "build", "--wheel", "--out-dir", str(temp / "dist")])
-            wheels = list((temp / "dist").glob("*.whl"))
-            if len(wheels) != 1:
-                raise CheckFailed("Expected one application wheel")
-            clean_env = temp / "clean-env"
-            run("wheel-environment", ["uv", "venv", "--python", sys.executable, str(clean_env)])
-            bin_dir = clean_env / ("Scripts" if os.name == "nt" else "bin")
-            clean_python = bin_dir / ("python.exe" if os.name == "nt" else "python")
-            clean_cli = bin_dir / ("potbot.exe" if os.name == "nt" else "potbot")
-            clean_environment = {
-                name: value
-                for name, value in os.environ.items()
-                if name not in {"PYTHONPATH", "PYTHONHOME", "PYTHONUSERBASE"}
-            }
-            clean_environment["PYTHONNOUSERSITE"] = "1"
-            run(
-                "wheel-install",
-                [
-                    "uv",
-                    "pip",
-                    "install",
-                    "--python",
-                    str(clean_python),
-                    "--no-deps",
-                    str(wheels[0]),
-                ],
-            )
-            run(
-                "installed-version",
-                [str(clean_cli), "--version"],
-                cwd=temp,
-                environment=clean_environment,
-            )
-            run(
-                "installed-help",
-                [str(clean_cli), "--help"],
-                cwd=temp,
-                environment=clean_environment,
-            )
-            run(
-                "installed-domain",
-                [
-                    str(clean_python),
-                    "-I",
-                    "-c",
-                    "from pathlib import Path; import sys, potbot, potbot.domain; "
-                    "assert Path(potbot.__file__).resolve().is_relative_to("
-                    "Path(sys.prefix).resolve()), 'package imported outside the clean environment'; "
-                    "print('installed domain import passed')",
-                ],
-                cwd=temp,
-                environment=clean_environment,
-            )
-            run(
-                "installed-execution-help",
-                [str(clean_cli), "execution", "--help"],
-                cwd=temp,
-                environment=clean_environment,
-            )
-            for command in (
-                "patch",
-                "credentials",
-                "dependencies",
-                "models",
-                "serve",
-                "jobs",
-                "identity",
-            ):
+            if not args.postgres_shard_only:
+                tests("unit-and-git", "not postgres and not sandbox")
+                run("wheel-build", ["uv", "build", "--wheel", "--out-dir", str(temp / "dist")])
+                wheels = list((temp / "dist").glob("*.whl"))
+                if len(wheels) != 1:
+                    raise CheckFailed("Expected one application wheel")
+                clean_env = temp / "clean-env"
+                run("wheel-environment", ["uv", "venv", "--python", sys.executable, str(clean_env)])
+                bin_dir = clean_env / ("Scripts" if os.name == "nt" else "bin")
+                clean_python = bin_dir / ("python.exe" if os.name == "nt" else "python")
+                clean_cli = bin_dir / ("potbot.exe" if os.name == "nt" else "potbot")
+                clean_environment = {
+                    name: value
+                    for name, value in os.environ.items()
+                    if name not in {"PYTHONPATH", "PYTHONHOME", "PYTHONUSERBASE"}
+                }
+                clean_environment["PYTHONNOUSERSITE"] = "1"
                 run(
-                    f"installed-{command}-help",
-                    [str(clean_cli), command, "--help"],
+                    "wheel-install",
+                    [
+                        "uv",
+                        "pip",
+                        "install",
+                        "--python",
+                        str(clean_python),
+                        "--no-deps",
+                        str(wheels[0]),
+                    ],
+                )
+                run(
+                    "installed-version",
+                    [str(clean_cli), "--version"],
                     cwd=temp,
                     environment=clean_environment,
                 )
-            run(
-                "installed-identity-resources",
-                [
-                    str(clean_python),
-                    "-I",
-                    "-c",
-                    "from pathlib import Path; import sys; "
-                    "from potbot.security.broker import native_source_directory; "
-                    "from potbot.semantics.agent_security import security_type_snapshot; "
-                    "from potbot.semantics.catalog import merge_types; "
-                    "source = native_source_directory(); "
-                    "assert source.is_relative_to(Path(sys.prefix).resolve()); "
-                    "assert (source / 'Cargo.lock').is_file(); "
-                    "assert (source / 'src' / 'secure.rs').is_file(); "
-                    "assert len(merge_types(security_type_snapshot())) == 715; "
-                    "assert 'cryptography' not in sys.modules; "
-                    "assert 'psycopg' not in sys.modules; "
-                    "print('installed native sources and Agent security catalog verified')",
-                ],
-                cwd=temp,
-                environment=clean_environment,
-            )
-            run(
-                "installed-semantic-catalog",
-                [
-                    str(clean_python),
-                    "-I",
-                    "-c",
-                    "from potbot.semantics.registry import SemanticRegistry; "
-                    "registry = SemanticRegistry.load(); "
-                    "assert len(registry.inventory('data_type')) == 45; "
-                    "assert len(registry.inventory('retrieval_profile')) == 7; "
-                    "print('installed semantic catalog verified: ' + registry.fingerprint)",
-                ],
-                cwd=temp,
-                environment=clean_environment,
-            )
-            run(
-                "installed-hierarchy",
-                [str(clean_cli), "syn", "hierarchy", "--summary"],
-                cwd=temp,
-                environment=clean_environment,
-            )
+                run(
+                    "installed-help",
+                    [str(clean_cli), "--help"],
+                    cwd=temp,
+                    environment=clean_environment,
+                )
+                run(
+                    "installed-domain",
+                    [
+                        str(clean_python),
+                        "-I",
+                        "-c",
+                        "from pathlib import Path; import sys, potbot, potbot.domain; "
+                        "assert Path(potbot.__file__).resolve().is_relative_to("
+                        "Path(sys.prefix).resolve()), 'package imported outside the clean environment'; "
+                        "print('installed domain import passed')",
+                    ],
+                    cwd=temp,
+                    environment=clean_environment,
+                )
+                run(
+                    "installed-execution-help",
+                    [str(clean_cli), "execution", "--help"],
+                    cwd=temp,
+                    environment=clean_environment,
+                )
+                for command in (
+                    "patch",
+                    "credentials",
+                    "dependencies",
+                    "models",
+                    "serve",
+                    "jobs",
+                    "identity",
+                ):
+                    run(
+                        f"installed-{command}-help",
+                        [str(clean_cli), command, "--help"],
+                        cwd=temp,
+                        environment=clean_environment,
+                    )
+                run(
+                    "installed-identity-resources",
+                    [
+                        str(clean_python),
+                        "-I",
+                        "-c",
+                        "from pathlib import Path; import sys; "
+                        "from potbot.security.broker import native_source_directory; "
+                        "from potbot.semantics.agent_security import security_type_snapshot; "
+                        "from potbot.semantics.catalog import merge_types; "
+                        "source = native_source_directory(); "
+                        "assert source.is_relative_to(Path(sys.prefix).resolve()); "
+                        "assert (source / 'Cargo.lock').is_file(); "
+                        "assert (source / 'src' / 'secure.rs').is_file(); "
+                        "assert len(merge_types(security_type_snapshot())) == 715; "
+                        "assert 'cryptography' not in sys.modules; "
+                        "assert 'psycopg' not in sys.modules; "
+                        "print('installed native sources and Agent security catalog verified')",
+                    ],
+                    cwd=temp,
+                    environment=clean_environment,
+                )
+                run(
+                    "installed-semantic-catalog",
+                    [
+                        str(clean_python),
+                        "-I",
+                        "-c",
+                        "from potbot.semantics.registry import SemanticRegistry; "
+                        "registry = SemanticRegistry.load(); "
+                        "assert len(registry.inventory('data_type')) == 45; "
+                        "assert len(registry.inventory('retrieval_profile')) == 7; "
+                        "print('installed semantic catalog verified: ' + registry.fingerprint)",
+                    ],
+                    cwd=temp,
+                    environment=clean_environment,
+                )
+                run(
+                    "installed-hierarchy",
+                    [str(clean_cli), "syn", "hierarchy", "--summary"],
+                    cwd=temp,
+                    environment=clean_environment,
+                )
             if args.with_postgres:
                 # Verify private recovery storage before acquiring a DB capability.
                 # Keep 0700 custody: a restricted host must fail before DB creation.
@@ -336,7 +368,16 @@ def main() -> int:
             "schema_version": 1,
             "started_at": started_at,
             "finished_at": datetime.now(UTC).isoformat(),
+            "scope": "postgres_partition"
+            if args.postgres_shard_only
+            else "application_verification",
             "postgres_requested": args.with_postgres,
+            "postgres_shard": {
+                "index": args.postgres_shard.index,
+                "count": args.postgres_shard.count,
+            }
+            if args.postgres_shard is not None
+            else None,
             "sandbox_requested": args.with_sandbox,
             "success": status == 0,
             "checks": results,

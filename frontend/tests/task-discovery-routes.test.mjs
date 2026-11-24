@@ -16,9 +16,9 @@ function request(method = 'GET', body, options = {}) {
 test('task-discovery BFF has fixed scoped reads and reviewed commands only', async t => {
   const prior = { ...process.env }, priorFetch = globalThis.fetch; Object.assign(process.env, env); delete process.env.POTBOT_UI_WORKSPACES_JSON;
   t.after(() => { globalThis.fetch = priorFetch; for (const key of [...Object.keys(env), 'POTBOT_UI_WORKSPACES_JSON']) if (prior[key] === undefined) delete process.env[key]; else process.env[key] = prior[key]; });
-  await t.test('operator session, Origin and route allowlist precede all network use', async () => {
+  await t.test('operator loopback, Origin and route allowlist precede all network use', async () => {
     let calls = 0; globalThis.fetch = async () => { calls++; throw Error('unexpected network'); };
-    assert.equal((await GET(new Request(auth.publicOrigin + '/api/ui/task-discovery/searches'), params('searches'))).status, 401);
+    assert.equal((await GET(new Request('http://remote.invalid:3100' + '/api/ui/task-discovery/searches'), params('searches'))).status, 403);
     assert.equal((await GET(request('GET', undefined, { headers: { Origin: 'https://evil.example' } }), params('searches'))).status, 403);
     assert.equal((await GET(request('GET', undefined, { headers: { 'X-Potbot-Workspace': other } }), params('searches'))).status, 503);
     assert.equal((await taskDiscoveryRoute(request('PUT'), ['searches'])).status, 400);

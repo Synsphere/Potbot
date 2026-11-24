@@ -4,6 +4,7 @@ Executed with Syn's pinned host-custody Python environment. The server owns the
 DPAPI vault and all authorization decisions. WSL receives only an authenticated
 request/response channel; root/private material is never exported.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -16,7 +17,7 @@ import socket
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 # The host-custody project is intentionally `tool.uv.package = false`, so its
 # verified source package is not installed into the venv.  Potbot launches this
@@ -27,9 +28,9 @@ if Path(__file__).is_symlink() or _SOURCE_ROOT.is_symlink():
     raise RuntimeError("Parent keystore source root is redirected")
 sys.path.insert(0, str(_SOURCE_ROOT))
 
-from syn_host_custody.broker import VaultInUseError, WindowsVault, host_approve
-from syn_host_custody.core import Authority, MAX_REQUEST, root_slot, safe_ref, safe_slot
-from syn_host_custody.owner import OwnerProcess
+from syn_host_custody.broker import VaultInUseError, WindowsVault, host_approve  # noqa: E402
+from syn_host_custody.core import Authority, root_slot, safe_ref, safe_slot  # noqa: E402
+from syn_host_custody.owner import OwnerProcess  # noqa: E402
 
 REQUEST_PROFILE = "potbot.parent-keystore-request/1"
 RESPONSE_PROFILE = "potbot.parent-keystore-response/1"
@@ -68,9 +69,9 @@ def mac(token: bytes, value: dict[str, Any]) -> str:
 def _secret_identity(body: dict[str, Any]) -> tuple[str, str | None]:
     service = body.get("service")
     slot = body.get("slot")
-    if not safe_ref(service) or body.get("account") != "slot":
+    if not isinstance(service, str) or not safe_ref(service) or body.get("account") != "slot":
         raise ValueError("Parent secret request has invalid service/account scope")
-    if slot is not None and (not safe_slot(slot) or root_slot(slot)):
+    if slot is not None and (not isinstance(slot, str) or not safe_slot(slot) or root_slot(slot)):
         raise ValueError("Parent secret request targets a protected slot")
     return service, slot
 
@@ -102,7 +103,7 @@ def _search(vault: WindowsVault, service: str, slot: str | None) -> list[str]:
     for key in vault.data["slots"]:
         if not key.startswith(prefix):
             continue
-        candidate = key[len(prefix):]
+        candidate = key[len(prefix) :]
         if safe_slot(candidate) and not root_slot(candidate):
             result.append(candidate)
     return sorted(result)
@@ -180,7 +181,7 @@ def serve(
     with OwnerProcess(owner_pid, owner_created), _open_vault() as vault:
         authority = Authority(vault, approve=host_approve)
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
-            server.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+            server.setsockopt(socket.SOL_SOCKET, cast(Any, socket).SO_EXCLUSIVEADDRUSE, 1)
             server.bind((host, port))
             server.listen(8)
             while True:

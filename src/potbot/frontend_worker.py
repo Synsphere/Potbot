@@ -40,8 +40,16 @@ def _safe_environment() -> dict[str, str]:
     env = dict(os.environ)
     for name in list(env):
         if (
-            name in {"POTBOT_DSN", "POTBOT_ADMIN_DSN", "GH_TOKEN", "GITHUB_TOKEN",
-                     "HF_TOKEN", "AWS_SECRET_ACCESS_KEY", "AZURE_CLIENT_SECRET"}
+            name
+            in {
+                "POTBOT_DSN",
+                "POTBOT_ADMIN_DSN",
+                "GH_TOKEN",
+                "GITHUB_TOKEN",
+                "HF_TOKEN",
+                "AWS_SECRET_ACCESS_KEY",
+                "AZURE_CLIENT_SECRET",
+            }
             or name.startswith("POTBOT_UI_")
             or name.endswith(("_API_KEY", "_TOKEN", "_SECRET", "_PASSWORD"))
         ):
@@ -56,8 +64,11 @@ def _report(message: str) -> None:
 def _checked_version(executable: Path) -> bool:
     try:
         result = subprocess.run(
-            [str(executable), "--version"], capture_output=True, text=True,
-            timeout=10, check=False,
+            [str(executable), "--version"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
         )
         match = re.fullmatch(r"v(\d+)\.(\d+)\.(\d+)\s*", result.stdout)
         return bool(match and result.returncode == 0 and (int(match[1]), int(match[2])) >= (20, 9))
@@ -67,13 +78,21 @@ def _checked_version(executable: Path) -> bool:
 
 def _node_release_name() -> str:
     machine = platform.machine().lower()
-    architecture = "arm64" if machine in {"aarch64", "arm64"} else "x64" if machine in {
-        "x86_64", "amd64"
-    } else None
+    architecture = (
+        "arm64"
+        if machine in {"aarch64", "arm64"}
+        else "x64"
+        if machine in {"x86_64", "amd64"}
+        else None
+    )
     if architecture is None:
         raise CapabilityUnavailableError("No verified Node.js build for this CPU architecture")
-    target = "win" if os.name == "nt" else "darwin" if sys.platform == "darwin" else (
-        "linux" if sys.platform.startswith("linux") else None
+    target = (
+        "win"
+        if os.name == "nt"
+        else "darwin"
+        if sys.platform == "darwin"
+        else ("linux" if sys.platform.startswith("linux") else None)
     )
     if target is None:
         raise CapabilityUnavailableError("This system has no supported GUI Node.js build")
@@ -91,7 +110,7 @@ def _download(url: str, *, maximum: int) -> bytes:
         data = response.read(maximum + 1)
     if not data or len(data) > maximum:
         raise CapabilityUnavailableError("Node.js download exceeded the permitted size")
-    return data
+    return bytes(data)
 
 
 def _extract_release(archive: Path, target: Path, release: str) -> None:
@@ -115,9 +134,8 @@ def _extract_release(archive: Path, target: Path, release: str) -> None:
         # device nodes and archive metadata that would escape the staging root.
         with tarfile.open(archive, "r:*") as source:
             members = source.getmembers()
-            if (
-                sum(member.size for member in members) > _MAX_EXTRACTED
-                or any(not member.name.startswith(prefix) for member in members)
+            if sum(member.size for member in members) > _MAX_EXTRACTED or any(
+                not member.name.startswith(prefix) for member in members
             ):
                 raise CapabilityUnavailableError("Node.js archive has an unexpected layout")
             source.extractall(target, filter="data")
@@ -128,17 +146,21 @@ def ensure_node(root: Path | None = None) -> tuple[Path, Path, dict[str, str]]:
     root = project_root() if root is None else root
     for executable in (shutil.which("node"),):
         if executable and _checked_version(Path(executable)):
-            npm = shutil.which("npm.cmd" if os.name == "nt" else "npm")
-            if npm and (os.name != "nt" or _npm_cli(Path(executable), Path(npm)) is not None):
-                return Path(executable), Path(npm), _safe_environment()
+            installed_npm = shutil.which("npm.cmd" if os.name == "nt" else "npm")
+            if installed_npm and (
+                os.name != "nt" or _npm_cli(Path(executable), Path(installed_npm)) is not None
+            ):
+                return Path(executable), Path(installed_npm), _safe_environment()
     release = _node_release_name()
     location = root / ".potbot" / "runtime" / "node" / _NODE_VERSION
     binary = location / ("node.exe" if os.name == "nt" else "bin/node")
     npm = location / ("npm.cmd" if os.name == "nt" else "bin/npm")
     env = _safe_environment()
     env["PATH"] = str(binary.parent) + os.pathsep + env.get("PATH", "")
-    if _checked_version(binary) and npm.exists() and (
-        os.name != "nt" or _npm_cli(binary, npm) is not None
+    if (
+        _checked_version(binary)
+        and npm.exists()
+        and (os.name != "nt" or _npm_cli(binary, npm) is not None)
     ):
         return binary, npm, env
     _report("Installing verified Node.js " + _NODE_VERSION)
@@ -158,14 +180,20 @@ def ensure_node(root: Path | None = None) -> tuple[Path, Path, dict[str, str]]:
         _extract_release(payload, temporary, release)
         extracted = temporary / release.removesuffix(".zip").split(".tar", 1)[0]
         if not _checked_version(extracted / ("node.exe" if os.name == "nt" else "bin/node")):
-            raise CapabilityUnavailableError("Downloaded Node.js executable failed its version check")
+            raise CapabilityUnavailableError(
+                "Downloaded Node.js executable failed its version check"
+            )
         if location.exists():
             # A concurrent installer may have completed; never overlay a live tree.
-            if _checked_version(binary) and npm.exists() and (
-                os.name != "nt" or _npm_cli(binary, npm) is not None
+            if (
+                _checked_version(binary)
+                and npm.exists()
+                and (os.name != "nt" or _npm_cli(binary, npm) is not None)
             ):
                 return binary, npm, env
-            raise CapabilityUnavailableError("Incomplete Node.js installation requires manual repair")
+            raise CapabilityUnavailableError(
+                "Incomplete Node.js installation requires manual repair"
+            )
         extracted.rename(location)
     if not npm.exists() or (os.name == "nt" and _npm_cli(binary, npm) is None):
         raise CapabilityUnavailableError("Node.js installation lacks npm's JavaScript CLI")
@@ -260,25 +288,29 @@ def prepare_frontend(root: Path | None = None) -> Path:
     return frontend
 
 
-def frontend_environment(config: ServiceConfig, store: CredentialStore | None = None) -> dict[str, str]:
+def frontend_environment(
+    config: ServiceConfig, store: CredentialStore | None = None
+) -> dict[str, str]:
     store = store or CredentialStore(credential_profile())
     access = store.get("api.access_token")
     password = store.get("ui.password")
     secret = store.get("ui.cookie_secret")
-    if not all((access, password, secret)) or len(secret) < 32:
+    if not access or not password or not secret or len(secret) < 32:
         raise CapabilityUnavailableError("The GUI's native credential setup is incomplete")
     env = _safe_environment()
     host = f"[{config.host}]" if ":" in config.host else config.host
-    env.update({
-        "POTBOT_UI_PUBLIC_ORIGIN": "http://127.0.0.1:3100",
-        "POTBOT_UI_PASSWORD": password,
-        "POTBOT_UI_COOKIE_SECRET": secret,
-        "POTBOT_UI_BACKEND_URL": f"http://{host}:{config.port}",
-        "POTBOT_UI_BACKEND_TOKEN": access,
-        "POTBOT_UI_WORKSPACE_ID": config.workspace_id,
-        "POTBOT_UI_WORKSPACE_NAME": "Potbot",
-        "POTBOT_UI_MODEL": "potbot",
-    })
+    env.update(
+        {
+            "POTBOT_UI_PUBLIC_ORIGIN": "http://127.0.0.1:3100",
+            "POTBOT_UI_PASSWORD": password,
+            "POTBOT_UI_COOKIE_SECRET": secret,
+            "POTBOT_UI_BACKEND_URL": f"http://{host}:{config.port}",
+            "POTBOT_UI_BACKEND_TOKEN": access,
+            "POTBOT_UI_WORKSPACE_ID": config.workspace_id,
+            "POTBOT_UI_WORKSPACE_NAME": "Potbot",
+            "POTBOT_UI_MODEL": "potbot",
+        }
+    )
     # The supervisor supplies the mandatory Xpra bridge values in this child
     # process environment. _safe_environment strips POTBOT_UI_*, so copy only
     # this exact allowlist back into the Next.js server environment.
@@ -314,7 +346,8 @@ def run_frontend(config: ServiceConfig) -> int:
         raise CapabilityUnavailableError("Next.js executable is missing after the GUI build")
     process = subprocess.Popen(
         [str(node), str(entry), "start", "--hostname", "127.0.0.1", "--port", "3100"],
-        cwd=frontend, env=environment,
+        cwd=frontend,
+        env=environment,
     )
 
     def stop(_number: int, _frame: Any) -> None:

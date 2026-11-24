@@ -1,5 +1,17 @@
 # Potbot unified development roadmap
 
+**24 November 2026 cleanup and R7.3-A:** R7.2-A/B/C are source-implemented;
+installed atomic-scheduler qualification remains separate. The new
+[paired atomic-role analysis](r7-3-a-paired-atomic-benchmarks.md) verifies retained
+model/input/prompt/output bindings, regrades exact output bytes and compares
+the complete declared holdout matrix without inference or routing changes.
+Continue R7.3 with independently reviewed datasets, deterministic baselines,
+measured deployments and reviewer calibration. Do not restart the historical
+U01-A or R7.2 implementation sequence from the dated headings below. Native Qt
+chat/graph migration and the released host-custody artifact retain separate
+workstreams and deployment gates. Runtime qualification remains false.
+
+
 **U00-A completed, 2 November 2026:** the [closeout](u00-a-closeout.md) reconciles
 the pinned main `95610037311c80cdf7163372998b08e1b8958926`, retained documents,
 731 explicit source rows, narrative sections, code/test evidence, all 24 PRs and

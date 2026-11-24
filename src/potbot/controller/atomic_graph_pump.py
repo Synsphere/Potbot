@@ -64,7 +64,9 @@ class AtomicGraphPump:
                 "AND (%s::timestamptz IS NULL OR (created_at,id)>(%s::timestamptz,%s::uuid)) "
                 "ORDER BY created_at,id LIMIT %s",
                 (
-                    context.workspace_id, context.principal_id, active_only,
+                    context.workspace_id,
+                    context.principal_id,
+                    active_only,
                     cursor[0] if cursor else None,
                     cursor[0] if cursor else None,
                     cursor[1] if cursor else None,
@@ -77,10 +79,14 @@ class AtomicGraphPump:
             "workspace_id": str(context.workspace_id),
             "principal_id": str(context.principal_id),
             "items": [
-                {"graph_id": str(row["id"]), "objective": row["objective"],
-                 "state": row["state"], "max_parallel": row["max_parallel"],
-                 "manifest_hash": row["manifest_hash"],
-                 "created_at": row["created_at"].isoformat()}
+                {
+                    "graph_id": str(row["id"]),
+                    "objective": row["objective"],
+                    "state": row["state"],
+                    "max_parallel": row["max_parallel"],
+                    "manifest_hash": row["manifest_hash"],
+                    "created_at": row["created_at"].isoformat(),
+                }
                 for row in page
             ],
             "next_cursor": _page_cursor(dict(page[-1])) if page else after,
@@ -102,11 +108,13 @@ class AtomicGraphPump:
         """
         _page_limit(limit, maximum=64)
         before = self.service.inspect(context, graph_id)
-        if before["state"] != "active" or before["outcome"] not in {
-            "ready", "running", "waiting"
-        }:
-            return {"graph_id": str(graph_id), "decision": "no_dispatch",
-                    "launched": [], "status": before}
+        if before["state"] != "active" or before["outcome"] not in {"ready", "running", "waiting"}:
+            return {
+                "graph_id": str(graph_id),
+                "decision": "no_dispatch",
+                "launched": [],
+                "status": before,
+            }
         try:
             jobs = self.service.launch_ready(
                 context, graph_id, setup_token=setup_token, limit=limit
@@ -119,21 +127,28 @@ class AtomicGraphPump:
             # Another worker may have committed our exact idempotency key. Never
             # issue a second launch in the same pass; refresh public state.
             current = self.service.inspect(context, graph_id)
-            return {"graph_id": str(graph_id), "decision": "reconciled_race",
-                    "launched": [], "status": current}
+            return {
+                "graph_id": str(graph_id),
+                "decision": "reconciled_race",
+                "launched": [],
+                "status": current,
+            }
         except ScopeDeniedError:
             # An expired check, changed installation or missing operator grant
             # is an admission blocker, not a reason to create replacement work.
             current = self.service.inspect(context, graph_id)
-            return {"graph_id": str(graph_id), "decision": "admission_blocked",
-                    "launched": [], "status": current}
+            return {
+                "graph_id": str(graph_id),
+                "decision": "admission_blocked",
+                "launched": [],
+                "status": current,
+            }
         current = self.service.inspect(context, graph_id)
         return {
             "graph_id": str(graph_id),
             "decision": "launched" if jobs else "no_dispatch",
             "launched": [
-                {"node_id": item["node_id"], "job_id": item["job"]["id"]}
-                for item in jobs
+                {"node_id": item["node_id"], "job_id": item["job"]["id"]} for item in jobs
             ],
             "status": current,
         }
@@ -159,10 +174,14 @@ class AtomicGraphPump:
             result = self.list(context, limit=graphs, active_only=True)
         decisions = []
         for graph in result["items"]:
-            decisions.append(self.tick_graph(
-                context, UUID(graph["graph_id"]),
-                setup_token=setup_token, limit=leaves_per_graph
-            ))
+            decisions.append(
+                self.tick_graph(
+                    context,
+                    UUID(graph["graph_id"]),
+                    setup_token=setup_token,
+                    limit=leaves_per_graph,
+                )
+            )
         # Wrap immediately when the last visited page has no successor. All
         # graph identity/launch idempotency is still enforced by the DB owner.
         return {

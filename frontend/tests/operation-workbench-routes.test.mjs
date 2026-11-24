@@ -43,7 +43,7 @@ test('operation BFF preserves authority, exact request identity and bounded scop
 
   await t.test('rejects unauthorized origins, workspaces, methods, identifiers and queries before network access',async()=>{
     let calls=0;globalThis.fetch=async()=>{calls++;throw new Error('unexpected network');};
-    assert.equal((await describe(new Request(auth.publicOrigin+'/api/ui/operations'),params())).status,401);
+    assert.equal((await describe(new Request('http://remote.invalid:3100'+'/api/ui/operations'),params())).status, 403);
     assert.equal((await submit(request('POST',spec,{headers:{Origin:'https://untrusted.example'}}),params('checks'))).status,403);
     assert.equal((await submit(request('POST',spec,{headers:{'Sec-Fetch-Site':'cross-site'}}),params('checks'))).status,403);
     assert.equal((await describe(request('GET',undefined,{headers:{'X-Potbot-Workspace':principalId}}),params())).status,503);

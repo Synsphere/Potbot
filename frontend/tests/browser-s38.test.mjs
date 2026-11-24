@@ -35,9 +35,9 @@ function request(url, { cookie = configure(), ws = workspace, method = 'GET', bo
   });
 }
 
-test('gallery denies absent login, foreign workspace and unsupported queries', async () => {
+test('gallery denies remote access, foreign workspace and unsupported queries', async () => {
   configure();
-  assert.equal((await galleryList(request('/api/ui/browser/evidence', {cookie:''}))).status, 401);
+  assert.equal((await galleryList(new Request('http://remote.invalid:3100/api/ui/browser/evidence'))).status, 403);
   assert.equal((await galleryList(request('/api/ui/browser/evidence', {ws:'other'}))).status, 404);
   assert.equal((await galleryList(request('/api/ui/browser/evidence?before=2&before=3'))).status, 400);
   assert.equal((await galleryList(request('/api/ui/browser/evidence?limit=999'))).status, 400);

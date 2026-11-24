@@ -5,6 +5,7 @@ Until Syn publishes a Potbot-specific host-custody artifact, Potbot stages only
 the host-custody helper files from the exact signed release source commit and
 verifies their Git blob identities before using Syn's own locked host project.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -18,12 +19,17 @@ import socket
 import subprocess
 import time
 import urllib.request
+from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, cast
 from uuid import uuid4
 
 from potbot.dependencies import project_root
 from potbot.domain.errors import CapabilityUnavailableError, StateMismatchError
+
+if TYPE_CHECKING:
+    from .host import WslOperatorHost
 
 SYN_HOST_CUSTODY_VERSION = "0.11.0"
 SYN_HOST_CUSTODY_SOURCE_COMMIT = "3ed8a43c7e08480b4e5ce13c9e4720c3001b70dc"
@@ -95,7 +101,7 @@ if ($task.State -eq 'Running') {
 }"""
 
 
-def _quiesce_windows_lifetime(manager) -> None:
+def _quiesce_windows_lifetime(manager: WslOperatorHost) -> None:
     """Stop only Potbot's exact legacy task before the live parent owns the vault."""
     from .host import run_host, windows_environment
 
@@ -112,11 +118,13 @@ def _quiesce_windows_lifetime(manager) -> None:
     try:
         result = json.loads(raw)
     except (TypeError, ValueError):
-        raise StateMismatchError("Managed Windows lifetime task returned an invalid receipt") from None
-    if (
-        result.get("profile") != "potbot.parent-keystore-quiesce/1"
-        or result.get("state") not in {"absent", "quiesced"}
-    ):
+        raise StateMismatchError(
+            "Managed Windows lifetime task returned an invalid receipt"
+        ) from None
+    if result.get("profile") != "potbot.parent-keystore-quiesce/1" or result.get("state") not in {
+        "absent",
+        "quiesced",
+    }:
         raise StateMismatchError("Managed Windows lifetime task did not quiesce")
 
     # The old Windows runner may have exited while its WSL user unit survived.
@@ -148,6 +156,7 @@ def _quiesce_windows_lifetime(manager) -> None:
         raise CapabilityUnavailableError(
             "Retired managed WSL operator service state is unavailable"
         )
+
 
 # Git blob identities from Syn v0.11.0 / source commit above. The signed release
 # manifest independently pins that source commit. Runtime download is therefore
@@ -392,7 +401,7 @@ def _download_source(relative: str) -> bytes:
         ) from error
     if not 0 < len(data) <= limit or _git_blob_sha1(data) != expected:
         raise StateMismatchError("Downloaded Syn host-custody source differs from its pinned blob")
-    return data
+    return bytes(data)
 
 
 def _stage_source(host_root: Path) -> Path:
@@ -453,7 +462,7 @@ def _uv_executable() -> Path:
 
 
 @contextmanager
-def _custody_setup_lock(host_root: Path):
+def _custody_setup_lock(host_root: Path) -> Iterator[None]:
     host_root.mkdir(parents=True, exist_ok=True)
     path = host_root / ".host-custody.lock"
     if path.is_symlink():
@@ -468,14 +477,14 @@ def _custody_setup_lock(host_root: Path):
         try:
             import msvcrt
 
-            msvcrt.locking(lock.fileno(), msvcrt.LK_NBLCK, 1)
+            cast(Any, msvcrt).locking(lock.fileno(), cast(Any, msvcrt).LK_NBLCK, 1)
         except OSError:
             raise StateMismatchError("Another Windows host-custody setup is in progress") from None
         try:
             yield
         finally:
             lock.seek(0)
-            msvcrt.locking(lock.fileno(), msvcrt.LK_UNLCK, 1)
+            cast(Any, msvcrt).locking(lock.fileno(), cast(Any, msvcrt).LK_UNLCK, 1)
 
 
 def prepare_windows_host_custody(host_root: Path) -> dict[str, Path | str]:
@@ -547,7 +556,7 @@ def _process_creation_filetime() -> int:
     import ctypes
     from ctypes import wintypes
 
-    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel = cast(Any, ctypes).WinDLL("kernel32", use_last_error=True)
     kernel.GetCurrentProcess.restype = wintypes.HANDLE
     kernel.GetProcessTimes.argtypes = [
         wintypes.HANDLE,
@@ -560,7 +569,7 @@ def _process_creation_filetime() -> int:
     values = [wintypes.FILETIME() for _ in range(4)]
     handle = kernel.GetCurrentProcess()
     if not kernel.GetProcessTimes(handle, *(ctypes.byref(value) for value in values)):
-        raise ctypes.WinError(ctypes.get_last_error())
+        raise cast(Any, ctypes).WinError(cast(Any, ctypes).get_last_error())
     return (values[0].dwHighDateTime << 32) | values[0].dwLowDateTime
 
 
@@ -623,13 +632,11 @@ finally:
 """
 
 
-def _wsl_network_identity(manager) -> tuple[str, str]:
+def _wsl_network_identity(manager: WslOperatorHost) -> tuple[str, str]:
     from .host import run_host
 
     raw = run_host(
-        manager.command(
-            "/usr/bin/python3.12", ["-I", "-B", "-c", _WSL_NETWORK_IDENTITY]
-        ),
+        manager.command("/usr/bin/python3.12", ["-I", "-B", "-c", _WSL_NETWORK_IDENTITY]),
         timeout=20,
     )
     try:
@@ -653,7 +660,7 @@ def _parent_client_payload() -> bytes:
     return b"#!/usr/bin/python3.12\n# Managed by Potbot parent keystore client v1\n" + source
 
 
-def _install_parent_client(manager) -> str:
+def _install_parent_client(manager: WslOperatorHost) -> str:
     from .host import DISTRO, windows_environment
 
     payload = _parent_client_payload()
@@ -675,8 +682,7 @@ def _install_parent_client(manager) -> str:
             expected,
         ],
         input=payload,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         timeout=30,
         check=False,
         env=windows_environment(),
@@ -690,7 +696,7 @@ def _install_parent_client(manager) -> str:
 
 def _allocate_parent_port(host: str) -> int:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
-        probe.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        probe.setsockopt(socket.SOL_SOCKET, cast(Any, socket).SO_EXCLUSIVEADDRUSE, 1)
         probe.bind((host, 0))
         return int(probe.getsockname()[1])
 
@@ -715,7 +721,7 @@ def _parent_environment(
     return values
 
 
-def _health_via_wsl(manager, environment: dict[str, str], client: str) -> bool:
+def _health_via_wsl(manager: WslOperatorHost, environment: dict[str, str], client: str) -> bool:
     try:
         result = subprocess.run(
             manager.command(client, ["-Pipe", environment["SYN_HOST_CUSTODY_PIPE"]]),
@@ -739,7 +745,7 @@ def _health_via_wsl(manager, environment: dict[str, str], client: str) -> bool:
 
 
 @contextmanager
-def windows_host_custody(manager):
+def windows_host_custody(manager: WslOperatorHost) -> Iterator[dict[str, str]]:
     if os.name != "nt":
         raise CapabilityUnavailableError("Windows host custody requires Windows")
     _quiesce_windows_lifetime(manager)
@@ -798,9 +804,7 @@ def windows_host_custody(manager):
                         os.fsync(log.fileno())
                     except OSError:
                         pass
-                    detail = log_path.read_text(
-                        encoding="utf-8", errors="replace"
-                    )[-4096:].strip()
+                    detail = log_path.read_text(encoding="utf-8", errors="replace")[-4096:].strip()
                     suffix = ""
                     if detail:
                         suffix = ": " + detail.splitlines()[-1][:500]

@@ -184,9 +184,7 @@ def install_service(
         host_custody = os.environ.get("POTBOT_WINDOWS_HOST_CUSTODY_REQUIRED") == "1"
         raw = _linux_unit(argv, os.getuid(), host_custody=host_custody)
         if context_rpc:
-            previous_units.add(
-                _linux_unit(argv[:-1], os.getuid(), host_custody=host_custody)
-            )
+            previous_units.add(_linux_unit(argv[:-1], os.getuid(), host_custody=host_custody))
         if host_custody:
             # One-time migration from Potbot's previous Windows/WSL unit, which
             # incorrectly depended on GNOME Keyring for operator custody.
@@ -269,6 +267,8 @@ def install_service(
     return {
         "profile": "potbot.syn-operator-user-service/1",
         "unit": str(path),
-        "state": "enabled_awaiting_host_custody" if platform.system() == "Linux" and host_custody else "start_requested",
+        "state": "enabled_awaiting_host_custody"
+        if platform.system() == "Linux" and host_custody
+        else "start_requested",
         "identity_recreated": False,
     }

@@ -64,7 +64,13 @@ def ensure_xpra_html5(root: Path | None = None) -> Path:
     source.parent.mkdir(parents=True, exist_ok=True)
     if not source.exists():
         result = subprocess.run(
-            [git, "clone", "--no-checkout", "https://github.com/Xpra-org/xpra-html5.git", str(source)],
+            [
+                git,
+                "clone",
+                "--no-checkout",
+                "https://github.com/Xpra-org/xpra-html5.git",
+                str(source),
+            ],
             cwd=root,
             check=False,
             stdout=subprocess.DEVNULL,
@@ -97,7 +103,7 @@ def ensure_xpra_html5(root: Path | None = None) -> Path:
     return output
 
 
-def prepare_core_runtime(config: "ServiceConfig") -> tuple[Path, Path]:
+def prepare_core_runtime(config: ServiceConfig) -> tuple[Path, Path]:
     """Validate the pinned Linux runtime and emit its private Xpra app policy."""
     if not sys.platform.startswith("linux"):
         raise CapabilityUnavailableError(
@@ -165,7 +171,7 @@ def prepare_core_runtime(config: "ServiceConfig") -> tuple[Path, Path]:
     return _private_write(service_home() / "xpra-apps.json", document), selected.home
 
 
-def frontend_bridge_environment(config: "ServiceConfig", token: str) -> dict[str, str]:
+def frontend_bridge_environment(config: ServiceConfig, token: str) -> dict[str, str]:
     if not isinstance(token, str) or not 32 <= len(token) <= 4096 or "\n" in token or "\r" in token:
         raise InvalidInputError("Xpra bridge token is invalid")
     return {

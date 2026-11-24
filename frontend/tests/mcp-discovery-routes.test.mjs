@@ -19,9 +19,9 @@ test('MCP BFF constrains retained observations and exact decisions to scoped fix
   const prior = { ...process.env }, priorFetch = globalThis.fetch; Object.assign(process.env, env); delete process.env.POTBOT_UI_WORKSPACES_JSON;
   t.after(() => { globalThis.fetch = priorFetch; for (const key of [...Object.keys(env), 'POTBOT_UI_WORKSPACES_JSON']) if (prior[key] === undefined) delete process.env[key]; else process.env[key] = prior[key]; });
 
-  await t.test('session, origin, workspace and host-only or invocation routes fail before network access', async () => {
+  await t.test('loopback, origin, workspace and host-only or invocation routes fail before network access', async () => {
     let calls = 0; globalThis.fetch = async () => { calls++; throw Error('unexpected network'); };
-    assert.equal((await GET(new Request(auth.publicOrigin + '/api/ui/mcp-discovery/bindings'), params('bindings'))).status, 401);
+    assert.equal((await GET(new Request('http://remote.invalid:3100' + '/api/ui/mcp-discovery/bindings'), params('bindings'))).status, 403);
     assert.equal((await GET(request('GET', undefined, { headers: { Origin: 'https://evil.example' } }), params('bindings'))).status, 403);
     assert.equal((await GET(request('GET', undefined, { headers: { 'X-Potbot-Workspace': other } }), params('bindings'))).status, 503);
     assert.equal((await mcpDiscoveryRoute(request('PUT'), ['bindings'])).status, 400);

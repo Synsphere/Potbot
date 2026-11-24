@@ -157,8 +157,8 @@ def application(args: argparse.Namespace) -> FastAPI:
         settings=settings,
         mcp_oauth=mcp_oauth,
     )
-    from potbot.api.ui_atomic_graphs import register_atomic_graph_routes
     from potbot.api.ui_api_setup import register_api_setup_routes
+    from potbot.api.ui_atomic_graphs import register_atomic_graph_routes
     from potbot.api.ui_context import register_context_routes
     from potbot.api.ui_discovery import register_discovery_routes
     from potbot.api.ui_mcp_discovery import register_mcp_discovery_routes
