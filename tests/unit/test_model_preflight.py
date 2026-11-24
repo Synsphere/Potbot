@@ -259,6 +259,19 @@ def test_raw_host_document_is_validated_before_decoding(tmp_path: Path) -> None:
         b"\xff",
         b" " * (1024 * 1024 + 1),
     ),
+    # Pytest exports the ID in PYTEST_CURRENT_TEST. Raw oversized bytes exceed
+    # Windows' environment-variable limit before the parser test can execute.
+    ids=(
+        "duplicate-keys",
+        "nan",
+        "infinity",
+        "overflow-float",
+        "oversized-integer",
+        "trailing-text",
+        "deep-nesting",
+        "invalid-utf8",
+        "oversized-bytes",
+    ),
 )
 def test_ambiguous_or_unbounded_host_json_is_sanitized(tmp_path: Path, raw: bytes | str) -> None:
     report = preflight_document(raw, project_root=tmp_path)

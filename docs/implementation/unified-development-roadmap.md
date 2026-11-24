@@ -1,15 +1,31 @@
 # Potbot unified development roadmap
 
-**24 November 2026 cleanup and R7.3-A:** R7.2-A/B/C are source-implemented;
-installed atomic-scheduler qualification remains separate. The new
-[paired atomic-role analysis](r7-3-a-paired-atomic-benchmarks.md) verifies retained
-model/input/prompt/output bindings, regrades exact output bytes and compares
-the complete declared holdout matrix without inference or routing changes.
-Continue R7.3 with independently reviewed datasets, deterministic baselines,
-measured deployments and reviewer calibration. Do not restart the historical
-U01-A or R7.2 implementation sequence from the dated headings below. Native Qt
-chat/graph migration and the released host-custody artifact retain separate
-workstreams and deployment gates. Runtime qualification remains false.
+**24 November 2026, R7.3-A through D in the review stack:** R7.2-A/B/C are
+source-implemented; installed atomic-scheduler qualification remains separate.
+[Paired analysis](r7-3-a-paired-atomic-benchmarks.md),
+[source-pinned references](r7-3-b-reference-baselines.md),
+[frozen reviewer calibration](r7-3-c-reviewer-calibration.md) and
+[deployment bindings](r7-3-d-deployment-bindings.md) now share the existing
+opt-in benchmark and retained-evidence owners. Returned-model mismatches stop
+dispatch and preserve the partial journal, usage and observed costs.
+
+```mermaid
+flowchart LR
+    A[Paired task evidence] --> B[Deterministic baselines]
+    B --> C[Calibrated reviewer protocol]
+    C --> D[Exact deployment declarations]
+    D --> G[Protected gold and actual deployment measurements]
+    G --> R[Separately admitted R7.4 routing policy]
+```
+
+*Configuration overview; this diagram does not qualify a live model or route.*
+
+Continue R7.3 with independently reviewed protected datasets, measured actual
+server/worker deployments and role-specific quality/resource comparisons. Keep
+R7.4 promotion behind its independent evidence gates. Do not restart historical
+U01-A or R7.2 implementation from dated headings below. Native Qt chat/graph
+migration and the released host-custody artifact retain separate workstreams
+and deployment gates. Runtime qualification remains false.
 
 
 **U00-A completed, 2 November 2026:** the [closeout](u00-a-closeout.md) reconciles

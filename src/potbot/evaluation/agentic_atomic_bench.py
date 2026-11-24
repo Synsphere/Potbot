@@ -20,6 +20,7 @@ from potbot.evaluation.agentic_model_bench import (
     Observation,
     RoleSuite,
     prompt_for_case,
+    returned_model_identity,
     rubric_score,
 )
 from potbot.models.prompt_compiler import PromptVariant
@@ -76,6 +77,17 @@ def validated_atomic_observations(
         or len(document["results"]) > 1600,
         "Atomic comparison requires bounded unqualified benchmark evidence",
     )
+    if "model_targets_sha256" in document:
+        _reject(
+            document["model_targets_sha256"]
+            != content_hash(
+                [
+                    {name: getattr(model, name) for name in model.__dataclass_fields__}
+                    for model in models
+                ]
+            ),
+            "Benchmark model configuration identity differs",
+        )
     kinds = {kind.name for kind in ATOMIC_KINDS}
     cases = {case.id: case for case in suite.cases}
     input_splits: dict[str, str] = {}
@@ -140,10 +152,23 @@ def validated_atomic_observations(
         )
         key = (row.model_id, row.case_id, row.variant, row.trial)
         _reject(key in indexed, "Duplicate attempts cannot inflate benchmark evidence")
-        _reject(row.status not in {"completed", "indeterminate"}, "Unknown observation status")
+        _reject(
+            row.status not in {"completed", "indeterminate", "identity_mismatch"},
+            "Unknown observation status",
+        )
+        identity = returned_model_identity(row.model, row.returned_model)
+        _reject(row.model_identity != identity, "Returned model identity classification differs")
+        _reject(
+            not isinstance(row.generation_origin, str) or not 1 <= len(row.generation_origin) <= 80,
+            "Invalid generation origin",
+        )
+        _reject(
+            (row.status == "identity_mismatch") != (identity == "mismatch"),
+            "Mismatched output cannot acquire a completed attribution",
+        )
         for value in (row.elapsed_ms, row.input_tokens, row.output_tokens, row.billed_microunits):
             _reject(value is not None and (type(value) is not int or value < 0), "Invalid metric")
-        if row.status == "completed":
+        if row.status in {"completed", "identity_mismatch"}:
             _reject(
                 not isinstance(row.response, str)
                 or len(row.response.encode("utf-8")) > 65536
@@ -153,8 +178,14 @@ def validated_atomic_observations(
             assert row.response is not None
             _reject(
                 hashlib.sha256(row.response.encode("utf-8")).hexdigest() != row.output_sha256
-                or type(row.score) not in {int, float}
-                or row.score != rubric_score(case, row.response),
+                or (
+                    row.status == "completed"
+                    and (
+                        type(row.score) not in {int, float}
+                        or row.score != rubric_score(case, row.response)
+                    )
+                )
+                or (row.status == "identity_mismatch" and row.score is not None),
                 "Output hash or independent rubric score differs",
             )
         else:
