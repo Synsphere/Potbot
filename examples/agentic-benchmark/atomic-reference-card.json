@@ -1,0 +1,9 @@
+{
+  "schema": "potbot.atomic-dataset-card/1",
+  "suite_sha256": "1bd96a21bbb26f6922c9d40a669ca0099c763fefb4afe666e6a0ba768530e131",
+  "author": "Potbot agent-authored draft; independent review pending",
+  "licence": "Same licence as the Potbot repository",
+  "source": "Literal synthetic protocol examples authored for R7.3-B; not production records",
+  "exposure": "public_synthetic_fixture",
+  "gold_review": "pending_independent_review"
+}
