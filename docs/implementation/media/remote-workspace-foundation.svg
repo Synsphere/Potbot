@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="570" viewBox="0 0 1120 570" role="img" aria-labelledby="title desc">
+  <title id="title">Native remote workspace planning foundation</title>
+  <desc id="desc">Public host facts and exact release pins feed a deterministic review manifest. Operator administration stores scoped immutable records. Remote installation, Syn transport, tools, models and Xpra remain future gates.</desc>
+  <rect width="1120" height="570" rx="24" fill="#101d2d"/>
+  <g font-family="Arial, sans-serif">
+    <text x="48" y="55" fill="#ffffff" font-size="28" font-weight="bold">A reviewable plan before remote effects</text>
+    <text x="48" y="86" fill="#b9ccde" font-size="17">RW01 / RW02 foundation · generated contract illustration</text>
+    <rect x="48" y="124" width="304" height="154" rx="16" fill="#173c58" stroke="#5bc8ed"/>
+    <text x="70" y="158" fill="#8be2ff" font-size="18" font-weight="bold">PUBLIC INPUTS</text>
+    <text x="70" y="191" fill="#ffffff" font-size="17">SSH public key + matching pin</text>
+    <text x="70" y="219" fill="#ffffff" font-size="17">Supplied host observations</text>
+    <text x="70" y="247" fill="#ffffff" font-size="17">Exact Syn / runner selections</text>
+    <path d="M365 202h32m-10-8 10 8-10 8" fill="none" stroke="#8be2ff" stroke-width="3"/>
+    <rect x="410" y="124" width="304" height="154" rx="16" fill="#173c58" stroke="#5bc8ed"/>
+    <text x="432" y="158" fill="#8be2ff" font-size="18" font-weight="bold">DETERMINISTIC MANIFEST</text>
+    <text x="432" y="191" fill="#ffffff" font-size="17">Native accounts / roots / services</text>
+    <text x="432" y="219" fill="#ffffff" font-size="17">Canonical content hash</text>
+    <text x="432" y="247" fill="#ffffff" font-size="17">apply_available: false</text>
+    <path d="M562 290v32m-8-10 8 10 8-10" fill="none" stroke="#8be2ff" stroke-width="3"/>
+    <rect x="48" y="338" width="666" height="170" rx="16" fill="#173c58" stroke="#5bc8ed"/>
+    <text x="70" y="375" fill="#8be2ff" font-size="18" font-weight="bold">OPERATOR ADMINISTRATION + POSTGRESQL RLS</text>
+    <text x="70" y="411" fill="#ffffff" font-size="17">Immutable registrations · exact plan replay · native environment pins</text>
+    <text x="70" y="443" fill="#ffffff" font-size="17">Direct grants · current revision / expiry / revocation checks</text>
+    <text x="70" y="475" fill="#ffffff" font-size="17">Serialized cycle rejection · application logins cannot self-install</text>
+    <path d="M728 202h32m-10-8 10 8-10 8" fill="none" stroke="#8b9bae" stroke-width="3" stroke-dasharray="6 5"/>
+    <rect x="774" y="124" width="298" height="384" rx="16" fill="#273140" stroke="#7d8a9b" stroke-dasharray="8 6"/>
+    <text x="797" y="159" fill="#d6dce4" font-size="18" font-weight="bold">REMAINING RUNTIME GATES</text>
+    <text x="797" y="205" fill="#d6dce4" font-size="17">Authenticated SSH inspection</text>
+    <text x="797" y="244" fill="#d6dce4" font-size="17">Reviewed privileged installer</text>
+    <text x="797" y="283" fill="#d6dce4" font-size="17">Released native Syn custody</text>
+    <text x="797" y="322" fill="#d6dce4" font-size="17">Fresh remote Syn challenge</text>
+    <text x="797" y="361" fill="#d6dce4" font-size="17">Tools / models / control UI</text>
+    <text x="797" y="400" fill="#d6dce4" font-size="17">Remote Xpra applications</text>
+    <text x="797" y="457" fill="#b6c0cc" font-size="16">Separate acceptance is required.</text>
+    <text x="48" y="544" fill="#b9ccde" font-size="15">Planning inputs and passing source tests do not establish a live remote workspace.</text>
+  </g>
+</svg>

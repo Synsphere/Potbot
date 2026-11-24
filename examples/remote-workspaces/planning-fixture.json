@@ -1,0 +1,42 @@
+{
+  "node": {
+    "id": "10000000-0000-4000-8000-000000000001",
+    "workspace_id": "10000000-0000-4000-8000-000000000002",
+    "owner_principal_id": "10000000-0000-4000-8000-000000000003",
+    "hostname": "fixture.example.invalid",
+    "port": 22,
+    "username": "operator",
+    "ssh_public_key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4f",
+    "ssh_fingerprint": "SHA256:ZkAslGjFiUHdGf/WUL8rQvkib4PTvQatUV0OUQSncCA",
+    "credential_reference": "secret://remote-nodes/10000000-0000-4000-8000-000000000001/ssh",
+    "generation": 1
+  },
+  "observation": {
+    "system": "Linux",
+    "os_id": "ubuntu",
+    "os_version": "24.04",
+    "architecture": "x86_64",
+    "python_version": "3.12.3",
+    "boot_id": "10000000-0000-4000-8000-000000000004",
+    "systemd_running": true,
+    "available_disk_bytes": 4294967296
+  },
+  "releases": [
+    {
+      "component": "syn",
+      "version": "fixture-0",
+      "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "manifest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "signer_root_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    {
+      "component": "potbot-runner",
+      "version": "fixture-0",
+      "payload_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "manifest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "signer_root_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "target_workspace_id": "10000000-0000-4000-8000-000000000005",
+  "project_root": "/srv/potbot/fixture"
+}
