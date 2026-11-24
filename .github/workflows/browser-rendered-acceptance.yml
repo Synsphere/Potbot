@@ -17,6 +17,7 @@ on:
       - 'scripts/browser_rendered_runtime.py'
       - 'scripts/browser_display_readiness.py'
       - 'tests/unit/test_browser_display_readiness.py'
+      - 'tests/unit/test_browser_native_readiness_gate.py'
       - 'tests/unit/test_browser_rendered_runtime.py'
       - 'conftest.py'
       - 'pyproject.toml'
@@ -31,6 +32,7 @@ on:
       - 'scripts/browser_rendered_runtime.py'
       - 'scripts/browser_display_readiness.py'
       - 'tests/unit/test_browser_display_readiness.py'
+      - 'tests/unit/test_browser_native_readiness_gate.py'
       - 'tests/unit/test_browser_rendered_runtime.py'
       - 'conftest.py'
       - 'pyproject.toml'
@@ -94,6 +96,7 @@ jobs:
             tests/unit/test_browser_rendered_gate.py \
             tests/unit/test_browser_rendered_runtime.py \
             tests/unit/test_browser_display_readiness.py \
+            tests/unit/test_browser_native_readiness_gate.py \
             --junitxml=artifacts/browser-rendered/unit.xml
       - name: Exercise real pixels, accessibility, picker, input and worker pipes
         # Do not use uv run here: re-syncing would remove the separately pinned
@@ -122,7 +125,7 @@ jobs:
         run: >-
           .venv/bin/python scripts/check_browser_rendered.py
           artifacts/browser-rendered/rendered.xml --profile "$POTBOT_BROWSER_LIVE_PROFILE"
-          --require-image-pins --require-engine-binary --output artifacts/browser-rendered/result.json
+          --require-image-pins --require-engine-binary --require-native-window --output artifacts/browser-rendered/result.json
       - name: Retain synthetic rendered-worker evidence, not production browser data
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
