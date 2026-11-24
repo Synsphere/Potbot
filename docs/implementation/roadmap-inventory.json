@@ -36917,7 +36917,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "bf189b7e46cfd8af8b3da6bad1c835499f5ab9a3d8417e2988715dfd8c98a4be",
+  "review_sha256": "718db9f7fa88998cf3dd981aefdfc52b75bb9a99f426804bdf64314a53bb23e7",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -130685,7 +130685,7 @@
         {
           "path": "scripts/postgres_shard_plugin.py",
           "symbol": "_ShardRun",
-          "sha256": "3ca5f895cd68fe9326d61e0e21c742a08b44e070fc4df5388d5090b836200d02",
+          "sha256": "ca81c8f1588bf819041a4427fd06a91bbf0b895203605fb44fe19f133bde6baa",
           "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
         }
       ],

@@ -5,12 +5,12 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-import tempfile
 from pathlib import Path
 
 import pytest
 
 from potbot.evaluation.postgres_test_shards import SELECTOR, PostgresShard, collection_receipt
+from potbot.tools.temporary import allocate_file
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:
@@ -64,8 +64,8 @@ class _ShardRun:
         else:
             if self.destination.is_symlink() or self.destination.read_bytes() != self.last_bytes:
                 raise pytest.UsageError("PostgreSQL shard receipt changed outside its owner")
-            descriptor, temporary = tempfile.mkstemp(
-                prefix=".postgres-shard-", dir=self.destination.parent
+            descriptor, temporary = allocate_file(
+                self.destination.parent, prefix=".postgres-shard-"
             )
             try:
                 with os.fdopen(descriptor, "wb") as handle:
