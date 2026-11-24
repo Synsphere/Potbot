@@ -6,6 +6,11 @@ on:
       - 'src/potbot/evaluation/agentic_*'
       - 'src/potbot/controller/atomic_tasks.py'
       - 'src/potbot/controller/model_route_bindings.py'
+      - 'src/potbot/models/native_results.py'
+      - 'src/potbot/controller/model_reasoning_results.py'
+      - 'src/potbot/controller/reasoning_result_contracts.py'
+      - 'src/potbot/controller/reasoning_investigation.py'
+      - 'tests/unit/test_model_reasoning_results.py'
       - 'src/potbot/controller/model_route_outcomes.py'
       - 'src/potbot/evaluation/model_route_outcomes.py'
       - 'tests/unit/test_model_route_outcomes.py'
@@ -42,6 +47,12 @@ jobs:
       - name: Verify offline model-role and judge calibration contracts
         run: |
           uv run --locked python -m pytest -q \
+            tests/unit/test_model_reasoning_results.py \
+            tests/unit/test_reasoning_investigation_r4.py \
+            tests/unit/test_reasoning_evaluation_r5.py \
+            tests/unit/test_reasoning_steering_r25.py \
+            tests/unit/test_reasoning_adaptive_expansion.py \
+            tests/unit/test_reasoning_temporal.py \
             tests/unit/test_model_route_outcomes.py \
             tests/unit/test_model_route_bindings.py \
             tests/unit/test_operation_checks.py \

@@ -627,6 +627,12 @@ class ReasoningInvestigator:
                 )
                 stopped()
                 last_model_revision = node.revision
+                # A completed but malformed reply still incurred its known
+                # usage. Validate outside the uncertain-dispatch handler, after
+                # original accounting and completion evidence are retained.
+                from potbot.controller.reasoning_result_contracts import validate_reasoning_output
+
+                validate_reasoning_output(role, output, payload, strict_steering=False)
                 return output
             raise ReasoningContextChanged("background context changed repeatedly before dispatch")
 

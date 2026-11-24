@@ -108,3 +108,5 @@ Next gates: real model deployment/server evidence, a native typed inference
 reader within the existing Syn worker boundary, protected independently reviewed
 paired holdouts, bounded canary accounting, explicit promotion and rollback to a
 still-qualified baseline. The persistent route remains shadow-only.
+
+Follow-on: [R7.4-F checked reasoning results](r7-4-f-checked-reasoning-results.md) adds a bounded native artifact reader and shared role validation. Engine installation, native outcome capture and runtime qualification remain separate.

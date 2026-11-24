@@ -326,3 +326,9 @@ class ModelRoutingService:
             routing_decision_id=decision_id,
             **bindings,
         )
+
+    def reasoning_result(self, context: WorkspaceContext, decision_id: UUID) -> dict[str, Any]:
+        """Read the original confirmed output; never allocate, infer or retry."""
+        from potbot.controller.model_reasoning_results import ModelReasoningResultReader
+
+        return ModelReasoningResultReader(self.database).read(context, _uuid(decision_id))
