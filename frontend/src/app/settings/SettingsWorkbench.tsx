@@ -141,7 +141,9 @@ export default function SettingsWorkbench({section}:{section:SettingsSection|"ov
         <label className={styles.mobileNav}>Settings category<select value={section} onChange={event=>{window.location.href=link(event.target.value);}}><option value="overview">All settings</option>{Object.entries(SECTIONS).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>
         {notice&&<p role="status" className={styles.notice}>{notice}</p>}
         {loading&&<p role="status">Loading workspace-scoped records…</p>}
-        {operation&&<p role="status" className={styles.notice}>{operation}</p>}
+        <div role="status" aria-atomic="true">
+          {operation&&!review&&<p className={styles.notice}>{operation}</p>}
+        </div>
         {catalogue&&section==="appearance"&&preferences&&<section className={styles.card}>
           <h2>Saved preferences</h2><p>For your principal in {target?.name}. Revision {preferences.revision}.</p>
           <form onSubmit={event=>{event.preventDefault();void savePreferences();}}>
@@ -186,8 +188,11 @@ export default function SettingsWorkbench({section}:{section:SettingsSection|"ov
         {catalogue&&features.length>0&&<section className={styles.coverage}><h2>Feature configuration owners</h2><p>Existing workbenches remain authoritative. Some configuration editors and remote capabilities are still planned.</p><div className={styles.items}>{features.map(feature=>{const owner=catalogue.categories.find(item=>item.id===feature.category);return <article className={styles.card} key={feature.id}><h3>{feature.label}</h3><p>{feature.description}</p><div className={styles.links}><a href={link(feature.category)}>Inspect this settings area</a>{owner&&owner.path!=="/"&&!owner.path.startsWith("/settings")&&<a href={owner.path+ownerQuery}>Open existing controls</a>}</div><small>{feature.id}</small></article>;})}</div></section>}
       </section>
     </div>
-    <dialog ref={dialog} className={styles.dialog} aria-labelledby="revocation-title" onCancel={event=>{if(busy)event.preventDefault();else setReview(null);}} onClose={()=>{if(!busy)setReview(null);}}>
-      {review&&<><h2 id="revocation-title">Request revocation of this grant?</h2><p>Source workspace {review.grant.sourceWorkspaceId} → target {target?.name}.</p><p>{review.grant.permissions.join(" · ")}</p><p>This queues an exact review for the native operator. Acceptance does not revoke the grant. Refresh after native application to verify the protected ledger.</p><details><summary>Exact review</summary><p>Grant {review.body.grantId}; revision {review.body.expectedRevision}; request {review.body.requestId}.</p><code>{review.body.grantSha256}</code></details>{operation&&<p role="status">{operation}</p>}<div className={styles.links}><button ref={back} type="button" disabled={busy} onClick={()=>setReview(null)}>Back</button><button type="button" disabled={busy} onClick={()=>void submitRevocation()}>{busy?"Submitting…":"Submit this request"}</button></div></>}
+    <dialog ref={dialog} className={styles.dialog} aria-labelledby="revocation-title" onCancel={event=>{
+      event.preventDefault();
+      if(!busy)setReview(null);
+    }}>
+      {review&&<><h2 id="revocation-title">Request revocation of this grant?</h2><p>Source workspace {review.grant.sourceWorkspaceId} → target {target?.name}.</p><p>{review.grant.permissions.join(" · ")}</p><p>This queues an exact review for the native operator. Acceptance does not revoke the grant. Refresh after native application to verify the protected ledger.</p><details><summary>Exact review</summary><p>Grant {review.body.grantId}; revision {review.body.expectedRevision}; request {review.body.requestId}.</p><code>{review.body.grantSha256}</code></details><div role="status" aria-atomic="true">{operation&&<p>{operation}</p>}</div><div className={styles.links}><button ref={back} type="button" disabled={busy} onClick={()=>setReview(null)}>Back</button><button type="button" disabled={busy} onClick={()=>void submitRevocation()}>{busy?"Submitting…":"Submit this request"}</button></div></>}
     </dialog>
   </main>;
 }

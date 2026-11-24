@@ -85,7 +85,9 @@ class OperationChecks:
         if request.episode_id != lease.episode_id:
             raise ScopeDeniedError("The operation check differs from its queued task.")
         expiry = datetime.fromtimestamp(lease.input["authorization"]["expires_at"], UTC)
-        return self._evaluate(actor, lease, identity, request, now, expiry)
+        return self._evaluate(
+            actor, lease, identity, request, now, expiry, lease.input.get("routing_decision_id")
+        )
 
     def revalidate(self, actor: WorkspaceContext, lease: JobLease) -> None:
         """Recheck a linked launch; the retained receipt is never an authority."""
@@ -110,7 +112,9 @@ class OperationChecks:
         ):
             raise StateMismatchError("The operation check is stale; check the exact request again.")
         expiry = datetime.fromtimestamp(prior["input"]["authorization"]["expires_at"], UTC)
-        current = self._evaluate(actor, lease, identity, request, now, expiry)
+        current = self._evaluate(
+            actor, lease, identity, request, now, expiry, prior["input"].get("routing_decision_id")
+        )
         if not current["eligible"] or current["bindings"] != recorded["bindings"]:
             raise StateMismatchError(
                 "Current operation eligibility differs from the checked request."
@@ -124,6 +128,7 @@ class OperationChecks:
         request: JobSpec,
         now: datetime,
         authorization_expiry: datetime,
+        routing_decision_id: str | None = None,
     ) -> dict[str, Any]:
         checks: list[dict[str, str]] = []
         bindings: dict[str, Any] = {
@@ -240,11 +245,22 @@ class OperationChecks:
                 bindings.update(native_bindings)
             elif request.job_type == "model.generate":
                 bindings["policySha256"] = self.gateway.policy.fingerprint
-                demand = self._hosted(request, check)
+                demand = self._hosted(actor, request, check, routing_decision_id)
             else:
                 raise CapabilityUnavailableError(
                     "No execution handler is installed for this operation."
                 )
+
+            if routing_decision_id is not None:
+                from potbot.controller.model_route_bindings import checked_route_binding
+
+                route_bindings = check(
+                    "model_route_binding",
+                    lambda: checked_route_binding(
+                        self.jobs.database, actor, routing_decision_id, request.to_dict(), bindings
+                    ),
+                )
+                bindings.update(route_bindings)
 
             def budget() -> None:
                 available = BudgetLedger(self.jobs.database).inspect(actor, request.episode_id)[
@@ -279,11 +295,22 @@ class OperationChecks:
         )
 
     def _hosted(
-        self, request: JobSpec, check: Callable[[str, Callable[[], Any]], Any]
+        self,
+        actor: WorkspaceContext,
+        request: JobSpec,
+        check: Callable[[str, Callable[[], Any]], Any],
+        routing_decision_id: str | None,
     ) -> dict[str, int]:
         def policy() -> list[tuple[Any, int, Any]]:
+            from potbot.controller.model_route_bindings import checked_output_spec
+
+            output_spec = (
+                checked_output_spec(self.jobs.database, actor, decision_id=routing_decision_id)
+                if routing_decision_id is not None
+                else None
+            )
             return [
-                self.gateway.policy.request(selection, request.input)
+                self.gateway.policy.request(selection, request.input, output_spec=output_spec)
                 for selection in request.selected_models
             ]
 
@@ -295,8 +322,8 @@ class OperationChecks:
                 redactor = CaptureRedactor(
                     tuple(dict.fromkeys((key, *self.gateway.protected_values)))
                 )
-                prompt = (generation.prompt + generation.system).encode()
-                if any(pattern in prompt for pattern in redactor.patterns):
+                disclosure = generation.disclosure_bytes
+                if any(pattern in disclosure for pattern in redactor.patterns):
                     raise ScopeDeniedError("A protected value cannot be disclosed in a prompt.")
 
         check("provider_credentials", credentials)

@@ -15,8 +15,10 @@ from uuid import UUID
 
 from potbot.cogs.contracts import CogRunContext, TypedCogValue
 from potbot.context.installed_syn_route import installed_context_route
+from potbot.context.work_exchange import bounded_work
 from potbot.controller.cog_capability_policy import CogPolicyDenied, Denial, installation_hash
 from potbot.controller.cog_grant_store import current_cog_policy
+from potbot.controller.model_reasoning_results import deployment_from_content
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import (
     CapabilityUnavailableError,
@@ -28,11 +30,30 @@ from potbot.domain.errors import (
 from potbot.domain.jobs import CogJobInput, JobLease
 from potbot.domain.serialization import canonical_json, content_hash
 from potbot.domain.syn import type_identity
+from potbot.models.native_results import (
+    REQUEST,
+    RESULT,
+    parse_native_result,
+    validate_native_request,
+)
+from potbot.models.registry import DeploymentSpec
 from potbot.persistence.artifacts import ArtifactStore, LocalArtifactBackend
 from potbot.syn_release.contracts import DOCUMENT_LIMIT, document, fields
 from potbot.syn_release.mesh_endpoint import NativeMeshClient, root_path
 from potbot.tools.agent_homes import AgentHomeRegistry
 from potbot.tools.execution_contracts import ExecutionPolicy, WorkBinding, digest, identifier
+from potbot.tools.native_model_worker import (
+    ENGINE_LIBRARY,
+    ENGINE_ROOT,
+    EXECUTABLE,
+    MAX_ENGINE,
+    MAX_TEMPLATE,
+    MAX_WEIGHTS,
+    SCHEMA,
+    blob_path,
+    installed_backend,
+    verified_file,
+)
 from potbot.tools.operator_cli import OperatorPaths, parse_manifest
 from potbot.tools.released_syn_nodes import ReleasedSynWorkerNodeMesh
 from potbot.tools.sandbox_cog_worker import SandboxedCogExecutor, SandboxedCogOperation
@@ -83,6 +104,75 @@ def read_profile(path: Path) -> tuple[dict[str, Any], str]:
     return profile, hashlib.sha256(data).hexdigest()
 
 
+def _model_pins(spec: DeploymentSpec, engine_sha256: object) -> tuple[str, str]:
+    try:
+        installed_backend(
+            spec.backend, spec.backend_version, spec.usable_context_tokens, spec.max_output_tokens
+        )
+    except ValueError:
+        raise ScopeDeniedError("The installed native model backend is unavailable.") from None
+    if (
+        spec.output_adapter != SCHEMA
+        or RESULT not in spec.response_schemas
+        or (spec.tool_protocol != "none" or spec.tokenizer_revision != spec.weights_digest)
+    ):
+        raise ScopeDeniedError(
+            "Native model requires its exact embedded tokenizer and result port."
+        )
+    return canonical_json(spec.to_dict()), digest(engine_sha256)
+
+
+def installed_model_deployment(operation: SandboxedCogOperation) -> DeploymentSpec | None:
+    """Return the deployment fixed by the model worker's administrator-owned installation."""
+    if not isinstance(operation, SandboxedCogOperation) or operation.binding.kind != "model":
+        return None
+    if (
+        operation.protocol != "context-rpc/v1"
+        or operation.binding.effect_class != "read_only"
+        or operation.argv[0] != EXECUTABLE
+        or len(operation.argv) != 3
+        or (operation.binding.input_type_ref, operation.binding.output_type_ref)
+        != (REQUEST, RESULT)
+    ):
+        raise ScopeDeniedError("Model operation requires the sealed native worker.")
+    selected = deployment_from_content(document(operation.argv[1].encode("utf-8")))
+    if operation.argv[1:] != _model_pins(selected, operation.argv[2]):
+        raise ScopeDeniedError("Model operation has noncanonical deployment pins.")
+    return selected
+
+
+def _verify_native_model_assets(
+    executor: SandboxedCogExecutor, operation: SandboxedCogOperation, deployment: DeploymentSpec
+) -> None:
+    runtime = executor.runtime
+    if runtime.shared_models is None:
+        raise CapabilityUnavailableError("The installed model library is unavailable.")
+    try:
+        with (
+            verified_file(
+                runtime.rootfs / ENGINE_ROOT.relative_to("/"),
+                ENGINE_LIBRARY,
+                operation.argv[2],
+                MAX_ENGINE,
+            ),
+            verified_file(
+                runtime.shared_models,
+                blob_path(deployment.chat_template_digest),
+                deployment.chat_template_digest,
+                MAX_TEMPLATE,
+            ),
+            # The worker verifies the full weight digest on the exact inode it loads.
+            verified_file(
+                runtime.shared_models, blob_path(deployment.weights_digest), None, MAX_WEIGHTS
+            ),
+        ):
+            pass
+    except (OSError, ValueError):
+        raise CapabilityUnavailableError(
+            "The pinned native model installation is unavailable."
+        ) from None
+
+
 class NativeCogDispatcher:
     def __init__(
         self,
@@ -113,11 +203,21 @@ class NativeCogDispatcher:
             or type_identity(request.type_ref) != type_identity(operation.binding.input_type_ref)
         ):
             raise ScopeDeniedError("Job differs from the installed native Cog profile.")
+        deployment = installed_model_deployment(operation)
+        if deployment is not None and request.type_ref != REQUEST:
+            raise ScopeDeniedError("Native inference needs the exact installed request port.")
         with jobs.database.transaction(actor) as connection:
             state = connection.execute(
                 "SELECT content_digest FROM repository_states WHERE workspace_id=%s AND id=%s",
                 (actor.workspace_id, request.repository_state_id),
             ).fetchone()
+            if deployment is not None:
+                registered = connection.execute(
+                    "SELECT content FROM model_deployments WHERE workspace_id=%s AND content_hash=%s",
+                    (actor.workspace_id, deployment.fingerprint),
+                ).fetchone()
+                if registered is None or registered["content"] != deployment.to_dict():
+                    raise ScopeDeniedError("The exact native deployment is not registered.")
         if state is None or state["content_digest"] != operation.binding.policy.source_digest:
             raise ScopeDeniedError("Job repository state differs from the installed Cog pin.")
         # Public canonical aliases identify the same type. Preserve the signed
@@ -126,6 +226,16 @@ class NativeCogDispatcher:
         invocation = CogRunContext(
             self.profile_hash, lease.contract_revision_id, request.repository_state_id, lease.job_id
         )
+        if deployment is not None:
+            validate_native_request(value.value, deployment)
+            bounded_work(
+                {
+                    "schema_version": 1,
+                    "operation_ref": operation.binding.operation_ref,
+                    "input": {"type_ref": value.type_ref, "value": value.value},
+                    "invocation_id": str(invocation.invocation_id),
+                }
+            )
         return request, operation, value, invocation
 
     def eligibility(
@@ -250,7 +360,14 @@ class NativeCogDispatcher:
             )
 
         check("native_runtime", runtime)
-        check("native_executable", lambda: self.executor._executable(operation))
+
+        def executable() -> None:
+            self.executor._executable(operation)
+            deployment = installed_model_deployment(operation)
+            if deployment is not None:
+                _verify_native_model_assets(self.executor, operation, deployment)
+
+        check("native_executable", executable)
 
         def release() -> None:
             from potbot.tools.shared_tool_release_markers import blocked_directories, read_hold
@@ -297,18 +414,22 @@ class NativeCogDispatcher:
             bindings["policySha256"] = current.policy.fingerprint
 
         check("native_capability_policy", grants)
-        return bindings, {
-            "calls": 1,
-            "tool_ms": operation.binding.policy.max_wall_ms,
-            "concurrency": 1,
-        }
+        estimates = {"calls": 1, "tool_ms": operation.binding.policy.max_wall_ms, "concurrency": 1}
+        deployment = installed_model_deployment(operation)
+        if deployment is not None:
+            estimates["tokens"] = deployment.usable_context_tokens
+        return bindings, estimates
 
     def run(
         self, jobs: JobService, actor: WorkspaceContext, lease: JobLease, abort: threading.Event
-    ) -> dict[str, str]:
+    ) -> dict[str, Any]:
         request, operation, value, invocation = self._prepare(jobs, actor, lease)
+        deployment = installed_model_deployment(operation)
         if abort.is_set() or jobs.cancelled(actor, lease):
             raise OperationCancelledError("Native Cog was cancelled before admission.")
+        if deployment is not None:
+            self.executor._executable(operation)
+            _verify_native_model_assets(self.executor, operation, deployment)
         native = (
             self.executor.syn_provenance(actor, request.agent_id)
             if self.persistent_cog_grants
@@ -348,6 +469,7 @@ class NativeCogDispatcher:
             lease,
             cog_max_wall_ms=operation.binding.policy.max_wall_ms,
             check_cog_grant=check_cog_grant if self.persistent_cog_grants else None,
+            **({"cog_model_deployment": deployment} if deployment is not None else {}),
         )
 
         async def execute() -> TypedCogValue:
@@ -374,14 +496,22 @@ class NativeCogDispatcher:
         result = asyncio.run(execute())
         if abort.is_set() or jobs.cancelled(actor, lease):
             raise IndeterminateExecutionError("Native Cog lease changed before result publication.")
+        raw = canonical_json({"type_ref": result.type_ref, "value": result.value}).encode()
+        result_receipt: dict[str, Any] = {"operation_id": str(lease.job_id)}
+        if deployment is not None:
+            verified = parse_native_result(
+                raw, request=value.value, job_id=lease.job_id, deployment=deployment
+            )
+            usage = verified["usage"]
+            result_receipt["usage"] = {
+                "input_tokens": usage["input_tokens"],
+                "output_tokens": usage["output_tokens"],
+                "tokens": usage["total_tokens"],
+            }
         sandbox = load_workspace_sandbox(jobs.database, actor)
         artifacts = ArtifactStore(jobs.database, LocalArtifactBackend(sandbox.path("artifacts")))
-        artifact = artifacts.put(
-            actor,
-            canonical_json({"type_ref": result.type_ref, "value": result.value}).encode(),
-            "application/json",
-        )
-        return {"artifact_id": str(artifact["id"]), "operation_id": str(lease.job_id)}
+        artifact = artifacts.put(actor, raw, "application/json")
+        return {**result_receipt, "artifact_id": str(artifact["id"])}
 
 
 def installed_cog_operations(
@@ -397,6 +527,7 @@ def installed_cog_operations(
         raise ScopeDeniedError("Native Cog profile has invalid operation bounds.")
     operations = []
     for raw in profile["operations"]:
+        model_profile = isinstance(raw, dict) and "model_deployment" in raw
         op = fields(
             raw,
             {
@@ -406,7 +537,8 @@ def installed_cog_operations(
                 "output_type_ref",
                 "repository_digest",
                 "max_wall_ms",
-            },
+            }
+            | ({"model_deployment"} if model_profile else set()),
         )
         image_pin = dict(paths.tool_entrypoints).get(op["entrypoint"])
         if (
@@ -417,10 +549,27 @@ def installed_cog_operations(
             raise ScopeDeniedError("Native Cog operation is outside the installed executable pins.")
         for port in ("input_type_ref", "output_type_ref"):
             TypedCogValue(op[port], None)
+        argv: tuple[str, ...] = (op["entrypoint"],)
+        native_port = type_identity(op["input_type_ref"]) == type_identity(
+            REQUEST
+        ) or type_identity(op["output_type_ref"]) == type_identity(RESULT)
+        if model_profile:
+            if (
+                profile["profile"] != "potbot.hosted-native-cog/3"
+                or op["entrypoint"] != EXECUTABLE
+                or (op["input_type_ref"], op["output_type_ref"]) != (REQUEST, RESULT)
+            ):
+                raise ScopeDeniedError("Native model requires the sealed Context worker profile.")
+            selected = fields(op["model_deployment"], {"deployment", "engine_sha256"})
+            argv += _model_pins(
+                deployment_from_content(selected["deployment"]), selected["engine_sha256"]
+            )
+        elif native_port or op["entrypoint"] == EXECUTABLE:
+            raise ScopeDeniedError("Native model ports require an explicitly pinned deployment.")
         operations.append(
             SandboxedCogOperation(
                 WorkBinding(
-                    "tool",
+                    "model" if model_profile else "tool",
                     op["operation_ref"],
                     op["input_type_ref"],
                     op["output_type_ref"],
@@ -434,7 +583,7 @@ def installed_cog_operations(
                         max_wall_ms=op["max_wall_ms"],
                     ),
                 ),
-                (op["entrypoint"],),
+                argv,
                 image_pin,
                 protocol="context-rpc/v1",
             )

@@ -134,7 +134,10 @@ class OperationWorkbench:
         setup_token: str,
         task_execution_binding: dict[str, Any] | None = None,
         task_execution_artifacts: Any = None,
+        routing_decision_id: UUID | None = None,
     ) -> dict[str, Any]:
+        if routing_decision_id is not None and not isinstance(routing_decision_id, UUID):
+            raise InvalidInputError("Model routing requires a decision UUID")
         identity, spec = operation_id(identity), parse_request(request)
         authorization = sign_authorization(
             context,
@@ -142,6 +145,7 @@ class OperationWorkbench:
             spec.to_dict(),
             setup_token,
             purpose="check",
+            routing_decision_id=str(routing_decision_id) if routing_decision_id else None,
             task_execution_sha256=task_execution_binding["sha256"]
             if task_execution_binding
             else None,
@@ -172,6 +176,11 @@ class OperationWorkbench:
                     "operation_id": identity,
                     "request": spec.to_dict(),
                     "authorization": authorization,
+                    **(
+                        {"routing_decision_id": str(routing_decision_id)}
+                        if routing_decision_id
+                        else {}
+                    ),
                     **(
                         {"task_execution_sha256": task_execution_binding["sha256"]}
                         if task_execution_binding
@@ -257,6 +266,7 @@ class OperationWorkbench:
                     setup_token,
                     purpose="launch",
                     check_id=check_job_id,
+                    routing_decision_id=check["input"].get("routing_decision_id"),
                     expires_at=int(report_time(report["expiresAt"]).timestamp()),
                     now=current,
                     task_execution_sha256=task_execution_binding["sha256"]

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="440" viewBox="0 0 1024 440" role="img" aria-labelledby="title description">
+  <title id="title">Potbot checked native model execution</title>
+  <desc id="description">The checked job reserves a token ceiling. A directed Syn exchange links Potbot to a sealed model worker. A valid reply charges reported tokens once. A lost reply leaves the original job indeterminate with its reservation held.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" markerWidth="7" markerHeight="7" refX="8" refY="5" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9 z" fill="#546884"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, sans-serif; fill: #12213c; }
+      .title { font-size: 29px; font-weight: 720; }
+      .name { font-size: 20px; font-weight: 700; }
+      .detail { font-size: 15px; }
+      .caption { font-size: 15px; font-weight: 620; fill: #455773; }
+      .link { stroke: #546884; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1024" height="440" rx="24" fill="#f1f5fb"/>
+  <text x="32" y="52" class="title">One checked job, one native model dispatch</text>
+  <g>
+    <rect x="32" y="84" width="240" height="106" rx="13" fill="#ffffff" stroke="#a8b8cc"/>
+    <text x="50" y="117" class="name">Frozen request</text>
+    <text x="50" y="146" class="detail">Role, prompt and model pin</text>
+    <text x="50" y="170" class="detail">Retain the original decision ID</text>
+    <path class="link" d="M 272 137 H 309"/>
+    <rect x="312" y="84" width="270" height="106" rx="13" fill="#e3ebfb" stroke="#91a9ce"/>
+    <text x="330" y="117" class="name">Checked job and ledger</text>
+    <text x="330" y="146" class="detail">Verify the installed operation</text>
+    <text x="330" y="170" class="detail">Reserve the token ceiling</text>
+    <path class="link" d="M 582 137 H 737"/>
+    <text x="659" y="124" text-anchor="middle" class="caption">Directed Syn</text>
+    <rect x="740" y="84" width="252" height="106" rx="13" fill="#ffffff" stroke="#a8b8cc"/>
+    <text x="758" y="117" class="name">Sealed model worker</text>
+    <text x="758" y="146" class="detail">Verify and load local assets</text>
+    <text x="758" y="170" class="detail">Return typed output and usage</text>
+  </g>
+  <path class="link" d="M 866 190 V 238 H 226 V 273"/>
+  <path class="link" d="M 866 190 V 238 H 721 V 273"/>
+  <g>
+    <rect x="32" y="276" width="388" height="112" rx="13" fill="#e2f2ea" stroke="#8ab49d"/>
+    <text x="50" y="311" class="name">Verified reply</text>
+    <text x="50" y="339" class="detail">Publish the result artifact and settle once</text>
+    <text x="50" y="363" class="detail">Read the original answer or share it for review</text>
+    <rect x="450" y="276" width="542" height="112" rx="13" fill="#fff0dc" stroke="#c9a475"/>
+    <text x="468" y="311" class="name">Lost or unverifiable reply</text>
+    <text x="468" y="339" class="detail">Hold the reservation while outcome remains indeterminate</text>
+    <text x="468" y="363" class="detail">Recover the original job without replay</text>
+  </g>
+  <text x="32" y="419" class="caption">Architecture illustration · Installed worker qualification is a separate gate</text>
+</svg>

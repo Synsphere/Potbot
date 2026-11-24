@@ -37,6 +37,10 @@ _BINDINGS = {
     "runtimeSha256",
     "releaseSha256",
     "taskExecutionSha256",
+    "modelRoutingSha256",
+    "modelPromptSha256",
+    "modelOutputSchemaSha256",
+    "modelRuntimeSha256",
 }
 
 
@@ -100,14 +104,15 @@ def _authorization(value: object) -> dict[str, Any]:
 
 
 def parse_check_input(value: object) -> tuple[str, JobSpec]:
-    if not isinstance(value, dict) or set(value) not in (
-        {"operation_id", "request", "authorization"},
-        {"operation_id", "request", "authorization", "task_execution_sha256"},
-    ):
+    required = {"operation_id", "request", "authorization"}
+    optional = {"task_execution_sha256", "routing_decision_id"}
+    if not isinstance(value, dict) or not required <= set(value) <= required | optional:
         raise InvalidInputError("Operation check fields do not match the supported contract")
     _authorization(value["authorization"])
     if "task_execution_sha256" in value:
         operation_id(value["task_execution_sha256"])
+    if "routing_decision_id" in value:
+        canonical_uuid(value["routing_decision_id"])
     return operation_id(value["operation_id"]), parse_request(value["request"])
 
 
@@ -120,6 +125,7 @@ def _body(
     purpose: str,
     check_id: UUID | None,
     task_execution_sha256: str | None = None,
+    routing_decision_id: str | None = None,
 ) -> bytes:
     spec = parse_request(request)
     value = {
@@ -135,6 +141,8 @@ def _body(
     }
     if task_execution_sha256 is not None:
         value["task_execution_sha256"] = operation_id(task_execution_sha256)
+    if routing_decision_id is not None:
+        value["routing_decision_id"] = str(canonical_uuid(routing_decision_id))
     return canonical_json(value).encode()
 
 
@@ -149,6 +157,7 @@ def sign_authorization(
     expires_at: int | None = None,
     now: datetime | None = None,
     task_execution_sha256: str | None = None,
+    routing_decision_id: str | None = None,
 ) -> dict[str, Any]:
     current = int((now or datetime.now(UTC)).timestamp())
     expires = expires_at if expires_at is not None else current + MAX_AUTHORIZATION_SECONDS
@@ -171,6 +180,7 @@ def sign_authorization(
                 purpose=purpose,
                 check_id=check_id,
                 task_execution_sha256=task_execution_sha256,
+                routing_decision_id=routing_decision_id,
             ),
             hashlib.sha256,
         ).hexdigest(),
@@ -188,6 +198,7 @@ def _verify(
     check_id: UUID | None,
     now: datetime | None,
     task_execution_sha256: str | None = None,
+    routing_decision_id: str | None = None,
     require_current: bool = True,
 ) -> None:
     authorization = _authorization(authorization)
@@ -208,6 +219,7 @@ def _verify(
             purpose=purpose,
             check_id=check_id,
             task_execution_sha256=task_execution_sha256,
+            routing_decision_id=routing_decision_id,
         ),
         hashlib.sha256,
     ).hexdigest()
@@ -235,6 +247,7 @@ def verify_check_authorization(
         check_id=None,
         now=now,
         task_execution_sha256=value.get("task_execution_sha256"),
+        routing_decision_id=value.get("routing_decision_id"),
         require_current=require_current,
     )
     return identity, spec
@@ -278,6 +291,7 @@ def verify_launch_authorization(
         check_id=lease.operation_check_id,
         now=now,
         task_execution_sha256=original_input.get("task_execution_sha256"),
+        routing_decision_id=original_input.get("routing_decision_id"),
         require_current=require_current,
     )
 

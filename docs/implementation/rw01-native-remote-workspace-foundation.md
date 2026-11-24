@@ -54,8 +54,8 @@ they do not establish the selected machine's identity or freshness.
 
 ## Records and operator services
 
-Migration **50**, allocated on `codex/potbot-remote-workspaces` from main commit
-`f13512cb9944b7e09e792bad27bb30746bfc5834`, adds:
+Migration **58** follows the model-routing and checked-reasoning migrations.
+It adds these records.
 
 | Record | Contract |
 | --- | --- |
@@ -65,7 +65,7 @@ Migration **50**, allocated on `codex/potbot-remote-workspaces` from main commit
 | `remote_provisioning_attempts` | Exact reviewed manifest and idempotency key; state remains `planned` |
 | `workspace_control_grant_revisions` | Direct source/principal/target permissions, expiry, revision, revocation generation and terminal revocation |
 
-Both existing migration lineages retain revisions 1–49 unchanged. Existing
+Both existing migration lineages retain revisions 1–57 unchanged. Existing
 `workspace_sandboxes.isolation_requirement='required'` rows are not rewritten.
 Native registration rejects a workspace already registered as a sandbox. The
 existing executor remains responsible for its current sandbox checks.

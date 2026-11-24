@@ -29,6 +29,7 @@ from potbot.domain.errors import (
     ScopeDeniedError,
     StateMismatchError,
 )
+from potbot.tools.native_model_worker import EXECUTABLE as NATIVE_MODEL_EXECUTABLE
 
 if TYPE_CHECKING:
     from potbot.context.projection import ContextProjectionManager
@@ -134,7 +135,7 @@ def parse_manifest(manifest: Path) -> OperatorPaths:
         for entrypoint, digest in selected.items():
             if (
                 not isinstance(entrypoint, str)
-                or not _ENTRYPOINT.fullmatch(entrypoint)
+                or (entrypoint != NATIVE_MODEL_EXECUTABLE and not _ENTRYPOINT.fullmatch(entrypoint))
                 or any(part in {"", ".", ".."} for part in entrypoint.split("/")[1:])
                 or not isinstance(digest, str)
                 or not _HEX.fullmatch(digest)

@@ -38,7 +38,11 @@ def inspect_benchmark_deployments(
         or len({model.id for model in models}) != len(models)
     ):
         raise InvalidInputError("invalid benchmark deployment bindings")
-    targets = {model.id: model for model in models if model.backend == "loopback_openai"}
+    targets = {
+        model.id: model
+        for model in models
+        if model.backend in {"loopback_openai", "loopback_ollama_v1"}
+    }
     seen: set[str] = set()
     rows: list[dict[str, Any]] = []
     for binding in document["bindings"]:

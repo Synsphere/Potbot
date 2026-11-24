@@ -5,10 +5,13 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from potbot.domain.errors import InvalidInputError, ModelUnavailableError
-from potbot.domain.serialization import content_hash
+from potbot.domain.serialization import canonical_json, content_hash
+
+if TYPE_CHECKING:
+    from potbot.models.reasoning_schema import ReasoningOutputSpec
 
 PROVIDERS = ("anthropic", "openai", "xai", "gemini", "evolink")
 DEFAULT_PROTOCOLS = {
@@ -136,12 +139,26 @@ class ProviderRequest:
     seed: int | None = None
     max_response_bytes: int = MAX_TEXT_BYTES
     response_format: str = "text"
+    reasoning_effort: str | None = None
+    output_spec: ReasoningOutputSpec | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.selection, ProviderSelection):
             raise InvalidInputError("A typed hosted model selection is required.")
-        if self.response_format not in {"text", "json_object"}:
+        if self.response_format not in {"text", "json_object", "json_schema"}:
             raise InvalidInputError("Unsupported hosted response format.")
+        if self.response_format == "json_schema" or self.output_spec is not None:
+            from potbot.models.reasoning_schema import ReasoningOutputSpec
+
+            if (
+                self.response_format != "json_schema"
+                or not isinstance(self.output_spec, ReasoningOutputSpec)
+                or self.selection.provider != "openai"
+                or self.selection.protocol not in {"responses", "chat_completions"}
+            ):
+                raise InvalidInputError(
+                    "Structured reasoning requires a trusted role schema and a native OpenAI protocol."
+                )
         if self.response_format == "json_object" and self.selection.protocol not in {
             "responses",
             "chat_completions",
@@ -172,12 +189,33 @@ class ProviderRequest:
         if self.seed is not None and self.selection.protocol in {"messages", "responses"}:
             raise InvalidInputError("The selected protocol has no supported seed parameter.")
 
+        if self.reasoning_effort is not None and (
+            self.selection.provider != "openai"
+            or self.selection.protocol not in {"responses", "chat_completions"}
+            or self.reasoning_effort
+            not in {"none", "minimal", "low", "medium", "high", "xhigh", "max"}
+        ):
+            raise InvalidInputError("Reasoning effort requires a supported native OpenAI protocol")
+
+    @property
+    def response_schema(self) -> dict[str, Any] | None:
+        if self.output_spec is None:
+            return None
+        return {"name": self.output_spec.name, "schema": self.output_spec.schema(), "strict": True}
+
+    @property
+    def disclosure_bytes(self) -> bytes:
+        """Bytes considered by hosted disclosure checks and conservative budgeting."""
+        prompt = (self.prompt + self.system).encode()
+        schema = self.response_schema
+        return prompt if schema is None else prompt + canonical_json(schema).encode()
+
     @property
     def fingerprint(self) -> str:
         return content_hash(self.to_dict())
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        value: dict[str, Any] = {
             "schema_version": 1,
             "selection": self.selection.to_dict(),
             "prompt": self.prompt,
@@ -190,6 +228,12 @@ class ProviderRequest:
             "max_response_bytes": self.max_response_bytes,
             "response_format": self.response_format,
         }
+        if self.reasoning_effort is not None:
+            value["reasoning_effort"] = self.reasoning_effort
+        schema = self.response_schema
+        if schema is not None:
+            value["response_schema"] = schema
+        return value
 
 
 @dataclass(frozen=True, slots=True)

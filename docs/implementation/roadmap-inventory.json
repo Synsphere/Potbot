@@ -29,10 +29,10 @@
     },
     {
       "path": "README.md",
-      "sha256": "8d7573ed9b3b64d3f31bf7a244dd93de4bc8efb09a0963f05f171b8b4739a3e8",
+      "sha256": "ee6e78d37a6042a2bef3e1d602c27cb8e7211444bbaa324b70e8f7881ebaccb2",
       "bytes": 38557,
       "kind": "narrative_text",
-      "text_sha256": "8d7573ed9b3b64d3f31bf7a244dd93de4bc8efb09a0963f05f171b8b4739a3e8",
+      "text_sha256": "ee6e78d37a6042a2bef3e1d602c27cb8e7211444bbaa324b70e8f7881ebaccb2",
       "characters": 38553,
       "lines": 630,
       "interpretation": "source_content_not_runtime_evidence"
@@ -235,6 +235,20 @@
       "path": "docs/images/settings-inventory-swarm.svg",
       "sha256": "a610f83a5a82be04204c33d2879a77685c8e4041a7fa3726f368bde009e3f6d7",
       "bytes": 4038,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/images/settings-models-mobile.png",
+      "sha256": "78d3f27001ab73d63fd2ebafda50d53c17cdf6a952197e052e1f9c3e4ca4a8a9",
+      "bytes": 36850,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/images/settings-swarm-review.png",
+      "sha256": "6b3308ded341ce7bab91cc8984b9637fc6d95967c07f8fc903c5eb109dbdad8b",
+      "bytes": 93668,
       "kind": "media",
       "interpretation": "asset_identity_only"
     },
@@ -470,12 +484,12 @@
     },
     {
       "path": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "sha256": "2b388a3684547f076d37452c6e750a64be63d4a42702583564cd33407da3e7db",
-      "bytes": 13092,
+      "sha256": "eac7ef8d8559fd667f7cc88446d053c961bace06c8f9e155b361aa891baacf0a",
+      "bytes": 13429,
       "kind": "narrative_text",
-      "text_sha256": "2b388a3684547f076d37452c6e750a64be63d4a42702583564cd33407da3e7db",
-      "characters": 13090,
-      "lines": 221,
+      "text_sha256": "eac7ef8d8559fd667f7cc88446d053c961bace06c8f9e155b361aa891baacf0a",
+      "characters": 13427,
+      "lines": 226,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1040,12 +1054,12 @@
     },
     {
       "path": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
-      "sha256": "cd109e8caa41215795cab7e5287b0160863306a4e52cc2b6ada72ac7091ba62d",
-      "bytes": 7679,
+      "sha256": "a15b66e7a3f37d5c2b5ad12a7b79e26bacefedda2e71287f8c5175f6d549dc88",
+      "bytes": 8279,
       "kind": "narrative_text",
-      "text_sha256": "cd109e8caa41215795cab7e5287b0160863306a4e52cc2b6ada72ac7091ba62d",
-      "characters": 7677,
-      "lines": 140,
+      "text_sha256": "a15b66e7a3f37d5c2b5ad12a7b79e26bacefedda2e71287f8c5175f6d549dc88",
+      "characters": 8275,
+      "lines": 151,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1432,6 +1446,146 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/implementation/r7-3-f-frozen-experiments.md",
+      "sha256": "b8d3abebc1437f9ff13b44bee949ae8ae43b1d40bb883fbec1a108a4e963e4b4",
+      "bytes": 8028,
+      "kind": "narrative_text",
+      "text_sha256": "b8d3abebc1437f9ff13b44bee949ae8ae43b1d40bb883fbec1a108a4e963e4b4",
+      "characters": 8028,
+      "lines": 137,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "sha256": "c0a99c589f44fec7f020484844f0454e8ad05c3063daf6c520a46f8d0756dc71",
+      "bytes": 7161,
+      "kind": "narrative_text",
+      "text_sha256": "c0a99c589f44fec7f020484844f0454e8ad05c3063daf6c520a46f8d0756dc71",
+      "characters": 7161,
+      "lines": 130,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "sha256": "ec215f077ee233b797d64b999ece6e3e8350d082818021d3d52a47e1de7fdb9e",
+      "bytes": 9286,
+      "kind": "narrative_text",
+      "text_sha256": "ec215f077ee233b797d64b999ece6e3e8350d082818021d3d52a47e1de7fdb9e",
+      "characters": 9286,
+      "lines": 161,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-c-persistent-shadow-routing.md",
+      "sha256": "af718b8f385edf76b5980b3f8e8d6f46c55eacdf03583d7eaa0c995bc6d76af6",
+      "bytes": 8963,
+      "kind": "narrative_text",
+      "text_sha256": "af718b8f385edf76b5980b3f8e8d6f46c55eacdf03583d7eaa0c995bc6d76af6",
+      "characters": 8959,
+      "lines": 153,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-d-checked-prompt-and-worker-bindings.md",
+      "sha256": "db3c9f815e535d6a813ee5439936860bd2cf3a9f42a74a54b424d2879e5b6e6b",
+      "bytes": 7059,
+      "kind": "narrative_text",
+      "text_sha256": "db3c9f815e535d6a813ee5439936860bd2cf3a9f42a74a54b424d2879e5b6e6b",
+      "characters": 7059,
+      "lines": 118,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-e-reviewed-route-outcomes.md",
+      "sha256": "8a5385ccae8508260fcc645ff45fa60504a7bda43439f25b95931a3ee8e51711",
+      "bytes": 6795,
+      "kind": "narrative_text",
+      "text_sha256": "8a5385ccae8508260fcc645ff45fa60504a7bda43439f25b95931a3ee8e51711",
+      "characters": 6795,
+      "lines": 112,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-f-checked-reasoning-results.md",
+      "sha256": "466c7e54edbd5e4a124cf2b67374328fe50453e8666cc0da367b7884ed1fa635",
+      "bytes": 6611,
+      "kind": "narrative_text",
+      "text_sha256": "466c7e54edbd5e4a124cf2b67374328fe50453e8666cc0da367b7884ed1fa635",
+      "characters": 6611,
+      "lines": 108,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-g-native-model-workers.md",
+      "sha256": "990b8deaf5f7b91da9f0892167c0d0f549267e0d6b3cb047a9a561fcb8cc8189",
+      "bytes": 5890,
+      "kind": "narrative_text",
+      "text_sha256": "990b8deaf5f7b91da9f0892167c0d0f549267e0d6b3cb047a9a561fcb8cc8189",
+      "characters": 5890,
+      "lines": 37,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-h-routed-investigations.md",
+      "sha256": "9559cf46d2ad338401cdd800f39f77ac49daaeb03ad5fbefd9bdb8edab666333",
+      "bytes": 5046,
+      "kind": "narrative_text",
+      "text_sha256": "9559cf46d2ad338401cdd800f39f77ac49daaeb03ad5fbefd9bdb8edab666333",
+      "characters": 5046,
+      "lines": 44,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-i-structured-reasoning.md",
+      "sha256": "5f676c2846e39c4eee431843d5ee2063e4741e56aaec9f167d49dbdd7938599b",
+      "bytes": 4247,
+      "kind": "narrative_text",
+      "text_sha256": "5f676c2846e39c4eee431843d5ee2063e4741e56aaec9f167d49dbdd7938599b",
+      "characters": 4247,
+      "lines": 30,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-j-verified-synthesis.md",
+      "sha256": "7489dbf7757f09a1287679fc54365644c8f77db50314ff5b886f6f4002fe68e0",
+      "bytes": 4688,
+      "kind": "narrative_text",
+      "text_sha256": "7489dbf7757f09a1287679fc54365644c8f77db50314ff5b886f6f4002fe68e0",
+      "characters": 4687,
+      "lines": 52,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-k-checked-reasoning-workbench.md",
+      "sha256": "8b9c623c676697c1d461132fffc23b551d7e8e42e6a0db588d3a8710426ecfcb",
+      "bytes": 4694,
+      "kind": "narrative_text",
+      "text_sha256": "8b9c623c676697c1d461132fffc23b551d7e8e42e6a0db588d3a8710426ecfcb",
+      "characters": 4692,
+      "lines": 54,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-l-stage-guidance.md",
+      "sha256": "26f50172dda508caf92304da38b199531fe618e4f46c7c66907bf9906c03e835",
+      "bytes": 2606,
+      "kind": "narrative_text",
+      "text_sha256": "26f50172dda508caf92304da38b199531fe618e4f46c7c66907bf9906c03e835",
+      "characters": 2606,
+      "lines": 21,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/r7-4-m-bounded-canary.md",
+      "sha256": "41b649887c8f206ffc38cb2bc0e3aa5a3c5e9eda6ba5e13a8c548bf0188782c6",
+      "bytes": 3032,
+      "kind": "narrative_text",
+      "text_sha256": "41b649887c8f206ffc38cb2bc0e3aa5a3c5e9eda6ba5e13a8c548bf0188782c6",
+      "characters": 3028,
+      "lines": 25,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": "docs/implementation/recent-potbot-development-reconciliation.md",
       "sha256": "d59f71e908931fd516d8c4de4f5c3e19b849e20555328a54dbde37d80315fca5",
       "bytes": 55034,
@@ -1453,11 +1607,11 @@
     },
     {
       "path": "docs/implementation/rw01-native-remote-workspace-foundation.md",
-      "sha256": "be75e7f3bb2f835f8537af36b24a070f99515631baa5f2caeff88975edcd2869",
-      "bytes": 7286,
+      "sha256": "696af3fb2fcd51005e8a8994db406c0afa343abecd5ad3020bd723bab05adfd4",
+      "bytes": 7255,
       "kind": "narrative_text",
-      "text_sha256": "be75e7f3bb2f835f8537af36b24a070f99515631baa5f2caeff88975edcd2869",
-      "characters": 7276,
+      "text_sha256": "696af3fb2fcd51005e8a8994db406c0afa343abecd5ad3020bd723bab05adfd4",
+      "characters": 7245,
       "lines": 129,
       "interpretation": "source_content_not_runtime_evidence"
     },
@@ -1803,12 +1957,12 @@
     },
     {
       "path": "docs/implementation/unified-development-roadmap.md",
-      "sha256": "ab91d5923b464a7bff4e39145df00f17df3c70812070ad730708be963e5e24c2",
-      "bytes": 45752,
+      "sha256": "3ecd61ea09c1f04c4ab6f46256355ff5f2326969ecb4eaddfff7d89d5a1b8d2b",
+      "bytes": 46207,
       "kind": "narrative_text",
-      "text_sha256": "ab91d5923b464a7bff4e39145df00f17df3c70812070ad730708be963e5e24c2",
-      "characters": 45592,
-      "lines": 419,
+      "text_sha256": "3ecd61ea09c1f04c4ab6f46256355ff5f2326969ecb4eaddfff7d89d5a1b8d2b",
+      "characters": 46047,
+      "lines": 425,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -1872,6 +2026,83 @@
       "path": "docs/media/plugin-discovery-strategy.svg",
       "sha256": "8d830816d3144e70a62ff93c8507c113c7abe2913b45e8be961eeeca7ce2b910",
       "bytes": 2369,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-checked-reasoning-results.svg",
+      "sha256": "ced1c602976999e7b5df892683ed6ce25515fc9a276e6b515f87611697801b16",
+      "bytes": 3468,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-checked-reasoning-workbench.png",
+      "sha256": "8f476fb7cbcc438c19a55a70604ee24ef9a0989202439c6316fe88cacd7501b3",
+      "bytes": 45561,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-checked-route-bindings.svg",
+      "sha256": "83a82fc55929ff76b7f93d7d8eda31ae24436f1acf248a757bca6031922fb53b",
+      "bytes": 2532,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-native-model-workers.svg",
+      "sha256": "a117696cd6ceae25a4b1ac7df9144f3312e36d9701b76492bd7b990302c6d61a",
+      "bytes": 3270,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-reviewed-route-outcomes.svg",
+      "sha256": "38c5f5232775288df5be5faf3e10f123396dd19f98325ac486a12c89c952230b",
+      "bytes": 4011,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-routed-investigation.svg",
+      "sha256": "0f39aea9ca6d269ea3bac57c47858c019267e79839c3647a803deb82fec36c82",
+      "bytes": 2973,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-shadow-routing.svg",
+      "sha256": "8fa0552e654dab808cb909d1fb715cad676f5ef5bd69f4b0c50ee74c698f4df0",
+      "bytes": 2819,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-small-local-atomic.svg",
+      "sha256": "5b11df4cb755214fcaea77f134f973ed7edec729b2f74f7797cf8c2adee83ad0",
+      "bytes": 2654,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-stage-guidance.png",
+      "sha256": "56762d9242ea9b8bc071d3071b6f3d412263a2ad6ef2ce68daa66fc93a2040af",
+      "bytes": 53309,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-structured-reasoning.svg",
+      "sha256": "bc9e0ab570d972cc089a87ffdf48d99be4616f0fe596fde8979e30e54511bcdc",
+      "bytes": 2657,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
+      "path": "docs/media/r7-verified-synthesis.svg",
+      "sha256": "dd1de11bfc9cf38b135cb89d30dbcf2c9f63b0de38123802836fd48b29dd6162",
+      "bytes": 2808,
       "kind": "media",
       "interpretation": "asset_identity_only"
     },
@@ -34294,7 +34525,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U00",
       "title": "Repository audit and roadmap reconciliation",
-      "locator": "line:249",
+      "locator": "line:255",
       "source_claim": "requirements_only",
       "requirement_sha256": "8e02c7ec68153a9ea09c732dec24853b9d7a65b2a370e9a8f4738bfa9147c8a3",
       "unified_owners": [
@@ -34326,7 +34557,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U01",
       "title": "Durable execution and provenance",
-      "locator": "line:250",
+      "locator": "line:256",
       "source_claim": "requirements_only",
       "requirement_sha256": "9acdee3308aa30755f1fe04ec78556f755c8fdaea9f3650d1e91888677f1e70d",
       "unified_owners": [
@@ -34386,7 +34617,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U02",
       "title": "Sandbox and shared filesystem",
-      "locator": "line:251",
+      "locator": "line:257",
       "source_claim": "requirements_only",
       "requirement_sha256": "f27fdf68725090cd51f00f3e8e157e472beffda2bec5975494fa151feccd2fcb",
       "unified_owners": [
@@ -34420,7 +34651,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U03",
       "title": "Worker/Cog resource supervision",
-      "locator": "line:252",
+      "locator": "line:258",
       "source_claim": "requirements_only",
       "requirement_sha256": "6fd056f50d44fd62e2b1400ccaef0bd8fa3533bf3359fc38f87327b70ac49e54",
       "unified_owners": [
@@ -34461,7 +34692,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U04",
       "title": "Semantic tool platform",
-      "locator": "line:253",
+      "locator": "line:259",
       "source_claim": "requirements_only",
       "requirement_sha256": "7f1a1e829ccf1f5ddca50253821fed65731cd7210251bfe4e3ca4a1cf0c1f083",
       "unified_owners": [
@@ -34531,7 +34762,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U05",
       "title": "Artifact transfer and GitHub concurrency",
-      "locator": "line:254",
+      "locator": "line:260",
       "source_claim": "requirements_only",
       "requirement_sha256": "ed7818d7731f55710e5596d2c7140fe8019d9f7aea09798f7beb98c9325bcd3d",
       "unified_owners": [
@@ -34566,7 +34797,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U06",
       "title": "Syn identity and security",
-      "locator": "line:255",
+      "locator": "line:261",
       "source_claim": "requirements_only",
       "requirement_sha256": "b1c9ad84bd4653b301fc1c4018085bbe1682203c76101ec7699a150a61575e86",
       "unified_owners": [
@@ -34600,7 +34831,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U07",
       "title": "Models, providers and credentials",
-      "locator": "line:256",
+      "locator": "line:262",
       "source_claim": "requirements_only",
       "requirement_sha256": "fb5a6e3ca91f5eb19db215baa1ad991f2c8dfbaef5a49235b6078a3656f438aa",
       "unified_owners": [
@@ -34635,7 +34866,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U08",
       "title": "Reasoning graph and steering",
-      "locator": "line:257",
+      "locator": "line:263",
       "source_claim": "requirements_only",
       "requirement_sha256": "acd521ce50bb19d6a89620dbd8c6b7d22c0b5fdfbfc12473defc60181486ae9b",
       "unified_owners": [
@@ -34670,7 +34901,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U09",
       "title": "Prompt/context and MODEL.md",
-      "locator": "line:258",
+      "locator": "line:264",
       "source_claim": "requirements_only",
       "requirement_sha256": "bf7f84edb02e60ef8572c505c67b36685ed81f02f76d975b7579d467aec1c647",
       "unified_owners": [
@@ -34707,7 +34938,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U10",
       "title": "Memory and embeddings",
-      "locator": "line:259",
+      "locator": "line:265",
       "source_claim": "requirements_only",
       "requirement_sha256": "b6213afccf90e68ccc7c32c0570bfb65875adfcee9e8d122c302949b726b8a53",
       "unified_owners": [
@@ -34746,7 +34977,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U11",
       "title": "Plugin and skills ecosystem",
-      "locator": "line:260",
+      "locator": "line:266",
       "source_claim": "requirements_only",
       "requirement_sha256": "322a12f1c3178717f393a21212982f61c81d989ac76dfb3750bc2aa78fb7daf7",
       "unified_owners": [
@@ -34796,7 +35027,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U12",
       "title": "Browser automation",
-      "locator": "line:261",
+      "locator": "line:267",
       "source_claim": "requirements_only",
       "requirement_sha256": "aa5729d418f9e0fe07f81549990e6b9f43eec398d40b8162c1b9b3e989e51e9f",
       "unified_owners": [
@@ -34833,7 +35064,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U13",
       "title": "Next.js operator frontend",
-      "locator": "line:262",
+      "locator": "line:268",
       "source_claim": "requirements_only",
       "requirement_sha256": "61130383fd5028063cb79292776e3db7c15abb9d82b934f4fc4ccaff5e813962",
       "unified_owners": [
@@ -34906,7 +35137,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U14",
       "title": "Evaluation and adaptation",
-      "locator": "line:263",
+      "locator": "line:269",
       "source_claim": "requirements_only",
       "requirement_sha256": "ece56c3dd0f7832182cab7633829be39bed5d475573ed31c82e1a8e61ecd69a3",
       "unified_owners": [
@@ -34942,7 +35173,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U15",
       "title": "Automation and interoperability",
-      "locator": "line:264",
+      "locator": "line:270",
       "source_claim": "requirements_only",
       "requirement_sha256": "4d287b3521c0deaa365e86a77a852cab18577f972d57b0eeb333c4133c8051f1",
       "unified_owners": [
@@ -34975,7 +35206,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U16",
       "title": "CI, release and deployment qualification",
-      "locator": "line:265",
+      "locator": "line:271",
       "source_claim": "requirements_only",
       "requirement_sha256": "6330a8cf848154f92867c2ad12aac0d10db7444dc291e3bf4026b961941c4fb2",
       "unified_owners": [
@@ -36234,12 +36465,12 @@
     },
     {
       "path": "src/potbot/context/runtime_integration.py",
-      "sha256": "6c6a02cdda2caf9fa398a5e8fa0289a7416bfa5f34f5f0c18a9d6767de363ea8",
-      "bytes": 17101,
+      "sha256": "70c79be4ee7246ea5211720a8b665feef707f74c19ce716974569dd2231c979c",
+      "bytes": 17549,
       "kind": "narrative_text",
-      "text_sha256": "6c6a02cdda2caf9fa398a5e8fa0289a7416bfa5f34f5f0c18a9d6767de363ea8",
-      "characters": 17101,
-      "lines": 430,
+      "text_sha256": "70c79be4ee7246ea5211720a8b665feef707f74c19ce716974569dd2231c979c",
+      "characters": 17549,
+      "lines": 437,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36516,12 +36747,12 @@
     },
     {
       "path": ".github/workflows/agentic-model-benchmark.yml",
-      "sha256": "34d042dfbcb8261b0a25765b72049dc18387e6da8ab3f1feff59c5156c327581",
-      "bytes": 3701,
+      "sha256": "d5158c0b16af0aa9aefcc4371ee3e07f3ecd5065bd5b1a83ff554a879b40b9af",
+      "bytes": 6883,
       "kind": "narrative_text",
-      "text_sha256": "34d042dfbcb8261b0a25765b72049dc18387e6da8ab3f1feff59c5156c327581",
-      "characters": 3701,
-      "lines": 77,
+      "text_sha256": "d5158c0b16af0aa9aefcc4371ee3e07f3ecd5065bd5b1a83ff554a879b40b9af",
+      "characters": 6883,
+      "lines": 134,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -37035,7 +37266,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "38bac079977b4ebe5bc96893f642e44ac22592150f394422aac90efeb93ae035",
+  "review_sha256": "2fbb57b42cfe1ecbae6c2d43c52f20c19a210cf3cc04e122b94d023f81886e9b",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -37086,7 +37317,7 @@
     {
       "source": "README.md",
       "locator": "line:1-194",
-      "sha256": "c62d30fcb8c57adda83946a28fb926718af5e0ba7c87d5a931843aefcd19d11f",
+      "sha256": "77f1357d417307fb4e4d0875aca5b639f0588dfbb0563fcafa49d1f9a477c3f6",
       "excerpt": "# potbot\n\nAn evidence-driven, multi-model coding agent, built in stages from the architecture\nand implementation plan in `docs/`.\n\nFor the current delivery orde",
       "review_families": [
         "durable",
@@ -112754,8 +112985,8 @@
     },
     {
       "source": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "locator": "line:1-8",
-      "sha256": "8aa46633b9a912420e4d3b69b7d1b1aa49e2363f5bde56e9981ec4dcbf791306",
+      "locator": "line:1-13",
+      "sha256": "6f34bd7eb6b8feadc81ad7169fab4e2092a68d188ee5fef145252fee9cc24b4d",
       "excerpt": "# R7 plan: temporal steering, recursive atomic tasks and specialist model routing\n\nThis increment adds a **non-executing advisory foundation**. It does not sile",
       "review_families": [
         "reasoning",
@@ -112764,7 +112995,7 @@
     },
     {
       "source": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "locator": "line:9-36",
+      "locator": "line:14-41",
       "sha256": "6a749588fbae466636da4790400415b9d2d807e71c5c3403124d27578bdeecaa",
       "excerpt": "## Why use a hybrid routing architecture?\n\nIndependent implementations provide useful patterns but are not drop-in Potbot\ncontrollers:\n\n- [LangGraph](https://gi",
       "review_families": [
@@ -112774,7 +113005,7 @@
     },
     {
       "source": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "locator": "line:37-65",
+      "locator": "line:42-70",
       "sha256": "c691653232c93c3b634d174e7a83afbb2c13e84228197963109b9ae3f193b505",
       "excerpt": "## Temporal steering: three principal categories, four implementation results\n\n1. `interrupt`: explicit **stop/pause/replace now**. Apply the deterministic\n   u",
       "review_families": [
@@ -112784,7 +113015,7 @@
     },
     {
       "source": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "locator": "line:66-91",
+      "locator": "line:71-96",
       "sha256": "7e375239e1b25a0fe6297e2015e4495d067295e587f35ff5f5379b441f86dd50",
       "excerpt": "## Recursive decomposition and a stopping criterion\n\nEvery subtask gets its **own** input/output contract, dependencies, admitted\ncapability references, limits ",
       "review_families": [
@@ -112794,7 +113025,7 @@
     },
     {
       "source": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "locator": "line:92-104",
+      "locator": "line:97-109",
       "sha256": "83d64ec2a4b9c4a9477f9d0b72f8ba1d1fe7d70e5bd1e3abee1b2623034bfb26",
       "excerpt": "### Example: KeywordMoves end-to-end objective\n\n- Goal: produce a reviewed YouTube-relevant keyword shortlist from lyrics and\n  explicitly supplied evidence.\n- ",
       "review_families": [
@@ -112804,7 +113035,7 @@
     },
     {
       "source": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "locator": "line:105-137",
+      "locator": "line:110-142",
       "sha256": "dd1812002037bb293617fce99ccb51ee010ed9946276c2fa354224da98554432",
       "excerpt": "## Models and quantization\n\n`potbot.models.specialist_catalog` lists candidate *upstream model identities*.\nNo candidate is an installed, qualified deployment. ",
       "review_families": [
@@ -112814,7 +113045,7 @@
     },
     {
       "source": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "locator": "line:138-177",
+      "locator": "line:143-182",
       "sha256": "ace12cb59482ed93a594791617943d4192665dc6e320c617acd1aa453412bf1e",
       "excerpt": "### Required storage/VRAM metadata\n\nA **specific installed model** requires an exact record:\n\n- `model_id`, `immutable_revision`, `quantization`, `backend`, `ar",
       "review_families": [
@@ -112824,7 +113055,7 @@
     },
     {
       "source": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "locator": "line:178-201",
+      "locator": "line:183-206",
       "sha256": "8463c6baf4c7978767565fff4fd2736bdfca166a305d1122e1e57619dd15c3af",
       "excerpt": "## Monitoring and self-optimization roadmap\n\n- **R7.1:** Connect temporal steering to the durable PostgreSQL inbox and run\n  checkpoint; urgent messages fence a",
       "review_families": [
@@ -112834,7 +113065,7 @@
     },
     {
       "source": "docs/implementation/24-atomic-task-routing-and-specialists.md",
-      "locator": "line:202-221",
+      "locator": "line:207-226",
       "sha256": "34dc5262085e9ee5f3ad94be3b70e8111b55fbc554cb6033d2a017f9d37f4f52",
       "excerpt": "### Acceptance gates\n\n1. An urgent user `stop` is acknowledged before next affected tool dispatch;\n   an uncertain in-flight paid call is never replayed automat",
       "review_families": [
@@ -116112,8 +116343,8 @@
     },
     {
       "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
-      "locator": "line:15-35",
-      "sha256": "c0f4ef09901ff1043349c30aec8fa994e7a011a8caf6039a60a7e04fd25f541c",
+      "locator": "line:15-39",
+      "sha256": "9c3ef18cbc49fe5a167aa3a42a5e9a1a76d26775cf8cf2a48b9b8ebea0369d1e",
       "excerpt": "## Open the settings workbench\n\nUse **Menu \u2192 All settings**, **Local model inventory**, **Local tool inventory**\nor **Workspace swarm**. The workspace selector ",
       "review_families": [
         "configuration",
@@ -116124,7 +116355,7 @@
     },
     {
       "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
-      "locator": "line:36-75",
+      "locator": "line:40-79",
       "sha256": "36004d7128591cfcb57fc33910a2c431368566179cb6cc0f9f1aae5392aeba62",
       "excerpt": "## Configure native inventory roots\n\nThe native operator selects project-relative roots in a private JSON profile.\nThe profile belongs to exactly one workspace.",
       "review_families": [
@@ -116136,8 +116367,8 @@
     },
     {
       "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
-      "locator": "line:76-110",
-      "sha256": "084bd039e84b329d762e51f7022cd5b8a9bf33e1a9a65d4e29da3f79cc43eefb",
+      "locator": "line:80-118",
+      "sha256": "55ba5c82d8e2cb4662692b721883d4df960df5f405cdcabeafdf4d021b022faf",
       "excerpt": "## Review workspace swarm records\n\nThe swarm view reads registered node identity, pinned SSH fingerprints, the\ncurrent native deployment, direct control grants ",
       "review_families": [
         "configuration",
@@ -116148,8 +116379,8 @@
     },
     {
       "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
-      "locator": "line:111-140",
-      "sha256": "7182b11a6868743db4cad772c52f8c11d61e61cb1cb4777fe6c1d9ad3fd841c3",
+      "locator": "line:119-151",
+      "sha256": "a6dec4b6460ee77b64801cf6639a68011ce7918902c43c071da9f4b787cb7c18",
       "excerpt": "## Interfaces and verification\n\n| Next resource | Native API | Method |\n| --- | --- | --- |\n| `/api/ui/settings/catalogue` | `/v1/ui/settings/catalogue` | GET |",
       "review_families": [
         "configuration",
@@ -117439,6 +117670,672 @@
       ]
     },
     {
+      "source": "docs/implementation/r7-3-f-frozen-experiments.md",
+      "locator": "line:1-25",
+      "sha256": "069253966cf26fd41e7987fc1cf6d6d8e4958d9ab01ad8a8456a90e0bf437c46",
+      "excerpt": "# R7.3-F: freeze an experiment and account for its whole cohort\n\nThis increment binds the existing opt-in atomic benchmark to a predeclared\nsuite, target config",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-3-f-frozen-experiments.md",
+      "locator": "line:26-82",
+      "sha256": "dcb6e676f83438125dad7e98f0fb071d996e32a90a9e612ad319a8856bad94d2",
+      "excerpt": "## Freeze, execute and inspect\n\n```sh\npython scripts/benchmark_agentic_models.py prepare-experiment \\\n  --suite private/candidate-suite.json --models private/ex",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-3-f-frozen-experiments.md",
+      "locator": "line:83-117",
+      "sha256": "41950998e7a993990c35da578eee36dfb4286462a18fb68881dcf4a3efe7a7a1",
+      "excerpt": "## Account for all outcomes\n\n| Planned-cell outcome | Retained interpretation |\n|---|---|\n| Completed, rubric passes | Completed evidence with independently rec",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-3-f-frozen-experiments.md",
+      "locator": "line:118-137",
+      "sha256": "c8f4837c23bccfb9ec31684038c8b497c5039d821a65bef5ce7701c51ed6be65",
+      "excerpt": "## Remaining qualification and recovery\n\nThese are source/fixture protocols. No actual independent gold, protected-data\nisolation, model-server identity, peak R",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "locator": "line:1-24",
+      "sha256": "6d6fda626bc97c6bea21d79c7be0f1b71dfad567fa6dcff7796268abad0ebd6b",
+      "excerpt": "# R7.4-A: frozen offline routing shadow evaluation\n\nThis increment evaluates explicit role-specific criteria against the retained\nR7.3 experiment. It performs n",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "locator": "line:25-84",
+      "sha256": "d32a9ab13d0f86a941620ad39a664066cd8583a2d33bac603b14038b9097e4c5",
+      "excerpt": "## Declare the criteria before execution\n\nA `potbot.atomic-shadow-policy/1` document has exactly `schema` and `rules`.\nSupply one rule for every planned holdout",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "locator": "line:85-114",
+      "sha256": "dafac050a07716d2728eb5822f84a93cb039304f3bed4822b4def8883fb2bea6",
+      "excerpt": "## Interpret the result\n\n| Evidence or criterion | Offline result |\n|---|---|\n| Any planned result missing, uncertain or model-mismatched | Whole experiment rem",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "locator": "line:115-130",
+      "sha256": "44bc23d1855b0eaeb655a84be3309d496a46682003ff0b5580a84ed5ec300d1f",
+      "excerpt": "## Promotion, compatibility and rollback\n\nEvery report keeps `qualified: false`, `promotion_ready: false`,\n`prior_registration_authenticated: false`, zero model",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:1-24",
+      "sha256": "6f675e382e578d5519aee47bee1999596e3788b049e74a3574c1b9ce5d6853d3",
+      "excerpt": "# R7.4-B: reproducible local and inexpensive hosted trials\n\nThe opt-in benchmark can compare installed Ollama packages with explicitly\nselected OpenAI snapshots",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:25-66",
+      "sha256": "9c4d23a657d0cbf6a0168d18ae50517ddcb5a8fa2ccd4ea2d74398b776ff977e",
+      "excerpt": "## Freeze generation settings and reduce repeated weight loading\n\n`loopback_ollama_v1` accepts an explicit HTTP loopback `/api` endpoint and a\n`sha256:<original",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:67-109",
+      "sha256": "de680c8858a9d80447ba73d26b1e2c0f98b89747316f92c2e001e1df529022a4",
+      "excerpt": "## Explicit inexpensive OpenAI configurations\n\nThe ordinary hosted backend retains its previous defaults. A revision of\n`openai-cheap-v1:<exact-model-id>` expli",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:110-141",
+      "sha256": "e013ea2bd292e795bc7f1eb5c08c96bfc7af86aecbbf105f337f52851992c6b6",
+      "excerpt": "## Actual first local trial\n\n![Actual local protocol matches and separate Markdown-format diagnostic](../media/r7-small-local-atomic.svg)\n\n*Generated chart from",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-b-local-and-cheap-hosted-trials.md",
+      "locator": "line:142-161",
+      "sha256": "425960f42f3e74b423b0dbdd04400c9a140f7eacb2c378dcd9be28fd41f07cc3",
+      "excerpt": "## Reproduce and interpret\n\nUse the existing `prepare-experiment`, `preflight`, `run`, `audit-experiment` and\n`compare-atomic` commands, with identical suite, c",
+      "review_families": [
+        "audit",
+        "evaluation",
+        "models"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-c-persistent-shadow-routing.md",
+      "locator": "line:1-16",
+      "sha256": "b796cf8018e8c447c0e2ab2994b7a75dbcd0a6a1b62a621c012aa922ee7f6c1f",
+      "excerpt": "# R7.4-C: persistent shadow routing and literal JSON prompt trials\n\nThis increment persists a **baseline-only shadow decision**, binds it to the\nexisting operat",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-c-persistent-shadow-routing.md",
+      "locator": "line:17-67",
+      "sha256": "5c8c3b705cf6393b017a74930a397a6e18690dda38c568b4532e71c0e655428e",
+      "excerpt": "## One durable decision, one checked execution\n\n`ModelRoutingService` is a controller-side service over the existing PostgreSQL\ndatabase and `OperationWorkbench",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-c-persistent-shadow-routing.md",
+      "locator": "line:68-85",
+      "sha256": "3980e28607389b81157227d66563cf08e9f9cb8be9d4bb314e771dc4b9098b79",
+      "excerpt": "## Fencing and accounting\n\nThe decision ID is included in both check and launch authorization MACs. Omitting\nor substituting it invalidates the authorization. L",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-c-persistent-shadow-routing.md",
+      "locator": "line:86-129",
+      "sha256": "a0c5d71e2e932357b1502cdca2f528cb5207fb6b44f9ac5459f664005843c722",
+      "excerpt": "## A new prompt hypothesis, without changing old scores\n\nThe [completed public-fixture comparison](r7-4-b-local-and-cheap-hosted-trials.md)\nshowed frequent Mark",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-c-persistent-shadow-routing.md",
+      "locator": "line:130-153",
+      "sha256": "2f6afb4f3d9027f5cfd881d8308732b6f8b517f29cee1103bc96f186a4334027",
+      "excerpt": "## Verification and remaining gates\n\n`tests/integration/test_model_routing_postgres.py` exercises genuine restricted\nPostgreSQL logins, same-workspace reviewer ",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-d-checked-prompt-and-worker-bindings.md",
+      "locator": "line:1-14",
+      "sha256": "bc470bcf24a4ab86e85ca4b88cb150cbab8ea6642ed338bfe148ed3034bc5c18",
+      "excerpt": "# R7.4-D: checked prompt and worker-admission bindings\n\nCompiled shadow routes now enforce the recipe, literal prompt bytes and observed\nworker configuration th",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-d-checked-prompt-and-worker-bindings.md",
+      "locator": "line:15-45",
+      "sha256": "bf76b8a62b24b3d276fefc791b089929580011c4298e6ddd002927562ea7e4e2",
+      "excerpt": "## Bind executable inputs to their provenance\n\nMigration 51 adds two append-only, scoped records without changing the previous\nmigrations. A prompt recipe fixes",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-d-checked-prompt-and-worker-bindings.md",
+      "locator": "line:46-81",
+      "sha256": "4799512724f2d6abf2963499e80db42f940b033db15a0805da0d4157b22ff4c8",
+      "excerpt": "## Recompute on the configured worker\n\nThe existing `OperationChecks` path now recognizes compiled routing decisions.\nIt runs ordinary task, capability, credent",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-d-checked-prompt-and-worker-bindings.md",
+      "locator": "line:82-97",
+      "sha256": "c62bddb5c29e984a1bf859969f63e831c723960307d5fc619ca17564cc29424f",
+      "excerpt": "## What the worker identity does and does not prove\n\nFor hosted inference, the identity covers the exact executor selection and\n**operator policy fingerprint**.",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-d-checked-prompt-and-worker-bindings.md",
+      "locator": "line:98-118",
+      "sha256": "9bb7d29fbe532970fe40f6f062368600770a033ef92f448356d911910638c6dd",
+      "excerpt": "## Verification and continuation\n\nThe PostgreSQL integration suite runs compiled requests through the normal\n`OperationWorkbench`, check worker, linked launch a",
+      "review_families": [
+        "durable",
+        "models",
+        "prompt",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-e-reviewed-route-outcomes.md",
+      "locator": "line:1-16",
+      "sha256": "9e944ed7685d9ae545ddbcd48d1e2a5f2f8c1a450cd25032dd5225d8d4926f10",
+      "excerpt": "# R7.4-E: durable model outcomes and independent regression review\n\nThe checked routing path now retains the original terminal hosted job's output\nand provider ",
+      "review_families": [
+        "durable",
+        "models",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-e-reviewed-route-outcomes.md",
+      "locator": "line:17-38",
+      "sha256": "de37964c99082a86c330457f4c45d95fdaafebd9be7e40b10b537d210f16b2b3",
+      "excerpt": "## Three different questions\n\n| Question | Evidence | What it does not establish |\n| --- | --- | --- |\n| Did this invocation finish? | Original job state, dispa",
+      "review_families": [
+        "durable",
+        "models",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-e-reviewed-route-outcomes.md",
+      "locator": "line:39-60",
+      "sha256": "b01cd87fd2f852aabc33defcec3e7335f987d6b9a5defe043fcc2d03766d5d24",
+      "excerpt": "## Sharing is a deliberate controller operation\n\nCapture is private. `share` requires the owner's expected outcome digest and\ndiscloses only this bounded output",
+      "review_families": [
+        "durable",
+        "models",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-e-reviewed-route-outcomes.md",
+      "locator": "line:61-90",
+      "sha256": "c68fd7e8b89cbd13f0449f7548f198afa8c358e60011d60a1b3e5ebf0265b851",
+      "excerpt": "## A regression veto fences dispatch\n\nAn independent `regression` verdict makes the policy's baseline acceptance\nunavailable. Existing allocation, admission and",
+      "review_families": [
+        "durable",
+        "models",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-e-reviewed-route-outcomes.md",
+      "locator": "line:91-112",
+      "sha256": "ad2d5e0748c17a03e270bdef94b145ed5875e8e9a9985d95acc789fcc6d5b494",
+      "excerpt": "## Benchmark accounting and verification boundary\n\nThe bounded owner summary counts distinct route decisions, observed terminal\nstates, unobserved decisions and",
+      "review_families": [
+        "durable",
+        "models",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-f-checked-reasoning-results.md",
+      "locator": "line:1-14",
+      "sha256": "1049f0a8c0962c52dad5895d390418e87d716aaa20d11f7effea4f37229d6fe6",
+      "excerpt": "# R7.4-F: checked native results and reasoning role validation\n\nReasoning can now read an original completed routed job through an owner-only\nresult boundary. I",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-f-checked-reasoning-results.md",
+      "locator": "line:15-37",
+      "sha256": "6056351689beabbaf8bdaf40c669ccb8a6b9d6ffa24c5d710a136e61971ffc7f",
+      "excerpt": "## Read the original effect without repeating it\n\n`ModelRoutingService.reasoning_result` reads one owned decision. The decision\nmust retain its frozen recipe an",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-f-checked-reasoning-results.md",
+      "locator": "line:38-64",
+      "sha256": "47bf8b2d1ce49f156d47c55faa60a25d6f891c43bf32515e4a19fc3a8f029faf",
+      "excerpt": "## Native model data contract\n\nThe request port is `syn://type/potbot-local-model-request-v1`. Its exact fields\nare model, deployment digest, literal system/pro",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-f-checked-reasoning-results.md",
+      "locator": "line:65-85",
+      "sha256": "6959ccc3ebd759e8d9adef23c5f70cbe78595f4a2eb3f8c5245c7d2f95db2022",
+      "excerpt": "## Validate the role before using the answer\n\nThe shared validator reuses the existing hypothesis, critique and steering\nparsers. It also validates investigator",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-f-checked-reasoning-results.md",
+      "locator": "line:86-108",
+      "sha256": "2892d9c5e5142b7f56f812572df24cb9bfcedc8d815e0d30ede3611e61570ffe",
+      "excerpt": "## Verification and remaining integration\n\nTests run real restricted PostgreSQL, original checked jobs, capability grants,\nartifact publication and recovery. Pr",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-g-native-model-workers.md",
+      "locator": "line:1-8",
+      "sha256": "a3ac0a6a9de5ec49a7d5fe0b21211773f7cdb40a8473a04b697e57a00c2faeaa",
+      "excerpt": "# R7.4-G native model workers and checked reasoning\n\nPotbot can admit a pinned local model through the same checked job, Syn worker and PostgreSQL budget path u",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-g-native-model-workers.md",
+      "locator": "line:9-15",
+      "sha256": "445bbb329774ec40afef793124dc12a01d6ed2cb91a70972ea103a6bcc5ed4d1",
+      "excerpt": "## Pin the installation\n\n- The sandbox image build accepts `POTBOT_NATIVE_INFERENCE=1`. This opt-in installs the CPU-only `llama-cpp-python` 0.3.19 backend. The",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-g-native-model-workers.md",
+      "locator": "line:16-26",
+      "sha256": "5aefc058aa08086c7c282bba94759fcf40527321f2038562bedb6d2b1e2b2341",
+      "excerpt": "## Admit and settle one invocation\n\n| Stage | Durable behavior |\n| --- | --- |\n| Check | Bind the original request to the installed worker and grant. Verify the",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-g-native-model-workers.md",
+      "locator": "line:27-37",
+      "sha256": "4a7bfd66319ed3f87cbb5e7c6f0ecedf01f0076c7e08cbd55a427260fd109e96",
+      "excerpt": "## Recover reasoning and share outcome evidence\n\n`CheckedReasoning.begin` freezes one declared reasoning role, private facts and a compiled request, then queues",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-h-routed-investigations.md",
+      "locator": "line:1-8",
+      "sha256": "dfb415408e6fb7b2b06467ab816ab9e13307788105658507650842d7edf6fcac",
+      "excerpt": "# R7.4-H restartable checked investigations\n\nA Potbot investigation can now use three accepted reasoning routes as a single recoverable run. The controller prop",
+      "review_families": [
+        "durable",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-h-routed-investigations.md",
+      "locator": "line:9-23",
+      "sha256": "063f7a0c803d9a32e8730a2c22ba8f3132c281968ec9fe7f0cd4b1e2debd632d",
+      "excerpt": "## Plan one run\n\nRun a normal Potbot job worker and provision an active task in the authenticated workspace. Prepare an owned, independently accepted compiled r",
+      "review_families": [
+        "durable",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-h-routed-investigations.md",
+      "locator": "line:24-35",
+      "sha256": "adaecc32485f87809177c071258f8de70741ba69ae7d85daed5e5d79a733f362",
+      "excerpt": "## Handoff and interruption\n\n| Stage | Data carried forward |\n| --- | --- |\n| Hypotheses | Bounded hypotheses assigned deterministic branch IDs. Proposed questi",
+      "review_families": [
+        "durable",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-h-routed-investigations.md",
+      "locator": "line:36-44",
+      "sha256": "6365131c345d836d611a571807a78360c34b0c481268f7209ae922ae41ecf3f1",
+      "excerpt": "## Verification boundary\n\nThe PostgreSQL acceptance tests exercise normal workbench checks and worker calls with controlled provider responses. They include fre",
+      "review_families": [
+        "durable",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-i-structured-reasoning.md",
+      "locator": "line:1-8",
+      "sha256": "92596ec7b015acfd77d65b81952bd81b08403f3cecd8ead2d1aa59f1032f7f51",
+      "excerpt": "# R7.4-I schema-constrained reasoning stages\n\nA checked hypothesis or critique job can now ask the decoder to follow a bounded role schema. Potbot derives it fr",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-i-structured-reasoning.md",
+      "locator": "line:9-21",
+      "sha256": "837af2af532252368ade93d0558904834bbeb3cc19ccb4e29cd03a45cc03074b",
+      "excerpt": "## Configure an accepted route\n\nFor `hypothesis_generator` or `critic`, create a new compiled reasoning policy with the recipe variant `model_role_schema_v1` an",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-i-structured-reasoning.md",
+      "locator": "line:22-30",
+      "sha256": "25d89bdfd9fae8d31201ce88f175aa687791c4fcca18e60e498ea24266a0401e",
+      "excerpt": "## Verification\n\nThe PostgreSQL tests verify the exact schema sent from the original check, a normally settled job and refusal to consume a duplicate-branch res",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-j-verified-synthesis.md",
+      "locator": "line:1-8",
+      "sha256": "939aa42be1eac3e9aa1bee6b5802776cc8bf466c8abe47ec00c420f15521e706",
+      "excerpt": "# R7.4-J verified synthesis\n\nPotbot can now recompute the final answer to two kinds of investigation from frozen facts. A decoder schema bounds the reply, and t",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-j-verified-synthesis.md",
+      "locator": "line:9-30",
+      "sha256": "5ab05129902aa6a5d1bdff0d4a86711af026c41856fdf8d603501221bd18b85e",
+      "excerpt": "## Freeze the answer check\n\nConfigure the accepted `synthesizer` recipe with `model_role_schema_v1` and `json_object_v1`. Provide an `answer_check` in the immut",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-j-verified-synthesis.md",
+      "locator": "line:31-36",
+      "sha256": "75add63d67db3cf40c9e3409f290ccbb00dc7b71a6abc077552a5ea65b1cc3a9",
+      "excerpt": "## Completion and recovery\n\nThe result reader parses the retained original reply as a literal JSON object with unique keys and integer values. It independently ",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-j-verified-synthesis.md",
+      "locator": "line:37-45",
+      "sha256": "86c6d104e7dde6bc3927384d7e11ab1899c32e09be73c18b0ff78b29dd2f7b7f",
+      "excerpt": "## Verification\n\n| Three-stage Qwen3.5 2B workflow | Verified final result | Calls | Reported tokens |\n| --- | --- | ---: | ---: |\n| USB choice | Green at 32 GB",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-j-verified-synthesis.md",
+      "locator": "line:46-52",
+      "sha256": "f318afb369a891c7d39b679c8d2cc85a660d6dbe0a32c7dd2179811be4f80ee5",
+      "excerpt": "## Native image qualification\n\nThe sandbox system image workflow accepts a manual `native_inference` input. It builds the `native-inference-v1` variant for each",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-k-checked-reasoning-workbench.md",
+      "locator": "line:1-8",
+      "sha256": "924a175f8fa7bb31a4176d502dd1de22dc3d43cbe64c51dd1cd5a69ef6b5e593",
+      "excerpt": "# R7.4-K checked reasoning workbench\n\nAn operator can open a durable investigation from the Research console, review its current stage and advance it explicitly",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-k-checked-reasoning-workbench.md",
+      "locator": "line:9-21",
+      "sha256": "e9d76da4095ca376886ba3a976621d8da9a89bc5a3911653e94db09355917fcb",
+      "excerpt": "## Open and control a run\n\nUse **Research \u2192 Checked reasoning** with the normal authenticated operator session and loopback Potbot controller. Select your exist",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-k-checked-reasoning-workbench.md",
+      "locator": "line:22-47",
+      "sha256": "9641d15d54bd7526ccd14a73310c1fda3fc4018b5888652224c4b00643a996da",
+      "excerpt": "## Include a settled research citation\n\nAdd `evidence_citations` to the usual plan to select one to four exact excerpts. Use the existing research citation pick",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-k-checked-reasoning-workbench.md",
+      "locator": "line:48-54",
+      "sha256": "865937a2e7840e5b7db1b9d180fa5d94a605f8870d2a096118a689e8e63aeb82",
+      "excerpt": "## Verification\n\nDisposable PostgreSQL tests drive all three roles through the operator adapter, restart, reject a stale advance, and recover the original settl",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-l-stage-guidance.md",
+      "locator": "line:1-8",
+      "sha256": "ef2f7ea339f9f37010240844210cdf424a1d8b3c7d96eea085e85e3a5aacd22b",
+      "excerpt": "# R7.4-L guidance at a checked stage\n\nAn operator can add guidance to a critique or synthesis after reviewing the preceding checkpoint and before the next stage",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-l-stage-guidance.md",
+      "locator": "line:9-16",
+      "sha256": "b5af2faffb493fdde1d2aa147b6cffd52373b5935c2b16dae27733fd4c6b7086",
+      "excerpt": "## Guide the current stage\n\nInspect an active run before starting the next check. At an unallocated critique or synthesis, enter one constraint per line and sel",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-l-stage-guidance.md",
+      "locator": "line:17-21",
+      "sha256": "8f5c9c8abd6300d01bdb54d004f1e03838bd2911e3adc431258e777cd6f388b7",
+      "excerpt": "## Evidence\n\nThe PostgreSQL test saved guidance after the controller had read the next stage and before it allocated the check. It observed an empty queue after",
+      "review_families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-m-bounded-canary.md",
+      "locator": "line:1-16",
+      "sha256": "17fe6dd35ea50308a8f32efa684afc11240b47736f04b25444274f4d7d7d8c8c",
+      "excerpt": "# Bounded model canary and rollback\n\nAn operator can open a time-limited canary for a candidate with its own frozen prompt recipe and independent acceptance. Th",
+      "review_families": [
+        "evaluation",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-m-bounded-canary.md",
+      "locator": "line:17-25",
+      "sha256": "c958de91c2c1b9fcd11b904fa72a7171d09d5a08ba9002c18113a13ca6228574",
+      "excerpt": "## Start and stop a window\n\nUse `ModelRouteCanaries.start` with a fresh canary UUID, the two policy UUIDs, the sampling percentage in basis points, the absolute",
+      "review_families": [
+        "evaluation",
+        "models",
+        "reasoning",
+        "accounting"
+      ]
+    },
+    {
       "source": "docs/implementation/recent-potbot-development-reconciliation.md",
       "locator": "line:1-14",
       "sha256": "89924394f3dbaac8e30f4e41cddcb3276ad41637303bb596648260787484be6a",
@@ -117749,8 +118646,8 @@
     {
       "source": "docs/implementation/rw01-native-remote-workspace-foundation.md",
       "locator": "line:55-99",
-      "sha256": "3f88a3ddba103de50cdcd07c2acaf9a32c442e67b0752cc22b63a40381e77392",
-      "excerpt": "## Records and operator services\n\nMigration **50**, allocated on `codex/potbot-remote-workspaces` from main commit\n`f13512cb9944b7e09e792bad27bb30746bfc5834`, a",
+      "sha256": "71706a64b8bbb04e2a69d40dfc2c20cf18839d5e06e0c861d31e0a4adf027b17",
+      "excerpt": "## Records and operator services\n\nMigration **58** follows the model-routing and checked-reasoning migrations.\nIt adds these records.\n\n| Record | Contract |\n| -",
       "review_families": [
         "audit",
         "native-remote-workspaces"
@@ -120910,9 +121807,9 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:1-38",
-      "sha256": "e1c607b945485dd2b51cefcc6593ae9ac0069cd82357aebd2a2f39b66b5c5806",
-      "excerpt": "# Potbot unified development roadmap\n\n**24 November 2026, R7.3-A through E in the review stack:** R7.2-A/B/C are\nsource-implemented; installed atomic-scheduler ",
+      "locator": "line:1-44",
+      "sha256": "4c804c32355f8fe6e61e21a7c63d3914a9efa5a66466deb6c09c517342283e56",
+      "excerpt": "# Potbot unified development roadmap\n\n**24 November 2026, R7.3-A through F and R7.4-A in the review stack:** R7.2-A/B/C are\nsource-implemented; installed atomic",
       "review_families": [
         "audit",
         "durable",
@@ -120926,7 +121823,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:39-202",
+      "locator": "line:45-208",
       "sha256": "535f53b812e2861b68a5f26913b82d310e59e1aeb4d109dfaa142254e784a6cc",
       "excerpt": "## Current delivery order \u2014 18 November 2026\n\nThe current batch finishes the remaining supported T05 implementation with\n[T05-B specialist research](t05-b-speci",
       "review_families": [
@@ -120942,7 +121839,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:203-210",
+      "locator": "line:209-216",
       "sha256": "076016b54fff41fb78ff8fdcc90229d963fc5d746b89b7706eeebb49f54312c8",
       "excerpt": "## Baseline and source-of-truth rules\n\nOlder README phase summaries (`0.5.0.dev8`/`dev9`) are historical; the reviewed main reports `0.5.0.dev11`. They are not ",
       "review_families": [
@@ -120958,7 +121855,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:211-244",
+      "locator": "line:217-250",
       "sha256": "4c193a4a608fa975564b4f8db4bfe008307a41cf3d1b25c33882bcb783543194",
       "excerpt": "## Existing plans to reconcile\n\n| Source | Scope |\n|---|---|\n| `docs/implementation/09-tool-plan-gap-audit.md` | 18 additional requirement groups and independen",
       "review_families": [
@@ -120974,7 +121871,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:245-266",
+      "locator": "line:251-272",
       "sha256": "3a83e4a3a3332d3ef4289fcfc3504ed4ab122ebf1cf45fdf94886f89bda19cce",
       "excerpt": "## Unified work packages\n\n| ID | Workstream | Remaining / qualification scope | Modernization | Dependencies |\n|---|---|---|---|---|\n| U00 | Repository audit an",
       "review_families": [
@@ -120990,7 +121887,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:267-268",
+      "locator": "line:273-274",
       "sha256": "730dc617da00361212299c3f3bf7caa292eeb8375c4645a26f895fe255a9c69d",
       "excerpt": "## Delivery waves and gates",
       "review_families": [
@@ -121006,7 +121903,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:269-274",
+      "locator": "line:275-280",
       "sha256": "092663dafe878c1956a3843788aa7a58148603391dc7efc03a2ab4bf50b05224",
       "excerpt": "### Wave 0 \u2014 Inventory, reconcile and pin (U00)\n\nPin current main SHA. Enumerate every `docs/` plan, issue, PR, stage-status document and CI acceptance job. Bui",
       "review_families": [
@@ -121022,7 +121919,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:275-280",
+      "locator": "line:281-286",
       "sha256": "382e3775074d6d89fbfe589167a208ad320459466fe816e1e619c4a2326bceab",
       "excerpt": "### Wave 1 \u2014 Secure durable foundation (U01\u2013U03, U06)\n\nExtend existing PostgreSQL/Syn execution rather than introducing a second job engine. Add fenced leases, ",
       "review_families": [
@@ -121038,7 +121935,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:281-284",
+      "locator": "line:287-290",
       "sha256": "ee0b5d377f44b86a968882f762dcddf5486951504484fae6f57bbdc4b5d897cf",
       "excerpt": "### Wave 2 \u2014 Tools, plugins, transport and browser (U04\u2013U05, U11\u2013U12)\n\nComplete existing T01\u2013T04 milestones, typed Cog contracts, debugger, discovery, concurren",
       "review_families": [
@@ -121054,7 +121951,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:285-288",
+      "locator": "line:291-294",
       "sha256": "9b8568dc87a1fd913d2775e2cea463e8cc54271de5fdbd471a3846c47413462e",
       "excerpt": "### Wave 3 \u2014 Intelligence and memory (U07\u2013U10)\n\nQualify actual local/hosted models and inference costs. Integrate live multi-model reasoning graphs, scheduling,",
       "review_families": [
@@ -121070,7 +121967,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:289-294",
+      "locator": "line:295-300",
       "sha256": "9a38ce04ac2df10970d4c69ae459dab6757ed121e4c0135233670ccf0927cca1",
       "excerpt": "### Wave 4 \u2014 Frontend and empirical optimization (U13\u2013U14)\n\nFinish real backend streaming, workspace controls, monitoring sprite, graph checkpoint timeline, pro",
       "review_families": [
@@ -121086,7 +121983,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:295-300",
+      "locator": "line:301-306",
       "sha256": "80b60f56644c374154018b6472010f50693d60ee0bd0831560224d401b134c72",
       "excerpt": "### Wave 5 \u2014 Automation and release (U15\u2013U16)\n\nAdd durable event subscriptions, schedules, A2A and channels under the same operator policy. Qualify all supporte",
       "review_families": [
@@ -121102,7 +121999,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:301-310",
+      "locator": "line:307-316",
       "sha256": "4b39689d3f86890624016437f1019a9f443b42259c348acd3976344d39f5cb18",
       "excerpt": "## Critical engineering invariants\n\n1. Do not create parallel authoritative PostgreSQL stores, schedulers, plugin registries or Syn event logs.\n2. Preserve the ",
       "review_families": [
@@ -121118,7 +122015,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:311-321",
+      "locator": "line:317-327",
       "sha256": "73ea150baabe9d4392b6c75e6ac5978672584992ebe9d0d26ba1c428568a0f6a",
       "excerpt": "### Syn transport for application RPC\n\n**Deferred pending a Syn release, 18 November 2026.** The following sequence is\nretained for resumption; the active deliv",
       "review_families": [
@@ -121134,7 +122031,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:322-349",
+      "locator": "line:328-355",
       "sha256": "cbc4b785f9baeac0b04d3321ea4a8fed61bf8a1816999c534cb2eb9667797027",
       "excerpt": "## First next milestone\n\n**U01-A: durable side-effect and crash recovery gap closure.** U00-A's\n[reviewed closeout](u00-a-closeout.md) is complete. Preserve the",
       "review_families": [
@@ -121150,7 +122047,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:350-363",
+      "locator": "line:356-369",
       "sha256": "fad8ad3bc0f5c2f2834281f8aaa52d60a6cf39c7bbfccd4fae9aee0a7b60f130",
       "excerpt": "## Required follow-through from the monitoring chat\n\n| Work item | Existing U owner | Deliverable and gate |\n|---|---|---|\n| U03-Q | U03, U02, U16 | Qualify eve",
       "review_families": [
@@ -121166,7 +122063,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:364-388",
+      "locator": "line:370-394",
       "sha256": "964a68bc75a782ed821c3d4699dc79a85a3112888516cbf8487f770be9a63938",
       "excerpt": "## Required follow-through from the other recent development conversations\n\n| Work item | Existing U owner | Deliverable and gate in the recent-development reco",
       "review_families": [
@@ -121182,7 +122079,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:389-400",
+      "locator": "line:395-406",
       "sha256": "8fd9aa45ac7a56661637b71fa0a5607b1b2b45780bdea5c35f0434b61d7925a3",
       "excerpt": "## References\n\n- `docs/implementation/agent-runtime-modernization.md`\n- `docs/implementation/09-tool-plan-gap-audit.md`\n- `docs/implementation/plugin-discovery-",
       "review_families": [
@@ -121198,7 +122095,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:401-405",
+      "locator": "line:407-411",
       "sha256": "c6f1c77f80e48b91c4a197f815afa2760f516f5eff7fc07b87bbbe7ffc5b2197",
       "excerpt": "## Cross-agent ecosystem compatibility (C00\u2013C09)\n\nAdd the companion [cross-agent compatibility plan](cross-agent-compatibility.md) as a required cross-cutting w",
       "review_families": [
@@ -121214,7 +122111,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:406-414",
+      "locator": "line:412-420",
       "sha256": "a3a63964c24da210b3a841a4fa93e2529b30a3e255e67e78853aea0f4d0192ad",
       "excerpt": "## External skill ecosystem discovery and native execution (S00\u2013S10)\n\nThe cross-agent C00\u2013C09 programme is extended by [external skill ecosystem integration](po",
       "review_families": [
@@ -121230,7 +122127,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:415-419",
+      "locator": "line:421-425",
       "sha256": "28dfd2784d97841df10d40c27bf4c7f21bc278c11ace17b0339a9ee74ece1daa",
       "excerpt": "## Agent benchmarking and testing (B00\u2013B10)\n\nAdd [Potbot agent benchmarking and testing](potbot-agent-benchmarking-plan.md) as the qualification specification f",
       "review_families": [
@@ -126188,7 +127085,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "cc69ceb911ac16d21c62e061451016cd0c609045354754a7638c417a000b8da2",
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
           "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted."
         }
       ],
@@ -126244,7 +127141,7 @@
         {
           "path": "src/potbot/controller/jobs.py",
           "symbol": "JobService",
-          "sha256": "8fa6ed2620c560c0a30bb4c68182f2ba4138ff7b59dd6e069fc5c56af5360efb",
+          "sha256": "52ad4ce0cf863c984d33598ada6dbad45ec8331b48424681a84459099165b72d",
           "basis": "Principal-owned queue, generation fences, immutable linked authority and original receipt replay without repeating work U04-T current-source review: Existing jobs retain immutable optional selection/binding provenance and recheck selected authority at final dispatch; legacy job lifecycle and scheduler remain the owners. U04-T follow-on: Existing persisted jobs retain immutable selected provenance and dispatch fences.",
           "symbol_sha256": "073c0283d651aff27f72a0d2a17b239d188e4e27e242cc87f674968c5dbb1302"
         },
@@ -126265,7 +127162,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "cc69ceb911ac16d21c62e061451016cd0c609045354754a7638c417a000b8da2",
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
           "symbol_sha256": "a20eac36b625aafa233ed31cb2e9be23acf7d99c65cef07e687e0d9079ffb190",
           "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-M follow-on: Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-Q follow-on: Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-S follow-on: Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. U04-T follow-on: Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-A follow-on: Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted.",
           "historical_symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
@@ -126312,6 +127209,54 @@
           "sha256": "131c460bc00e92f6027f94b92c0e74d0ce68bb95e32338499d6e5f86235c94f3",
           "symbol_sha256": "a6b9927cfbce78654a887cddba210ab5108f041e8cc0b249281ea4a4b6730be0",
           "basis": "Retains exact checkpointed dispatch claims, context/interrupt gates and terminal dispatch observations under the writer lease."
+        },
+        {
+          "path": "src/potbot/controller/model_routing.py",
+          "symbol": "ModelRoutingService",
+          "sha256": "263acfd6f27375c867ade948fc63579666b6d415221688cf305607f6ededbf1b",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "src/potbot/controller/model_route_bindings.py",
+          "symbol": "persist_compilation",
+          "sha256": "f7db2e7075c9a4cbe593db4ff7afb4c2cfe0534e6881920986c45d8c31d397d1",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "src/potbot/controller/model_route_outcomes.py",
+          "symbol": "ModelRouteOutcomeService",
+          "sha256": "9f7429f6d046417817fa6d14e90c420cbc834d5e2cfeb88df10c143fbd17d9b6",
+          "basis": "Original terminal hosted queue/provider evidence, explicit output sharing, designated authenticated review, policy-local regression veto and unchanged indeterminate budget/no-replay owners. Synthetic HTTP; no native inference or protected holdout qualification."
+        },
+        {
+          "path": "src/potbot/controller/model_reasoning_results.py",
+          "symbol": "read",
+          "sha256": "a9fd3e165cee69dfb49d3ccb4d769e41c0876ee4b71595eecbe7015dac246518",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
+        },
+        {
+          "path": "src/potbot/controller/checked_reasoning.py",
+          "symbol": "launch",
+          "sha256": "2c25f8e286fc62d720947c7c40da79bb4e7fdf3292a8869b85a8d664ef64f3de",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "src/potbot/controller/routed_reasoning.py",
+          "symbol": "advance",
+          "sha256": "6ad3ee28bcd1c5c87c19f4799c0bf3b7a41c8bfa835811b6aba2f359b79a97d6",
+          "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
+        },
+        {
+          "path": "src/potbot/controller/model_route_bindings.py",
+          "symbol": "checked_output_spec",
+          "sha256": "f7db2e7075c9a4cbe593db4ff7afb4c2cfe0534e6881920986c45d8c31d397d1",
+          "basis": "Opt-in immutable role schema binding through the existing hosted queue with independent role validation. Exact backend wire checked offline and through the local Ollama adapter. Four completed local cases with three correct answers. Live OpenAI and managed native Syn remain separate gates."
+        },
+        {
+          "path": "src/potbot/api/ui_checked_reasoning.py",
+          "symbol": "register_checked_reasoning_routes",
+          "sha256": "d3af3d04163d8e88d0492195995c63856f40bb6c33874994b2fa8c0443d8f858",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
         }
       ],
       "tests": [
@@ -126547,9 +127492,93 @@
           "sha256": "afdf0dd80056abea97b313d7b0f4346d3348125f09d4b1d88754582280f4d3a4",
           "symbol_sha256": "8345018a407cbfaee8127fe5a1c44fdbffb8964cffde0252885274993076f49a",
           "basis": "Immutable source/component outcomes and writer tokens prevent history rewrites or unfenced consumption."
+        },
+        {
+          "path": "tests/integration/test_model_routing_postgres.py",
+          "symbol": "test_committing_revocation_wins_against_a_waiting_dispatch",
+          "sha256": "813fea61571a7e0670d2ac16e24f8ad2f2d970846ddec8fed7b3a0a9e6abae36",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "tests/integration/test_model_routing_postgres.py",
+          "symbol": "test_revoking_inflight_work_does_not_replay_or_release_held_reservations",
+          "sha256": "813fea61571a7e0670d2ac16e24f8ad2f2d970846ddec8fed7b3a0a9e6abae36",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_bindings.py",
+          "symbol": "test_sql_inserted_allocation_without_compilation_cannot_claim_a_check",
+          "sha256": "671e5a827dd7373cc1494e9e3d65313e47fc39f64123a2b2e6b3554b7b56fac7",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_bindings.py",
+          "symbol": "test_lost_reply_keeps_original_compiled_job_and_indeterminate_reservation",
+          "sha256": "671e5a827dd7373cc1494e9e3d65313e47fc39f64123a2b2e6b3554b7b56fac7",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_outcomes.py",
+          "symbol": "test_reply_loss_stays_indeterminate_unreviewable_as_success_and_never_replayed",
+          "sha256": "a233dd7a797f65fa19b4968651334744be3d5d702b728b4058aeda52d0f27dca",
+          "basis": "Original terminal hosted queue/provider evidence, explicit output sharing, designated authenticated review, policy-local regression veto and unchanged indeterminate budget/no-replay owners. Synthetic HTTP; no native inference or protected holdout qualification."
+        },
+        {
+          "path": "tests/integration/test_model_reasoning_results.py",
+          "symbol": "test_original_checked_reasoning_result_survives_route_block_without_replay",
+          "sha256": "ff3ffc0bae25c67da7d6a4e8155db622810fa273220290987a2ff75545c48fde",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
+        },
+        {
+          "path": "tests/integration/test_checked_reasoning.py",
+          "symbol": "test_reasoning_lost_reply_preserves_original_indeterminate_job",
+          "sha256": "d1443477ca73abd64e752022f78fb458f6d042692160acae73df718d10360cb8",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "tests/integration/test_routed_reasoning.py",
+          "symbol": "test_routed_sql_prevents_future_allocation_and_dispatch_after_interrupt",
+          "sha256": "2b9cfc588a183fb043c5248644e2fd387e82210297212c6f46aa898eed487c20",
+          "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
+        },
+        {
+          "path": "tests/integration/test_routed_reasoning.py",
+          "symbol": "test_routed_reasoning_cli_requires_scope_and_resumes_checked_worker",
+          "sha256": "2b9cfc588a183fb043c5248644e2fd387e82210297212c6f46aa898eed487c20",
+          "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
+        },
+        {
+          "path": "tests/integration/test_structured_reasoning.py",
+          "symbol": "test_structured_check_binds_exact_schema_and_preserves_role_validation",
+          "sha256": "02271e4b5aa267bd9b58fb359c689a6d816009172ea0c8d58b97b1619548c346",
+          "basis": "Opt-in immutable role schema binding through the existing hosted queue with independent role validation. Exact backend wire checked offline and through the local Ollama adapter. Four completed local cases with three correct answers. Live OpenAI and managed native Syn remain separate gates."
+        },
+        {
+          "path": "tests/integration/test_verified_synthesis.py",
+          "symbol": "test_verified_synthesis_uses_frozen_facts_and_preserves_settlement",
+          "sha256": "83b761be04229bb0070671268d1fa6a821349af861e9d60a1637409adbf4160b",
+          "basis": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open."
+        },
+        {
+          "path": "tests/integration/test_ui_checked_reasoning.py",
+          "symbol": "test_operator_finishes_and_reopens_three_checked_stages",
+          "sha256": "bf1c4e49485f28f18429b96356f741b41c5656fbc624571958f62b9bd37fa642",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
+        },
+        {
+          "path": "tests/integration/test_ui_checked_reasoning.py",
+          "symbol": "test_operator_interrupt_fences_through_same_owned_scope",
+          "sha256": "bf1c4e49485f28f18429b96356f741b41c5656fbc624571958f62b9bd37fa642",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
+        },
+        {
+          "path": "tests/integration/test_checked_reasoning_guidance.py",
+          "symbol": "test_postgres_refuses_late_guidance_even_for_the_owner",
+          "sha256": "357afac972033136d6acbfa3edd4dadbef1ff9cf18badf028ff00635eff77050",
+          "basis": "Append-only owner guidance is checked before successor allocation and part of the compiled stage facts. Real PostgreSQL rejected a raced stale compilation and a late owner insert. The operator can recover retained state without replay. Signed installed runtime and independently reviewed rollout remain separate."
         }
       ],
-      "assessment": "Existing action intents, durable receipts, recovery claims, at-least-once outbox and generation fences already cover the local supervised-tool path. This is not exactly-once execution across arbitrary remote producers. U04-E also retains purpose-signed checks, a unique run per check, immutable request bindings and same-key recovery on the existing queue; possible effects are never replayed automatically. U04-X follow-on: uses original committed command receipts and fenced phase/action claims on the existing approval owner. Recovery invalidates delayed build, promotion and postflight claims; uncertain effects are held, not automatically rescheduled. U04-D follow-on: retains original source/control/review/handoff command receipts and fences one explicit measurement attempt. Same-key recovery reads committed evidence before native setup; an incomplete attempt is not dispatched again and cancellation does not prove process stop. U04-M follow-on: retains exact admitted reconciliation requests, one fenced native claim, immutable complete snapshots, current terminal recovery and stopped invocation receipts. Original command recovery never silently dispatches a second native attempt. U04-Q follow-on: retains prepared case identities before dispatch and joins finished results to existing actions, reservations, artifacts and stopped receipts. Exact command recovery never repeats native tool calls. U04-S follow-on: retains exact reviewed commands, fenced native claims, immutable shortlists/selections and original receipts through existing signed persistence and idempotency owners. U04-T follow-on: uses additive migration 46 and the existing jobs queue for immutable selected provenance, one run per check, exact original receipts and bounded retained history. T05-A follow-on: extends the existing research queue with additive migration 47, immutable external authorization and request receipts, original command recovery and bounded history. T05-B/R7.1 follow-on: Uses the existing research queue and PostgreSQL reasoning run/inbox owners. Additive migration 48 stores temporal source/dispatch state without a second scheduler.",
+      "assessment": "Existing action intents, durable receipts, recovery claims, at-least-once outbox and generation fences already cover the local supervised-tool path. This is not exactly-once execution across arbitrary remote producers. U04-E also retains purpose-signed checks, a unique run per check, immutable request bindings and same-key recovery on the existing queue; possible effects are never replayed automatically. U04-X follow-on: uses original committed command receipts and fenced phase/action claims on the existing approval owner. Recovery invalidates delayed build, promotion and postflight claims; uncertain effects are held, not automatically rescheduled. U04-D follow-on: retains original source/control/review/handoff command receipts and fences one explicit measurement attempt. Same-key recovery reads committed evidence before native setup; an incomplete attempt is not dispatched again and cancellation does not prove process stop. U04-M follow-on: retains exact admitted reconciliation requests, one fenced native claim, immutable complete snapshots, current terminal recovery and stopped invocation receipts. Original command recovery never silently dispatches a second native attempt. U04-Q follow-on: retains prepared case identities before dispatch and joins finished results to existing actions, reservations, artifacts and stopped receipts. Exact command recovery never repeats native tool calls. U04-S follow-on: retains exact reviewed commands, fenced native claims, immutable shortlists/selections and original receipts through existing signed persistence and idempotency owners. U04-T follow-on: uses additive migration 46 and the existing jobs queue for immutable selected provenance, one run per check, exact original receipts and bounded retained history. T05-A follow-on: extends the existing research queue with additive migration 47, immutable external authorization and request receipts, original command recovery and bounded history. T05-B/R7.1 follow-on: Uses the existing research queue and PostgreSQL reasoning run/inbox owners. Additive migration 48 stores temporal source/dispatch state without a second scheduler. R7.4-C implements persistent baseline-only shadow admission and opt-in literal JSON prompt contracts; candidate execution and production routing qualification remain blocked. R7.4-D binds opt-in compiled shadow requests to their private input provenance and observed worker admission configuration; independently qualified model/server identity, canary and rollback remain unfinished. R7.4-E adds private terminal outcome snapshots, explicit reviewer disclosure and independently recorded regression fencing; model/server qualification, protected paired holdouts, canaries and qualified fallback remain unfinished. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection. R7.4-L fences stage guidance before the checked allocation.",
       "support_scope": "Actual tests define lost-ack receipt recovery, unknown mutation quarantine, expiry, duplicate delivery and restart for the existing owners. Operation jobs and events now enforce the submitting principal in both controller queries and PostgreSQL RLS. U04-X follow-on: Real PostgreSQL tests cover principal privacy, same-key recovery after progress, competing claims, active-tool serialization, setup-key rotation and native-outcome acknowledgment. This does not establish arbitrary distributed exactly-once execution. U04-D follow-on: Source/publisher refresh and revocation, report expiry, changed runtime/claim bindings and key rotation invalidate new actions without erasing retained evidence. Atomic existing-owner handoff does not establish distributed exactly-once arbitrary remote execution. U04-M follow-on: Concurrent claim, cancellation, disable/revoke, failed refresh, TTL, replacement and changed-profile cases preserve history while withdrawing new authority. A cancellation record does not claim process stop, and uncertain effects remain held for explicit recovery. U04-Q follow-on: Real claim races, explicit cancellation, prepared-only recovery, stopped receipt reconciliation and older-attempt recovery preserve lifetime and current-history boundaries; unknown outcomes remain indeterminate. U04-S follow-on: One fresh native claim wins a race. Exact retries recover original receipts without a second inference; cancellation and uncertain outcomes remain explicit. U04-T follow-on: There is no second scheduler or attempt owner. Recovery reuses original jobs and keys; cancellation remains negative authority when positive admission is unavailable. T05-A follow-on: There is no new scheduler. Local and external claim paths remain separated, and every later send rechecks the existing current scope and lease. T05-B/R7.1 follow-on: Exact source records and component decisions are retained; expired writers cannot consume components or authorize new dispatch, and uncertain effects are never automatically replayed.",
       "remaining": [
         "Cross-producer crash boundaries and durable approval/cancellation adoption remain incomplete",
@@ -126981,6 +128010,12 @@
           "sha256": "49978c57bcff23e669d58913d40dba6a94861bf5c42fce3d46611a560b04b919",
           "symbol_sha256": "149c890de662bda1a52229c85bb8f0a3042036eaeae6c3fe1a64c1b1731c6ea7",
           "basis": "Rechecks durable user interruption under the same run lock before committing budgeted possible dispatch."
+        },
+        {
+          "path": "src/potbot/controller/jobs.py",
+          "symbol": "_settle_cog",
+          "sha256": "52ad4ce0cf863c984d33598ada6dbad45ec8331b48424681a84459099165b72d",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
         }
       ],
       "tests": [
@@ -127102,9 +128137,57 @@
           "sha256": "afdf0dd80056abea97b313d7b0f4346d3348125f09d4b1d88754582280f4d3a4",
           "symbol_sha256": "d4dbdc9f3cd2d1593c691e87e95cb2ecc2ebba52eca0e0ab4cf81deaa6b95710",
           "basis": "Existing budget owners distinguish confirmed-unsent allowance release from an uncertain potentially charged model call."
+        },
+        {
+          "path": "tests/integration/test_reasoning_output_accounting.py",
+          "symbol": "test_invalid_role_output_keeps_known_charge_and_failed_run_without_retry",
+          "sha256": "e2e5d38abd21660ce8f1af8f387217034059e8fb5ab30a449000eb51f2915d30",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
+        },
+        {
+          "path": "tests/integration/test_native_model_accounting.py",
+          "symbol": "test_native_model_settles_actual_tokens_once",
+          "sha256": "c2153a10bfe33369e7c6c5a0358a3025f928b3357866d1c03790500f661eb5d8",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "tests/integration/test_native_model_accounting.py",
+          "symbol": "test_native_model_loss_keeps_hold_and_cannot_replay_after_restart",
+          "sha256": "c2153a10bfe33369e7c6c5a0358a3025f928b3357866d1c03790500f661eb5d8",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "tests/integration/test_native_model_accounting.py",
+          "symbol": "test_native_model_route_veto_at_dispatch_rolls_back_reservation",
+          "sha256": "c2153a10bfe33369e7c6c5a0358a3025f928b3357866d1c03790500f661eb5d8",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "tests/integration/test_routed_reasoning.py",
+          "symbol": "test_routed_interrupt_between_job_and_hosted_dispatch_releases_unsent_hold",
+          "sha256": "2b9cfc588a183fb043c5248644e2fd387e82210297212c6f46aa898eed487c20",
+          "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
+        },
+        {
+          "path": "tests/integration/test_structured_reasoning.py",
+          "symbol": "test_structured_check_binds_exact_schema_and_preserves_role_validation",
+          "sha256": "02271e4b5aa267bd9b58fb359c689a6d816009172ea0c8d58b97b1619548c346",
+          "basis": "Opt-in immutable role schema binding through the existing hosted queue with independent role validation. Exact backend wire checked offline and through the local Ollama adapter. Four completed local cases with three correct answers. Live OpenAI and managed native Syn remain separate gates."
+        },
+        {
+          "path": "tests/integration/test_verified_synthesis.py",
+          "symbol": "test_verified_synthesis_uses_frozen_facts_and_preserves_settlement",
+          "sha256": "83b761be04229bb0070671268d1fa6a821349af861e9d60a1637409adbf4160b",
+          "basis": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open."
+        },
+        {
+          "path": "tests/integration/test_ui_checked_reasoning.py",
+          "symbol": "test_operator_lost_provider_reply_preserves_original_job_and_hold",
+          "sha256": "bf1c4e49485f28f18429b96356f741b41c5656fbc624571958f62b9bd37fa642",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
         }
       ],
-      "assessment": "The worker audit joins namespaced forks to operator-side trace and TASKSTATS identities. A positive receipt also requires terminal task traces and recursive cgroup release. The Linux fixture checks cancellation fencing, cleanup of a timed-out worker alongside a live peer, and renewal of both leases while concurrent workers remain isolated. The context RPC fixture checks durable results against audited worker exits. Qualification of the deployed worker routes remains open. U04-Q follow-on: runs every prepared qualification case through the existing task budget reservation, candidate lease, execution and usage-settlement owners. U04-S follow-on: runs transient query/document embeddings through the existing combined task budget reservation, usage-origin and settlement owners under one bounded runtime deadline. U04-T follow-on: verifies selected results against the existing settled task usage and gateway/native invocation receipts before evaluating declared assertions. T05-A follow-on: reserves bounded requests, bytes, runtime and declared monetary ceilings before disclosure and settles confirmed usage through the existing budget ledger. T05-B/R7.1 follow-on: Accounts for specialist rate floors and PubMed metadata before disclosure and checks durable urgent state before budgeted model dispatch.",
+      "assessment": "The worker audit joins namespaced forks to operator-side trace and TASKSTATS identities. A positive receipt also requires terminal task traces and recursive cgroup release. The Linux fixture checks cancellation fencing, cleanup of a timed-out worker alongside a live peer, and renewal of both leases while concurrent workers remain isolated. The context RPC fixture checks durable results against audited worker exits. Qualification of the deployed worker routes remains open. U04-Q follow-on: runs every prepared qualification case through the existing task budget reservation, candidate lease, execution and usage-settlement owners. U04-S follow-on: runs transient query/document embeddings through the existing combined task budget reservation, usage-origin and settlement owners under one bounded runtime deadline. U04-T follow-on: verifies selected results against the existing settled task usage and gateway/native invocation receipts before evaluating declared assertions. T05-A follow-on: reserves bounded requests, bytes, runtime and declared monetary ceilings before disclosure and settles confirmed usage through the existing budget ledger. T05-B/R7.1 follow-on: Accounts for specialist rate floors and PubMed metadata before disclosure and checks durable urgent state before budgeted model dispatch. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection.",
       "support_scope": "Process-start identity, attribution and measured-versus-unavailable metric contracts; no blanket every-route production result. U04-Q follow-on: Budget exhaustion blocks dispatch; verified stopped runs settle existing reservations. Qualification creates no extra task budget or execution permission. U04-S follow-on: Budget denial prevents preparation; confirmed work is charged, and uncertain supervised outcomes hold the original reservation. Discovery creates no additional budget or model permission. U04-T follow-on: Execution success, partial output, unsettled usage and mutable coordination fields cannot manufacture an assertion pass or a new budget grant. T05-A follow-on: Synthetic usage is explicit. Declared tariffs are conservative estimates, not provider invoices; ambiguous sent requests retain an indeterminate hold and are never silently retried. T05-B/R7.1 follow-on: A prepared but unsent reasoning reservation can be released only on confirmed nondispatch; possible or uncertain calls keep existing conservative settlement rules. Declared research tariffs remain ceilings rather than invoices.",
       "remaining": [
         "Complete real loss-aware syscall/task-exit accounting for every executable Cog route",
@@ -128166,25 +129249,25 @@
         {
           "path": "src/potbot/controller/operation_workbench.py",
           "symbol": "OperationWorkbench",
-          "sha256": "31d297ca3b076f9e155d30b60de50facd04aae16619a18000ce33876eb831d18",
+          "sha256": "b6c21a6bc650c7c264776345d9158ceda4e4c940b02809f57c1b82ee778620ce",
           "basis": "Exact catalogue-to-handler mapping, owned check/run/result lifecycle and one-check/one-run controller U04-T current-source review: Existing checks and one-run-per-check launches carry immutable selected-task provenance, retain original same-key receipts, and preserve current operator/native/provider admission."
         },
         {
           "path": "src/potbot/domain/operation_workbench.py",
           "symbol": "verify_launch_authorization",
-          "sha256": "70b7017880f06ef12f4e195f7dc45efae09153ffd758e6bb21a22cbc6463945a",
+          "sha256": "e67269e7eabf3d43342ac6fda7896d82fc9e7beaa7353874d81030177aef8491",
           "basis": "Separate purpose MACs bind workspace/principal/operation/full request/check and current native operator capability U04-T current-source review: Signed check and launch authorization optionally binds the complete selected execution digest; historical verification ignores expiry alone and retains exact scope, request and MAC checks."
         },
         {
           "path": "src/potbot/controller/operation_checks.py",
           "symbol": "OperationChecks",
-          "sha256": "c5e8841e72138f925a891225a4250b9645c2127a5d272a37944f71478ac00849",
+          "sha256": "b5e4dc0edb154754071c6f7556bf28be2053579ac688bafc69143ea1b615edf7",
           "basis": "Configured-worker native/hosted observations without dispatch effects; current binding revalidation before execution U04-T current-source review: Selected worker checks bind the exact discovery selection and execution digest, enforce canonical native ports and revalidate current selected authority before existing readiness checks."
         },
         {
           "path": "src/potbot/controller/native_cog_dispatch.py",
           "symbol": "eligibility",
-          "sha256": "1a5c541be8e6728d80866f9852b6254273f7ee64688d53797917e620d5b19296",
+          "sha256": "f466efc994026fcc3649e60342f765a0595ae875c1f88ad90c304f36d31ca291",
           "basis": "Exact native installation, task, grant, runtime, Context protocol/operator route and S12 observations through existing authorities U04-T current-source review: Native preparation preserves the signed canonical input alias while using the installed profile port spelling at the existing typed execution boundary."
         },
         {
@@ -128329,13 +129412,13 @@
         {
           "path": "tests/integration/test_operation_checks.py",
           "symbol": "test_native_workbench_catalogue_to_worker_lifecycle_and_verified_artifact",
-          "sha256": "548523ba08b60c717508d0ef06880898c9c6e8155b3f894ef0aa54b5caad122f",
+          "sha256": "343055cd55b8247509a526c3f22ea9770c777e32757d2ece74ab09ca45964670",
           "basis": "Real PostgreSQL central-to-worker native lifecycle with explicit process/Syn transport fixtures and verified artifact readback"
         },
         {
           "path": "tests/integration/test_operation_checks.py",
           "symbol": "test_hosted_check_has_zero_effects_then_linked_launch_uses_existing_worker",
-          "sha256": "548523ba08b60c717508d0ef06880898c9c6e8155b3f894ef0aa54b5caad122f",
+          "sha256": "343055cd55b8247509a526c3f22ea9770c777e32757d2ece74ab09ca45964670",
           "basis": "Real queue/task/budget checks show no eligibility effects, then one existing hosted handler call using explicit mocked HTTP"
         },
         {
@@ -128842,7 +129925,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "cc69ceb911ac16d21c62e061451016cd0c609045354754a7638c417a000b8da2",
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
           "symbol_sha256": "a20eac36b625aafa233ed31cb2e9be23acf7d99c65cef07e687e0d9079ffb190",
           "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted.",
           "historical_symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
@@ -128996,7 +130079,7 @@
         {
           "path": "src/potbot/context/runtime_integration.py",
           "symbol": "execute_context_operation",
-          "sha256": "6c6a02cdda2caf9fa398a5e8fa0289a7416bfa5f34f5f0c18a9d6767de363ea8",
+          "sha256": "70c79be4ee7246ea5211720a8b665feef707f74c19ce716974569dd2231c979c",
           "basis": "Reviewed shared Cog log source. Live acceptance requires a separate execution record. U04-A current-source review: Context launches propagate the lazy native setup-key resolver into the existing authenticated session owner; launch authority is unchanged."
         }
       ],
@@ -129116,8 +130199,86 @@
         {
           "path": "src/potbot/controller/operation_checks.py",
           "symbol": "_hosted",
-          "sha256": "c5e8841e72138f925a891225a4250b9645c2127a5d272a37944f71478ac00849",
+          "sha256": "b5e4dc0edb154754071c6f7556bf28be2053579ac688bafc69143ea1b615edf7",
           "basis": "Selected configured provider policy/credential/prompt/budget checks without inference calls U04-T current-source review: Selected worker checks bind the exact discovery selection and execution digest, enforce canonical native ports and revalidate current selected authority before existing readiness checks."
+        },
+        {
+          "path": "src/potbot/models/providers/contracts.py",
+          "symbol": "ProviderRequest",
+          "sha256": "26e3f2aedf358bcc5ee04ba8f2f4d09fb9766d35c382dbc510ef7fc5f35ce98a",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/models/providers/protocols.py",
+          "symbol": "request_body",
+          "sha256": "a73b94ea7525d4b2fe922d5e1feadf5924dc88ca00ceb1729ffc414ae1a31f52",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/domain/model_routing.py",
+          "symbol": "bind_route_request",
+          "sha256": "789e195a7bb2e5ebd389d483b642bf2307b0a906d51403b3dba80a6287aeb229",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "src/potbot/controller/model_routing.py",
+          "symbol": "ModelRoutingService",
+          "sha256": "263acfd6f27375c867ade948fc63579666b6d415221688cf305607f6ededbf1b",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "src/potbot/controller/model_route_bindings.py",
+          "symbol": "checked_route_binding",
+          "sha256": "f7db2e7075c9a4cbe593db4ff7afb4c2cfe0534e6881920986c45d8c31d397d1",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "src/potbot/controller/model_route_bindings.py",
+          "symbol": "worker_admission_identity",
+          "sha256": "f7db2e7075c9a4cbe593db4ff7afb4c2cfe0534e6881920986c45d8c31d397d1",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "src/potbot/controller/model_route_outcomes.py",
+          "symbol": "review",
+          "sha256": "9f7429f6d046417817fa6d14e90c420cbc834d5e2cfeb88df10c143fbd17d9b6",
+          "basis": "Original terminal hosted queue/provider evidence, explicit output sharing, designated authenticated review, policy-local regression veto and unchanged indeterminate budget/no-replay owners. Synthetic HTTP; no native inference or protected holdout qualification."
+        },
+        {
+          "path": "src/potbot/models/native_results.py",
+          "symbol": "parse_native_result",
+          "sha256": "363235ee97b93fd0126769c3d0a6b1a51bcfd8e9b56617eece75be89eed4b6cd",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
+        },
+        {
+          "path": "src/potbot/tools/native_model_worker.py",
+          "symbol": "run_inference",
+          "sha256": "0baacf10da4921fbca8243c66ac7462351a655d3d87a6ac8f457cf3fae9409ae",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "src/potbot/controller/native_cog_dispatch.py",
+          "symbol": "installed_model_deployment",
+          "sha256": "f466efc994026fcc3649e60342f765a0595ae875c1f88ad90c304f36d31ca291",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "src/potbot/models/reasoning_schema.py",
+          "symbol": "ReasoningOutputSpec",
+          "sha256": "ae4b2a959ef6c1a2f2b4655793ca15f1b4adc90a8c9bcee8e08747912c09f886",
+          "basis": "Opt-in immutable role schema binding through the existing hosted queue with independent role validation. Exact backend wire checked offline and through the local Ollama adapter. Four completed local cases with three correct answers. Live OpenAI and managed native Syn remain separate gates."
+        },
+        {
+          "path": "src/potbot/models/reasoning_fact_check.py",
+          "symbol": "verify_fact_answer",
+          "sha256": "04664e9c5dee722e801fedf27d6684f5339c6cc5e5c0c19f8860e9c7969574a0",
+          "basis": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open."
+        },
+        {
+          "path": "src/potbot/controller/model_route_canaries.py",
+          "symbol": "ModelRouteCanaries",
+          "sha256": "559403ece8388d2e9dce138b69822ddf18b2d8d7fd21569c1ac34ba0ec7e53a5",
+          "basis": "The independently reviewed route pair uses ordinary compiled checks, dispatch, budget and outcomes. The durable candidate cap and rollback are exercised in disposable PostgreSQL with a provider fixture. This evidence does not qualify candidate model quality or authorize promotion."
         }
       ],
       "tests": [
@@ -129136,11 +130297,89 @@
         {
           "path": "tests/integration/test_operation_checks.py",
           "symbol": "test_hosted_linked_launch_revalidates_before_any_provider_or_reservation",
-          "sha256": "548523ba08b60c717508d0ef06880898c9c6e8155b3f894ef0aa54b5caad122f",
+          "sha256": "343055cd55b8247509a526c3f22ea9770c777e32757d2ece74ab09ca45964670",
           "basis": "Changed hosted policy/credential/task/budget/setup/expiry blocks before mocked provider or reservation"
+        },
+        {
+          "path": "tests/unit/test_agentic_openai_profile.py",
+          "symbol": "test_legacy_provider_request_identity_omits_new_optional_control",
+          "sha256": "a310f479a6f05d3b896b540cba961d65f01f96c3d9de9c3ece5e55094a63a0f5",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_model_routing_contract.py",
+          "symbol": "test_native_projection_pins_profile_and_deployment_without_losing_live_input",
+          "sha256": "d307d435e542cb6bbd9883f316e1fa35d5a85789918747aa32b5b564bb2065e0",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "tests/unit/test_model_routing_authorization.py",
+          "symbol": "test_routed_check_and_launch_bind_the_same_decision_and_legacy_omission",
+          "sha256": "f8dfbcbd1a37a9cd11574663d47d338d6f96b9a1a6d5ded73c8294e17ceaee1b",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "tests/integration/test_model_routing_postgres.py",
+          "symbol": "test_independent_acceptance_is_required_and_cannot_be_forged",
+          "sha256": "813fea61571a7e0670d2ac16e24f8ad2f2d970846ddec8fed7b3a0a9e6abae36",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_bindings.py",
+          "symbol": "test_changed_worker_policy_is_refused_before_provider_effect",
+          "sha256": "671e5a827dd7373cc1494e9e3d65313e47fc39f64123a2b2e6b3554b7b56fac7",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "tests/unit/test_model_route_bindings.py",
+          "symbol": "test_native_profile_image_installation_and_syn_provenance_are_required",
+          "sha256": "67a783a0ebe7e337b68ff399e1541f36aec20257813526fa8f4469296bedb991",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_outcomes.py",
+          "symbol": "test_regression_fences_queued_dispatch_even_after_new_baseline_acceptance",
+          "sha256": "a233dd7a797f65fa19b4968651334744be3d5d702b728b4058aeda52d0f27dca",
+          "basis": "Original terminal hosted queue/provider evidence, explicit output sharing, designated authenticated review, policy-local regression veto and unchanged indeterminate budget/no-replay owners. Synthetic HTTP; no native inference or protected holdout qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_outcomes.py",
+          "symbol": "test_final_database_dispatch_fence_rejects_a_regression_after_worker_check",
+          "sha256": "a233dd7a797f65fa19b4968651334744be3d5d702b728b4058aeda52d0f27dca",
+          "basis": "Original terminal hosted queue/provider evidence, explicit output sharing, designated authenticated review, policy-local regression veto and unchanged indeterminate budget/no-replay owners. Synthetic HTTP; no native inference or protected holdout qualification."
+        },
+        {
+          "path": "tests/integration/test_model_reasoning_results.py",
+          "symbol": "test_native_typed_artifact_is_bound_to_original_checked_job_and_recovers_without_dispatch",
+          "sha256": "ff3ffc0bae25c67da7d6a4e8155db622810fa273220290987a2ff75545c48fde",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
+        },
+        {
+          "path": "tests/integration/test_model_reasoning_results.py",
+          "symbol": "test_completed_native_process_cannot_supply_another_or_incomplete_model_result",
+          "sha256": "ff3ffc0bae25c67da7d6a4e8155db622810fa273220290987a2ff75545c48fde",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
+        },
+        {
+          "path": "tests/unit/test_native_model_worker.py",
+          "symbol": "test_only_exact_worker_result_reaches_artifact",
+          "sha256": "2ddb963632af88b4ca0ac4fb35439c19511f5501cb489c689b07cb1271f6497a",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "tests/unit/test_reasoning_schema.py",
+          "symbol": "test_critique_schema_binds_ids_count_and_score_enum",
+          "sha256": "c3d9307b90cf957a2f9aa0cab713038ee3347f630130d8dde8ef2e1abb7353fc",
+          "basis": "Opt-in immutable role schema binding through the existing hosted queue with independent role validation. Exact backend wire checked offline and through the local Ollama adapter. Four completed local cases with three correct answers. Live OpenAI and managed native Syn remain separate gates."
+        },
+        {
+          "path": "tests/integration/test_model_route_canaries.py",
+          "symbol": "test_rollback_fences_queued_candidate_and_keeps_lost_reply_indeterminate",
+          "sha256": "048321f3ddd8d49f839a03eaf834f2c5b0da63ff4951d07cfc1b6e18f83d11e8",
+          "basis": "The independently reviewed route pair uses ordinary compiled checks, dispatch, budget and outcomes. The durable candidate cap and rollback are exercised in disposable PostgreSQL with a provider fixture. This evidence does not qualify candidate model quality or authorize promotion."
         }
       ],
-      "assessment": "Model catalogs, typed generation/invocation, provider adapters and budget boundaries exist. Listed/default/tiny/hosted models remain distinct from measured host-qualified deployments; no paid or weight-loading calls occur in this audit. U04-E checks selected hosted policy/disclosure/credential/budget admission in the configured worker and revalidates before launching through the existing hosted gateway.",
+      "assessment": "Model catalogs, typed generation/invocation, provider adapters and budget boundaries exist. Listed/default/tiny/hosted models remain distinct from measured host-qualified deployments; no paid or weight-loading calls occur in this audit. U04-E checks selected hosted policy/disclosure/credential/budget admission in the configured worker and revalidates before launching through the existing hosted gateway. Optional native OpenAI reasoning effort is fingerprinted and protocol-bounded; omitting it preserves legacy request identities and grants no new operation authority. R7.4-C implements persistent baseline-only shadow admission and opt-in literal JSON prompt contracts; candidate execution and production routing qualification remain blocked. R7.4-D binds opt-in compiled shadow requests to their private input provenance and observed worker admission configuration; independently qualified model/server identity, canary and rollback remain unfinished. R7.4-E adds private terminal outcome snapshots, explicit reviewer disclosure and independently recorded regression fencing; model/server qualification, protected paired holdouts, canaries and qualified fallback remain unfinished. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts.",
       "support_scope": "Provider and model protocol definitions and deterministic fixture evidence, not all five default model quality/capacity qualification. Eligibility does not call a provider or establish actual model quality/capacity.",
       "remaining": [
         "Qualify actual tokenizer/template/model revision, low-VRAM capacity and cost/latency",
@@ -129211,15 +130450,27 @@
         {
           "path": "src/potbot/models/prompt_compiler.py",
           "symbol": "PromptProfile",
-          "sha256": "ae988652e046b94e669988171217704ce0d3a21d450c2c9cfb7dc87429d48b70",
+          "sha256": "96cf5b741711c6fa8b0852ba36cbe6863f0d6da9b7783db6b022301d9a2e2add",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
         },
         {
           "path": "src/potbot/controller/reasoning_investigation.py",
           "symbol": "ReasoningInvestigator",
-          "sha256": "5d62d41f49db3fe92d4f3ff5830d3fcec4e84c4d45f921a27643a6679bf30346",
+          "sha256": "acd59e23472e1790b714932fe456cc97ca0608c1ed7f1fa5b735a8aa3cedc9fb",
           "symbol_sha256": "7507722cf48e565a44e174acd2af88483db0386ab2e28ef7eca5daa2c4165d9f",
           "basis": "Rebuilds undispatched stale-context prompts, preserves source generation revisions and fences model/evidence effects without automatic replay."
+        },
+        {
+          "path": "src/potbot/models/prompt_compiler.py",
+          "symbol": "compile_reasoning_prompt",
+          "sha256": "96cf5b741711c6fa8b0852ba36cbe6863f0d6da9b7783db6b022301d9a2e2add",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "src/potbot/controller/model_route_bindings.py",
+          "symbol": "compile_route_request",
+          "sha256": "f7db2e7075c9a4cbe593db4ff7afb4c2cfe0534e6881920986c45d8c31d397d1",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
         }
       ],
       "tests": [
@@ -129255,9 +130506,33 @@
           "sha256": "afdf0dd80056abea97b313d7b0f4346d3348125f09d4b1d88754582280f4d3a4",
           "symbol_sha256": "95304c884d5c6365a0909860e118a639019fa595eaf810f377a4f0591b68e7cf",
           "basis": "Old generated questions cannot acquire a fresh revision merely because their evidence node is created after new material context."
+        },
+        {
+          "path": "tests/unit/test_prompt_contracts.py",
+          "symbol": "test_opt_in_changes_identity_without_changing_task_packet_or_native_controls",
+          "sha256": "c2ff028a80a59997bdef56b762c6a2ccf95ca224f9874e607a6cbd85237268c1",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "tests/unit/test_model_route_bindings.py",
+          "symbol": "test_compiler_preserves_untrusted_packet_as_data_and_binds_exact_bytes",
+          "sha256": "67a783a0ebe7e337b68ff399e1541f36aec20257813526fa8f4469296bedb991",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_bindings.py",
+          "symbol": "test_compiler_facts_and_recipe_receipts_are_append_only",
+          "sha256": "671e5a827dd7373cc1494e9e3d65313e47fc39f64123a2b2e6b3554b7b56fac7",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "tests/integration/test_model_reasoning_results.py",
+          "symbol": "test_completion_and_valid_json_do_not_replace_the_reasoning_role_contract",
+          "sha256": "ff3ffc0bae25c67da7d6a4e8155db622810fa273220290987a2ff75545c48fde",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
         }
       ],
-      "assessment": "Recipient rendering/token budgeting, typed envelopes and model-aware prompt compilation exist. A universal deterministic PromptCompiler/ContextEngine with full semantic final eligibility remains incomplete. T05-B/R7.1 follow-on: Carries source-linked user context into subsequent model packets and checks context epochs before admitting an external effect.",
+      "assessment": "Recipient rendering/token budgeting, typed envelopes and model-aware prompt compilation exist. A universal deterministic PromptCompiler/ContextEngine with full semantic final eligibility remains incomplete. T05-B/R7.1 follow-on: Carries source-linked user context into subsequent model packets and checks context epochs before admitting an external effect. R7.4-C implements persistent baseline-only shadow admission and opt-in literal JSON prompt contracts; candidate execution and production routing qualification remain blocked. R7.4-D binds opt-in compiled shadow requests to their private input provenance and observed worker admission configuration; independently qualified model/server identity, canary and rollback remain unfinished. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open.",
       "support_scope": "Current exact packet/template and bounded proposal contracts; source syntax is not authority. T05-B/R7.1 follow-on: Changed facts retain source/principal/hash/revision and remain distinct from independently verified tool evidence. Stale generated evidence questions require reassessment; prompt recompilation cannot replay a sent call.",
       "remaining": [
         "Qualify deterministic manifests, compaction, semantic meaning and every model/context producer",
@@ -129307,6 +130582,54 @@
           "sha256": "66940ca2395bc523f3c6fe7c89bcfe1db2f89e16b474704d55934ba775aa6a5f",
           "symbol_sha256": "c7ee67639e89d05a3fc3a1a3ebdb95b24aaca607a3b36487a3c19f57c2614aec",
           "basis": "Retains context provenance and conflicts separately from hypotheses, records nondispatch and marks interrupted pending/running nodes conservatively."
+        },
+        {
+          "path": "src/potbot/controller/reasoning_result_contracts.py",
+          "symbol": "validate_reasoning_output",
+          "sha256": "290f72a54ff7362f32d826bc3b221c68af814e6784f692541e4590087ab08af5",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
+        },
+        {
+          "path": "src/potbot/controller/checked_reasoning.py",
+          "symbol": "begin",
+          "sha256": "2c25f8e286fc62d720947c7c40da79bb4e7fdf3292a8869b85a8d664ef64f3de",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "src/potbot/controller/model_reasoning_results.py",
+          "symbol": "native_reasoning_deployment",
+          "sha256": "a9fd3e165cee69dfb49d3ccb4d769e41c0876ee4b71595eecbe7015dac246518",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "src/potbot/controller/model_route_outcomes.py",
+          "symbol": "capture",
+          "sha256": "9f7429f6d046417817fa6d14e90c420cbc834d5e2cfeb88df10c143fbd17d9b6",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "src/potbot/controller/routed_reasoning.py",
+          "symbol": "_check_facts",
+          "sha256": "6ad3ee28bcd1c5c87c19f4799c0bf3b7a41c8bfa835811b6aba2f359b79a97d6",
+          "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
+        },
+        {
+          "path": "src/potbot/controller/routed_reasoning_evidence.py",
+          "symbol": "freeze_citations",
+          "sha256": "89a412fc6c1e2c9a58f4c4706c72dd7aebc970256e6837f2e2985d89fdee2260",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
+        },
+        {
+          "path": "src/potbot/controller/routed_reasoning.py",
+          "symbol": "guide",
+          "sha256": "6ad3ee28bcd1c5c87c19f4799c0bf3b7a41c8bfa835811b6aba2f359b79a97d6",
+          "basis": "Append-only owner guidance is checked before successor allocation and part of the compiled stage facts. Real PostgreSQL rejected a raced stale compilation and a late owner insert. The operator can recover retained state without replay. Signed installed runtime and independently reviewed rollout remain separate."
+        },
+        {
+          "path": "src/potbot/controller/model_route_canaries.py",
+          "symbol": "ModelRouteCanaries",
+          "sha256": "559403ece8388d2e9dce138b69822ddf18b2d8d7fd21569c1ac34ba0ec7e53a5",
+          "basis": "The independently reviewed route pair uses ordinary compiled checks, dispatch, budget and outcomes. The durable candidate cap and rollback are exercised in disposable PostgreSQL with a provider fixture. This evidence does not qualify candidate model quality or authorize promotion."
         }
       ],
       "tests": [
@@ -129363,9 +130686,75 @@
           "sha256": "afdf0dd80056abea97b313d7b0f4346d3348125f09d4b1d88754582280f4d3a4",
           "symbol_sha256": "535295da59f4059f40e359542d61fa091e082401b33e21a3ddead5769177d392",
           "basis": "Bounded source capacity cannot suppress an emergency stop; blocked extra context is explicit."
+        },
+        {
+          "path": "tests/unit/test_model_reasoning_results.py",
+          "symbol": "test_critique_is_bound_to_every_frozen_branch_and_remains_advisory",
+          "sha256": "44ab48c74e68993aaac6eeabf53239b67756a9744366c616f3bd8607ac1b5bb8",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
+        },
+        {
+          "path": "tests/unit/test_model_reasoning_results.py",
+          "symbol": "test_steering_cannot_invent_reopened_branches_or_hide_work_in_no_change",
+          "sha256": "44ab48c74e68993aaac6eeabf53239b67756a9744366c616f3bd8607ac1b5bb8",
+          "basis": "Owner-only original checked job result, compiled input provenance, bounded native artifact/deployment report, shared role validation and retained known usage after malformed output. Explicit native/provider fixtures; no engine loading, native token settlement or live model qualification."
+        },
+        {
+          "path": "tests/integration/test_model_reasoning_results.py",
+          "symbol": "test_native_outcome_can_be_shared_and_reviewed_without_replaying",
+          "sha256": "ff3ffc0bae25c67da7d6a4e8155db622810fa273220290987a2ff75545c48fde",
+          "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
+        },
+        {
+          "path": "tests/integration/test_routed_reasoning.py",
+          "symbol": "test_routed_reasoning_resumes_three_stages_and_charges_each_once",
+          "sha256": "2b9cfc588a183fb043c5248644e2fd387e82210297212c6f46aa898eed487c20",
+          "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
+        },
+        {
+          "path": "tests/integration/test_routed_reasoning.py",
+          "symbol": "test_unconfirmed_or_invalid_routed_reply_blocks_successors",
+          "sha256": "2b9cfc588a183fb043c5248644e2fd387e82210297212c6f46aa898eed487c20",
+          "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
+        },
+        {
+          "path": "tests/unit/test_reasoning_schema.py",
+          "symbol": "test_structured_variant_requires_json_role_and_supported_checked_executor",
+          "sha256": "c3d9307b90cf957a2f9aa0cab713038ee3347f630130d8dde8ef2e1abb7353fc",
+          "basis": "Opt-in immutable role schema binding through the existing hosted queue with independent role validation. Exact backend wire checked offline and through the local Ollama adapter. Four completed local cases with three correct answers. Live OpenAI and managed native Syn remain separate gates."
+        },
+        {
+          "path": "tests/unit/test_reasoning_schema.py",
+          "symbol": "test_older_prompt_identities_remain_byte_compatible",
+          "sha256": "c3d9307b90cf957a2f9aa0cab713038ee3347f630130d8dde8ef2e1abb7353fc",
+          "basis": "Opt-in immutable role schema binding through the existing hosted queue with independent role validation. Exact backend wire checked offline and through the local Ollama adapter. Four completed local cases with three correct answers. Live OpenAI and managed native Syn remain separate gates."
+        },
+        {
+          "path": "tests/integration/test_verified_synthesis.py",
+          "symbol": "test_verified_synthesis_uses_frozen_facts_and_preserves_settlement",
+          "sha256": "83b761be04229bb0070671268d1fa6a821349af861e9d60a1637409adbf4160b",
+          "basis": "Independent frozen numeric and count verification of retained replies, including a database completion guard and durable settlement. Two local Qwen workflows passed through a test adapter. Signed native Syn qualification and protected rollout remain open."
+        },
+        {
+          "path": "tests/integration/test_routed_reasoning_evidence.py",
+          "symbol": "test_citation_pin_survives_concurrent_start_and_source_unavailability",
+          "sha256": "1d5a0a43936323226303f334c61a97c98e2032ac40ed565cfb2fbcef8357ae1c",
+          "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
+        },
+        {
+          "path": "tests/integration/test_checked_reasoning_guidance.py",
+          "symbol": "test_guidance_racing_advance_is_checked_on_the_next_attempt",
+          "sha256": "357afac972033136d6acbfa3edd4dadbef1ff9cf18badf028ff00635eff77050",
+          "basis": "Append-only owner guidance is checked before successor allocation and part of the compiled stage facts. Real PostgreSQL rejected a raced stale compilation and a late owner insert. The operator can recover retained state without replay. Signed installed runtime and independently reviewed rollout remain separate."
+        },
+        {
+          "path": "tests/integration/test_model_route_canaries.py",
+          "symbol": "test_rollback_fences_queued_candidate_and_keeps_lost_reply_indeterminate",
+          "sha256": "048321f3ddd8d49f839a03eaf834f2c5b0da63ff4951d07cfc1b6e18f83d11e8",
+          "basis": "The independently reviewed route pair uses ordinary compiled checks, dispatch, budget and outcomes. The durable candidate cap and rollback are exercised in disposable PostgreSQL with a provider fixture. This evidence does not qualify candidate model quality or authorize promotion."
         }
       ],
-      "assessment": "Bounded R6 reasoning, PostgreSQL checkpoints/steering and R6.1 task accounting exist. Shared ensemble selection, independent candidates, full temporal scheduling and safe cross-branch composition remain partial. T05-B/R7.1 follow-on: Connects urgent/deferred/background components to the existing single reasoning owner with immutable source ranges, explicit predecessors, context epochs and dispatch fencing.",
+      "assessment": "Bounded R6 reasoning, PostgreSQL checkpoints/steering and R6.1 task accounting exist. Shared ensemble selection, independent candidates, full temporal scheduling and safe cross-branch composition remain partial. T05-B/R7.1 follow-on: Connects urgent/deferred/background components to the existing single reasoning owner with immutable source ranges, explicit predecessors, context epochs and dispatch fencing. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection. R7.4-L fences stage guidance before the checked allocation.",
       "support_scope": "Current graph/store/lease contracts and real database restart/stale-writer tests, not a new scheduler or proof of live model superiority. T05-B/R7.1 follow-on: An accepted urgent directive fences subsequent work; in-flight outcomes and task budget holds retain their actual receipts. Current-goal changes wait for a confirmed predecessor, next-goal work remains pending for a future admitted scheduler, and background facts never become independently verified evidence.",
       "remaining": [
         "R7.1 supplies bounded urgent/deferred/background integration; R7.2 atomic leaves, admitted next-goal execution and parallel scheduling remain to be connected to the existing owners.",
@@ -129698,7 +131087,7 @@
         {
           "path": "src/potbot/controller/operation_checks.py",
           "symbol": "OperationChecks",
-          "sha256": "c5e8841e72138f925a891225a4250b9645c2127a5d272a37944f71478ac00849",
+          "sha256": "b5e4dc0edb154754071c6f7556bf28be2053579ac688bafc69143ea1b615edf7",
           "symbol_sha256": "248fe1877eb0a23d8045bd2be6c0dd7072b1f82208e6f5dbb5252452a9d22620",
           "basis": "Existing worker checks enforce exact selected canonical metadata and installed port compatibility. U04-T follow-on: Existing worker checks enforce exact selected canonical metadata and installed port compatibility."
         }
@@ -129804,7 +131193,7 @@
         {
           "path": "src/potbot/context/runtime_integration.py",
           "symbol": "LaunchContext",
-          "sha256": "6c6a02cdda2caf9fa398a5e8fa0289a7416bfa5f34f5f0c18a9d6767de363ea8",
+          "sha256": "70c79be4ee7246ea5211720a8b665feef707f74c19ce716974569dd2231c979c",
           "basis": "inspected integration owner; not whole-requirement implementation proof U04-A current-source review: Context launches propagate the lazy native setup-key resolver into the existing authenticated session owner; launch authority is unchanged."
         },
         {
@@ -129965,7 +131354,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "cc69ceb911ac16d21c62e061451016cd0c609045354754a7638c417a000b8da2",
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
           "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted."
         },
         {
@@ -130538,7 +131927,7 @@
         {
           "path": "src/potbot/evaluation/agentic_model_bench.py",
           "symbol": "ModelTarget",
-          "sha256": "a5a159b67e100a32bb22cb397a01c425a1ed3491e8d4ff602682191f99534e0d",
+          "sha256": "1b9d5238f1da5e9fa34c36c226e16bc3110d23314d278c6fddb605dc3c9bae4f",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
         },
         {
@@ -130636,13 +132025,13 @@
         {
           "path": "src/potbot/evaluation/agentic_deployments.py",
           "symbol": "inspect_benchmark_deployments",
-          "sha256": "db51255503e5e469628fa9b21b8956a7f7ea4f15fbc67dcc04655b4c048eabc0",
+          "sha256": "1ea799f5b0b05826cc0cd48ba5cd113ba7687d3b8edc48e5b2c8d6bf95a4aef4",
           "basis": "R7.3-D offline file/deployment binding and synthetic no-replay mismatch accounting. Caller-local file checks and returned labels do not authenticate the serving process or qualify model routing."
         },
         {
           "path": "src/potbot/evaluation/agentic_model_bench.py",
           "symbol": "returned_model_identity",
-          "sha256": "a5a159b67e100a32bb22cb397a01c425a1ed3491e8d4ff602682191f99534e0d",
+          "sha256": "1b9d5238f1da5e9fa34c36c226e16bc3110d23314d278c6fddb605dc3c9bae4f",
           "basis": "R7.3-D offline file/deployment binding and synthetic no-replay mismatch accounting. Caller-local file checks and returned labels do not authenticate the serving process or qualify model routing."
         },
         {
@@ -130656,6 +132045,84 @@
           "symbol": "audit_candidate_review",
           "sha256": "f5eee5fac60f9054b9338b6d0a13a81f361ab485c961bc4dbe25cfaa89536c81",
           "basis": "R7.3-E synthetic private-candidate/blind-review protocol, exact reconstruction, oracle controls, typed conflicts and pre-transport admission. No actual private dataset, reviewer authentication or live deployment is qualified."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_experiments.py",
+          "symbol": "freeze_atomic_experiment",
+          "sha256": "8afd0f953101dfaf8762def70fa8d36b8e0d0b17c0a9f7449713282213f4f17d",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_experiments.py",
+          "symbol": "audit_atomic_experiment",
+          "sha256": "8afd0f953101dfaf8762def70fa8d36b8e0d0b17c0a9f7449713282213f4f17d",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "scripts/benchmark_agentic_models.py",
+          "symbol": "_experiment_admission",
+          "sha256": "de93957eab31c6f7c38a3eda0c8e5889d52eaa081fd4c87d474238b18d4b8bf6",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_shadow.py",
+          "symbol": "validate_shadow_policy",
+          "sha256": "b27fecd4598d604db1bfb75ceed0425453a023b2e3ef65ffb735581ecbd03fd3",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_shadow.py",
+          "symbol": "evaluate_atomic_shadow",
+          "sha256": "b27fecd4598d604db1bfb75ceed0425453a023b2e3ef65ffb735581ecbd03fd3",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_ollama_transport.py",
+          "symbol": "generate_ollama",
+          "sha256": "5a7c935cd717bf3bdcde12515ff51928a9f28d2e8943abe47ff6ce27ea11799e",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_ollama_transport.py",
+          "symbol": "transport_profile",
+          "sha256": "5a7c935cd717bf3bdcde12515ff51928a9f28d2e8943abe47ff6ce27ea11799e",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_openai_profile.py",
+          "symbol": "profile_for_target",
+          "sha256": "cfb51c0bfc65fee206aac23f1d5cb2f0b2a53d45ec98cc5ea3335b7dd1c9415d",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_model_transport.py",
+          "symbol": "BenchmarkTransport",
+          "sha256": "cf4e716332ce7a27ab8776f241edfe2045662794cd2d50e1b41382285628fb69",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "src/potbot/evaluation/prompt_contracts.py",
+          "symbol": "evaluate_json_object_v1",
+          "sha256": "01dbb0f59cdc1b78e8d78f91dcc47b3b9b8b1b545162f15a8ce44524f4a09e29",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "src/potbot/evaluation/model_route_outcomes.py",
+          "symbol": "assess_output",
+          "sha256": "7f30dcdb91574635ab0156970b539b750b3a43c8dbd7d1c102c72dc85385d0c5",
+          "basis": "Original terminal hosted queue/provider evidence, explicit output sharing, designated authenticated review, policy-local regression veto and unchanged indeterminate budget/no-replay owners. Synthetic HTTP; no native inference or protected holdout qualification."
+        },
+        {
+          "path": "src/potbot/evaluation/model_route_outcomes.py",
+          "symbol": "summarize_outcomes",
+          "sha256": "7f30dcdb91574635ab0156970b539b750b3a43c8dbd7d1c102c72dc85385d0c5",
+          "basis": "Original terminal hosted queue/provider evidence, explicit output sharing, designated authenticated review, policy-local regression veto and unchanged indeterminate budget/no-replay owners. Synthetic HTTP; no native inference or protected holdout qualification."
+        },
+        {
+          "path": "src/potbot/controller/model_route_canaries.py",
+          "symbol": "ModelRouteCanaries",
+          "sha256": "559403ece8388d2e9dce138b69822ddf18b2d8d7fd21569c1ac34ba0ec7e53a5",
+          "basis": "The independently reviewed route pair uses ordinary compiled checks, dispatch, budget and outcomes. The durable candidate cap and rollback are exercised in disposable PostgreSQL with a provider fixture. This evidence does not qualify candidate model quality or authorize promotion."
         }
       ],
       "tests": [
@@ -130815,9 +132282,111 @@
           "symbol": "test_bool_and_integer_gold_are_a_conflict_not_python_equality",
           "sha256": "2cffb44015ab020517b540bd7a7f558b96926af728fa81fc6448127243c105b3",
           "basis": "R7.3-E synthetic private-candidate/blind-review protocol, exact reconstruction, oracle controls, typed conflicts and pre-transport admission. No actual private dataset, reviewer authentication or live deployment is qualified."
+        },
+        {
+          "path": "tests/unit/test_agentic_experiments.py",
+          "symbol": "test_run_retains_plan_before_first_dispatch_and_offline_audit_never_replays",
+          "sha256": "1ea2f56279011cf13e4d7c7919d2f457c4cf016bbb12e5c5c2f1a77d23756b7e",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "tests/unit/test_agentic_experiments.py",
+          "symbol": "test_missing_uncertain_mismatch_and_failed_outputs_keep_their_denominators",
+          "sha256": "1ea2f56279011cf13e4d7c7919d2f457c4cf016bbb12e5c5c2f1a77d23756b7e",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "tests/unit/test_agentic_experiment_json.py",
+          "symbol": "test_invalid_json_is_refused",
+          "sha256": "ffef5b08434f54c6588d585f01ff8e7d6dcbc4dbe29d8698198ae710f499e6f5",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "tests/unit/test_agentic_shadow.py",
+          "symbol": "test_complete_favorable_evidence_is_only_a_hypothetical_selection",
+          "sha256": "0467f1a163eacc7c1cb9488d665e297ef91857ee4fc4cde051c7bdded382ea45",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "tests/unit/test_agentic_shadow.py",
+          "symbol": "test_cli_freeze_run_and_shadow_bind_policy_before_dispatch",
+          "sha256": "0467f1a163eacc7c1cb9488d665e297ef91857ee4fc4cde051c7bdded382ea45",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "tests/unit/test_agentic_shadow.py",
+          "symbol": "test_policy_is_detached_and_changed_criteria_cannot_reinterpret_an_old_run",
+          "sha256": "0467f1a163eacc7c1cb9488d665e297ef91857ee4fc4cde051c7bdded382ea45",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "tests/unit/test_agentic_ollama_transport.py",
+          "symbol": "test_changed_installed_or_loaded_manifest_is_refused_without_replacement_call",
+          "sha256": "df0bdcf9f809a28f7961c938e29b77bbf38acd4f5dd7fd2eec0e30e281df2302",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_agentic_ollama_transport.py",
+          "symbol": "test_lost_generation_reply_has_one_post_and_no_ps_or_replay",
+          "sha256": "df0bdcf9f809a28f7961c938e29b77bbf38acd4f5dd7fd2eec0e30e281df2302",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_agentic_ollama_transport.py",
+          "symbol": "test_grouped_schedule_runs_each_cell_once_in_stable_model_blocks",
+          "sha256": "df0bdcf9f809a28f7961c938e29b77bbf38acd4f5dd7fd2eec0e30e281df2302",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_agentic_openai_profile.py",
+          "symbol": "test_unresolved_native_api_failure_stops_further_paid_cells",
+          "sha256": "a310f479a6f05d3b896b540cba961d65f01f96c3d9de9c3ece5e55094a63a0f5",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_agentic_openai_profile.py",
+          "symbol": "test_known_token_limit_preserves_actual_usage_without_replaying",
+          "sha256": "a310f479a6f05d3b896b540cba961d65f01f96c3d9de9c3ece5e55094a63a0f5",
+          "basis": "Inspected versioned opt-in generation controls, exact declared identities, unchanged legacy defaults and bounded no-replay evidence; runtime promotion remains separately gated."
+        },
+        {
+          "path": "tests/unit/test_prompt_contracts.py",
+          "symbol": "test_invalid_literal_output_is_not_repaired",
+          "sha256": "c2ff028a80a59997bdef56b762c6a2ccf95ca224f9874e607a6cbd85237268c1",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "tests/unit/test_prompt_contracts.py",
+          "symbol": "test_literal_object_can_pass_shape_with_a_wrong_semantic_answer",
+          "sha256": "c2ff028a80a59997bdef56b762c6a2ccf95ca224f9874e607a6cbd85237268c1",
+          "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_bindings.py",
+          "symbol": "test_eligible_check_without_exact_route_proof_cannot_insert_execution",
+          "sha256": "671e5a827dd7373cc1494e9e3d65313e47fc39f64123a2b2e6b3554b7b56fac7",
+          "basis": "Reviewed frozen recipe/private facts, literal recompilation, actual worker admission-configuration identity, SQL refusal of incomplete proof and unchanged queue/budget/no-replay owners. No weight/server attestation, candidate permission or live deployment qualification."
+        },
+        {
+          "path": "tests/unit/test_model_route_outcomes.py",
+          "symbol": "test_valid_json_is_not_semantic_or_runtime_qualification",
+          "sha256": "1511a215d048e5c5098f1009b6b8dd8c725dfd11b57df3e3f7c078cc11b95432",
+          "basis": "Original terminal hosted queue/provider evidence, explicit output sharing, designated authenticated review, policy-local regression veto and unchanged indeterminate budget/no-replay owners. Synthetic HTTP; no native inference or protected holdout qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_outcomes.py",
+          "symbol": "test_capture_and_explicit_share_preserve_private_job_and_prompt_boundary",
+          "sha256": "a233dd7a797f65fa19b4968651334744be3d5d702b728b4058aeda52d0f27dca",
+          "basis": "Original terminal hosted queue/provider evidence, explicit output sharing, designated authenticated review, policy-local regression veto and unchanged indeterminate budget/no-replay owners. Synthetic HTTP; no native inference or protected holdout qualification."
+        },
+        {
+          "path": "tests/integration/test_model_route_canaries.py",
+          "symbol": "test_rollback_fences_queued_candidate_and_keeps_lost_reply_indeterminate",
+          "sha256": "048321f3ddd8d49f839a03eaf834f2c5b0da63ff4951d07cfc1b6e18f83d11e8",
+          "basis": "The independently reviewed route pair uses ordinary compiled checks, dispatch, budget and outcomes. The durable candidate cap and rollback are exercised in disposable PostgreSQL with a provider fixture. This evidence does not qualify candidate model quality or authorize promotion."
         }
       ],
-      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route. R7.3-C adds frozen anonymous reviewer task pairs, exact bundle admission before inference and complete retained-matrix calibration. Repeated verdicts and reversed positions count as one source task; declared self-model aliases are refused. Synthetic correctness and self-consistent gold do not authenticate a provider, independent oracle or deployed model. R7.3-D reuses the existing LocalHostProfile/DeploymentSpec preflight, binds exact target configuration and retains returned labels/origins. A known mismatch stops primary and derived requests with partial journals, observed charges and held admission reservations preserved; offline paired/reviewer quality excludes those rows. Short pytest IDs preserve the original oversized malformed-input tests on Windows. Real server identity/loading, protected independent gold, resource measurements and promotion remain separate. R7.3-E separates proposed gold and oracle controls from blind task/context review, reuses the existing duplicate-input and rubric owners, and blocks candidate experiments on missing, uncertain or conflicting declared answers. Exact reviewer identity, access isolation, representative protected data and actual model/worker quality remain unqualified.",
+      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route. R7.3-C adds frozen anonymous reviewer task pairs, exact bundle admission before inference and complete retained-matrix calibration. Repeated verdicts and reversed positions count as one source task; declared self-model aliases are refused. Synthetic correctness and self-consistent gold do not authenticate a provider, independent oracle or deployed model. R7.3-D reuses the existing LocalHostProfile/DeploymentSpec preflight, binds exact target configuration and retains returned labels/origins. A known mismatch stops primary and derived requests with partial journals, observed charges and held admission reservations preserved; offline paired/reviewer quality excludes those rows. Short pytest IDs preserve the original oversized malformed-input tests on Windows. Real server identity/loading, protected independent gold, resource measurements and promotion remain separate. R7.3-E separates proposed gold and oracle controls from blind task/context review, reuses the existing duplicate-input and rubric owners, and blocks candidate experiments on missing, uncertain or conflicting declared answers. Exact reviewer identity, access isolation, representative protected data and actual model/worker quality remain unqualified. R7.3-F freezes the complete primary experiment and supporting input digests before runner dispatch, retains its exact plan, and audits all planned denominators without replay. Historical prior registration, independent gold, host resource measurement and live routing remain separately unqualified. R7.4-A adds policy-bound offline routing shadow analysis over the existing frozen experiment and paired evidence, with explicit independent runtime/promotion blockers and zero dispatch or routing mutations. R7.4-B adds versioned native generation controls, frozen grouped execution and finite hosted comparison over existing journals. Actual public synthetic local trials and separate format diagnostics do not qualify runtime routing. R7.4-C implements persistent baseline-only shadow admission and opt-in literal JSON prompt contracts; candidate execution and production routing qualification remain blocked. R7.4-D binds opt-in compiled shadow requests to their private input provenance and observed worker admission configuration; independently qualified model/server identity, canary and rollback remain unfinished. R7.4-E adds private terminal outcome snapshots, explicit reviewer disclosure and independently recorded regression fencing; model/server qualification, protected paired holdouts, canaries and qualified fallback remain unfinished.",
       "support_scope": "Current fixture, judge/calibration and ledger definitions, not completed B00-B10 external benchmark campaigns. U04-D follow-on: The deterministic forty-request discovery set checks class selection and hard exclusions, with adversarial name/popularity/keyword repetition and exact installed-owner preference. These retrieval fixtures are not general reasoning, tool execution or task-success benchmarks. U04-Q follow-on: Failed assertions, peer errors, malformed/changed outputs and missing stopped evidence cannot produce a successful task report. Server-provided success flags and hashes are not independent expected results. U04-S follow-on: Retrieval score, installation and provider-authored text are not general success measurements. Passing synthetic fixtures do not substitute for independent deployed model/task evidence. U04-T follow-on: Passing applies only to fixed assertions. It does not complete a whole task, independently qualify a deployed provider/host, or turn a truncated UI preview into outcome evidence. T05-A follow-on: Supported means verified cited-source agreement only. Different values remain unresolved; retrieval time does not replace publication time, and no need or task is automatically resolved.",
       "remaining": [
         "Freeze chronological tasks, independent graders, exact returned patch and real cost/time/resource provenance",
@@ -130857,7 +132426,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "cc69ceb911ac16d21c62e061451016cd0c609045354754a7638c417a000b8da2",
+          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
           "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted."
         },
         {
@@ -130890,7 +132459,7 @@
         {
           "path": "src/potbot/controller/operation_workbench.py",
           "symbol": "OperationWorkbench",
-          "sha256": "31d297ca3b076f9e155d30b60de50facd04aae16619a18000ce33876eb831d18",
+          "sha256": "b6c21a6bc650c7c264776345d9158ceda4e4c940b02809f57c1b82ee778620ce",
           "symbol_sha256": "3ab9a4c7fa15fdeddac53f9314c52f94732039612d948a8aff0bdba0301d76fe",
           "basis": "Existing original command receipt and run-per-check recovery semantics remain authoritative for selected requests. U04-T follow-on: Existing original command receipt and run-per-check recovery semantics remain authoritative for selected requests."
         },

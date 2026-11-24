@@ -27,6 +27,10 @@ explicit rebase that preserves unrelated concurrent changes. Saved preferences
 are consumed when the workspace reloads them; dock coordinates and compact
 density remain browser-local.
 
+![Potbot’s models and providers settings at mobile width, with the workspace and category controls above inventory](../images/settings-models-mobile.png)
+
+*The production build at 360 pixels wide using synthetic inventory records.*
+
 The ten existing computational settings show installation defaults and, where
 available, the latest recorded run snapshot. Private credential references and
 source locations appear as counts. This increment does not reconstruct a live
@@ -103,6 +107,10 @@ reports completion only when the protected grant ledger agrees; a completion
 claim in the application journal is insufficient. Grant revocation alone does
 not establish shutdown of a running process.
 
+![The Potbot swarm grant review dialog with the specific source and target, the two permissions, and the keyboard focus indicator](../images/settings-swarm-review.png)
+
+*The production build showing a test grant and a keyboard-focused submit button.*
+
 The Next bridge retains Potbot's existing loopback operator access boundary and
 same-origin mutation checks. This is not a new multi-user authentication system.
 Only fixed routes and bounded, allowlisted projections reach the browser;
@@ -132,9 +140,12 @@ Ruff, mypy, TypeScript and the production build. Its native inventory command
 observed 45 Python distribution metadata records and one unavailable model root;
 it performed no inference or remote provisioning.
 
-Rendered desktop/mobile layout, keyboard and screen-reader acceptance still
-require a supported browser connection. The Chrome extension was unavailable in
-this implementation session, so no UI screenshots or demonstration video were
-captured. The illustration above describes source contracts and supplies no
-evidence of rendered UI acceptance. Subsequent increments cover live layer
-editing, richer inventory detectors and qualified native node lifecycle actions.
+The joined preview passed desktop and mobile rendering, keyboard navigation,
+dialog cancellation and immediate reopening in Edge. The accessibility tree
+exposes the named dialog and the controls. Cancel returns focus to the grant
+action with no request. An explicit submit queues one request for the selected
+workspace. Clearing and repopulating the status text keeps its live region
+mounted throughout the operation. The screenshots show the observed flow.
+
+Subsequent increments cover live layer editing, richer inventory detectors and
+qualified native node lifecycle actions.

@@ -176,7 +176,8 @@ def _preflight(
     local = sum(
         1
         for _, _, mid, _, _ in matrix
-        if next(m for m in models if m.id == mid).backend == "loopback_openai"
+        if next(m for m in models if m.id == mid).backend
+        in {"loopback_openai", "loopback_ollama_v1"}
     )
     return {
         "suite_sha256": suite.identity,
@@ -265,6 +266,58 @@ def _deployment_admission(
     return inspect_benchmark_deployments(document, models, suite, project_root=root)
 
 
+def _experiment_evidence(args: argparse.Namespace) -> dict[str, Any]:
+    evidence = {
+        name: _strict_read(getattr(args, name)) if getattr(args, name, None) else None
+        for name in (
+            "candidate_package",
+            "gold_review",
+            "dataset_card",
+            "deployment_bindings",
+            "review_bundle",
+        )
+    }
+    if getattr(args, "shadow_policy", None) is not None:
+        evidence["shadow_policy"] = _strict_read(args.shadow_policy)
+    return evidence
+
+
+def _experiment_admission(
+    args: argparse.Namespace,
+    suite: RoleSuite,
+    models: list[ModelTarget],
+    variants: list[PromptVariant],
+) -> dict[str, Any] | None:
+    path = getattr(args, "experiment_plan", None)
+    if path is None:
+        if getattr(args, "shadow_policy", None) is not None:
+            raise InvalidInputError("shadow criteria require their frozen experiment plan")
+        return None
+    from potbot.evaluation.agentic_experiments import (
+        admit_atomic_experiment,
+        read_experiment_document,
+    )
+
+    if getattr(args, "judge_derived", False):
+        raise InvalidInputError(
+            "freeze reviewer experiments separately; no unplanned derived calls"
+        )
+    if getattr(args, "command", "run") == "run" and not args.store_text:
+        raise InvalidInputError(
+            "frozen experiment auditing requires explicit private text retention"
+        )
+    return admit_atomic_experiment(
+        read_experiment_document(path),
+        suite,
+        models,
+        variants=tuple(variants),
+        repeat=args.repeat,
+        shuffle_seed=args.shuffle_seed,
+        evidence=_experiment_evidence(args),
+        execution_order=getattr(args, "execution_order", "shuffled"),
+    )
+
+
 def _execute(
     args: argparse.Namespace,
     suite: RoleSuite,
@@ -277,6 +330,7 @@ def _execute(
 ) -> dict[str, Any]:
     if not 1 <= args.repeat <= 5:
         raise InvalidInputError("repeats must be between one and five")
+    experiment = _experiment_admission(args, suite, models, variants)
     review_bundle_sha256 = _review_admission(args, suite, models)
     candidate_review = _candidate_admission(args, suite)
     if candidate_review is not None and candidate_review["status"] != "declared_agreement":
@@ -375,8 +429,19 @@ def _execute(
         for trial in range(1, args.repeat + 1)
     ]
     randomizer.shuffle(grid)
+    execution_order = getattr(args, "execution_order", "shuffled")
+    if execution_order not in {"shuffled", "model_blocks_v1"}:
+        raise InvalidInputError("Unknown benchmark execution order")
+    if execution_order == "model_blocks_v1":
+        # Stable grouping preserves the randomized cell order within a model,
+        # and randomizes block order. This avoids loading weights for each cell.
+        model_order = list(models)
+        randomizer.shuffle(model_order)
+        rank = {model.id: index for index, model in enumerate(model_order)}
+        grid.sort(key=lambda cell: rank[cell[1].id])
     observations: list[Observation] = []
     identity_mismatch = False
+    transport_blocked = False
     for index, (case, model, variant, trial) in enumerate(grid, start=1):
         key = {"case_id": case.id, "model_id": model.id, "variant": variant, "trial": trial}
         if on_event:
@@ -399,11 +464,14 @@ def _execute(
             f"[Potbot benchmark] {index}/{len(grid)} {model.id} {case.role} {variant} {row.status}",
             file=sys.stderr,
         )
+        if getattr(transport, "execution_blocked", False):
+            transport_blocked = True
+            break
         if row.status == "identity_mismatch":
             identity_mismatch = True
             break
     judge_rows: list[Observation] = []
-    if args.judge_derived and not identity_mismatch:
+    if args.judge_derived and not identity_mismatch and not transport_blocked:
         from potbot.evaluation.agentic_reviewers import model_revision_identity
 
         # Only derive a pair when independently graded outputs have different
@@ -484,12 +552,17 @@ def _execute(
         "candidate_dataset_review": candidate_review,
         "deployment_inspection": deployment_inspection,
         "execution": {
-            "status": "stopped_model_identity_mismatch" if identity_mismatch else "completed",
+            "status": "stopped_model_identity_mismatch"
+            if identity_mismatch
+            else "stopped_transport_failure"
+            if transport_blocked
+            else "completed",
             "scheduled_primary_attempts": len(grid),
             "unattempted_primary_attempts": len(grid) - len(observations),
             "no_automatic_replay": True,
             "returned_model_labels_authenticated": False,
         },
+        "experiment_plan_sha256": experiment["plan_sha256"] if experiment else None,
         "review_bundle_sha256": review_bundle_sha256,
         "reference_runtime": None,
         "admission_ceiling_microunits": args.max_cost_microunits,
@@ -504,6 +577,17 @@ def _execute(
         "qualified": False,
         "auto_promoted": False,
     }
+    if execution_order != "shuffled":
+        report["execution"]["execution_order"] = execution_order
+    if any(m.backend == "loopback_ollama_v1" for m in models):
+        from potbot.evaluation.agentic_ollama_transport import transport_profile
+
+        report["transport_profiles"] = {"loopback_ollama_v1": transport_profile()}
+    from potbot.evaluation.agentic_openai_profile import profile_for_target
+
+    openai_profiles = {m.id: p for m in models if (p := profile_for_target(m)) is not None}
+    if openai_profiles:
+        report.setdefault("transport_profiles", {})["openai_cheap_v1"] = openai_profiles
     if any(m.backend == "deterministic" for m in models):
         from potbot.evaluation.agentic_reference import reference_runtime
 
@@ -524,6 +608,12 @@ def main(argv: list[str] | None = None) -> int:
         group.add_argument("--review-bundle", type=Path)
         group.add_argument("--deployment-bindings", type=Path)
         group.add_argument("--project-root", type=Path)
+        group.add_argument("--experiment-plan", type=Path)
+        group.add_argument("--shadow-policy", type=Path)
+        group.add_argument("--shuffle-seed", type=int, default=42)
+        group.add_argument(
+            "--execution-order", choices=("shuffled", "model_blocks_v1"), default="shuffled"
+        )
         group.add_argument("--variants", default="generic,family,model_role")
         group.add_argument("--repeat", type=int, default=1)
         if name == "run":
@@ -535,9 +625,32 @@ def main(argv: list[str] | None = None) -> int:
             group.add_argument("--max-cost-microunits", type=int, default=0)
             group.add_argument("--judge-derived", action="store_true")
             group.add_argument("--max-judge-pairs", type=int, default=8)
-            group.add_argument("--shuffle-seed", type=int, default=42)
             group.add_argument("--min-samples", type=int, default=12)
             group.add_argument("--store-text", action="store_true")
+    for name in ("prepare-experiment", "audit-experiment", "shadow-routing"):
+        experiment = command.add_parser(name)
+        experiment.add_argument("--suite", type=Path, required=True)
+        experiment.add_argument("--models", type=Path, required=True)
+        experiment.add_argument("--output", type=Path, required=True)
+        for binding in (
+            "candidate-package",
+            "gold-review",
+            "dataset-card",
+            "deployment-bindings",
+            "review-bundle",
+            "shadow-policy",
+        ):
+            experiment.add_argument("--" + binding, type=Path)
+        if name == "prepare-experiment":
+            experiment.add_argument("--variants", default="generic,family,model_role")
+            experiment.add_argument("--repeat", type=int, default=1)
+            experiment.add_argument("--shuffle-seed", type=int, default=42)
+            experiment.add_argument(
+                "--execution-order", choices=("shuffled", "model_blocks_v1"), default="shuffled"
+            )
+        else:
+            experiment.add_argument("--experiment-plan", type=Path, required=True)
+            experiment.add_argument("--results", type=Path, required=True)
     prepare = command.add_parser("prepare-atomic-dataset")
     prepare.add_argument("--suite", type=Path, required=True)
     prepare.add_argument("--provenance", type=Path, required=True)
@@ -590,6 +703,55 @@ def main(argv: list[str] | None = None) -> int:
     )
     try:
         args = parser.parse_args(argv)
+        if args.command in {"prepare-experiment", "audit-experiment", "shadow-routing"}:
+            from potbot.evaluation.agentic_experiments import (
+                audit_atomic_experiment,
+                freeze_atomic_experiment,
+                read_experiment_document,
+            )
+
+            suite = RoleSuite.from_dict(_strict_read(args.suite))
+            models = _targets(args.models)
+            evidence = _experiment_evidence(args)
+            if args.command == "prepare-experiment":
+                payload = freeze_atomic_experiment(
+                    suite,
+                    models,
+                    variants=tuple(_parsed_variants(args.variants)),
+                    repeat=args.repeat,
+                    shuffle_seed=args.shuffle_seed,
+                    evidence=evidence,
+                    execution_order=args.execution_order,
+                )
+            elif args.command == "shadow-routing":
+                from potbot.evaluation.agentic_shadow import evaluate_atomic_shadow
+
+                payload = evaluate_atomic_shadow(
+                    evidence.get("shadow_policy"),
+                    read_experiment_document(args.experiment_plan),
+                    read_experiment_document(args.results),
+                    suite,
+                    models,
+                    evidence=evidence,
+                )
+            else:
+                payload = audit_atomic_experiment(
+                    read_experiment_document(args.experiment_plan),
+                    read_experiment_document(args.results),
+                    suite,
+                    models,
+                    evidence=evidence,
+                )
+            _private_write(args.output, canonical_json(payload) + "\n")
+            print(json.dumps({"plan_sha256": payload.get("plan_sha256"), "qualified": False}))
+            return (
+                2
+                if (
+                    payload.get("complete_for_analysis") is False
+                    or payload.get("all_offline_limits_met") is False
+                )
+                else 0
+            )
         if args.command == "prepare-atomic-dataset":
             from potbot.evaluation.agentic_candidate_dataset import (
                 gold_review_request,
@@ -759,10 +921,12 @@ def main(argv: list[str] | None = None) -> int:
         if not 1 <= args.repeat <= 5:
             raise InvalidInputError("invalid repeat count")
         if args.command == "preflight":
+            experiment = _experiment_admission(args, suite, models, variants)
             review_bundle_sha256 = _review_admission(args, suite, models)
             plan = _preflight(models, suite, variants, args.repeat)
             plan["deployment_inspection"] = _deployment_admission(args, suite, models)
             plan["candidate_dataset_review"] = _candidate_admission(args, suite)
+            plan["experiment_plan_sha256"] = experiment["plan_sha256"] if experiment else None
             if review_bundle_sha256 is not None:
                 plan["review_bundle_sha256"] = review_bundle_sha256
             if args.dataset_card is not None:
@@ -789,6 +953,7 @@ def main(argv: list[str] | None = None) -> int:
             or not 0 <= args.max_cost_microunits <= 10**12
         ):
             raise InvalidInputError("invalid judge or evidence minimum")
+        experiment = _experiment_admission(args, suite, models, variants)
         policy = HostedPolicy.read(args.provider_policy) if args.provider_policy else None
         run_id = str(uuid4())
         destination = args.output_dir / run_id
@@ -800,11 +965,14 @@ def main(argv: list[str] | None = None) -> int:
                     "run_id": run_id,
                     "suite_sha256": suite.identity,
                     "status": "started",
+                    "experiment_plan_sha256": experiment["plan_sha256"] if experiment else None,
                     "no_automatic_replay": True,
                 }
             )
             + "\n",
         )
+        if experiment is not None:
+            _private_write(destination / "experiment-plan.json", canonical_json(experiment) + "\n")
         journal = destination / "attempts.jsonl"
         # Durable per-attempt journal; incomplete calls are uncertain. A
         # restart must create a NEW run, never append or replay a paid request.
@@ -832,7 +1000,7 @@ def main(argv: list[str] | None = None) -> int:
                 indent=2,
             )
         )
-        return 2 if report["execution"]["status"] == "stopped_model_identity_mismatch" else 0
+        return 0 if report["execution"]["status"] == "completed" else 2
     except (
         InvalidInputError,
         SchemaViolationError,

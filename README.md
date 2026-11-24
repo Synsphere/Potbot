@@ -23,7 +23,7 @@ parallelism gates, and interrupt fencing. Installed-host qualification and
 an automatic operator scheduler tick remain separate integration gates. R7.3
 benchmarks are next; new Syn work is deferred until Syn is ready for release.
 
-**Implemented: Phases 1–4, the Phase 5 model foundation, and hosted jobs/API (`0.5.0.dev14`).** Tasks, contracts,
+**Implemented: Phases 1–4, the Phase 5 model foundation, and hosted jobs/API (`0.5.0.dev15`).** Tasks, contracts,
 evidence, artifacts, worker jobs, budgets, configuration, environment identities, and
 model invocation records are durable. Potbot can capture a local Git repository,
 materialize isolated candidates, execute registered tools under a qualified Linux
