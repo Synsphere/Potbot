@@ -89673,7 +89673,7 @@
       },
       {
         "path": ".github/workflows/browser-rendered-acceptance.yml",
-        "sha256": "a21f1d53811f19b826c0c567db5b820dc98bbaa7524f9889bb6862c5ef9f02e1",
+        "sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
         "name": "Browser rendered worker acceptance",
         "state": "active",
         "scope": [
