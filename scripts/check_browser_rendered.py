@@ -39,6 +39,8 @@ SOURCE_FILES = (
     "tests/browser/fixtures/probe.js",
     "scripts/check_browser_rendered.py",
     "scripts/browser_rendered_runtime.py",
+    "scripts/browser_display_readiness.py",
+    "tests/unit/test_browser_display_readiness.py",
     "sandbox/image/Dockerfile",
     ".github/workflows/browser-rendered-acceptance.yml",
 )
@@ -89,7 +91,8 @@ def validate_report(raw: bytes, profile: str) -> dict:
         if name in props:
             raise ValueError("duplicate browser version metadata")
         props[name] = prop.get("value")
-    if set(props) != {"browser_profile", "browser_version", "packages", "browser_binary"}:
+    required = {"browser_profile", "browser_version", "packages", "browser_binary"}
+    if not required <= set(props) or set(props) - required - {"native_window"}:
         raise ValueError("browser identity metadata is incomplete")
     if props["browser_profile"] != profile or not re.fullmatch(
         r"[0-9]+(?:\.[0-9]+){1,4}", props["browser_version"] or ""
@@ -119,7 +122,19 @@ def validate_report(raw: bytes, profile: str) -> dict:
         or not 0 < binary["bytes"] <= 2 * 1024**3
     ):
         raise ValueError("invalid browser executable identity")
+    native = None
+    if "native_window" in props:
+        native = json.loads(props["native_window"], object_pairs_hook=_unique_object)
+        if (
+            not isinstance(native, dict)
+            or set(native) != {"map_state", "title_sha256"}
+            or native["map_state"] != "IsViewable"
+            or not isinstance(native["title_sha256"], str)
+            or re.fullmatch(r"[0-9a-f]{64}", native["title_sha256"]) is None
+        ):
+            raise ValueError("invalid native browser window evidence")
     return {
+        "native_window": native,
         "browser_binary": binary,
         "profile": profile,
         "browser_version": props["browser_version"],
@@ -144,12 +159,15 @@ def verify(
     *,
     require_image_pins: bool = False,
     require_engine_binary: bool = False,
+    require_native_window: bool = False,
 ) -> dict:
     with report.open("rb") as stream:
         raw = stream.read(4 * 1024 * 1024 + 1)
     identity = validate_report(raw, profile)
     if require_engine_binary and identity["browser_binary"]["source"] != "engine":
         raise ValueError("rendered CI must use the selected engine's executable")
+    if require_native_window and identity["native_window"] is None:
+        raise ValueError("rendered CI requires native window readiness evidence")
     pins = image_pins(root)
     matches = all(pins[name] == value for name, value in identity["packages"].items())
     if require_image_pins and not matches:
@@ -200,6 +218,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--require-image-pins", action="store_true")
     parser.add_argument("--require-engine-binary", action="store_true")
+    parser.add_argument("--require-native-window", action="store_true")
     args = parser.parse_args()
     try:
         result = verify(
@@ -208,6 +227,7 @@ def main() -> int:
             args.profile,
             require_image_pins=args.require_image_pins,
             require_engine_binary=args.require_engine_binary,
+            require_native_window=args.require_native_window,
         )
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(
