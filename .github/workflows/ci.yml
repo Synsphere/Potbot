@@ -263,7 +263,21 @@ jobs:
       - name: Verify resumable upload Cogs independently on real PostgreSQL
         run: uv run --locked python -m pytest -q tests/integration/test_artifact_upload_cogs.py
       - name: Verify application, repositories, migrations, and database isolation
-        run: uv run --locked python scripts/check.py --with-postgres --with-sandbox
+        run: uv run --locked python scripts/check.py --with-postgres --with-sandbox --postgres-shard 0/4
+      - name: Retain the primary PostgreSQL partition receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: postgres-test-shard-0
+          path: artifacts/postgres-shards/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Produce the exact-source T01 gate evidence independently
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/integration/test_tool_inventory.py
+          tests/integration/test_semantic_tool_contracts.py
+          tests/integration/test_execution_provenance.py
       - name: Verify source-preview release packaging and clean wheel install
         shell: bash
         run: |
@@ -356,3 +370,106 @@ jobs:
             reason="The run needs diagnosis before it can support a verified public story."
           fi
           echo "Blogworthiness: FAIL — $reason Evidence: $POTBOT_CI_RESULT at $GITHUB_SHA." >> "$GITHUB_STEP_SUMMARY"
+
+  postgres-shards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [1, 2, 3]
+    env:
+      # Each hosted runner owns its own disposable Docker database.
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+      UV_PYTHON: "3.12"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.23"
+          enable-cache: true
+      - name: Install the same locked verification environment
+        run: uv sync --locked --extra postgres --extra semantics --extra credentials --extra providers --extra web --extra security --extra debugger --dev
+      - name: Install the existing Linux isolation prerequisites
+        run: |
+          bash scripts/ci_prepare_ubuntu_mirror.sh
+          sudo apt-get update
+          sudo apt-get install --yes bubblewrap libseccomp2 apparmor-profiles
+          potbot_userns_restriction=/proc/sys/kernel/apparmor_restrict_unprivileged_userns
+          if [[ -r "$potbot_userns_restriction" ]] && [[ "$(cat "$potbot_userns_restriction")" == 1 ]]; then
+            potbot_bwrap_profile=/usr/share/apparmor/extra-profiles/bwrap-userns-restrict
+            test -r "$potbot_bwrap_profile"
+            sudo apparmor_parser --replace "$potbot_bwrap_profile"
+          fi
+      - name: Start this shard's disposable PostgreSQL service
+        run: docker compose up --detach --wait --wait-timeout 90
+      - name: Execute the exact PostgreSQL partition through the existing sanitized runner
+        run: >-
+          uv run --locked python scripts/check.py --with-postgres
+          --postgres-shard '${{ matrix.index }}/4' --postgres-shard-only
+      - name: Remove this shard's disposable database and volumes
+        if: always()
+        run: docker compose down --volumes --remove-orphans --timeout 10
+      - name: Retain partition collection and completion evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: postgres-test-shard-${{ matrix.index }}
+          path: artifacts/postgres-shards/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Retain sanitized partition diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: postgres-shard-${{ matrix.index }}-diagnostics
+          path: |
+            artifacts/postgres.log
+            artifacts/postgres.xml
+            artifacts/summary.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Record partition run blogworthiness
+        if: always()
+        run: |
+          echo "Blogworthiness: FAIL - routine PostgreSQL partition replay. Evidence: this job and its retained receipt at $GITHUB_SHA; fixture coverage does not qualify production." >> "$GITHUB_STEP_SUMMARY"
+
+  postgres-coverage:
+    if: always()
+    needs: [verify, postgres-shards]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require every execution job to succeed
+        env:
+          PRIMARY_RESULT: ${{ needs.verify.result }}
+          PARTITION_RESULT: ${{ needs.postgres-shards.result }}
+        run: |
+          test "$PRIMARY_RESULT" = success
+          test "$PARTITION_RESULT" = success
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.23"
+          enable-cache: true
+      - run: uv sync --locked --dev
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: postgres-test-shard-*
+          path: artifacts/postgres-shards
+          merge-multiple: true
+      - name: Verify the complete disjoint source-bound test union
+        run: >-
+          uv run --locked python scripts/check_postgres_shards.py
+          artifacts/postgres-shards/*.json --source-commit "$GITHUB_SHA"
+          --output artifacts/postgres-coverage.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: postgres-coverage
+          path: artifacts/postgres-coverage.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Record coverage run blogworthiness
+        if: always()
+        run: |
+          echo "Blogworthiness: FAIL - routine partition coverage check. Evidence: this job and postgres-coverage.json at $GITHUB_SHA; selection completeness is separate from production qualification." >> "$GITHUB_STEP_SUMMARY"

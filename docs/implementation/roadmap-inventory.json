@@ -1018,6 +1018,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/implementation/ci-postgres-partitions.md",
+      "sha256": "d2da5cd31132edf69b5f3d1b6f24556f72efe2976b3beb1f4b9eafc76275c95b",
+      "bytes": 3685,
+      "kind": "narrative_text",
+      "text_sha256": "d2da5cd31132edf69b5f3d1b6f24556f72efe2976b3beb1f4b9eafc76275c95b",
+      "characters": 3685,
+      "lines": 67,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": "docs/implementation/context-rpc-syn-route.md",
       "sha256": "27712157aee435c530575a28ed3e059b1c06e190d2bc218edea7c96e555e2daf",
       "bytes": 12831,
@@ -36096,12 +36106,12 @@
     },
     {
       "path": "scripts/check.py",
-      "sha256": "a5dc227b59e9b62f4a19789d8763152a942e4e1ec80bbb68f87f60b295096c9e",
-      "bytes": 15129,
+      "sha256": "23762c049eb4268799ca2e41683a3482c01db8d43f7a00c524c1e68240db3945",
+      "bytes": 17639,
       "kind": "narrative_text",
-      "text_sha256": "a5dc227b59e9b62f4a19789d8763152a942e4e1ec80bbb68f87f60b295096c9e",
-      "characters": 15129,
-      "lines": 351,
+      "text_sha256": "23762c049eb4268799ca2e41683a3482c01db8d43f7a00c524c1e68240db3945",
+      "characters": 17639,
+      "lines": 392,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36276,12 +36286,12 @@
     },
     {
       "path": "tests/unit/test_check_runner.py",
-      "sha256": "573aad6bea5d42656546413946a89c470aaf47b0b4571636944151f74affd601",
-      "bytes": 5911,
+      "sha256": "38a890e8a017fb5dce7097b3fa47e8812851a5ebcb981ed0761850a75fd27d08",
+      "bytes": 7905,
       "kind": "narrative_text",
-      "text_sha256": "573aad6bea5d42656546413946a89c470aaf47b0b4571636944151f74affd601",
-      "characters": 5911,
-      "lines": 141,
+      "text_sha256": "38a890e8a017fb5dce7097b3fa47e8812851a5ebcb981ed0761850a75fd27d08",
+      "characters": 7905,
+      "lines": 195,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36498,12 +36508,12 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "sha256": "344fe2e8ee5c3937b90a3cdfc06290dbcfeaba617d1a8373dc7c853e48177fce",
-      "bytes": 18073,
+      "sha256": "faf9fafd815b00ec7f18cd9110ea31f8efcc1c13b1e99642e2181ec707fdef22",
+      "bytes": 23537,
       "kind": "narrative_text",
-      "text_sha256": "344fe2e8ee5c3937b90a3cdfc06290dbcfeaba617d1a8373dc7c853e48177fce",
-      "characters": 18071,
-      "lines": 358,
+      "text_sha256": "faf9fafd815b00ec7f18cd9110ea31f8efcc1c13b1e99642e2181ec707fdef22",
+      "characters": 23535,
+      "lines": 475,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36897,7 +36907,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "bdde63d07a1822b2972bcee3710f9bfc512a0e53799df7fb7b75bd3275888bc3",
+  "review_sha256": "276b21d2296bf427250e32d549b3cbdf8a3fb02749aa1dbd04617e69e9800b80",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -115961,6 +115971,17 @@
       ]
     },
     {
+      "source": "docs/implementation/ci-postgres-partitions.md",
+      "locator": "line:1-67",
+      "sha256": "02685c23e8819d2ef5c0cc54affe887b2e4d5d6288e8f27b8257e92fa340bdbb",
+      "excerpt": "# Complete PostgreSQL test coverage in isolated CI partitions\n\nThe [PR94 verification run](https://github.com/Synsphere/Potbot/actions/runs/45298121057)\npassed ",
+      "review_families": [
+        "audit",
+        "stage-acceptance",
+        "evaluation"
+      ]
+    },
+    {
       "source": "docs/implementation/context-rpc-syn-route.md",
       "locator": "line:1-47",
       "sha256": "85bfd54ea1247af75e5bc4702d66bc8c497aa740e7932191c093f2046e3fb16a",
@@ -130587,6 +130608,18 @@
           "symbol": "run_gate",
           "sha256": "64a168320c473f2ada34330d7b5ade1dd94772d22ea9928a28ff1a4c32761c19",
           "basis": "Reviewed source/report identity and required JUnit acceptance path."
+        },
+        {
+          "path": "src/potbot/evaluation/postgres_test_shards.py",
+          "symbol": "verify_postgres_shards",
+          "sha256": "56fbaf53ac2861a5b07ca24dec1349e8bb2cd4c45cbbdc0dd9af545bcca2c19d",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
+        },
+        {
+          "path": "scripts/postgres_shard_plugin.py",
+          "symbol": "_ShardRun",
+          "sha256": "3ca5f895cd68fe9326d61e0e21c742a08b44e070fc4df5388d5090b836200d02",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
         }
       ],
       "tests": [
@@ -130601,9 +130634,21 @@
           "symbol": "test_inconsistent_junit_counters_never_establish_a_pass",
           "sha256": "ba5b13a46ec39e2f4e6ea9f35ad00a31a8f82df7d2c702cbb58f08b2aa4d9efc",
           "basis": "Actual testcase/counter reconciliation rejects malformed acceptance evidence."
+        },
+        {
+          "path": "tests/unit/test_postgres_shards.py",
+          "symbol": "test_actual_pytest_partitions_preserve_the_original_selector_and_all_terminal_cases",
+          "sha256": "d7a88f35908e6c160a1ccc666e4d283072358fd7ec7e0e0d69a0ceaca6db1de6",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
+        },
+        {
+          "path": "tests/unit/test_postgres_shards.py",
+          "symbol": "test_actual_incomplete_or_failed_pytest_run_cannot_supply_a_green_receipt",
+          "sha256": "d7a88f35908e6c160a1ccc666e4d283072358fd7ec7e0e0d69a0ceaca6db1de6",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
         }
       ],
-      "assessment": "T01.4 now invalidates stale reports before execution, retains unique run directories and actual source manifests, and checks source stability plus real nonempty unskipped PostgreSQL/sandbox JUnit cases. Fully-qualified is explicitly limited to application PostgreSQL and sandbox tests; production_runtime_qualified stays false.",
+      "assessment": "T01.4 now invalidates stale reports before execution, retains unique run directories and actual source manifests, and checks source stability plus real nonempty unskipped PostgreSQL/sandbox JUnit cases. Fully-qualified is explicitly limited to application PostgreSQL and sandbox tests; production_runtime_qualified stays false. The full PostgreSQL lane exceeded 1800 seconds at roughly84% in PR94. CI now configures four isolated deterministic partitions and an exact-source, disjoint full-union completion gate, preserving the original selector and explicit T01 evidence producers. Local child-pytest rejection tests cover incomplete, failed and zero-exit aborted runs; actual partitioned PostgreSQL CI remains required.",
       "support_scope": "Acceptance-report contract tests and offline gate; no implicit native, image, custody, provider or specialist qualification.",
       "remaining": [
         "Run the full application qualified gate at the final commit on its required PostgreSQL/sandbox host.",
