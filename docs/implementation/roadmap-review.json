@@ -3990,7 +3990,7 @@
         {
           "path": "src/potbot/tools/xpra_browser_worker.py",
           "symbol": "BrowserWorker",
-          "sha256": "4f0a1d611fb256b513685bf7021ddf3d8b960d146705017b31c15f8ddb0630fe",
+          "sha256": "9807c230ce3009ceb4da64d92170ac49eeae8a377a8554061f7942458d9f9725",
           "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran."
         },
         {
@@ -4022,7 +4022,7 @@
         {
           "path": "tests/unit/test_browser_capture_recovery.py",
           "symbol": "test_capture_timeout_fences_subsequent_requests",
-          "sha256": "47d31a0487a6b6d5df1c891cf6614253d83842b116f449263439fd951e6477ec",
+          "sha256": "70d27849644faa1b8f525a80a3367037bff17d99ad305d64df30bc6babf55d17",
           "basis": "New failure regression also checked against the original worker; rendered/native qualification remains open."
         }
       ],
@@ -80711,14 +80711,14 @@
     },
     {
       "path": "docs/implementation/ci-postgres-partitions.md",
-      "sha256": "3b130ff4773ab93e21bfecb1ca26dbe080ae516db0c1b01d3ade15161cb76d98",
+      "sha256": "1988f08f681bc657fb5f8b10115178bbb868445f25f35e14bc1514eb0a338ebc",
       "families": [
         "audit",
         "stage-acceptance",
         "evaluation"
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
-      "assessment": "Source-reviewed PostgreSQL partition orchestration, same original selector, fresh databases and complete execution-accounting gate. New CI completion and elapsed-time improvement require actual run evidence; no production qualification is asserted. Actual partition results exposed a snapshot capacity failure; the single generated projection exclusion is explicit. Native-window readiness is a stronger test prerequisite, with real rendered confirmation pending. The actual primary sandbox lane exposed a missing Poppler executable: 95 tests passed and one required PDF case failed. CI now installs the dependency while preserving exact executable hashing, isolation and all existing artifact gates; the new run remains required. The actual partition exposed eight existing native root modules absent from explicit source ownership. They now reuse entrypoint/persistence owners; a committed-path namespace regression retains unknown-root refusal. Actual source/host qualification remains separate. Discovery exposed four stale dependent inventory evidence pins. Only those inspect-only profiles receive new immutable source versions/digests; existing runtime and admission authority is unchanged. All twenty curated profile pins are checked before CI.",
+      "assessment": "Source-reviewed PostgreSQL partition orchestration, same original selector, fresh databases and complete execution-accounting gate. New CI completion and elapsed-time improvement require actual run evidence; no production qualification is asserted. Actual partition results exposed a snapshot capacity failure; the single generated projection exclusion is explicit. Native-window readiness is a stronger test prerequisite, with real rendered confirmation pending. The actual primary sandbox lane exposed a missing Poppler executable: 95 tests passed and one required PDF case failed. CI now installs the dependency while preserving exact executable hashing, isolation and all existing artifact gates; the new run remains required. The actual partition exposed eight existing native root modules absent from explicit source ownership. They now reuse entrypoint/persistence owners; a committed-path namespace regression retains unknown-root refusal. Actual source/host qualification remains separate. Discovery exposed four stale dependent inventory evidence pins. Only those inspect-only profiles receive new immutable source versions/digests; existing runtime and admission authority is unchanged. All twenty curated profile pins are checked before CI. PR95 adds native-view-first capture with strict viewport evidence and bounded HTTPS EC2 mirror repair; real rendered CI is still required.",
       "narrative": [
         {
           "locator": "line:1-69",
@@ -80731,8 +80731,8 @@
           ]
         },
         {
-          "locator": "line:70-131",
-          "sha256": "a80c351e051c3eee611f0145675ac333b891e2a596672194f6f4496cef766287",
+          "locator": "line:70-153",
+          "sha256": "ed25ec684dac2c28962e951a59944eee475937d7aed251500561bc89de4bba18",
           "excerpt": "## Follow-up failures exposed by the complete lane\n\nThe first actual partition run reached its terminal results in 742 seconds:\n195 tests passed and the tool-in",
           "families": [
             "audit",
@@ -89679,7 +89679,7 @@
       },
       {
         "path": ".github/workflows/browser-rendered-acceptance.yml",
-        "sha256": "9e3f697f11c4e3ee2b79029acfbbca504fc6a22ca23ffc7fa58325fd3727b470",
+        "sha256": "25032f0485e5cedf0b34e2fbfcf21786a676662e0e63ecf8b6ad91ebde0c3af8",
         "name": "Browser rendered worker acceptance",
         "state": "active",
         "scope": [
