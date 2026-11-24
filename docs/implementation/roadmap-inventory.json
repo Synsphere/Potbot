@@ -36925,12 +36925,12 @@
     },
     {
       "path": ".github/workflows/sandbox-system-image.yml",
-      "sha256": "a2e43d88c182c6776418ccc9e52f9d570f39c9c5b324f79faee8ca348bad20a2",
-      "bytes": 10049,
+      "sha256": "cf6dd72136bc398840a02eb315f66c66cdd8354de3a0eb55cac42ba299ca910f",
+      "bytes": 10145,
       "kind": "narrative_text",
-      "text_sha256": "a2e43d88c182c6776418ccc9e52f9d570f39c9c5b324f79faee8ca348bad20a2",
-      "characters": 10049,
-      "lines": 217,
+      "text_sha256": "cf6dd72136bc398840a02eb315f66c66cdd8354de3a0eb55cac42ba299ca910f",
+      "characters": 10145,
+      "lines": 219,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -37154,7 +37154,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "367ea001cff8014e3a4d4990e343c46496dcb6d5e86c1b83ae5b0b3233a691d9",
+  "review_sha256": "29c4338078bf705b250d8b4e181fe666b86294451b7dbd90e5cce73c792540da",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {

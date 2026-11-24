@@ -91694,7 +91694,7 @@
       },
       {
         "path": ".github/workflows/sandbox-system-image.yml",
-        "sha256": "a2e43d88c182c6776418ccc9e52f9d570f39c9c5b324f79faee8ca348bad20a2",
+        "sha256": "cf6dd72136bc398840a02eb315f66c66cdd8354de3a0eb55cac42ba299ca910f",
         "name": "Sandbox system image build and publication",
         "state": "active",
         "scope": [
