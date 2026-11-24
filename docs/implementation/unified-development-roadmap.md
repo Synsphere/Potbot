@@ -1,14 +1,18 @@
 # Potbot unified development roadmap
 
-**24 November 2026, R7.3-A through E in the review stack:** R7.2-A/B/C are
+**24 November 2026, R7.3-A through F and R7.4-A in the review stack:** R7.2-A/B/C are
 source-implemented; installed atomic-scheduler qualification remains separate.
 [Paired analysis](r7-3-a-paired-atomic-benchmarks.md),
 [source-pinned references](r7-3-b-reference-baselines.md),
 [frozen reviewer calibration](r7-3-c-reviewer-calibration.md),
-[deployment bindings](r7-3-d-deployment-bindings.md) and
-[blind candidate gold review](r7-3-e-private-dataset-review.md) share the existing
+[deployment bindings](r7-3-d-deployment-bindings.md),
+[blind candidate gold review](r7-3-e-private-dataset-review.md) and
+[frozen experiment accounting](r7-3-f-frozen-experiments.md) share the existing
 opt-in benchmark and retained-evidence owners. Returned-model mismatches stop
 dispatch and preserve the partial journal, usage and observed costs.
+[Offline routing shadow evaluation](r7-4-a-offline-routing-shadow.md) binds
+explicit role-specific criteria before execution and inspects complete retained
+evidence. Hypothetical choices grant no live route or promotion authority.
 
 ```mermaid
 flowchart LR
@@ -16,8 +20,10 @@ flowchart LR
     B --> C[Calibrated reviewer protocol]
     C --> D[Exact deployment declarations]
     D --> E[Frozen candidate and blind-review workflow]
-    E --> G[Authenticated gold and actual deployment measurements]
-    G --> R[Separately admitted R7.4 routing policy]
+    E --> F[Predeclared experiment and whole-cohort accounting]
+    F --> S[Frozen offline routing criteria and hypothetical comparison]
+    S --> G[Authenticated gold and actual deployment measurements]
+    G --> R[Separately admitted live shadow, canary and promotion]
 ```
 
 *Configuration overview; this diagram does not qualify a live model or route.*

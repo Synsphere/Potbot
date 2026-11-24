@@ -9,12 +9,15 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from potbot.domain.errors import InvalidInputError, ScopeDeniedError
 from potbot.domain.serialization import content_hash
 from potbot.models.providers import ProviderRequest, ProviderSelection, ProviderUsage
 from potbot.models.providers.contracts import ALLOWED_PROTOCOLS, PROVIDERS, model_name
+
+if TYPE_CHECKING:
+    from potbot.models.reasoning_schema import ReasoningOutputSpec
 
 
 def _integer(value: object, name: str, minimum: int, maximum: int) -> int:
@@ -193,14 +196,18 @@ class HostedPolicy:
         if request.selection.protocol != expected.protocol:
             raise ScopeDeniedError("The hosted protocol does not match the operator policy.")
         if (
-            len((request.prompt + request.system).encode()) > self.max_prompt_bytes
+            len(request.disclosure_bytes) > self.max_prompt_bytes
             or request.max_output_tokens > self.max_output_tokens
             or request.timeout_seconds > self.max_timeout_seconds
         ):
             raise ScopeDeniedError("The hosted request exceeds the operator policy limits.")
 
     def request(
-        self, selection: dict[str, str], value: dict[str, Any]
+        self,
+        selection: dict[str, str],
+        value: dict[str, Any],
+        *,
+        output_spec: ReasoningOutputSpec | None = None,
     ) -> tuple[ProviderRequest, int, RateRule]:
         if (
             not isinstance(selection, dict)
@@ -233,12 +240,14 @@ class HostedPolicy:
             temperature=value.get("temperature"),
             top_p=value.get("top_p"),
             seed=value.get("seed"),
+            response_format="json_schema" if output_spec is not None else "text",
+            output_spec=output_spec,
         )
         self.authorize(request)
         # Provider tokenizers and hidden template overhead are unavailable here.
         # This conservative byte-based admission estimate is labelled as such;
         # reported overruns remain charged and exhaust the task when necessary.
-        estimate = len((request.prompt + request.system).encode()) + 1024
+        estimate = len(request.disclosure_bytes) + 1024
         allowance = _integer(
             value.get("input_token_allowance", estimate),
             "Input token allowance",

@@ -86,7 +86,7 @@ _ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:/@-]*\Z")
 class ModelTarget:
     id: str
     model: str
-    backend: Literal["hosted", "loopback_openai", "deterministic"]
+    backend: Literal["hosted", "loopback_openai", "deterministic", "loopback_ollama_v1"]
     roles: tuple[str, ...]
     revision: str
     provider: str | None = None
@@ -134,6 +134,14 @@ class ModelTarget:
                 raise InvalidInputError(
                     "deterministic target requires the exact reference source pin"
                 )
+        elif self.backend == "loopback_ollama_v1":
+            if self.provider is not None or self.base_url is None:
+                raise InvalidInputError("Native Ollama target requires an explicit loopback URL")
+            from potbot.evaluation.agentic_model_transport import validate_ollama_url
+            from potbot.evaluation.agentic_ollama_transport import expected_manifest
+
+            validate_ollama_url(self.base_url)
+            expected_manifest(self.revision)
         elif self.backend == "loopback_openai":
             if self.provider is not None or not self.base_url:
                 raise InvalidInputError("loopback model requires an explicitly configured base URL")
@@ -663,7 +671,7 @@ def summarise(observations: Iterable[Observation], *, minimum_samples: int = 12)
         substitutes = [
             r
             for r in candidates
-            if r["backend"] == "loopback_openai"
+            if r["backend"] in {"loopback_openai", "loopback_ollama_v1"}
             and r["tier"] in {"micro", "small"}
             and _quality(r) >= _quality(best) - 0.03
             and r["median_latency_ms"] is not None

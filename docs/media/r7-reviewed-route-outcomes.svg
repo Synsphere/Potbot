@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="610" viewBox="0 0 1120 610" role="img" aria-labelledby="title desc">
+<title id="title">Reviewed model route outcomes</title><desc id="desc">An original checked job and provider receipt feed a private output snapshot. The owner explicitly shares this output with the designated reviewer. An independent regression verdict blocks new allocations and unsent dispatches. Completion and syntax are distinct from correctness.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#91a8bb" stroke-width="2"/></marker></defs>
+<rect width="1120" height="610" rx="20" fill="#101e2b"/>
+<g font-family="Arial,sans-serif" fill="#e9f1f7">
+<text x="38" y="48" font-size="26" font-weight="bold">Model outcomes: completion, format, independent review</text>
+<text x="38" y="78" font-size="16" fill="#b6c9d7">Implemented controller / PostgreSQL contracts · architecture illustration · shadow routes only</text>
+<g fill="#1c3447" stroke="#52758d" stroke-width="1.5"><rect x="38" y="120" width="300" height="120" rx="12"/><rect x="406" y="120" width="300" height="120" rx="12"/><rect x="774" y="120" width="308" height="120" rx="12"/></g>
+<text x="58" y="151" font-size="19" font-weight="bold">Original checked job</text><text x="58" y="181" font-size="16">Ordered output + terminal state</text><text x="58" y="207" font-size="16">Original provider receipt</text>
+<text x="426" y="151" font-size="19" font-weight="bold">Private outcome snapshot</text><text x="426" y="181" font-size="16">Exact source evidence · append-only</text><text x="426" y="207" font-size="16">32 KiB bound · no output repair</text>
+<text x="794" y="151" font-size="19" font-weight="bold">Explicit owner sharing</text><text x="794" y="181" font-size="16">Expected exact outcome digest</text><text x="794" y="207" font-size="16">Only the designated reviewer</text>
+<path d="M338 180H396M706 180H764M928 240V298" fill="none" stroke="#91a8bb" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="774" y="308" width="308" height="128" rx="12" fill="#1c3447" stroke="#65b8ad" stroke-width="1.5"/>
+<text x="794" y="340" font-size="19" font-weight="bold">Independent judgment</text><text x="794" y="370" font-size="16">Acceptable / regression / inconclusive</text><text x="794" y="398" font-size="16">Evidence + evaluator revision</text><text x="794" y="421" font-size="14" fill="#b6c9d7">A single verdict does not qualify a model.</text>
+<rect x="406" y="308" width="300" height="128" rx="12" fill="#3d2a32" stroke="#ed9d9d" stroke-width="1.5"/>
+<text x="426" y="340" font-size="19" font-weight="bold">Regression veto</text><text x="426" y="370" font-size="16">Fence allocations + unsent dispatch</text><text x="426" y="398" font-size="16">Cannot erase with baseline re-review</text><text x="426" y="421" font-size="14" fill="#e7b9b9">Shared policy lock orders the boundary.</text>
+<path d="M774 372H716" fill="none" stroke="#91a8bb" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="38" y="308" width="300" height="128" rx="12" fill="#1c3447" stroke="#52758d" stroke-width="1.5"/>
+<text x="58" y="340" font-size="19" font-weight="bold">Existing job + budget owner</text><text x="58" y="370" font-size="16">Retain uncertain work and reservation</text><text x="58" y="398" font-size="16">Never replay a lost reply</text><text x="58" y="421" font-size="14" fill="#b6c9d7">Review does not alter an external effect.</text>
+<rect x="38" y="479" width="1044" height="91" rx="12" fill="#172a38"/>
+<text x="60" y="510" font-size="18" font-weight="bold">Retained benchmark summary</text><text x="60" y="537" font-size="16">Distinct decisions · completed / failed / cancelled / indeterminate · reviewed / unreviewed / unobserved</text>
+<text x="60" y="559" font-size="14" fill="#b6c9d7">No automatic promotion, protected-holdout claim or fallback. Existing frozen comparison scores remain unchanged.</text>
+</g></svg>

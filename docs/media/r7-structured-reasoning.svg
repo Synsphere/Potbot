@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="380" viewBox="0 0 1040 380" role="img" aria-labelledby="title description">
+  <title id="title">Schema-constrained checked reasoning</title>
+  <desc id="description">An accepted recipe and frozen context determine the schema. The operation check binds its digest. The hosted decoder limits structure. Potbot independently checks the original reply before accepting the next stage.</desc>
+  <defs>
+    <marker id="tip" viewBox="0 0 10 10" markerWidth="7" markerHeight="7" refX="8" refY="5" orient="auto">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#4c6382"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, sans-serif; fill: #162846; }
+      .heading { font-size: 27px; font-weight: 730; }
+      .name { font-size: 20px; font-weight: 700; }
+      .detail { font-size: 15px; }
+      .line { stroke: #4c6382; stroke-width: 2; fill: none; marker-end: url(#tip); }
+      .note { fill: #415671; font-size: 14px; }
+    </style>
+  </defs>
+  <rect width="1040" height="380" fill="#eff4fb" rx="22"/>
+  <text x="32" y="49" class="heading">Constrain the reply before accepting a reasoning stage</text>
+  <rect x="32" y="78" width="277" height="104" rx="12" fill="#fff" stroke="#9db1ca"/>
+  <text x="50" y="111" class="name">Frozen role and branches</text>
+  <text x="50" y="139" class="detail">Derive the role's schema from</text>
+  <text x="50" y="160" class="detail">the accepted recipe and context</text>
+  <path class="line" d="M309 130 H376"/>
+  <rect x="380" y="78" width="267" height="104" rx="12" fill="#dfe9fa" stroke="#91a9ca"/>
+  <text x="398" y="111" class="name">Checked schema digest</text>
+  <text x="398" y="139" class="detail">Compare the same schema at</text>
+  <text x="398" y="160" class="detail">check and hosted dispatch</text>
+  <path class="line" d="M647 130 H714"/>
+  <rect x="718" y="78" width="290" height="104" rx="12" fill="#fff" stroke="#9db1ca"/>
+  <text x="736" y="111" class="name">Structured decoding</text>
+  <text x="736" y="139" class="detail">Limit scores, branch IDs, fields</text>
+  <text x="736" y="160" class="detail">and list lengths during generation</text>
+  <path class="line" d="M863 182 V224"/>
+  <rect x="32" y="228" width="976" height="98" rx="12" fill="#e4f1eb" stroke="#8db39d"/>
+  <text x="50" y="262" class="name">Validate the original reply independently</text>
+  <text x="50" y="291" class="detail">Adopt a valid checkpoint or stop before the next role. A duplicate branch still fails validation.</text>
+  <text x="32" y="356" class="note">Architecture illustration · Raw response and known usage remain with the original job</text>
+</svg>

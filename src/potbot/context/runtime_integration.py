@@ -33,6 +33,7 @@ from potbot.domain.errors import (
     ScopeDeniedError,
     StateMismatchError,
 )
+from potbot.tools.native_model_worker import EXECUTABLE as NATIVE_MODEL_EXECUTABLE
 
 
 def context_parent(ledger: Any, runtime: Any, workspace_id: UUID) -> Path:
@@ -240,6 +241,9 @@ async def execute_context_operation(
         raise ScopeDeniedError("Context work requires the authenticated controller binding")
     binding.check(executor, actor)
     directed_queue = getattr(op, "directed_queue", False) is True
+    sealed_model = op.argv[0] == NATIVE_MODEL_EXECUTABLE
+    if sealed_model and syn_route is None:
+        raise ScopeDeniedError("Sealed native models require the released Syn Context route")
     home = executor.homes.lookup(actor.workspace_id, agent_id)
     if home is None:
         raise ScopeDeniedError("Worker is not registered")
@@ -319,7 +323,7 @@ async def execute_context_operation(
             envelope,
             op.binding.output_type_ref,
             allow_mutations=op.binding.effect_class != "read_only",
-            work_only=directed_queue or api_read is not None,
+            work_only=sealed_model or directed_queue or api_read is not None,
             provide_value=api_read,
         )
         channel = ContextWorkerChannel(
@@ -389,14 +393,17 @@ async def execute_context_operation(
                 except BaseException:
                     pass
             if guard.lease is not None and not getattr(guard, "_finished", False):
-                if (directed_queue or api_read is not None) and stopped:
-                    # A confirmed stop releases process ownership. The durable
-                    # dispatch and receipt still govern the provider outcome.
+                if (sealed_model or directed_queue or api_read is not None) and stopped:
+                    # Process ownership ends after a confirmed stop. The durable
+                    # dispatch still governs an unobserved work result.
+                    evidence_kind = (
+                        "stopped-sealed-model:" if sealed_model else "stopped-directed-transport:"
+                    )
                     try:
                         await _settle(
                             lambda: guard.finish(
                                 evidence_sha256=admission_digest(
-                                    "stopped-directed-transport:" + str(cog.invocation_id)
+                                    evidence_kind + str(cog.invocation_id)
                                 )
                             )
                         )

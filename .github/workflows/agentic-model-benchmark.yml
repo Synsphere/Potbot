@@ -5,6 +5,21 @@ on:
     paths:
       - 'src/potbot/evaluation/agentic_*'
       - 'src/potbot/controller/atomic_tasks.py'
+      - 'src/potbot/controller/model_route_bindings.py'
+      - 'src/potbot/models/native_results.py'
+      - 'src/potbot/controller/model_reasoning_results.py'
+      - 'src/potbot/controller/reasoning_result_contracts.py'
+      - 'src/potbot/controller/reasoning_investigation.py'
+      - 'tests/unit/test_model_reasoning_results.py'
+      - 'src/potbot/controller/model_route_outcomes.py'
+      - 'src/potbot/evaluation/model_route_outcomes.py'
+      - 'tests/unit/test_model_route_outcomes.py'
+      - 'src/potbot/controller/model_routing.py'
+      - 'src/potbot/domain/model_routing.py'
+      - 'tests/unit/test_model_route_bindings.py'
+      - 'src/potbot/models/prompt_compiler.py'
+      - 'src/potbot/evaluation/prompt_contracts.py'
+      - 'tests/unit/test_prompt_contracts.py'
       - 'scripts/benchmark_agentic_models.py'
       - 'examples/agentic-benchmark/**'
       - 'tests/unit/test_agentic_*'
@@ -32,6 +47,24 @@ jobs:
       - name: Verify offline model-role and judge calibration contracts
         run: |
           uv run --locked python -m pytest -q \
+            tests/unit/test_model_reasoning_results.py \
+            tests/unit/test_reasoning_investigation_r4.py \
+            tests/unit/test_reasoning_evaluation_r5.py \
+            tests/unit/test_reasoning_steering_r25.py \
+            tests/unit/test_reasoning_adaptive_expansion.py \
+            tests/unit/test_reasoning_temporal.py \
+            tests/unit/test_model_route_outcomes.py \
+            tests/unit/test_model_route_bindings.py \
+            tests/unit/test_operation_checks.py \
+            tests/unit/test_atomic_graph_runtime.py \
+            tests/unit/test_prompt_contracts.py \
+            tests/unit/test_model_routing_contract.py \
+            tests/unit/test_model_routing_authorization.py \
+            tests/unit/test_agentic_shadow.py \
+            tests/unit/test_agentic_ollama_transport.py \
+            tests/unit/test_agentic_openai_profile.py \
+            tests/unit/test_agentic_experiments.py \
+            tests/unit/test_agentic_experiment_json.py \
             tests/unit/test_agentic_candidate_dataset.py \
             tests/unit/test_agentic_candidate_edges.py \
             tests/unit/test_agentic_deployments.py \
@@ -54,16 +87,40 @@ jobs:
         run: |
           uv run --locked python scripts/benchmark_agentic_models.py pin-reference \
             --output artifacts/agentic-benchmark/reference-models.json
+          uv run --locked python scripts/benchmark_agentic_models.py prepare-experiment \
+            --models artifacts/agentic-benchmark/reference-models.json \
+            --suite examples/agentic-benchmark/atomic-reference-suite.json \
+            --dataset-card examples/agentic-benchmark/atomic-reference-card.json \
+            --output artifacts/agentic-benchmark/experiment-plan.json
           uv run --locked python scripts/benchmark_agentic_models.py run \
             --models artifacts/agentic-benchmark/reference-models.json \
             --suite examples/agentic-benchmark/atomic-reference-suite.json \
             --dataset-card examples/agentic-benchmark/atomic-reference-card.json \
+            --experiment-plan artifacts/agentic-benchmark/experiment-plan.json \
             --output-dir artifacts/agentic-benchmark/reference-runs --store-text \
             > artifacts/agentic-benchmark/reference-run.json
           uv run --locked python scripts/benchmark_agentic_models.py audit-atomic-suite \
             --suite examples/agentic-benchmark/atomic-reference-suite.json \
             --dataset-card examples/agentic-benchmark/atomic-reference-card.json \
             --output artifacts/agentic-benchmark/dataset-audit.json
+      - name: Audit the complete predeclared pure-reference cohort
+        run: |
+          uv run --locked python - <<'PY'
+          import json
+          import runpy
+          from pathlib import Path
+          root = Path("artifacts/agentic-benchmark")
+          run = json.loads((root / "reference-run.json").read_text())
+          cli = runpy.run_path("scripts/benchmark_agentic_models.py")
+          raise SystemExit(cli["main"]([
+              "audit-experiment", "--models", str(root / "reference-models.json"),
+              "--suite", "examples/agentic-benchmark/atomic-reference-suite.json",
+              "--dataset-card", "examples/agentic-benchmark/atomic-reference-card.json",
+              "--experiment-plan", str(root / "experiment-plan.json"),
+              "--results", str(Path(run["report_dir"]) / "report.json"),
+              "--output", str(root / "experiment-audit.json"),
+          ]))
+          PY
       - name: Upload unqualified plan evidence
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

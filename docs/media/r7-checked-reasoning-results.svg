@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="590" viewBox="0 0 1120 590" role="img" aria-labelledby="title desc">
+<title id="title">Checked reasoning result boundary</title><desc id="desc">An original completed job is bound to frozen prompt provenance. Hosted receipts or native artifacts must match before role validation. Refused output never authorizes replay, and known usage remains in the existing ledger.</desc>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L7 4L0 8" fill="none" stroke="#9eb5c5" stroke-width="2"/></marker></defs>
+<rect width="1120" height="590" rx="20" fill="#101e2b"/>
+<g font-family="Arial,sans-serif" fill="#eaf2f7">
+<text x="36" y="47" font-size="26" font-weight="bold">A completed process is not yet a usable reasoning answer</text>
+<text x="36" y="78" font-size="16" fill="#b6c9d7">Implemented source contracts · explicit model fixtures · no inference-engine qualification</text>
+<g fill="#1c3447" stroke="#52758d" stroke-width="1.5"><rect x="36" y="118" width="302" height="116" rx="12"/><rect x="408" y="118" width="302" height="116" rx="12"/><rect x="780" y="118" width="304" height="116" rx="12"/></g>
+<text x="56" y="149" font-size="19" font-weight="bold">Original completed job</text><text x="56" y="180" font-size="16">Owner + decision + check + task</text><text x="56" y="205" font-size="16">No new invocation</text>
+<text x="428" y="149" font-size="19" font-weight="bold">Recompile frozen input</text><text x="428" y="180" font-size="16">Recipe + private facts + literal request</text><text x="428" y="205" font-size="16">Compare retained prompt provenance</text>
+<text x="800" y="149" font-size="19" font-weight="bold">Verify original result</text><text x="800" y="180" font-size="16">Hosted receipt or typed native artifact</text><text x="800" y="205" font-size="16">Job + deployment + completion + usage</text>
+<g fill="none" stroke="#9eb5c5" stroke-width="2" marker-end="url(#a)"><path d="M338 176H398"/><path d="M710 176H770"/><path d="M932 234V285"/></g>
+<rect x="638" y="295" width="446" height="140" rx="12" fill="#1b3a3d" stroke="#65b8ad" stroke-width="1.5"/>
+<text x="660" y="328" font-size="20" font-weight="bold">Apply the declared reasoning role</text><text x="660" y="360" font-size="16">Hypotheses · exact critique branches · bounded queries</text><text x="660" y="386" font-size="16">Known steering targets · bounded synthesis</text><text x="660" y="413" font-size="15" fill="#b6d9d1">Accepted shape does not establish correctness or permission.</text>
+<rect x="36" y="295" width="520" height="140" rx="12" fill="#3d2a32" stroke="#e9a0a0" stroke-width="1.5"/>
+<text x="58" y="328" font-size="20" font-weight="bold">Refuse mismatched or incomplete output</text><text x="58" y="360" font-size="16">Another job / deployment · malformed role · lost reply</text><text x="58" y="386" font-size="16">No repair, resend, replacement result or automatic promotion</text><text x="58" y="413" font-size="15" fill="#e7b9b9">A known completed bill remains settled after a bad answer.</text>
+<rect x="36" y="476" width="1048" height="77" rx="12" fill="#172a38"/>
+<text x="58" y="508" font-size="18" font-weight="bold">Existing Syn, worker, job and ledger authorities remain</text><text x="58" y="534" font-size="16">Reading is not dispatch. Engine loading, native token settlement, independent quality and canary gates remain open.</text>
+</g></svg>

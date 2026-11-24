@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     from potbot.models.prompt_compiler import CompiledPrompt
 
 
-def validate_loopback_url(value: str) -> str:
+def _validate_loopback_url(value: str, expected_path: str) -> str:
     if not isinstance(value, str) or len(value) > 255:
         raise InvalidInputError("loopback endpoint is invalid")
     try:
@@ -43,7 +43,7 @@ def validate_loopback_url(value: str) -> str:
             and local
             and parsed.port is not None
             and 1 <= parsed.port <= 65535
-            and parsed.path == "/v1"
+            and parsed.path == expected_path
             and not parsed.username
             and not parsed.password
             and not parsed.query
@@ -52,8 +52,16 @@ def validate_loopback_url(value: str) -> str:
     except (ValueError, TypeError):
         valid = False
     if not valid:
-        raise InvalidInputError("benchmark endpoint must be explicit HTTP loopback /v1")
+        raise InvalidInputError("benchmark endpoint must use its exact explicit HTTP loopback path")
     return value
+
+
+def validate_loopback_url(value: str) -> str:
+    return _validate_loopback_url(value, "/v1")
+
+
+def validate_ollama_url(value: str) -> str:
+    return _validate_loopback_url(value, "/api")
 
 
 class BenchmarkTransport:
@@ -73,6 +81,7 @@ class BenchmarkTransport:
         self.local_key = local_key
         self.client_factory = client_factory
         self.http_client = http_client
+        self.execution_blocked = False
 
     def request(self, target: ModelTarget, prompt: CompiledPrompt) -> Generation:
         from potbot.evaluation.agentic_model_bench import Generation
@@ -81,11 +90,20 @@ class BenchmarkTransport:
             from potbot.evaluation.agentic_reference import generate_reference
 
             return generate_reference(target, prompt)
+        if target.backend == "loopback_ollama_v1":
+            from potbot.evaluation.agentic_ollama_transport import generate_ollama
+
+            return generate_ollama(target, prompt, self.http_client)
         if target.backend == "hosted":
             if self.policy is None or self.credentials is None:
                 raise ScopeDeniedError("hosted benchmark requires an explicit policy and vault")
             assert target.provider is not None
             rule = self.policy.rule(target.provider, target.model)
+            from potbot.evaluation.agentic_openai_profile import profile_for_target
+
+            profile = profile_for_target(target)
+            if profile is not None and rule.protocol not in (None, "responses"):
+                raise ScopeDeniedError("The versioned OpenAI benchmark requires Responses")
             request = ProviderRequest(
                 selection=ProviderSelection(target.provider, target.model, rule.protocol),
                 prompt=prompt.user,
@@ -93,6 +111,8 @@ class BenchmarkTransport:
                 max_output_tokens=target.max_output_tokens,
                 timeout_seconds=90,
                 response_format="text",
+                reasoning_effort=profile["reasoning_effort"] if profile else None,
+                temperature=profile["temperature"] if profile else None,
             )
             self.policy.authorize(request)
             client = self.client_factory(self.credentials.resolve, authorize=self.policy.authorize)
@@ -105,9 +125,16 @@ class BenchmarkTransport:
                         pieces.append(event.text)
                     if isinstance(event, ProviderCompleted):
                         completed = event
+            except Exception:
+                if profile is not None:
+                    self.execution_blocked = True
+                raise
             finally:
                 client.close()
-            if completed is None or completed.finish_reason != "stop":
+            permitted = {"stop", "length"} if profile is not None else {"stop"}
+            if completed is None or completed.finish_reason not in permitted:
+                if profile is not None:
+                    self.execution_blocked = True
                 raise InvalidInputError("provider output is incomplete, usage unresolved")
             usage = completed.usage
             charged = (
@@ -124,6 +151,7 @@ class BenchmarkTransport:
                 output_tokens=usage.output_tokens if usage else None,
                 billed_microunits=charged,
                 returned_model=completed.model,
+                origin="openai-cheap-v1-" + completed.finish_reason if profile else "measured",
             )
         assert target.base_url is not None
         base = validate_loopback_url(target.base_url)

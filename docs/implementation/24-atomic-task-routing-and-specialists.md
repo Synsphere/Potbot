@@ -6,6 +6,11 @@ authorize external effects or auto-promote benchmark winners. R7 must integrate
 these contracts with PostgreSQL/SYN ledgers, the R2.5 steering inbox, admitted
 Cog operations and the model benchmarking/health monitor before production use.
 
+Current follow-on: [R7.4-C persistent shadow routing and literal JSON prompt trials](r7-4-c-persistent-shadow-routing.md)
+now binds a durable baseline decision to the existing checked queue and final
+dispatch fence. Its candidate execution remains database-blocked; the original
+roadmap below is not a claim that full R7.4 is complete.
+
 ## Why use a hybrid routing architecture?
 
 Independent implementations provide useful patterns but are not drop-in Potbot

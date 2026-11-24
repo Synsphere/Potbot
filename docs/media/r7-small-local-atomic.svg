@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 490" role="img" aria-labelledby="title desc">
+<title id="title">Actual local protocol matches on 336 attempts per model</title>
+<desc id="desc">Strict original output matches compared with a separate post-hoc diagnostic that removes one enclosing Markdown fence. This is public synthetic fixture testing, not qualification.</desc>
+<rect width="1000" height="490" fill="#f8fafc"/>
+<g font-family="sans-serif" fill="#0f172a"><text x="30" y="37" font-size="24" font-weight="bold">Small local models: output contracts matter</text>
+<text x="30" y="65" font-size="15">56 public cases ×3 prompt styles ×2 repeats; no production qualification</text>
+<text x="30" y="134" font-size="16">SmolLM2 360M</text>
+<rect x="245" y="118" width="600" height="20" fill="#e2e8f0"/>
+<rect x="245" y="118" width="3.57" height="20" fill="#1d4ed8"/>
+<text x="860" y="133" font-size="15">2/336</text>
+<rect x="245" y="143" width="600" height="15" fill="#e2e8f0"/>
+<rect x="245" y="143" width="3.57" height="15" fill="#d97706"/>
+<text x="860" y="156" font-size="14">2/336</text>
+<text x="30" y="212" font-size="16">Qwen2.5-Coder 1.5B</text>
+<rect x="245" y="196" width="600" height="20" fill="#e2e8f0"/>
+<rect x="245" y="196" width="0.00" height="20" fill="#1d4ed8"/>
+<text x="860" y="211" font-size="15">0/336</text>
+<rect x="245" y="221" width="600" height="15" fill="#e2e8f0"/>
+<rect x="245" y="221" width="280.36" height="15" fill="#d97706"/>
+<text x="860" y="234" font-size="14">157/336</text>
+<text x="30" y="290" font-size="16">Qwen3.5 0.8B</text>
+<rect x="245" y="274" width="600" height="20" fill="#e2e8f0"/>
+<rect x="245" y="274" width="75.00" height="20" fill="#1d4ed8"/>
+<text x="860" y="289" font-size="15">42/336</text>
+<rect x="245" y="299" width="600" height="15" fill="#e2e8f0"/>
+<rect x="245" y="299" width="75.00" height="15" fill="#d97706"/>
+<text x="860" y="312" font-size="14">42/336</text>
+<text x="30" y="368" font-size="16">Qwen3.5 2B</text>
+<rect x="245" y="352" width="600" height="20" fill="#e2e8f0"/>
+<rect x="245" y="352" width="271.43" height="20" fill="#1d4ed8"/>
+<text x="860" y="367" font-size="15">152/336</text>
+<rect x="245" y="377" width="600" height="15" fill="#e2e8f0"/>
+<rect x="245" y="377" width="271.43" height="15" fill="#d97706"/>
+<text x="860" y="390" font-size="14">152/336</text>
+<rect x="30" y="443" width="16" height="16" fill="#1d4ed8"/><text x="55" y="456" font-size="14">Strict primary score</text>
+<rect x="260" y="443" width="16" height="16" fill="#d97706"/><text x="285" y="456" font-size="14">One-fence diagnostic only; primary scores unchanged</text></g></svg>
