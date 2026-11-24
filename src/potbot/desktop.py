@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import threading
 from queue import Empty, SimpleQueue
+from typing import Any
 
 from potbot.desktop_state import WEB_UI_URL, DesktopStatus, probe_status
 from potbot.domain.errors import CapabilityUnavailableError, DomainError
@@ -23,6 +24,7 @@ def main() -> int:
             QPushButton,
             QSizePolicy,
             QSplitter,
+            QStackedWidget,
             QVBoxLayout,
             QWidget,
         )
@@ -31,15 +33,17 @@ def main() -> int:
             "The native desktop requires the locked PySide6-Essentials runtime."
         ) from error
 
+    from potbot.desktop_settings import create_settings_widget, native_stylesheet
     from potbot.oneclick import start_services
 
     messages: SimpleQueue[tuple[str, str]] = SimpleQueue()
 
-    class WorkspaceWindow(QMainWindow):  # type: ignore[misc]  # Optional Qt runtime.
+    class WorkspaceWindow(QMainWindow):  # type: ignore[misc, unused-ignore]  # Optional Qt runtime.
         def __init__(self) -> None:
             super().__init__()
             self._starter: threading.Thread | None = None
             self._startup_error = ""
+            self._settings_backend_ready = False
             self.setWindowTitle("Potbot")
             self.resize(1260, 780)
             self.setMinimumSize(860, 560)
@@ -59,7 +63,16 @@ def main() -> int:
             navigation = QListWidget()
             navigation.setObjectName("workspaceNav")
             navigation.addItems(
-                ["Chat", "Reasoning graph", "Applications", "Models", "Preferences"]
+                [
+                    "Chat",
+                    "Reasoning graph",
+                    "Applications",
+                    "Models",
+                    "Tools",
+                    "Workspace swarm",
+                    "Settings",
+                    "Preferences",
+                ]
             )
             navigation.setCurrentRow(0)
             navigation.setMaximumWidth(210)
@@ -90,7 +103,25 @@ def main() -> int:
             canvas.addWidget(title)
             canvas.addWidget(explanation)
             canvas.addWidget(empty_chat, 1)
-            scene.addWidget(content)
+            self.settings_panel = create_settings_widget(self)
+            self.settings_panel.preferencesChanged.connect(self._apply_preferences)
+            self.settings_panel.mutationBusy.connect(navigation.setDisabled)
+            pages = QStackedWidget()
+            pages.addWidget(content)
+            pages.addWidget(self.settings_panel)
+
+            def select_panel(index: int) -> None:
+                section = {3: "models", 4: "tools", 5: "swarm", 6: "overview", 7: "appearance"}.get(
+                    index
+                )
+                if section is None:
+                    pages.setCurrentWidget(content)
+                else:
+                    pages.setCurrentWidget(self.settings_panel)
+                    self.settings_panel.open_section(section)
+
+            navigation.currentRowChanged.connect(select_panel)
+            scene.addWidget(pages)
             scene.setStretchFactor(1, 1)
             layout.addWidget(scene, 1)
             self.setCentralWidget(root)
@@ -131,33 +162,22 @@ def main() -> int:
             applications.setWidget(app_body)
             self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, applications)
 
-            self.setStyleSheet(
-                """
-                QMainWindow, QWidget { background: #08131d; color: #e9f3fa; }
-                #startupBanner { background: #102638; color: #87ddf2; font-weight: 700;
-                                 border-bottom: 1px solid #244154; }
-                #workspaceNav { background: #0c1a26; border: 0; padding: 10px; }
-                #workspaceNav::item { padding: 11px 12px; margin: 2px; border-radius: 6px; }
-                #workspaceNav::item:selected { background: #163b4c; color: #9ce9f7; }
-                #workspaceCanvas { padding: 26px; }
-                #eyebrow { color: #68cfe9; font-size: 11px; font-weight: 700; }
-                #workspaceTitle { font-size: 27px; font-weight: 700; padding: 4px 0 2px 0; }
-                #workspaceCopy { color: #a8bbc7; font-size: 13px; }
-                #emptyWorkspace { color: #738c9c; font-size: 14px; padding: 40px; }
-                #statusRow { padding: 8px; background: #10202d; border-radius: 5px; }
-                QDockWidget { color: #dbeaf2; }
-                QDockWidget::title { background: #0e1e2a; padding: 8px; }
-                QPushButton { background: #17445a; border: 1px solid #2d718d; border-radius: 5px;
-                              padding: 8px 12px; color: white; }
-                QPushButton:disabled { color: #657a86; background: #10202a; border-color: #203744; }
-                QPushButton:hover:!disabled { background: #205b75; }
-                """
-            )
+            self.setStyleSheet(native_stylesheet("dark"))
 
             self.timer = QTimer(self)
             self.timer.timeout.connect(self._refresh)
             self.timer.start(800)
             self._refresh()
+
+        def _apply_preferences(self, settings: dict[str, object]) -> None:
+            application = QApplication.instance()
+            assert isinstance(application, QApplication)
+            system_dark = application.styleHints().colorScheme() == Qt.ColorScheme.Dark
+            self.setStyleSheet(native_stylesheet(str(settings.get("theme", "system")), system_dark))
+
+        def closeEvent(self, event: Any) -> None:
+            self.settings_panel.close()
+            super().closeEvent(event)
 
         def start_stack(self, _checked: bool = False) -> None:
             if self._starter is not None and self._starter.is_alive():
@@ -202,6 +222,9 @@ def main() -> int:
             self.status_labels["xpra"].setText("Xpra applications · " + self._label(status.xpra))
             self.status_labels["web"].setText("Remote web interface · " + self._label(status.web))
             self.web_button.setEnabled(status.web)
+            if status.backend and not self._settings_backend_ready:
+                self.settings_panel.backend_available()
+            self._settings_backend_ready = status.backend
             self.retry_button.setEnabled(self._starter is None or not self._starter.is_alive())
             if status.xpra:
                 self.app_message.setText(

@@ -2020,7 +2020,7 @@
         {
           "path": "src/potbot/tools/inventory.py",
           "symbol": "build_inventory",
-          "sha256": "04a22c379d141a7a068cc043d6af66b03aa18da5cf5eb51887e10b3c1fe886c0",
+          "sha256": "2d64605789880687a105afceb491e2bdea509ec7923e7259137deec50b145792",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
         },
         {
@@ -2364,7 +2364,7 @@
         {
           "path": "tests/unit/test_tool_inventory.py",
           "symbol": "test_every_committed_python_path_has_an_explicit_source_inventory_owner",
-          "sha256": "2d9135811e3685fe8e46cb9bf1769b4bbb4f861325ae2f89dd168c1f935c41f1",
+          "sha256": "d38af9618106ef26e2dbe776dc9886b090d81d2085d0ca1ad5529f2cd5b5be8f",
           "basis": "Committed Python path namespace with inert synthetic bodies; all existing root modules have explicit integration owners and unknown root modules still fail closed. This is not source-body or runtime qualification."
         }
       ],
@@ -4382,8 +4382,8 @@
           "basis": "Effectful CLI entry points require deliberate confirmation before constructing runtime owners."
         }
       ],
-      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences. U04-A adds a complete /skills acquisition/review/install/activation/resource/update/rollback/disable/revoke workshop with scoped durable mutation recovery. U04-X follow-on: adds the complete /setup/tools source/review/build/test/promotion/repin/postflight/rollback/recovery workflow, preserving legacy tested approvals and exact scoped uncertain-request journals. U04-D follow-on: adds /discover search, source/publisher decisions, exact review and bounded host-measurement monitoring with stable scoped uncertain-request recovery. Handoff links select the exact existing package or tool operation and do not automatically install, activate or execute it. U04-M follow-on: adds /discover/mcp for current binding review, tools/resources/templates/prompts inspection, exact reference copy, explicit queued reconciliation, monitoring and enable/disable/revoke/cancel decisions with scoped uncertain-response recovery. U04-Q follow-on: adds /discover/mcp/qualification for scoped suite/case review, exact request/control/cancel decisions, bounded GET monitoring, explicit identical-request recovery and current versus historical task report inspection. U04-S follow-on: adds /discover/tasks for explicit context review, typed constraints, lexical/pending hybrid requests, explained shortlists/exclusions, progressive inspection and exact reviewed selections/cancellation. U04-T follow-on: adds a selection-bound /tools workbench with explicit check then launch, exact job resume, independent verification, fixed BFF routes and stable-key recovery. T05-A follow-on: adds /research from task/need creation through reviewed action and disclosure admission, exact run resume, source inspection, citation verification and historical comparison readback. T05-B/R7.1 follow-on: Displays all specialist source metadata and lineage under the existing research workflow, accepts the actual PostgreSQL/HTTP fixture, and retains the safe reasoning graph projection for interrupted runs. CFG01 follow-on adds /settings, seven revisioned preference controls, workspace-scoped inventories and swarm request review while retaining the active Home context.",
-      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance. U04-A binds the browser to fixed authenticated BFF routes, exact plans/revisions and the server-only setup capability; TypeScript/Node/build checks remain distinct from rendered-browser qualification. U04-X follow-on: Fixed authenticated BFF routes accept recipe IDs, exact commits and digest/revision decisions; host commands, private claims and setup secrets are not browser authority. Actual HTTP/PostgreSQL fixture projections and Node/type/build checks remain separate from rendered-browser acceptance. U04-D follow-on: Fixed authenticated BFF routes enforce byte/query limits, current workspace/principal projection and server-only setup capability. Actual HTTP fixture projections, browser state helpers and Node/type/build checks remain separate from rendered-browser acceptance. U04-M follow-on: Actual HTTP/PostgreSQL exported envelopes feed strict frontend projections. Browser mutations accept reviewed identities and digests only; private native profiles, setup capability and worker claims stay server-side. Node/type/build evidence is separate from rendered installed-host acceptance. U04-Q follow-on: Actual HTTP/PostgreSQL envelopes feed strict DTOs, fixed BFF routes and exact suite/attempt/report joins. Browser inputs cannot execute native work, upload reports, supply private cases or dispatch receipt recovery. Node/type/build gates do not claim a rendered installed-host qualification. U04-S follow-on: Strict actual HTTP/PostgreSQL projections, fixed BFF routes, scoped exact-command recovery and bounded GET monitoring expose no browser inference or execution. Production builds and unit checks do not establish rendered installed-host qualification. U04-T follow-on: Actual HTTP/PostgreSQL export consumption, unit checks, TypeScript and production build establish the implemented contract; rendered installed-host acceptance and live provider qualification remain separate. T05-A follow-on: Fixed BFF routes, scope fencing, exact recovery, actual HTTP fixture consumption, TypeScript and production build establish the implemented contract; rendered-host and live-provider qualification remain separate. T05-B/R7.1 follow-on: Strict projectors preserve complete original provider observations and native reservation parity. Raw steering context and principal/dispatch details do not pass through the graph projection. Source/type/build checks remain distinct from rendered installed-host qualification. CFG01 projections and the production build do not establish rendered desktop/mobile or screen-reader acceptance.",
+      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences. U04-A adds a complete /skills acquisition/review/install/activation/resource/update/rollback/disable/revoke workshop with scoped durable mutation recovery. U04-X follow-on: adds the complete /setup/tools source/review/build/test/promotion/repin/postflight/rollback/recovery workflow, preserving legacy tested approvals and exact scoped uncertain-request journals. U04-D follow-on: adds /discover search, source/publisher decisions, exact review and bounded host-measurement monitoring with stable scoped uncertain-request recovery. Handoff links select the exact existing package or tool operation and do not automatically install, activate or execute it. U04-M follow-on: adds /discover/mcp for current binding review, tools/resources/templates/prompts inspection, exact reference copy, explicit queued reconciliation, monitoring and enable/disable/revoke/cancel decisions with scoped uncertain-response recovery. U04-Q follow-on: adds /discover/mcp/qualification for scoped suite/case review, exact request/control/cancel decisions, bounded GET monitoring, explicit identical-request recovery and current versus historical task report inspection. U04-S follow-on: adds /discover/tasks for explicit context review, typed constraints, lexical/pending hybrid requests, explained shortlists/exclusions, progressive inspection and exact reviewed selections/cancellation. U04-T follow-on: adds a selection-bound /tools workbench with explicit check then launch, exact job resume, independent verification, fixed BFF routes and stable-key recovery. T05-A follow-on: adds /research from task/need creation through reviewed action and disclosure admission, exact run resume, source inspection, citation verification and historical comparison readback. T05-B/R7.1 follow-on: Displays all specialist source metadata and lineage under the existing research workflow, accepts the actual PostgreSQL/HTTP fixture, and retains the safe reasoning graph projection for interrupted runs. CFG01 follow-on adds /settings, seven revisioned preference controls, workspace-scoped inventories and swarm request review while retaining the active Home context. CFG02 adds native Qt settings, preferences, model/tool inventories and swarm grant review directly over existing APIs, independent of Next.js.",
+      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance. U04-A binds the browser to fixed authenticated BFF routes, exact plans/revisions and the server-only setup capability; TypeScript/Node/build checks remain distinct from rendered-browser qualification. U04-X follow-on: Fixed authenticated BFF routes accept recipe IDs, exact commits and digest/revision decisions; host commands, private claims and setup secrets are not browser authority. Actual HTTP/PostgreSQL fixture projections and Node/type/build checks remain separate from rendered-browser acceptance. U04-D follow-on: Fixed authenticated BFF routes enforce byte/query limits, current workspace/principal projection and server-only setup capability. Actual HTTP fixture projections, browser state helpers and Node/type/build checks remain separate from rendered-browser acceptance. U04-M follow-on: Actual HTTP/PostgreSQL exported envelopes feed strict frontend projections. Browser mutations accept reviewed identities and digests only; private native profiles, setup capability and worker claims stay server-side. Node/type/build evidence is separate from rendered installed-host acceptance. U04-Q follow-on: Actual HTTP/PostgreSQL envelopes feed strict DTOs, fixed BFF routes and exact suite/attempt/report joins. Browser inputs cannot execute native work, upload reports, supply private cases or dispatch receipt recovery. Node/type/build gates do not claim a rendered installed-host qualification. U04-S follow-on: Strict actual HTTP/PostgreSQL projections, fixed BFF routes, scoped exact-command recovery and bounded GET monitoring expose no browser inference or execution. Production builds and unit checks do not establish rendered installed-host qualification. U04-T follow-on: Actual HTTP/PostgreSQL export consumption, unit checks, TypeScript and production build establish the implemented contract; rendered installed-host acceptance and live provider qualification remain separate. T05-A follow-on: Fixed BFF routes, scope fencing, exact recovery, actual HTTP fixture consumption, TypeScript and production build establish the implemented contract; rendered-host and live-provider qualification remain separate. T05-B/R7.1 follow-on: Strict projectors preserve complete original provider observations and native reservation parity. Raw steering context and principal/dispatch details do not pass through the graph projection. Source/type/build checks remain distinct from rendered installed-host qualification. CFG01 projections and the production build do not establish rendered desktop/mobile or screen-reader acceptance. Native offscreen widget interaction and recovery contracts remain distinct from manual accessibility, installed-host and remote-runtime qualification.",
       "remaining": [
         "Connect job-backed inference, principal-aware workspace discovery and resumable terminal/graph APIs",
         "Preserve exact orb, reduced-motion/accessibility and metric timing/denominator contracts"
@@ -71435,41 +71435,45 @@
     },
     {
       "path": "docs/implementation/native-desktop-m1.md",
-      "sha256": "e9a7aba01bfd83144423d168a9f3f7d49eb0a6bf492f3a1ad0cd6cf22b82fe14",
+      "sha256": "e040ed1e9e5bb4ec6154f79a6ce01a89a4e0bbc435f66fc9e0cd189dbf43c2cd",
       "families": [
         "frontend",
         "recovery"
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
-      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates. CFG02 adds native Qt settings, inventories and reviewed swarm control through existing APIs; remote and assistive-technology qualification remain separate.",
       "narrative": [
         {
-          "locator": "line:1-16",
-          "sha256": "e6a7893a765ee7d825891c162af7da44e5d0a53f73bea7b842094d66eda92225",
+          "locator": "line:1-23",
+          "sha256": "80893e26b1a81f0d8159eed92bd81ac29d3b7ad5d211722f4c83eebb6398f050",
+          "excerpt": "# Native desktop implementation\n\nPotbot now has two intentional user interfaces:\n\n- **Native local Qt 6 client** \u2014 the default local surface on Windows, macOS a",
           "families": [
             "frontend",
             "recovery"
           ]
         },
         {
-          "locator": "line:17-24",
+          "locator": "line:24-31",
           "sha256": "382eb7e2f810aadbc9d860cf7adbee7f04cb5bb735ed5c43cc086d5d4fdff174",
+          "excerpt": "## Startup contract\n\nThe local process creates and shows `QMainWindow` before starting the existing\none-click provisioning path in a daemon thread. The workspac",
           "families": [
             "frontend",
             "recovery"
           ]
         },
         {
-          "locator": "line:25-36",
+          "locator": "line:32-43",
           "sha256": "134817c42b903aa8209dc4489e6af059a2d507d2e1b151ec6c2e10d609a7ee70",
+          "excerpt": "## Credential hardening included in M1\n\nManaged Windows WSL no longer makes Potbot's own `CredentialStore` depend on\nD-Bus Secret Service readiness. Potbot call",
           "families": [
             "frontend",
             "recovery"
           ]
         },
         {
-          "locator": "line:37-44",
-          "sha256": "b5d8301ec5d75cc18af3b3da04e77742681b11f36d50df8eea15554941bc00ca",
+          "locator": "line:44-51",
+          "sha256": "546b7cc9c088ee88724ee65ad8b966f1ed5a8b0de26b468a8ecb37d2bc03fa8f",
+          "excerpt": "## Next milestones\n\n1. Move native chat/session history and reasoning graph views into Qt.\n2. Add native application inventory and launch controls.\n3. Reuse the",
           "families": [
             "frontend",
             "recovery"
@@ -81066,6 +81070,112 @@
           "families": [
             "configuration",
             "frontend",
+            "models",
+            "native-remote-workspaces"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/images/native-settings-appearance.png",
+      "sha256": "a03c5faf0c6cbca97419f65507b6099301eb0fe81ca34429f5452fe97059194a",
+      "families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Real Qt widgets over existing APIs. Actual offscreen captures use explicit synthetic records; no production node or inference runtime qualification.",
+      "narrative": []
+    },
+    {
+      "path": "docs/images/native-settings-models.png",
+      "sha256": "6691e31d3c77e9f4a33d5063749a2974582173ff7fe9bee96708275843b6e6b8",
+      "families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Real Qt widgets over existing APIs. Actual offscreen captures use explicit synthetic records; no production node or inference runtime qualification.",
+      "narrative": []
+    },
+    {
+      "path": "docs/implementation/cfg02-native-python-settings.md",
+      "sha256": "71d32acf0d482e3094c9e56a2561c14702cc430f58d56eb348d2ff5e86773a38",
+      "families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Real Qt widgets over existing APIs. Actual offscreen captures use explicit synthetic records; no production node or inference runtime qualification.",
+      "narrative": [
+        {
+          "locator": "line:1-7",
+          "sha256": "9e3fcd6e525afd66f1ba47aca18ee3d7e5ce82d4df6fbb63de221c29b93ae31a",
+          "excerpt": "# Native Python settings and workspace swarm controls\n\nPotbot's Python desktop now opens real Qt panels for **Settings**, **Preferences**,\n**Models**, **Tools**",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:8-28",
+          "sha256": "11db73ecd1f79daad466bd825de7594960694e84961fd731a3951680445cd927",
+          "excerpt": "## Use the native settings panels\n\nStart Potbot through the existing native desktop entry point. Select **Settings**\nin the left navigation for all fourteen cat",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:29-47",
+          "sha256": "208afbf736fe76b9f5b33092f84e7056feda819e1ee3703c0270617a01183588",
+          "excerpt": "## Inspect model and tool inventories\n\nModels and Tools display searchable native tables with separate columns for\npresence, qualification, recorded health and ",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:48-68",
+          "sha256": "b2750b536c578630fae0b7636fe56eaef8c1ee24576d522387a4212711487814",
+          "excerpt": "## Manage workspace control grants\n\nWorkspace swarm has native tabs for nodes, deployments, direct control grants\nand management requests. Registered nodes rema",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:69-86",
+          "sha256": "dc51a45142ffb2321f52d262b14a1829823c161fd135c3b11aff783d9a4811ea",
+          "excerpt": "## Connections and native credential custody\n\nThe default connection comes from the existing service configuration and its\nselected native vault profile. Option",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:87-108",
+          "sha256": "3387a41424de89205379d48e7d46fbc4e1249fb0825c262fec3342da4c764735",
+          "excerpt": "## Verification and remaining acceptance\n\nThe [native acceptance workflow](../../.github/workflows/native-settings.yml)\nrequires actual Qt tests on Windows and ",
+          "families": [
+            "frontend",
+            "configuration",
             "models",
             "native-remote-workspaces"
           ]
@@ -90670,6 +90780,19 @@
         ],
         "at_reviewed_base": false,
         "qualification_limit": "Execution is established only by the actual current-head run. Fixtures do not qualify a remote node, model runtime or rendered UI."
+      },
+      {
+        "path": ".github/workflows/native-settings.yml",
+        "sha256": "986a167d6203cdee453d7bbcc5236fa6365d17ceef8b3b04f6cf1ef2e22341ad",
+        "name": "Native Python settings and swarm UI",
+        "state": "active",
+        "at_reviewed_base": false,
+        "scope": [
+          "Required Windows/Linux offscreen Qt interaction, scope and recovery tests",
+          "Native Qt actions through HTTP handlers and disposable PostgreSQL",
+          "No skipped native/database acceptance; labelled Qt fixture captures"
+        ],
+        "qualification_limit": "Only an actual inspected current-head run establishes execution. These fixtures do not qualify an installed production host, model or remote node."
       }
     ],
     "baseline_checks": {
@@ -95325,6 +95448,69 @@
         }
       ],
       "next_action": "Run the dedicated PostgreSQL/frontend CI and perform rendered desktop/mobile, keyboard and screen-reader acceptance when the supported browser connection is available; continue live configuration ownership and native lifecycle stages independently."
+    },
+    {
+      "id": "CFG02/native-python-settings-and-swarm",
+      "implementation_base": "871a32cd021f77454af6be5af31a58382458e2ee",
+      "reviewed_on": "2026-11-24",
+      "source": "docs/implementation/cfg02-native-python-settings.md",
+      "review_family": "frontend",
+      "runtime_qualified": false,
+      "evidence_boundary": "Actual Qt forms reuse existing API owners. Offscreen interaction and SQL fixtures remain separate from production-host and remote-runtime qualification.",
+      "code_evidence": [
+        {
+          "path": "src/potbot/desktop_settings.py",
+          "symbol": "create_settings_widget",
+          "sha256": "5e6f4cc38d0bad582bdc319d18397d5bc4c7ec50f043183a3aea42848f72e549",
+          "symbol_sha256": "db76c2426a9cc3f5c189b87f84a9936c88f8259c3a482e90fe65b1e80be15e5b",
+          "basis": "Real native widgets, generation-fenced reads, conflict review and explicit grant intent."
+        },
+        {
+          "path": "src/potbot/desktop_settings_client.py",
+          "symbol": "NativeSettingsClient",
+          "sha256": "2d5b155f85184163f671e5d5326a41ffe5a929a3a797792ee958ccae9954eb9a",
+          "symbol_sha256": "cd9975c9fed6e0db02d631e42147c9b7a75b07ba2841186fd26e91c58c54a705",
+          "basis": "Fixed loopback API routes and scoped projections without administrator DSNs."
+        },
+        {
+          "path": "src/potbot/desktop_settings_state.py",
+          "symbol": "RevocationJournal",
+          "sha256": "4700744a1d8ed638ebb80b7fa1123ff5bed796d057107fe6a9c1ef0714ddbb68",
+          "symbol_sha256": "7be158f7276ab33f98bdb5592a23aae6a8fc1e1146caf9a7edfb5d5fec3de727",
+          "basis": "Persist an exact private review before explicit submission; no automatic retry."
+        }
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/unit/test_desktop_settings_qt.py",
+          "symbol": "test_native_scope_switch_discards_late_read_and_preserves_home_context",
+          "sha256": "8d4ddf93eadc52a4cca332aae416781c9d4f47b71f6b44cf5d546c30825fa507",
+          "symbol_sha256": "d8d0ed4807acdacbe3dbac1fb508abc6873e80615b5d668733b65942b2f4ed11",
+          "basis": "Actual Qt drops late responses while retaining Home."
+        },
+        {
+          "path": "tests/unit/test_desktop_settings_qt.py",
+          "symbol": "test_native_revocation_reviews_exact_identity_and_survives_a_lost_reply",
+          "sha256": "8d4ddf93eadc52a4cca332aae416781c9d4f47b71f6b44cf5d546c30825fa507",
+          "symbol_sha256": "19a428787a51b8a2752ceeaf74d39abd73b89166c11826329b86f6c0637e3627",
+          "basis": "Actual Qt review/cancel and explicit same-request retry."
+        },
+        {
+          "path": "tests/integration/test_desktop_settings.py",
+          "symbol": "test_native_qt_preferences_inventory_and_revocation_use_actual_api_and_ledger",
+          "sha256": "06968c5ae20ebde6beefefdab3d53b8846fac2db83ec4927b63de4ac66cf3832",
+          "symbol_sha256": "cb3477b399046115f2d1692e7ddba5d23fd5869f2748f69bd5a2b271f33ceffe",
+          "basis": "Qt/HTTP preference conflict and protected grant readback with real PostgreSQL."
+        },
+        {
+          "path": "tests/unit/test_tool_inventory.py",
+          "symbol": "test_native_settings_modules_keep_the_existing_entrypoint_owner",
+          "sha256": "d38af9618106ef26e2dbe776dc9886b090d81d2085d0ca1ad5529f2cd5b5be8f",
+          "symbol_sha256": "a08cf3a8008c6c053d21bdc6ff5601322f1603203f24b608d2d54ffcb526ac97",
+          "basis": "New native modules keep the maintained source inventory owner."
+        }
+      ],
+      "next_action": "Inspect required native Windows/Linux and Qt/PostgreSQL CI; retain manual accessibility, installed profile and qualified node lifecycle acceptance."
     }
   ],
   "current_delivery_order": {

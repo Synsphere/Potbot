@@ -295,3 +295,14 @@ def test_every_committed_python_path_has_an_explicit_source_inventory_owner():
         component["qualification"] == "not_established_by_source_inventory"
         for component in report["components"]
     )
+
+
+def test_native_settings_modules_keep_the_existing_entrypoint_owner():
+    paths = {
+        f"src/potbot/{name}.py": b"raise RuntimeError('never import native UI during inventory')"
+        for name in ("desktop_settings", "desktop_settings_client", "desktop_settings_state")
+    }
+    report = build_inventory(fixture_snapshot(extra=paths))
+    entrypoints = next(row for row in report["components"] if row["id"] == "entrypoints")
+    assert set(paths) <= {row["path"] for row in entrypoints["source_files"]}
+    assert entrypoints["qualification"] == "not_established_by_source_inventory"
