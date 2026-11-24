@@ -97397,7 +97397,7 @@
     {
       "id": "CFG03/live-configuration-and-native-worker-control",
       "implementation_base": "0956d071b360305434fff85297521c45bd9830dd",
-      "source_commit": "1fe250e5cb8a4675a916f38ee73d2abdb9ec78bd",
+      "source_commit": "1d9c9cf897cb4a0c51e35238b0b470c09f22c09f",
       "reviewed_on": "2026-11-24",
       "source": "docs/implementation/cfg03-live-configuration-and-node-controls.md",
       "review_family": "configuration",
@@ -97414,14 +97414,14 @@
         {
           "path": "src/potbot/controller/node_controls.py",
           "symbol": "NodeControls",
-          "sha256": "76b766d20984a7d7e93880e6174a77b4ff578bad8430f87054f1d60af571af91",
-          "symbol_sha256": "163e524658f353120c6bdbbee20bbea5e8c68dc16917e17e83c94d604ca65235",
+          "sha256": "9da4be92fc47d2224baf4f8b3462a708e3164d89829c540fc46162399d21a2c3",
+          "symbol_sha256": "4c6679055f4436ff2f7d752300480c19220ed8b1df7d89f91bf48ff8d3938327",
           "basis": "Exact owner/setup review and independently read native completion events."
         },
         {
           "path": "src/potbot/tools/node_supervisor.py",
           "symbol": "NativeNodeSupervisor",
-          "sha256": "af6dffe5309728a00ce6cd0b898d235c2858e6603a84a0c392216da93208473d",
+          "sha256": "a727bdfb572f1ca3f9b7e195dce894d9a16c571c9e7aa3519726280b0dfb059b",
           "symbol_sha256": "3e832cdc2d646dba909481a7d7f1dd6d3b1b981d2aa4014612c4c3fef8c74a0f",
           "basis": "Host-side drain, conservative holds, old-process exit and replacement readiness."
         },
@@ -97437,14 +97437,14 @@
         {
           "path": "tests/integration/test_live_controls.py",
           "symbol": "test_drain_fences_claims_then_waits_for_jobs_and_both_kinds_of_holds",
-          "sha256": "d91e61bd21becd3edbf8cbc28ac5eea23b11bbed2e45fac9d8cfaf62b2452fae",
+          "sha256": "7b73b74fee212692c678a00a5d73034c92c3ab0ed4a9105bf2c3c8815a92ec00",
           "symbol_sha256": "b3f3cedf7ce045b3e6637bcce62864993face3c5f275c2235238471295f11eef",
           "basis": "Actual SQL drain fences claims and waits for jobs, budget and atomic holds."
         },
         {
           "path": "tests/integration/test_live_controls.py",
           "symbol": "test_actual_restricted_jobs_worker_starts_and_restarts_with_empty_queue",
-          "sha256": "d91e61bd21becd3edbf8cbc28ac5eea23b11bbed2e45fac9d8cfaf62b2452fae",
+          "sha256": "7b73b74fee212692c678a00a5d73034c92c3ab0ed4a9105bf2c3c8815a92ec00",
           "symbol_sha256": "3bdd7e7e602314fc81bf041dca3e6e65daa1a5aae7bd537bbe24b4bba451d4ae",
           "basis": "Existing real restricted CLI worker startup and replacement; no model call."
         },
