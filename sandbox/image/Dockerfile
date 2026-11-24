@@ -1,7 +1,22 @@
 # Build-time only: Docker Compose makes an immutable Linux rootfs. Potbot NEVER
 # uses Docker for sandbox execution. Downloads stay in the host-side /var/ai bind.
 ARG BASE_IMAGE
+FROM ${BASE_IMAGE} AS native-inference
+ARG NATIVE_INFERENCE=0
+RUN mkdir -p /opt/potbot/native-inference \
+    && if [ "$NATIVE_INFERENCE" = 1 ]; then \
+        apt-get update \
+        && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            ca-certificates build-essential python3-dev python3-venv \
+        && python3 -m venv --copies /opt/potbot/native-inference \
+        && CMAKE_BUILD_PARALLEL_LEVEL=2 \
+            CMAKE_ARGS="-DGGML_NATIVE=OFF -DGGML_OPENMP=OFF -DGGML_RPC=OFF" \
+            /opt/potbot/native-inference/bin/pip install --no-cache-dir "llama-cpp-python==0.3.19" \
+        && chmod -R a-w /opt/potbot/native-inference; \
+    else test "$NATIVE_INFERENCE" = 0; fi
+
 FROM ${BASE_IMAGE}
+COPY --from=native-inference /opt/potbot/native-inference /opt/potbot/native-inference
 ARG SOURCE_COMMIT
 LABEL org.opencontainers.image.title="Potbot minimal Linux sandbox rootfs" \
       org.opencontainers.image.source="https://github.com/kieransimkin/potbot" \
@@ -52,6 +67,8 @@ COPY sandbox/clients/context_client.py /opt/potbot/context_client.py
 COPY sandbox/qualification/worker_probe.py /usr/local/libexec/potbot-worker-probe
 COPY src/potbot/tools/queue_transport_worker.py /usr/local/libexec/potbot-queue-transport
 COPY src/potbot/tools/python_profile_worker.py /usr/local/libexec/potbot-python-profile
-RUN chmod 0555 /usr/local/libexec/potbot-worker-probe /usr/local/libexec/potbot-queue-transport /usr/local/libexec/potbot-python-profile
+COPY src/potbot/tools/native_model_worker.py /usr/local/libexec/potbot-local-model
+RUN chmod 0555 /usr/local/libexec/potbot-worker-probe /usr/local/libexec/potbot-queue-transport \
+    /usr/local/libexec/potbot-python-profile /usr/local/libexec/potbot-local-model
 WORKDIR /home
 CMD ["/bin/bash"]
