@@ -244,15 +244,14 @@ def test_wsl_scope_detaches_only_known_infrastructure_9p_mounts(tmp_path, monkey
 
     monkeypatch.setattr(scoped_launcher.subprocess, "run", run)
     scoped_launcher._detach_wsl_infrastructure_shares(mountinfo)
-    assert removed[:3] == [
-        "/mnt/wslg/distro",
-        "/mnt/wslg/doc",
-        "/mnt/wslg/versions.txt",
-    ]
-    assert "/mnt/wslg" in removed
-    assert "/usr/lib/wsl/drivers" in removed
-    assert "/usr/lib/wsl/lib" in removed
-    assert "/init" in removed
+    expected = {row.split()[4] for row in rows}
+    assert set(removed) == expected
+    assert len(removed) == len(expected)
+    # Mount depth governs safe detachment; unrelated peers need no fixed order.
+    for mountpoint in expected:
+        for child in expected:
+            if child.startswith(mountpoint + "/"):
+                assert removed.index(child) < removed.index(mountpoint)
 
 
 def test_wsl_scope_rejects_arbitrary_remaining_drvfs_mount(tmp_path, monkeypatch) -> None:
