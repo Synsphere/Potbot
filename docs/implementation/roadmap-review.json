@@ -4512,6 +4512,24 @@
           "symbol": "audit_candidate_review",
           "sha256": "f5eee5fac60f9054b9338b6d0a13a81f361ab485c961bc4dbe25cfaa89536c81",
           "basis": "R7.3-E synthetic private-candidate/blind-review protocol, exact reconstruction, oracle controls, typed conflicts and pre-transport admission. No actual private dataset, reviewer authentication or live deployment is qualified."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_experiments.py",
+          "symbol": "freeze_atomic_experiment",
+          "sha256": "aa51b3114cf8474f705f1fc913bce3424ab5225d2b7c698ae10bc3c6ab408e05",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_experiments.py",
+          "symbol": "audit_atomic_experiment",
+          "sha256": "aa51b3114cf8474f705f1fc913bce3424ab5225d2b7c698ae10bc3c6ab408e05",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "scripts/benchmark_agentic_models.py",
+          "symbol": "_experiment_admission",
+          "sha256": "bf14cea983ef623e342e2be79cb701d401b602f7b15e2465956be6cb9fe09abf",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
         }
       ],
       "tests": [
@@ -4671,9 +4689,27 @@
           "symbol": "test_bool_and_integer_gold_are_a_conflict_not_python_equality",
           "sha256": "2cffb44015ab020517b540bd7a7f558b96926af728fa81fc6448127243c105b3",
           "basis": "R7.3-E synthetic private-candidate/blind-review protocol, exact reconstruction, oracle controls, typed conflicts and pre-transport admission. No actual private dataset, reviewer authentication or live deployment is qualified."
+        },
+        {
+          "path": "tests/unit/test_agentic_experiments.py",
+          "symbol": "test_run_retains_plan_before_first_dispatch_and_offline_audit_never_replays",
+          "sha256": "1ea2f56279011cf13e4d7c7919d2f457c4cf016bbb12e5c5c2f1a77d23756b7e",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "tests/unit/test_agentic_experiments.py",
+          "symbol": "test_missing_uncertain_mismatch_and_failed_outputs_keep_their_denominators",
+          "sha256": "1ea2f56279011cf13e4d7c7919d2f457c4cf016bbb12e5c5c2f1a77d23756b7e",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "tests/unit/test_agentic_experiment_json.py",
+          "symbol": "test_invalid_json_is_refused",
+          "sha256": "ffef5b08434f54c6588d585f01ff8e7d6dcbc4dbe29d8698198ae710f499e6f5",
+          "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
         }
       ],
-      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route. R7.3-C adds frozen anonymous reviewer task pairs, exact bundle admission before inference and complete retained-matrix calibration. Repeated verdicts and reversed positions count as one source task; declared self-model aliases are refused. Synthetic correctness and self-consistent gold do not authenticate a provider, independent oracle or deployed model. R7.3-D reuses the existing LocalHostProfile/DeploymentSpec preflight, binds exact target configuration and retains returned labels/origins. A known mismatch stops primary and derived requests with partial journals, observed charges and held admission reservations preserved; offline paired/reviewer quality excludes those rows. Short pytest IDs preserve the original oversized malformed-input tests on Windows. Real server identity/loading, protected independent gold, resource measurements and promotion remain separate. R7.3-E separates proposed gold and oracle controls from blind task/context review, reuses the existing duplicate-input and rubric owners, and blocks candidate experiments on missing, uncertain or conflicting declared answers. Exact reviewer identity, access isolation, representative protected data and actual model/worker quality remain unqualified.",
+      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route. R7.3-C adds frozen anonymous reviewer task pairs, exact bundle admission before inference and complete retained-matrix calibration. Repeated verdicts and reversed positions count as one source task; declared self-model aliases are refused. Synthetic correctness and self-consistent gold do not authenticate a provider, independent oracle or deployed model. R7.3-D reuses the existing LocalHostProfile/DeploymentSpec preflight, binds exact target configuration and retains returned labels/origins. A known mismatch stops primary and derived requests with partial journals, observed charges and held admission reservations preserved; offline paired/reviewer quality excludes those rows. Short pytest IDs preserve the original oversized malformed-input tests on Windows. Real server identity/loading, protected independent gold, resource measurements and promotion remain separate. R7.3-E separates proposed gold and oracle controls from blind task/context review, reuses the existing duplicate-input and rubric owners, and blocks candidate experiments on missing, uncertain or conflicting declared answers. Exact reviewer identity, access isolation, representative protected data and actual model/worker quality remain unqualified. R7.3-F freezes the complete primary experiment and supporting input digests before runner dispatch, retains its exact plan, and audits all planned denominators without replay. Historical prior registration, independent gold, host resource measurement and live routing remain separately unqualified.",
       "support_scope": "Current fixture, judge/calibration and ledger definitions, not completed B00-B10 external benchmark campaigns. U04-D follow-on: The deterministic forty-request discovery set checks class selection and hard exclusions, with adversarial name/popularity/keyword repetition and exact installed-owner preference. These retrieval fixtures are not general reasoning, tool execution or task-success benchmarks. U04-Q follow-on: Failed assertions, peer errors, malformed/changed outputs and missing stopped evidence cannot produce a successful task report. Server-provided success flags and hashes are not independent expected results. U04-S follow-on: Retrieval score, installation and provider-authored text are not general success measurements. Passing synthetic fixtures do not substitute for independent deployed model/task evidence. U04-T follow-on: Passing applies only to fixed assertions. It does not complete a whole task, independently qualify a deployed provider/host, or turn a truncated UI preview into outcome evidence. T05-A follow-on: Supported means verified cited-source agreement only. Different values remain unresolved; retrieval time does not replace publication time, and no need or task is automatically resolved.",
       "remaining": [
         "Freeze chronological tasks, independent graders, exact returned patch and real cost/time/resource provenance",
@@ -75557,7 +75593,7 @@
     },
     {
       "path": "docs/implementation/unified-development-roadmap.md",
-      "sha256": "ab91d5923b464a7bff4e39145df00f17df3c70812070ad730708be963e5e24c2",
+      "sha256": "7b09d11e87bb15fb7b1e7cd8ddf03cd8647537d3313ca0136c01b2e306d5849f",
       "families": [
         "audit",
         "durable",
@@ -75569,12 +75605,12 @@
         "syn-release"
       ],
       "disposition": "reviewed_follow_on_with_explicit_runtime_limits",
-      "assessment": "Adds the scoped T05-A milestone while preserving historical statuses, global next U01-A and explicit deployed-runtime qualification limits. T05-B/R7.1 follow-on: Records the current delivery order through T05-B/R7.1 to R7.2 while preserving the historical U00 baseline, canonical stage identities and explicit runtime qualification limits. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates. R7.3-D current source records A-D as implemented in the PR review stack, preserves historical headings, and directs remaining R7.3 work to protected independent gold and actual deployment measurements before R7.4 promotion. R7.3-E adds the frozen candidate/blind-review workflow to the current delivery overview while retaining independent gold, installed runtime and promotion gates.",
+      "assessment": "Adds the scoped T05-A milestone while preserving historical statuses, global next U01-A and explicit deployed-runtime qualification limits. T05-B/R7.1 follow-on: Records the current delivery order through T05-B/R7.1 to R7.2 while preserving the historical U00 baseline, canonical stage identities and explicit runtime qualification limits. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates. R7.3-D current source records A-D as implemented in the PR review stack, preserves historical headings, and directs remaining R7.3 work to protected independent gold and actual deployment measurements before R7.4 promotion. R7.3-E adds the frozen candidate/blind-review workflow to the current delivery overview while retaining independent gold, installed runtime and promotion gates. R7.3-F adds frozen experiment admission and full-cohort accounting while preserving independent gold, resource and routing gates.",
       "narrative": [
         {
-          "locator": "line:1-38",
-          "sha256": "e1c607b945485dd2b51cefcc6593ae9ac0069cd82357aebd2a2f39b66b5c5806",
-          "excerpt": "# Potbot unified development roadmap\n\n**24 November 2026, R7.3-A through E in the review stack:** R7.2-A/B/C are\nsource-implemented; installed atomic-scheduler ",
+          "locator": "line:1-40",
+          "sha256": "fd2f487717273addd464f8ca91e79cd889271415827a4e1c31882a7b8c79a786",
+          "excerpt": "# Potbot unified development roadmap\n\n**24 November 2026, R7.3-A through F in the review stack:** R7.2-A/B/C are\nsource-implemented; installed atomic-scheduler ",
           "families": [
             "audit",
             "durable",
@@ -75587,7 +75623,7 @@
           ]
         },
         {
-          "locator": "line:39-202",
+          "locator": "line:41-204",
           "sha256": "535f53b812e2861b68a5f26913b82d310e59e1aeb4d109dfaa142254e784a6cc",
           "excerpt": "## Current delivery order \u2014 18 November 2026\n\nThe current batch finishes the remaining supported T05 implementation with\n[T05-B specialist research](t05-b-speci",
           "families": [
@@ -75602,7 +75638,7 @@
           ]
         },
         {
-          "locator": "line:203-210",
+          "locator": "line:205-212",
           "sha256": "076016b54fff41fb78ff8fdcc90229d963fc5d746b89b7706eeebb49f54312c8",
           "excerpt": "## Baseline and source-of-truth rules\n\nOlder README phase summaries (`0.5.0.dev8`/`dev9`) are historical; the reviewed main reports `0.5.0.dev11`. They are not ",
           "families": [
@@ -75617,7 +75653,7 @@
           ]
         },
         {
-          "locator": "line:211-244",
+          "locator": "line:213-246",
           "sha256": "4c193a4a608fa975564b4f8db4bfe008307a41cf3d1b25c33882bcb783543194",
           "excerpt": "## Existing plans to reconcile\n\n| Source | Scope |\n|---|---|\n| `docs/implementation/09-tool-plan-gap-audit.md` | 18 additional requirement groups and independen",
           "families": [
@@ -75632,7 +75668,7 @@
           ]
         },
         {
-          "locator": "line:245-266",
+          "locator": "line:247-268",
           "sha256": "3a83e4a3a3332d3ef4289fcfc3504ed4ab122ebf1cf45fdf94886f89bda19cce",
           "excerpt": "## Unified work packages\n\n| ID | Workstream | Remaining / qualification scope | Modernization | Dependencies |\n|---|---|---|---|---|\n| U00 | Repository audit an",
           "families": [
@@ -75647,7 +75683,7 @@
           ]
         },
         {
-          "locator": "line:267-268",
+          "locator": "line:269-270",
           "sha256": "730dc617da00361212299c3f3bf7caa292eeb8375c4645a26f895fe255a9c69d",
           "excerpt": "## Delivery waves and gates",
           "families": [
@@ -75662,7 +75698,7 @@
           ]
         },
         {
-          "locator": "line:269-274",
+          "locator": "line:271-276",
           "sha256": "092663dafe878c1956a3843788aa7a58148603391dc7efc03a2ab4bf50b05224",
           "excerpt": "### Wave 0 \u2014 Inventory, reconcile and pin (U00)\n\nPin current main SHA. Enumerate every `docs/` plan, issue, PR, stage-status document and CI acceptance job. Bui",
           "families": [
@@ -75677,7 +75713,7 @@
           ]
         },
         {
-          "locator": "line:275-280",
+          "locator": "line:277-282",
           "sha256": "382e3775074d6d89fbfe589167a208ad320459466fe816e1e619c4a2326bceab",
           "excerpt": "### Wave 1 \u2014 Secure durable foundation (U01\u2013U03, U06)\n\nExtend existing PostgreSQL/Syn execution rather than introducing a second job engine. Add fenced leases, ",
           "families": [
@@ -75692,7 +75728,7 @@
           ]
         },
         {
-          "locator": "line:281-284",
+          "locator": "line:283-286",
           "sha256": "ee0b5d377f44b86a968882f762dcddf5486951504484fae6f57bbdc4b5d897cf",
           "excerpt": "### Wave 2 \u2014 Tools, plugins, transport and browser (U04\u2013U05, U11\u2013U12)\n\nComplete existing T01\u2013T04 milestones, typed Cog contracts, debugger, discovery, concurren",
           "families": [
@@ -75707,7 +75743,7 @@
           ]
         },
         {
-          "locator": "line:285-288",
+          "locator": "line:287-290",
           "sha256": "9b8568dc87a1fd913d2775e2cea463e8cc54271de5fdbd471a3846c47413462e",
           "excerpt": "### Wave 3 \u2014 Intelligence and memory (U07\u2013U10)\n\nQualify actual local/hosted models and inference costs. Integrate live multi-model reasoning graphs, scheduling,",
           "families": [
@@ -75722,7 +75758,7 @@
           ]
         },
         {
-          "locator": "line:289-294",
+          "locator": "line:291-296",
           "sha256": "9a38ce04ac2df10970d4c69ae459dab6757ed121e4c0135233670ccf0927cca1",
           "excerpt": "### Wave 4 \u2014 Frontend and empirical optimization (U13\u2013U14)\n\nFinish real backend streaming, workspace controls, monitoring sprite, graph checkpoint timeline, pro",
           "families": [
@@ -75737,7 +75773,7 @@
           ]
         },
         {
-          "locator": "line:295-300",
+          "locator": "line:297-302",
           "sha256": "80b60f56644c374154018b6472010f50693d60ee0bd0831560224d401b134c72",
           "excerpt": "### Wave 5 \u2014 Automation and release (U15\u2013U16)\n\nAdd durable event subscriptions, schedules, A2A and channels under the same operator policy. Qualify all supporte",
           "families": [
@@ -75752,7 +75788,7 @@
           ]
         },
         {
-          "locator": "line:301-310",
+          "locator": "line:303-312",
           "sha256": "4b39689d3f86890624016437f1019a9f443b42259c348acd3976344d39f5cb18",
           "excerpt": "## Critical engineering invariants\n\n1. Do not create parallel authoritative PostgreSQL stores, schedulers, plugin registries or Syn event logs.\n2. Preserve the ",
           "families": [
@@ -75767,7 +75803,7 @@
           ]
         },
         {
-          "locator": "line:311-321",
+          "locator": "line:313-323",
           "sha256": "73ea150baabe9d4392b6c75e6ac5978672584992ebe9d0d26ba1c428568a0f6a",
           "excerpt": "### Syn transport for application RPC\n\n**Deferred pending a Syn release, 18 November 2026.** The following sequence is\nretained for resumption; the active deliv",
           "families": [
@@ -75782,7 +75818,7 @@
           ]
         },
         {
-          "locator": "line:322-349",
+          "locator": "line:324-351",
           "sha256": "cbc4b785f9baeac0b04d3321ea4a8fed61bf8a1816999c534cb2eb9667797027",
           "excerpt": "## First next milestone\n\n**U01-A: durable side-effect and crash recovery gap closure.** U00-A's\n[reviewed closeout](u00-a-closeout.md) is complete. Preserve the",
           "families": [
@@ -75797,7 +75833,7 @@
           ]
         },
         {
-          "locator": "line:350-363",
+          "locator": "line:352-365",
           "sha256": "fad8ad3bc0f5c2f2834281f8aaa52d60a6cf39c7bbfccd4fae9aee0a7b60f130",
           "excerpt": "## Required follow-through from the monitoring chat\n\n| Work item | Existing U owner | Deliverable and gate |\n|---|---|---|\n| U03-Q | U03, U02, U16 | Qualify eve",
           "families": [
@@ -75812,7 +75848,7 @@
           ]
         },
         {
-          "locator": "line:364-388",
+          "locator": "line:366-390",
           "sha256": "964a68bc75a782ed821c3d4699dc79a85a3112888516cbf8487f770be9a63938",
           "excerpt": "## Required follow-through from the other recent development conversations\n\n| Work item | Existing U owner | Deliverable and gate in the recent-development reco",
           "families": [
@@ -75827,7 +75863,7 @@
           ]
         },
         {
-          "locator": "line:389-400",
+          "locator": "line:391-402",
           "sha256": "8fd9aa45ac7a56661637b71fa0a5607b1b2b45780bdea5c35f0434b61d7925a3",
           "excerpt": "## References\n\n- `docs/implementation/agent-runtime-modernization.md`\n- `docs/implementation/09-tool-plan-gap-audit.md`\n- `docs/implementation/plugin-discovery-",
           "families": [
@@ -75842,7 +75878,7 @@
           ]
         },
         {
-          "locator": "line:401-405",
+          "locator": "line:403-407",
           "sha256": "c6f1c77f80e48b91c4a197f815afa2760f516f5eff7fc07b87bbbe7ffc5b2197",
           "excerpt": "## Cross-agent ecosystem compatibility (C00\u2013C09)\n\nAdd the companion [cross-agent compatibility plan](cross-agent-compatibility.md) as a required cross-cutting w",
           "families": [
@@ -75857,7 +75893,7 @@
           ]
         },
         {
-          "locator": "line:406-414",
+          "locator": "line:408-416",
           "sha256": "a3a63964c24da210b3a841a4fa93e2529b30a3e255e67e78853aea0f4d0192ad",
           "excerpt": "## External skill ecosystem discovery and native execution (S00\u2013S10)\n\nThe cross-agent C00\u2013C09 programme is extended by [external skill ecosystem integration](po",
           "families": [
@@ -75872,7 +75908,7 @@
           ]
         },
         {
-          "locator": "line:415-419",
+          "locator": "line:417-421",
           "sha256": "28dfd2784d97841df10d40c27bf4c7f21bc278c11ace17b0339a9ee74ece1daa",
           "excerpt": "## Agent benchmarking and testing (B00\u2013B10)\n\nAdd [Potbot agent benchmarking and testing](potbot-agent-benchmarking-plan.md) as the qualification specification f",
           "families": [
@@ -80846,6 +80882,54 @@
           "locator": "line:65-124",
           "sha256": "61d6ff471fca9c58ac84e40bc990cda4612cb82a25460b20f38d0148657bf131",
           "excerpt": "## Supply independent answers, then inspect agreement\n\nThe reviewer supplies schema `potbot.atomic-gold-review/1`, the exact\n`input_manifest_sha256`, a distinct",
+          "families": [
+            "audit",
+            "evaluation"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/r7-3-f-frozen-experiments.md",
+      "families": [
+        "audit",
+        "evaluation"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Inspected frozen-experiment protocol, before-dispatch admission, no-replay offline whole-cohort audit and explicit independence/resource limits. No actual deployment or independent gold is qualified.",
+      "sha256": "b8d3abebc1437f9ff13b44bee949ae8ae43b1d40bb883fbec1a108a4e963e4b4",
+      "narrative": [
+        {
+          "locator": "line:1-25",
+          "sha256": "069253966cf26fd41e7987fc1cf6d6d8e4958d9ab01ad8a8456a90e0bf437c46",
+          "excerpt": "# R7.3-F: freeze an experiment and account for its whole cohort\n\nThis increment binds the existing opt-in atomic benchmark to a predeclared\nsuite, target config",
+          "families": [
+            "audit",
+            "evaluation"
+          ]
+        },
+        {
+          "locator": "line:26-82",
+          "sha256": "dcb6e676f83438125dad7e98f0fb071d996e32a90a9e612ad319a8856bad94d2",
+          "excerpt": "## Freeze, execute and inspect\n\n```sh\npython scripts/benchmark_agentic_models.py prepare-experiment \\\n  --suite private/candidate-suite.json --models private/ex",
+          "families": [
+            "audit",
+            "evaluation"
+          ]
+        },
+        {
+          "locator": "line:83-117",
+          "sha256": "41950998e7a993990c35da578eee36dfb4286462a18fb68881dcf4a3efe7a7a1",
+          "excerpt": "## Account for all outcomes\n\n| Planned-cell outcome | Retained interpretation |\n|---|---|\n| Completed, rubric passes | Completed evidence with independently rec",
+          "families": [
+            "audit",
+            "evaluation"
+          ]
+        },
+        {
+          "locator": "line:118-137",
+          "sha256": "c8f4837c23bccfb9ec31684038c8b497c5039d821a65bef5ce7701c51ed6be65",
+          "excerpt": "## Remaining qualification and recovery\n\nThese are source/fixture protocols. No actual independent gold, protected-data\nisolation, model-server identity, peak R",
           "families": [
             "audit",
             "evaluation"
@@ -89625,7 +89709,7 @@
       },
       {
         "path": ".github/workflows/agentic-model-benchmark.yml",
-        "sha256": "34d042dfbcb8261b0a25765b72049dc18387e6da8ab3f1feff59c5156c327581",
+        "sha256": "db1fbee81a9170677033fce77f40ce49f3bf0f44140136728630ada738b9965e",
         "name": "Agentic model benchmark preflight (no paid calls)",
         "state": "active",
         "scope": [
@@ -89643,7 +89727,7 @@
           "event": "push"
         },
         "at_reviewed_base": false,
-        "qualification_limit": "Offline model/reference/reviewer protocol tests, public synthetic fixtures and unqualified artifacts. No provider calls, authenticated gold, protected holdout, installed model/Cog or routing qualification. R7.3-D adds offline profile-binding, source/endpoint drift, strict metadata and no-replay mismatch fixtures; no provider is contacted or production deployment qualified. R7.3-E additionally checks synthetic candidate packages, blind requests, typed gold conflicts and blocked dispatch. No real reviewer or protected dataset is supplied by CI."
+        "qualification_limit": "Offline model/reference/reviewer protocol tests, public synthetic fixtures and unqualified artifacts. No provider calls, authenticated gold, protected holdout, installed model/Cog or routing qualification. R7.3-D adds offline profile-binding, source/endpoint drift, strict metadata and no-replay mismatch fixtures; no provider is contacted or production deployment qualified. R7.3-E additionally checks synthetic candidate packages, blind requests, typed gold conflicts and blocked dispatch. No real reviewer or protected dataset is supplied by CI. R7.3-F freezes and audits the source-pinned public pure-reference cohort without model calls; protocol success is not live specialist qualification."
       },
       {
         "path": ".github/workflows/artifact-controller-s45.yml",
@@ -94967,6 +95051,15 @@
       "review_family": "evaluation",
       "runtime_qualified": false,
       "evidence_boundary": "Synthetic offline candidate/controls/reviewer and existing-runner CLI fixtures. Reviewer identity, actual data isolation/independence and live model/deployment qualification remain open."
+    },
+    {
+      "id": "R7.3-F/frozen-experiment-and-full-cohort-audit",
+      "implementation_base": "4877ce12d6b656b6966bb885f923d0a9969993f9",
+      "reviewed_on": "2026-11-24",
+      "source": "docs/implementation/r7-3-f-frozen-experiments.md",
+      "review_family": "evaluation",
+      "runtime_qualified": false,
+      "evidence_boundary": "Synthetic and deterministic public-reference experiments. No independent gold, secret holdout, prior-registration authentication, live model resource measurement or routing promotion."
     }
   ],
   "current_delivery_order": {
@@ -94980,7 +95073,8 @@
       "R7.3-B/source-pinned-reference-baselines",
       "R7.3-C/frozen-reviewer-calibration",
       "R7.3-D/source-implemented-deployment-and-identity-bindings",
-      "R7.3-E/source-implemented-private-candidate-review"
+      "R7.3-E/source-implemented-private-candidate-review",
+      "R7.3-F/source-implemented-frozen-experiment-audit"
     ],
     "next_implementation_milestone": {
       "id": "R7.3",

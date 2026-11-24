@@ -265,6 +265,52 @@ def _deployment_admission(
     return inspect_benchmark_deployments(document, models, suite, project_root=root)
 
 
+def _experiment_evidence(args: argparse.Namespace) -> dict[str, Any]:
+    return {
+        name: _strict_read(getattr(args, name)) if getattr(args, name, None) else None
+        for name in (
+            "candidate_package",
+            "gold_review",
+            "dataset_card",
+            "deployment_bindings",
+            "review_bundle",
+        )
+    }
+
+
+def _experiment_admission(
+    args: argparse.Namespace,
+    suite: RoleSuite,
+    models: list[ModelTarget],
+    variants: list[PromptVariant],
+) -> dict[str, Any] | None:
+    path = getattr(args, "experiment_plan", None)
+    if path is None:
+        return None
+    from potbot.evaluation.agentic_experiments import (
+        admit_atomic_experiment,
+        read_experiment_document,
+    )
+
+    if getattr(args, "judge_derived", False):
+        raise InvalidInputError(
+            "freeze reviewer experiments separately; no unplanned derived calls"
+        )
+    if getattr(args, "command", "run") == "run" and not args.store_text:
+        raise InvalidInputError(
+            "frozen experiment auditing requires explicit private text retention"
+        )
+    return admit_atomic_experiment(
+        read_experiment_document(path),
+        suite,
+        models,
+        variants=tuple(variants),
+        repeat=args.repeat,
+        shuffle_seed=args.shuffle_seed,
+        evidence=_experiment_evidence(args),
+    )
+
+
 def _execute(
     args: argparse.Namespace,
     suite: RoleSuite,
@@ -277,6 +323,7 @@ def _execute(
 ) -> dict[str, Any]:
     if not 1 <= args.repeat <= 5:
         raise InvalidInputError("repeats must be between one and five")
+    experiment = _experiment_admission(args, suite, models, variants)
     review_bundle_sha256 = _review_admission(args, suite, models)
     candidate_review = _candidate_admission(args, suite)
     if candidate_review is not None and candidate_review["status"] != "declared_agreement":
@@ -490,6 +537,7 @@ def _execute(
             "no_automatic_replay": True,
             "returned_model_labels_authenticated": False,
         },
+        "experiment_plan_sha256": experiment["plan_sha256"] if experiment else None,
         "review_bundle_sha256": review_bundle_sha256,
         "reference_runtime": None,
         "admission_ceiling_microunits": args.max_cost_microunits,
@@ -524,6 +572,8 @@ def main(argv: list[str] | None = None) -> int:
         group.add_argument("--review-bundle", type=Path)
         group.add_argument("--deployment-bindings", type=Path)
         group.add_argument("--project-root", type=Path)
+        group.add_argument("--experiment-plan", type=Path)
+        group.add_argument("--shuffle-seed", type=int, default=42)
         group.add_argument("--variants", default="generic,family,model_role")
         group.add_argument("--repeat", type=int, default=1)
         if name == "run":
@@ -535,9 +585,28 @@ def main(argv: list[str] | None = None) -> int:
             group.add_argument("--max-cost-microunits", type=int, default=0)
             group.add_argument("--judge-derived", action="store_true")
             group.add_argument("--max-judge-pairs", type=int, default=8)
-            group.add_argument("--shuffle-seed", type=int, default=42)
             group.add_argument("--min-samples", type=int, default=12)
             group.add_argument("--store-text", action="store_true")
+    for name in ("prepare-experiment", "audit-experiment"):
+        experiment = command.add_parser(name)
+        experiment.add_argument("--suite", type=Path, required=True)
+        experiment.add_argument("--models", type=Path, required=True)
+        experiment.add_argument("--output", type=Path, required=True)
+        for binding in (
+            "candidate-package",
+            "gold-review",
+            "dataset-card",
+            "deployment-bindings",
+            "review-bundle",
+        ):
+            experiment.add_argument("--" + binding, type=Path)
+        if name == "prepare-experiment":
+            experiment.add_argument("--variants", default="generic,family,model_role")
+            experiment.add_argument("--repeat", type=int, default=1)
+            experiment.add_argument("--shuffle-seed", type=int, default=42)
+        else:
+            experiment.add_argument("--experiment-plan", type=Path, required=True)
+            experiment.add_argument("--results", type=Path, required=True)
     prepare = command.add_parser("prepare-atomic-dataset")
     prepare.add_argument("--suite", type=Path, required=True)
     prepare.add_argument("--provenance", type=Path, required=True)
@@ -590,6 +659,36 @@ def main(argv: list[str] | None = None) -> int:
     )
     try:
         args = parser.parse_args(argv)
+        if args.command in {"prepare-experiment", "audit-experiment"}:
+            from potbot.evaluation.agentic_experiments import (
+                audit_atomic_experiment,
+                freeze_atomic_experiment,
+                read_experiment_document,
+            )
+
+            suite = RoleSuite.from_dict(_strict_read(args.suite))
+            models = _targets(args.models)
+            evidence = _experiment_evidence(args)
+            if args.command == "prepare-experiment":
+                payload = freeze_atomic_experiment(
+                    suite,
+                    models,
+                    variants=tuple(_parsed_variants(args.variants)),
+                    repeat=args.repeat,
+                    shuffle_seed=args.shuffle_seed,
+                    evidence=evidence,
+                )
+            else:
+                payload = audit_atomic_experiment(
+                    read_experiment_document(args.experiment_plan),
+                    read_experiment_document(args.results),
+                    suite,
+                    models,
+                    evidence=evidence,
+                )
+            _private_write(args.output, canonical_json(payload) + "\n")
+            print(json.dumps({"plan_sha256": payload.get("plan_sha256"), "qualified": False}))
+            return 2 if payload.get("complete_for_analysis") is False else 0
         if args.command == "prepare-atomic-dataset":
             from potbot.evaluation.agentic_candidate_dataset import (
                 gold_review_request,
@@ -759,10 +858,12 @@ def main(argv: list[str] | None = None) -> int:
         if not 1 <= args.repeat <= 5:
             raise InvalidInputError("invalid repeat count")
         if args.command == "preflight":
+            experiment = _experiment_admission(args, suite, models, variants)
             review_bundle_sha256 = _review_admission(args, suite, models)
             plan = _preflight(models, suite, variants, args.repeat)
             plan["deployment_inspection"] = _deployment_admission(args, suite, models)
             plan["candidate_dataset_review"] = _candidate_admission(args, suite)
+            plan["experiment_plan_sha256"] = experiment["plan_sha256"] if experiment else None
             if review_bundle_sha256 is not None:
                 plan["review_bundle_sha256"] = review_bundle_sha256
             if args.dataset_card is not None:
@@ -789,6 +890,7 @@ def main(argv: list[str] | None = None) -> int:
             or not 0 <= args.max_cost_microunits <= 10**12
         ):
             raise InvalidInputError("invalid judge or evidence minimum")
+        experiment = _experiment_admission(args, suite, models, variants)
         policy = HostedPolicy.read(args.provider_policy) if args.provider_policy else None
         run_id = str(uuid4())
         destination = args.output_dir / run_id
@@ -800,11 +902,14 @@ def main(argv: list[str] | None = None) -> int:
                     "run_id": run_id,
                     "suite_sha256": suite.identity,
                     "status": "started",
+                    "experiment_plan_sha256": experiment["plan_sha256"] if experiment else None,
                     "no_automatic_replay": True,
                 }
             )
             + "\n",
         )
+        if experiment is not None:
+            _private_write(destination / "experiment-plan.json", canonical_json(experiment) + "\n")
         journal = destination / "attempts.jsonl"
         # Durable per-attempt journal; incomplete calls are uncertain. A
         # restart must create a NEW run, never append or replay a paid request.
