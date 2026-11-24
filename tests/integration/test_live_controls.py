@@ -200,8 +200,15 @@ def test_live_configuration_pins_tasks_and_has_one_compare_and_swap_winner(app_e
     with ThreadPoolExecutor(max_workers=2) as executor:
         results = list(executor.map(attempt, (2048, 8192)))
     assert sorted(str(value) for value in results) == ["2", "conflict"]
-    with pytest.raises(RevisionConflictError):
+    with pytest.raises(ScopeDeniedError):
         with app_env.db.transaction(app_env.context) as connection:
+            connection.execute(
+                "UPDATE workspace_configuration_revisions SET overrides='{}' WHERE revision=1"
+            )
+    from psycopg.errors import ObjectNotInPrerequisiteState
+
+    with pytest.raises(ObjectNotInPrerequisiteState):
+        with admin_connection(app_env.admin_dsn, app_env.schema) as connection:
             connection.execute(
                 "UPDATE workspace_configuration_revisions SET overrides='{}' WHERE revision=1"
             )

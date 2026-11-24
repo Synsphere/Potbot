@@ -41,7 +41,7 @@ class WorkerProcess:
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
             env=env,
-            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
+            creationflags=int(getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)),
             start_new_session=os.name != "nt",
         )
 

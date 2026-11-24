@@ -184,7 +184,7 @@ class NodeControls:
                     "SELECT c.*,n.generation,c.heartbeat_at>clock_timestamp()-interval '15 seconds' AS fresh "
                     "FROM node_runtime_controls c JOIN remote_nodes n "
                     "ON (n.workspace_id,n.id)=(c.workspace_id,c.node_id) "
-                    "WHERE c.workspace_id=%s AND c.node_id=%s FOR SHARE OF c,n",
+                    "WHERE c.workspace_id=%s AND c.node_id=%s FOR SHARE OF c",
                     (context.workspace_id, node_id),
                 ).fetchone()
                 if (
