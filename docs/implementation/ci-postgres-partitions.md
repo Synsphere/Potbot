@@ -101,3 +101,20 @@ CI run must establish the real PDF pass; the missing prerequisite is not waived.
 Downstream source-inventory uploads were also absent because this sandbox
 failure stopped their explicit producer step; their original acceptance and
 artifact requirements remain in place.
+
+
+The next complete partition again passed 195 tests and exposed eight existing
+root-level installer/desktop modules absent from the explicit source owner map.
+[Its actual assertion](https://github.com/Synsphere/Potbot/actions/runs/45318984092/job/138192600901)
+refused an unowned source module. Their mappings now reuse existing owners:
+
+| Committed source | Existing integration owner |
+|---|---|
+| `core_runtime.py`, `desktop.py`, `desktop_state.py`, `frontend_worker.py` | Entry points and native startup |
+| `oneclick.py`, `windows_core_runtime.py`, `wsl_core_runtime.py` | Entry points and native startup |
+| `native_postgres.py` | PostgreSQL persistence |
+
+A unit regression inventories every committed Python path using inert synthetic
+bodies and requires an explicit owner, while an unknown root module still fails
+closed. It executes no inspected source and establishes no runtime qualification.
+The actual full-source PostgreSQL integration remains a separate mandatory gate.

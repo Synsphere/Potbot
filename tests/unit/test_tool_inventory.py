@@ -2,7 +2,9 @@
 
 import asyncio
 import json
+import subprocess
 from dataclasses import replace
+from pathlib import Path
 from uuid import uuid4
 
 import pytest
@@ -109,11 +111,12 @@ def test_inventory_is_deterministic_complete_and_source_only():
     )
 
 
-@pytest.mark.parametrize("variant", ["missing", "owner", "working_tree", "version"])
+@pytest.mark.parametrize("variant", ["missing", "owner", "root_owner", "working_tree", "version"])
 def test_inventory_rejects_missing_drift_or_unowned_source(variant):
     kwargs = {
         "missing": {"omit": (CORE_ANCHORS[3],)},
         "owner": {"extra": {"src/potbot/unknown/new.py": b"# no owner"}},
+        "root_owner": {"extra": {"src/potbot/unregistered.py": b"# no root owner"}},
         "working_tree": {"kind": "working_tree"},
         "version": {"extra": {"src/potbot/__init__.py": b'__version__="changed"'}},
     }[variant]
@@ -248,3 +251,47 @@ def test_syn_release_adapter_has_its_own_source_owner_without_import_or_node_adm
     assert [entry["path"] for entry in component["source_files"]] == [
         "src/potbot/syn_release/store.py"
     ]
+
+
+def test_every_committed_python_path_has_an_explicit_source_inventory_owner():
+    # A namespace regression, not runtime/source-content qualification. Use the
+    # committed path inventory but synthetic inert bodies, never import modules.
+    root = Path(__file__).resolve().parents[2]
+    paths = subprocess.check_output(
+        ["git", "ls-tree", "-r", "--name-only", "HEAD", "--", "src/potbot"],
+        cwd=root,
+        text=True,
+        encoding="utf-8",
+        timeout=15,
+    ).splitlines()
+    python_paths = {path for path in paths if path.endswith(".py")}
+    assert python_paths and "src/potbot/core_runtime.py" in python_paths
+    fixture = {
+        path: b"raise RuntimeError('namespace inventory must not import')"
+        for path in python_paths
+        if path != "src/potbot/__init__.py"
+    }
+    report = build_inventory(fixture_snapshot(extra=fixture))
+    owned = {
+        entry["path"]: component["id"]
+        for component in report["components"]
+        for entry in component["source_files"]
+    }
+    assert set(owned) == python_paths
+    assert owned["src/potbot/native_postgres.py"] == "persistence"
+    assert all(
+        owned["src/potbot/" + name] == "entrypoints"
+        for name in (
+            "core_runtime.py",
+            "desktop.py",
+            "desktop_state.py",
+            "frontend_worker.py",
+            "oneclick.py",
+            "windows_core_runtime.py",
+            "wsl_core_runtime.py",
+        )
+    )
+    assert all(
+        component["qualification"] == "not_established_by_source_inventory"
+        for component in report["components"]
+    )
