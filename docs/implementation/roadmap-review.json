@@ -4981,6 +4981,18 @@
           "symbol": "run_gate",
           "sha256": "64a168320c473f2ada34330d7b5ade1dd94772d22ea9928a28ff1a4c32761c19",
           "basis": "Reviewed source/report identity and required JUnit acceptance path."
+        },
+        {
+          "path": "src/potbot/evaluation/postgres_test_shards.py",
+          "symbol": "verify_postgres_shards",
+          "sha256": "56fbaf53ac2861a5b07ca24dec1349e8bb2cd4c45cbbdc0dd9af545bcca2c19d",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
+        },
+        {
+          "path": "scripts/postgres_shard_plugin.py",
+          "symbol": "_ShardRun",
+          "sha256": "3ca5f895cd68fe9326d61e0e21c742a08b44e070fc4df5388d5090b836200d02",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
         }
       ],
       "tests": [
@@ -4995,9 +5007,21 @@
           "symbol": "test_inconsistent_junit_counters_never_establish_a_pass",
           "sha256": "ba5b13a46ec39e2f4e6ea9f35ad00a31a8f82df7d2c702cbb58f08b2aa4d9efc",
           "basis": "Actual testcase/counter reconciliation rejects malformed acceptance evidence."
+        },
+        {
+          "path": "tests/unit/test_postgres_shards.py",
+          "symbol": "test_actual_pytest_partitions_preserve_the_original_selector_and_all_terminal_cases",
+          "sha256": "d7a88f35908e6c160a1ccc666e4d283072358fd7ec7e0e0d69a0ceaca6db1de6",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
+        },
+        {
+          "path": "tests/unit/test_postgres_shards.py",
+          "symbol": "test_actual_incomplete_or_failed_pytest_run_cannot_supply_a_green_receipt",
+          "sha256": "d7a88f35908e6c160a1ccc666e4d283072358fd7ec7e0e0d69a0ceaca6db1de6",
+          "basis": "Source and actual child-pytest protocol checks for deterministic complete partitions. This is not a claim that the new real PostgreSQL CI run has passed."
         }
       ],
-      "assessment": "T01.4 now invalidates stale reports before execution, retains unique run directories and actual source manifests, and checks source stability plus real nonempty unskipped PostgreSQL/sandbox JUnit cases. Fully-qualified is explicitly limited to application PostgreSQL and sandbox tests; production_runtime_qualified stays false.",
+      "assessment": "T01.4 now invalidates stale reports before execution, retains unique run directories and actual source manifests, and checks source stability plus real nonempty unskipped PostgreSQL/sandbox JUnit cases. Fully-qualified is explicitly limited to application PostgreSQL and sandbox tests; production_runtime_qualified stays false. The full PostgreSQL lane exceeded 1800 seconds at roughly84% in PR94. CI now configures four isolated deterministic partitions and an exact-source, disjoint full-union completion gate, preserving the original selector and explicit T01 evidence producers. Local child-pytest rejection tests cover incomplete, failed and zero-exit aborted runs; actual partitioned PostgreSQL CI remains required.",
       "support_scope": "Acceptance-report contract tests and offline gate; no implicit native, image, custody, provider or specialist qualification.",
       "remaining": [
         "Run the full application qualified gate at the final commit on its required PostgreSQL/sandbox host.",
@@ -80621,6 +80645,29 @@
           ]
         }
       ]
+    },
+    {
+      "path": "docs/implementation/ci-postgres-partitions.md",
+      "sha256": "d2da5cd31132edf69b5f3d1b6f24556f72efe2976b3beb1f4b9eafc76275c95b",
+      "families": [
+        "audit",
+        "stage-acceptance",
+        "evaluation"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Source-reviewed PostgreSQL partition orchestration, same original selector, fresh databases and complete execution-accounting gate. New CI completion and elapsed-time improvement require actual run evidence; no production qualification is asserted.",
+      "narrative": [
+        {
+          "locator": "line:1-67",
+          "sha256": "02685c23e8819d2ef5c0cc54affe887b2e4d5d6288e8f27b8257e92fa340bdbb",
+          "excerpt": "# Complete PostgreSQL test coverage in isolated CI partitions\n\nThe [PR94 verification run](https://github.com/Synsphere/Potbot/actions/runs/45298121057)\npassed ",
+          "families": [
+            "audit",
+            "stage-acceptance",
+            "evaluation"
+          ]
+        }
+      ]
     }
   ],
   "requirements": [
@@ -89601,7 +89648,7 @@
       },
       {
         "path": ".github/workflows/ci.yml",
-        "sha256": "344fe2e8ee5c3937b90a3cdfc06290dbcfeaba617d1a8373dc7c853e48177fce",
+        "sha256": "faf9fafd815b00ec7f18cd9110ea31f8efcc1c13b1e99642e2181ec707fdef22",
         "name": "Potbot verification",
         "state": "active",
         "scope": [
@@ -89621,7 +89668,7 @@
           "event": "push"
         },
         "at_reviewed_base": true,
-        "qualification_limit": "Historical U00/S12/U04-C runs do not qualify this source. Workbench tests use real PostgreSQL and explicit provider/native process/transport fixtures. Final-commit CI, rendered UI and installed host/live provider qualification remain distinct. U04-A source and fixture/database acceptance does not qualify live GitHub access, a native vault, installed Bubblewrap/Syn execution or rendered browser interaction. Historical CI run records are not promoted to this follow-on. U04-X follow-on: The timeout adjustment preserves the broad test selection. Historical inspected runs do not establish a passing run for this new source; installed host, live source/provider and rendered browser acceptance remain separate."
+        "qualification_limit": "Requested unit/wheel/sandbox checks plus all four isolated original-selector PostgreSQL partitions and mandatory collection/completion coverage. Skips remain explicit. Successful fixtures do not qualify production."
       },
       {
         "path": ".github/workflows/context-agent-rpc.yml",
@@ -94709,6 +94756,15 @@
       "review_family": "evaluation",
       "runtime_qualified": false,
       "evidence_boundary": "Fixed source-cell selection, reconstructed anonymous orientation pairs, pre-dispatch self-alias refusal and conditional retained-verdict diagnostics. All actual gold/provider/deployment authentication and R7.4 promotion remain open."
+    },
+    {
+      "id": "CI/complete-postgres-partitions",
+      "implementation_base": "083a940136eb340d05d2002585415fba88d311fe",
+      "reviewed_on": "2026-11-24",
+      "source": "docs/implementation/ci-postgres-partitions.md",
+      "review_family": "stage-acceptance",
+      "runtime_qualified": false,
+      "evidence_boundary": "Deterministic partition integrity and actual child-pytest completion/rejection. All original PostgreSQL tests and mandatory actual CI results remain required."
     }
   ],
   "current_delivery_order": {

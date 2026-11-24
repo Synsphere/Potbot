@@ -139,3 +139,57 @@ def test_pytest_uses_its_own_short_private_tree_and_preserves_explicit_root(
     assert Path(observed[0]["POTBOT_TEMP_ROOT"]) == expected
     assert all(Path(observed[0][name]) == expected for name in ("TEMP", "TMP", "TMPDIR"))
     assert json.loads((artifacts / "summary.json").read_text())["success"] is False
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        ["--postgres-shard", "0/4"],
+        ["--postgres-shard-only"],
+        ["--with-postgres", "--postgres-shard", "0/4", "--postgres-shard-only", "--with-sandbox"],
+    ],
+)
+def test_invalid_partition_scope_is_refused_before_any_check(check_script, monkeypatch, extra):
+    monkeypatch.setattr(sys, "argv", ["check.py", *extra])
+    with pytest.raises(SystemExit) as error:
+        check_script.main()
+    assert error.value.code == 2
+
+
+def test_partition_only_uses_the_same_database_and_sanitized_check_owner(
+    check_script, tmp_path, monkeypatch
+):
+    artifacts = tmp_path / "artifacts"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "check.py",
+            "--with-postgres",
+            "--postgres-shard",
+            "2/4",
+            "--postgres-shard-only",
+            "--artifacts",
+            str(artifacts),
+        ],
+    )
+    commands = []
+
+    def process(command, **kwargs):
+        commands.append(command)
+        if "db" in command and "create" in command:
+            Path(command[command.index("--manifest") + 1]).write_text('{"synthetic":"capability"}')
+        return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(check_script.subprocess, "run", process)
+    assert check_script.main() == 0
+    tests = [command for command in commands if "pytest" in command]
+    assert len(tests) == 1
+    assert tests[0][tests[0].index("-m", 3) + 1] == "postgres and not sandbox"
+    assert tests[0][tests[0].index("--postgres-shard") + 1] == "2/4"
+    assert "scripts.postgres_shard_plugin" in tests[0]
+    assert not any(command[:2] == ["uv", "build"] for command in commands)
+    assert any("cleanup" in command for command in commands)
+    summary = json.loads((artifacts / "summary.json").read_text())
+    assert summary["success"] is True and summary["scope"] == "postgres_partition"
+    assert summary["postgres_shard"] == {"index": 2, "count": 4}
