@@ -129,3 +129,25 @@ inspect-only distributions remain unchanged. Existing admitted registry snapshot
 are not rewritten or activated by changing this example manifest; future source
 admission retains its normal review. The complete twenty-profile pin check is
 included in local verification before another CI run.
+
+
+The PR95 follow-up still timed out on a first surface capture after native
+mapping succeeded. Chromium's own [PageHandler implementation](https://github.com/chromium/chromium/blob/main/content/browser/devtools/protocol/page_handler.cc)
+shows that surface capture reapplies emulation and view sizing, while the native
+view snapshot bypasses that path. The headed worker now prefers its private
+native view snapshot, with a surface fallback only after a completed matching
+engine error. The six-second budget, single native request ownership and
+timeout/cancellation fence remain. Actual rendered tests additionally require
+the JPEG's independently parsed dimensions to be exactly 1280 by 800, alongside
+the existing real-pixel change and independent cold-start checks. Unit tests
+alone do not establish that this resolves the observed Chromium stall.
+
+The same run spent its entire fifteen-minute budget downloading recommended
+display packages from an HTTP EC2 Ubuntu mirror. The disposable CI mirror
+preparation now recognizes that configured mirror as well as Azure and standard
+archives, probes bounded HTTPS metadata endpoints, and keeps Ubuntu's signed APT
+verification. Explicit display tools use `--no-install-recommends`; pinned engine
+dependencies and all browser variants remain mandatory. No production host's
+APT configuration is changed by this CI script. The existing orchestration
+diagram and actual JSON/JUnit receipts cover this repair; no native UI capture
+was produced locally for an unverified result.

@@ -6,22 +6,22 @@ sources=(
   /etc/apt/sources.list.d/ubuntu.sources
   /etc/apt/sources.list
 )
-azure_pattern='https?://azure\.archive\.ubuntu\.com/ubuntu(/|[[:space:]]|$)'
-azure_sources=()
+archive_pattern='https?://(azure\.archive\.ubuntu\.com|[a-z0-9-]+\.ec2\.archive\.ubuntu\.com|archive\.ubuntu\.com)/ubuntu(/|[[:space:]]|$)'
+archive_sources=()
 for source in "${sources[@]}"; do
-  if [[ -f "$source" ]] && grep -Eq "$azure_pattern" "$source"; then
-    azure_sources+=("$source")
+  if [[ -f "$source" ]] && grep -Eq "$archive_pattern" "$source"; then
+    archive_sources+=("$source")
   fi
 done
 
-if (( ${#azure_sources[@]} == 0 )); then
+if (( ${#archive_sources[@]} == 0 )); then
   exit 0
 fi
 
 # Probe the same suite the runner needs. APT still verifies Ubuntu's signed metadata.
 mirrors=(
-  https://azure.archive.ubuntu.com/ubuntu
   https://archive.ubuntu.com/ubuntu
+  https://azure.archive.ubuntu.com/ubuntu
   https://ubuntu.osuosl.org/ubuntu
   https://mirror.clarkson.edu/ubuntu
 )
@@ -30,10 +30,8 @@ for mirror in "${mirrors[@]}"; do
     --connect-timeout 4 --max-time 8 --output /dev/null "$mirror/dists/noble-updates/InRelease"; then
     continue
   fi
-  if [[ "$mirror" != "${mirrors[0]}" ]]; then
-    echo "Using reachable Ubuntu archive mirror $mirror."
-    sudo sed -Ei "s#$azure_pattern#$mirror\\1#g" "${azure_sources[@]}"
-  fi
+  echo "Using reachable HTTPS Ubuntu archive mirror $mirror."
+  sudo sed -Ei "s#$archive_pattern#$mirror\\2#g" "${archive_sources[@]}"
   exit 0
 done
 

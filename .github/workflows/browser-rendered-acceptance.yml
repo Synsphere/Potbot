@@ -85,7 +85,7 @@ jobs:
           else
             .venv/bin/python -m playwright install --with-deps chromium
           fi
-          sudo apt-get install --yes xvfb xauth openbox x11-utils
+          sudo apt-get install --yes --no-install-recommends xvfb xauth openbox x11-utils
       - name: Run worker security and evidence-gate regression tests
         run: |
           mkdir -p artifacts/browser-rendered
