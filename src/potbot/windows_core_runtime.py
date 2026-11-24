@@ -48,6 +48,7 @@ _SANDBOX_IMAGE_INPUTS = (
     "src/potbot/tools/browser_https_routes.py",
     "src/potbot/tools/python_profile_worker.py",
     "src/potbot/tools/queue_transport_worker.py",
+    "src/potbot/tools/native_model_worker.py",
     "sandbox",
     "scripts/sandbox_image_manifest.py",
     "docs/implementation/28-shared-model-library-and-download-admission.md",
