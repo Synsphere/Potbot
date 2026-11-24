@@ -680,7 +680,7 @@
     {
       "canonicalId": "potbot.remote_debugging",
       "kind": "tool",
-      "version": "6f1dd9cfde28907ee28c1d1aeb965344a8ceac8d",
+      "version": "86657d032647187f68c06cdbd0b9d5aeefb4064f",
       "name": "Remote debug profile",
       "description": "Inspect a remote process, remote breakpoint or remote Python debugger and gdbserver compatibility.",
       "publisher": {
@@ -711,11 +711,11 @@
       },
       "manifest": {
         "profile": "remote_debugging",
-        "sourceCommit": "6f1dd9cfde28907ee28c1d1aeb965344a8ceac8d",
+        "sourceCommit": "86657d032647187f68c06cdbd0b9d5aeefb4064f",
         "sourceEvidence": [
           {
             "path": "src/potbot/tools/inventory.py",
-            "sha256": "04a22c379d141a7a068cc043d6af66b03aa18da5cf5eb51887e10b3c1fe886c0"
+            "sha256": "2d64605789880687a105afceb491e2bdea509ec7923e7259137deec50b145792"
           }
         ],
         "profileState": "planned_unavailable",
@@ -731,7 +731,7 @@
     {
       "canonicalId": "potbot.hardware_debugging",
       "kind": "tool",
-      "version": "6f1dd9cfde28907ee28c1d1aeb965344a8ceac8d",
+      "version": "86657d032647187f68c06cdbd0b9d5aeefb4064f",
       "name": "Hardware debug profile",
       "description": "Inspect hardware breakpoint, board probe, JTAG, SWD and firmware debugging requirements.",
       "publisher": {
@@ -762,11 +762,11 @@
       },
       "manifest": {
         "profile": "hardware_debugging",
-        "sourceCommit": "6f1dd9cfde28907ee28c1d1aeb965344a8ceac8d",
+        "sourceCommit": "86657d032647187f68c06cdbd0b9d5aeefb4064f",
         "sourceEvidence": [
           {
             "path": "src/potbot/tools/inventory.py",
-            "sha256": "04a22c379d141a7a068cc043d6af66b03aa18da5cf5eb51887e10b3c1fe886c0"
+            "sha256": "2d64605789880687a105afceb491e2bdea509ec7923e7259137deec50b145792"
           }
         ],
         "profileState": "planned_unavailable",
@@ -782,7 +782,7 @@
     {
       "canonicalId": "potbot.android_inspection",
       "kind": "tool",
-      "version": "6f1dd9cfde28907ee28c1d1aeb965344a8ceac8d",
+      "version": "86657d032647187f68c06cdbd0b9d5aeefb4064f",
       "name": "Android inspection profile",
       "description": "Inspect Android screen, ADB and mobile emulator or Android application requirements.",
       "publisher": {
@@ -813,11 +813,11 @@
       },
       "manifest": {
         "profile": "android_inspection",
-        "sourceCommit": "6f1dd9cfde28907ee28c1d1aeb965344a8ceac8d",
+        "sourceCommit": "86657d032647187f68c06cdbd0b9d5aeefb4064f",
         "sourceEvidence": [
           {
             "path": "src/potbot/tools/inventory.py",
-            "sha256": "04a22c379d141a7a068cc043d6af66b03aa18da5cf5eb51887e10b3c1fe886c0"
+            "sha256": "2d64605789880687a105afceb491e2bdea509ec7923e7259137deec50b145792"
           }
         ],
         "profileState": "planned_unavailable",
@@ -833,7 +833,7 @@
     {
       "canonicalId": "potbot.apple_inspection",
       "kind": "tool",
-      "version": "6f1dd9cfde28907ee28c1d1aeb965344a8ceac8d",
+      "version": "86657d032647187f68c06cdbd0b9d5aeefb4064f",
       "name": "Apple inspection profile",
       "description": "Inspect iOS, iPhone, Apple host, macOS application and Xcode requirements.",
       "publisher": {
@@ -864,11 +864,11 @@
       },
       "manifest": {
         "profile": "apple_inspection",
-        "sourceCommit": "6f1dd9cfde28907ee28c1d1aeb965344a8ceac8d",
+        "sourceCommit": "86657d032647187f68c06cdbd0b9d5aeefb4064f",
         "sourceEvidence": [
           {
             "path": "src/potbot/tools/inventory.py",
-            "sha256": "04a22c379d141a7a068cc043d6af66b03aa18da5cf5eb51887e10b3c1fe886c0"
+            "sha256": "2d64605789880687a105afceb491e2bdea509ec7923e7259137deec50b145792"
           }
         ],
         "profileState": "planned_unavailable",
