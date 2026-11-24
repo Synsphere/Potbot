@@ -118,3 +118,14 @@ A unit regression inventories every committed Python path using inert synthetic
 bodies and requires an explicit owner, while an unknown root module still fails
 closed. It executes no inspected source and establishes no runtime qualification.
 The actual full-source PostgreSQL integration remains a separate mandatory gate.
+
+
+Updating the inventory module also changes the evidence digest used by four
+curated optional inspection profiles. Discovery CI correctly rejected the stale
+pin after 325 other cases passed. Those four source-only profiles now have a
+new version and source commit identifying the actual inventory change, with its
+verified file digest. The other sixteen profiles, unavailable/runtime flags and
+inspect-only distributions remain unchanged. Existing admitted registry snapshots
+are not rewritten or activated by changing this example manifest; future source
+admission retains its normal review. The complete twenty-profile pin check is
+included in local verification before another CI run.
