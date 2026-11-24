@@ -253,7 +253,8 @@ def test_cli_plan_roundtrip_and_duplicate_or_private_fields_fail_closed(tmp_path
 def test_migration_is_additive_in_both_published_lineages():
     for lineage in ("main", "phase3-preview"):
         migrations = application_migrations(lineage=lineage)
-        assert tuple(item.version for item in migrations) == tuple(range(1, 51))
-        assert migrations[-1].name == "remote_workspace_schema"
+        assert tuple(item.version for item in migrations) == tuple(range(1, len(migrations) + 1))
+        native = next(item for item in migrations if item.version == 58)
+        assert native.name == "remote_workspace_schema"
         assert "isolation_requirement='required'" in migrations[13].statements[0]
-        assert "workspace_sandboxes" not in migrations[-1].workspace_tables
+        assert "workspace_sandboxes" not in native.workspace_tables

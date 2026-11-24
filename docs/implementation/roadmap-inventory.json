@@ -37266,7 +37266,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "d0cde5192fff8e478a3d17886ac9a79f716b7b444e9c4a7d9e36f1201317bbba",
+  "review_sha256": "8ec39b9e269b708ce4b99345f36b5ef60286fb7b8fb44893ade594c896c86ce7",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -132859,7 +132859,7 @@
         {
           "path": "tests/unit/test_remote_workspaces.py",
           "symbol": "test_grant_requires_exact_current_direct_authority",
-          "sha256": "80d5ccd6e39c39d18883de37e225c694b8909c4f873c4d1fdf946eefb9d8b7cb",
+          "sha256": "c4fbc2cdeafa92e11cd3be89c8da929c0121b082c15a0e4cd4851dd446fc363e",
           "basis": "Reject forged, stale, expired, revoked and transitive authority."
         },
         {

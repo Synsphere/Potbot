@@ -5828,7 +5828,7 @@
         {
           "path": "tests/unit/test_remote_workspaces.py",
           "symbol": "test_grant_requires_exact_current_direct_authority",
-          "sha256": "80d5ccd6e39c39d18883de37e225c694b8909c4f873c4d1fdf946eefb9d8b7cb",
+          "sha256": "c4fbc2cdeafa92e11cd3be89c8da929c0121b082c15a0e4cd4851dd446fc363e",
           "basis": "Reject forged, stale, expired, revoked and transitive authority."
         },
         {
