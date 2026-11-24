@@ -1,4 +1,4 @@
-"""Dependency-free, non-mutating native host probe and provisioning plan commands."""
+"""Native probe/plan commands and an explicit operator-only revocation handoff."""
 
 from __future__ import annotations
 
@@ -77,9 +77,44 @@ def main(argv: Sequence[str] | None = None) -> int:
     commands.add_parser("probe", help="print native facts on this host without changing it")
     plan = commands.add_parser("plan", help="build a deterministic plan from supplied public facts")
     plan.add_argument("--input", type=Path, required=True)
+    revoke = commands.add_parser(
+        "apply-revocation", help="apply one reviewed intent using native admin credentials"
+    )
+    revoke.add_argument("--workspace-id", type=UUID, required=True)
+    revoke.add_argument("--owner-principal-id", type=UUID, required=True)
+    revoke.add_argument("--request-id", type=UUID, required=True)
+    revoke.add_argument("--schema", default="potbot")
+    revoke.add_argument("--confirm", required=True, action="store_true")
+    inventory = commands.add_parser(
+        "inventory", help="inspect explicit project roots without loading or executing"
+    )
+    inventory.add_argument("--profile", type=Path, required=True)
+    inventory.add_argument("--workspace-id", type=UUID, required=True)
+    inventory.add_argument("--kind", choices=("models", "tools"), required=True)
     args = parser.parse_args(argv)
     try:
-        result = observation_receipt() if args.command == "probe" else plan_from_file(args.input)
+        if args.command == "apply-revocation":
+            from potbot.controller.swarm_requests import apply_revocation
+            from potbot.credentials import resolve_postgres_dsn
+            from potbot.persistence.database import admin_connection
+
+            with admin_connection(resolve_postgres_dsn("admin"), args.schema) as connection:
+                result = apply_revocation(
+                    connection,
+                    workspace_id=args.workspace_id,
+                    owner_principal_id=args.owner_principal_id,
+                    request_id=args.request_id,
+                )
+        elif args.command == "inventory":
+            from potbot.tools.local_inventory import InventoryProfile, inspect_local
+
+            result = inspect_local(
+                InventoryProfile.read(args.profile, args.workspace_id), args.kind
+            )
+        else:
+            result = (
+                observation_receipt() if args.command == "probe" else plan_from_file(args.input)
+            )
         print(json.dumps({"result": result}, sort_keys=True, allow_nan=False))
         return 0
     except DomainError as error:
@@ -94,6 +129,18 @@ def main(argv: Sequence[str] | None = None) -> int:
                     }
                 },
                 sort_keys=True,
+            )
+        )
+    except Exception:
+        # Native DB/credential libraries may carry private connection diagnostics.
+        print(
+            json.dumps(
+                {
+                    "error": {
+                        "code": "capability_unavailable",
+                        "message": "Native operator revocation unavailable; no success confirmed.",
+                    }
+                }
             )
         )
     return 1

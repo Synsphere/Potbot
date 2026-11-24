@@ -1,0 +1,101 @@
+name: Configuration UI, inventories and swarm requests
+on:
+  push:
+    paths:
+      - 'src/potbot/domain/settings_catalogue.py'
+      - 'src/potbot/tools/local_inventory.py'
+      - 'src/potbot/controller/settings.py'
+      - 'src/potbot/controller/swarm_requests.py'
+      - 'src/potbot/api/ui_settings.py'
+      - 'src/potbot/api/server_cli.py'
+      - 'src/potbot/api/remote_workspaces_cli.py'
+      - 'frontend/**'
+      - 'tests/unit/test_settings_inventory.py'
+      - 'tests/unit/test_ui_settings.py'
+      - 'tests/integration/test_ui_settings.py'
+      - '.github/workflows/configuration-ui.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  settings-and-rls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      UV_PYTHON: '3.12'
+      UV_CACHE_DIR: ${{ github.workspace }}/.potbot/uv-cache
+      POTBOT_TEST_DSN: postgresql://potbot_test:potbot_test_only@127.0.0.1:55432/potbot_test
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        with:
+          version: '0.12.23'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install locked verification dependencies
+        run: |
+          uv sync --locked --extra postgres --extra semantics --dev
+          npm ci --prefix frontend --ignore-scripts --no-audit --no-fund
+      - name: Verify passive inventory, HTTP admission and native CLI regressions
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/unit/test_settings_inventory.py tests/unit/test_ui_settings.py
+          tests/unit/test_remote_workspaces.py tests/unit/test_cli_adapter.py
+          --junitxml=artifacts/configuration/unit.xml
+      - name: Lint and type-check settings owners
+        run: |
+          files='src/potbot/domain/settings_catalogue.py src/potbot/tools/local_inventory.py src/potbot/controller/settings.py src/potbot/controller/swarm_requests.py src/potbot/api/ui_settings.py src/potbot/api/remote_workspaces_cli.py'
+          uv run --locked ruff check $files src/potbot/api/server_cli.py tests/unit/test_settings_inventory.py tests/unit/test_ui_settings.py tests/integration/test_ui_settings.py
+          uv run --locked ruff format --check $files src/potbot/api/server_cli.py tests/unit/test_settings_inventory.py tests/unit/test_ui_settings.py tests/integration/test_ui_settings.py
+          uv run --locked mypy $files
+      - name: Start an owned disposable PostgreSQL fixture
+        run: docker compose -p configuration-ui-tests up --detach --wait --wait-timeout 90
+      - name: Execute real workspace isolation, snapshot and native revocation acceptance
+        run: >-
+          uv run --locked python -m pytest -q
+          tests/integration/test_ui_settings.py tests/integration/test_remote_workspaces.py
+          tests/integration/test_database.py tests/integration/test_context_acl.py
+          --junitxml=artifacts/configuration/postgres.xml
+      - name: Require executed database acceptance and actual HTTP contract evidence
+        run: |
+          uv run --locked python - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree
+          cases = list(ElementTree.parse('artifacts/configuration/postgres.xml').iter('testcase'))
+          settings = [case for case in cases if case.get('classname', '').endswith('test_ui_settings')]
+          if len(settings) < 7 or any(case.find(tag) is not None for case in cases
+                                    for tag in ('skipped', 'failure', 'error')):
+              raise SystemExit('Settings PostgreSQL acceptance must execute without skips')
+          if not Path('artifacts/configuration/settings-http.json').is_file():
+              raise SystemExit('Missing real SQL-backed HTTP evidence')
+          print(f'{len(settings)} settings and {len(cases)} total PostgreSQL cases passed')
+          PY
+      - name: Replay actual SQL-backed HTTP responses through the frontend projection
+        env:
+          POTBOT_SETTINGS_HTTP_FIXTURE: artifacts/configuration/settings-http.json
+        run: node --experimental-strip-types --test frontend/tests/settings-contract.test.mjs
+      - name: Verify frontend regressions, TypeScript and production compilation
+        run: |
+          npm test --prefix frontend
+          npm run typecheck --prefix frontend
+          npm run build --prefix frontend
+      - name: Retain database and scoped HTTP evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: configuration-ui-acceptance
+          path: artifacts/configuration/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Record completion assessment
+        if: always()
+        run: |
+          printf '%s\n' 'Blogworthiness: FAIL. Routine regression replay; evidence is this run and its retained reports. Feature reporting belongs to the maintained implementation article. A CI fixture does not qualify a production node.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Remove only this job's disposable fixture
+        if: always()
+        run: docker compose -p configuration-ui-tests down --volumes --remove-orphans --timeout 10

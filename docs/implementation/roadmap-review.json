@@ -2944,7 +2944,7 @@
           "basis": "source inspection; test definition is not an individual executed result"
         }
       ],
-      "assessment": "The operator records observed configuration states and protects the reverse history. A watched directory move or unmount fences new launches and preserves the previous head. T05-A follow-on: exposes safe configured provider descriptors, source policy, disclosure permission, ceilings and optional pinned PDF profile without returning credentials. T05-B/R7.1 follow-on: Supports any configured subset of nine providers, optional OpenAlex/Semantic Scholar fixed-header credentials and committed npm dependency installation.",
+      "assessment": "The operator records observed configuration states and protects the reverse history. A watched directory move or unmount fences new launches and preserves the previous head. T05-A follow-on: exposes safe configured provider descriptors, source policy, disclosure permission, ceilings and optional pinned PDF profile without returning credentials. T05-B/R7.1 follow-on: Supports any configured subset of nine providers, optional OpenAlex/Semantic Scholar fixed-header credentials and committed npm dependency installation. CFG01 follow-on describes all ten current computational defaults and seven preference keys; source references remain counts and live configuration-layer writes are unavailable.",
       "support_scope": "Linux inotify regression coverage for root and nested path replacement and existing inverse-record and operator lifetime tests. Qualified sandbox and rollback evidence remains separate. T05-A follow-on: Credential installation and native profile configuration remain explicit existing operator responsibilities; browser inputs cannot add endpoints or replace policy authority. T05-B/R7.1 follow-on: Browser policy descriptors cannot replace endpoint, credential or admission authority. Installed provider/account and aggregate rate qualification remain operator responsibilities.",
       "remaining": [
         "Qualify watcher loss/overflow, rollback, restart ownership, protected /etc/ai-past and indeterminate lease retention"
@@ -4382,8 +4382,8 @@
           "basis": "Effectful CLI entry points require deliberate confirmation before constructing runtime owners."
         }
       ],
-      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences. U04-A adds a complete /skills acquisition/review/install/activation/resource/update/rollback/disable/revoke workshop with scoped durable mutation recovery. U04-X follow-on: adds the complete /setup/tools source/review/build/test/promotion/repin/postflight/rollback/recovery workflow, preserving legacy tested approvals and exact scoped uncertain-request journals. U04-D follow-on: adds /discover search, source/publisher decisions, exact review and bounded host-measurement monitoring with stable scoped uncertain-request recovery. Handoff links select the exact existing package or tool operation and do not automatically install, activate or execute it. U04-M follow-on: adds /discover/mcp for current binding review, tools/resources/templates/prompts inspection, exact reference copy, explicit queued reconciliation, monitoring and enable/disable/revoke/cancel decisions with scoped uncertain-response recovery. U04-Q follow-on: adds /discover/mcp/qualification for scoped suite/case review, exact request/control/cancel decisions, bounded GET monitoring, explicit identical-request recovery and current versus historical task report inspection. U04-S follow-on: adds /discover/tasks for explicit context review, typed constraints, lexical/pending hybrid requests, explained shortlists/exclusions, progressive inspection and exact reviewed selections/cancellation. U04-T follow-on: adds a selection-bound /tools workbench with explicit check then launch, exact job resume, independent verification, fixed BFF routes and stable-key recovery. T05-A follow-on: adds /research from task/need creation through reviewed action and disclosure admission, exact run resume, source inspection, citation verification and historical comparison readback. T05-B/R7.1 follow-on: Displays all specialist source metadata and lineage under the existing research workflow, accepts the actual PostgreSQL/HTTP fixture, and retains the safe reasoning graph projection for interrupted runs.",
-      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance. U04-A binds the browser to fixed authenticated BFF routes, exact plans/revisions and the server-only setup capability; TypeScript/Node/build checks remain distinct from rendered-browser qualification. U04-X follow-on: Fixed authenticated BFF routes accept recipe IDs, exact commits and digest/revision decisions; host commands, private claims and setup secrets are not browser authority. Actual HTTP/PostgreSQL fixture projections and Node/type/build checks remain separate from rendered-browser acceptance. U04-D follow-on: Fixed authenticated BFF routes enforce byte/query limits, current workspace/principal projection and server-only setup capability. Actual HTTP fixture projections, browser state helpers and Node/type/build checks remain separate from rendered-browser acceptance. U04-M follow-on: Actual HTTP/PostgreSQL exported envelopes feed strict frontend projections. Browser mutations accept reviewed identities and digests only; private native profiles, setup capability and worker claims stay server-side. Node/type/build evidence is separate from rendered installed-host acceptance. U04-Q follow-on: Actual HTTP/PostgreSQL envelopes feed strict DTOs, fixed BFF routes and exact suite/attempt/report joins. Browser inputs cannot execute native work, upload reports, supply private cases or dispatch receipt recovery. Node/type/build gates do not claim a rendered installed-host qualification. U04-S follow-on: Strict actual HTTP/PostgreSQL projections, fixed BFF routes, scoped exact-command recovery and bounded GET monitoring expose no browser inference or execution. Production builds and unit checks do not establish rendered installed-host qualification. U04-T follow-on: Actual HTTP/PostgreSQL export consumption, unit checks, TypeScript and production build establish the implemented contract; rendered installed-host acceptance and live provider qualification remain separate. T05-A follow-on: Fixed BFF routes, scope fencing, exact recovery, actual HTTP fixture consumption, TypeScript and production build establish the implemented contract; rendered-host and live-provider qualification remain separate. T05-B/R7.1 follow-on: Strict projectors preserve complete original provider observations and native reservation parity. Raw steering context and principal/dispatch details do not pass through the graph projection. Source/type/build checks remain distinct from rendered installed-host qualification.",
+      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences. U04-A adds a complete /skills acquisition/review/install/activation/resource/update/rollback/disable/revoke workshop with scoped durable mutation recovery. U04-X follow-on: adds the complete /setup/tools source/review/build/test/promotion/repin/postflight/rollback/recovery workflow, preserving legacy tested approvals and exact scoped uncertain-request journals. U04-D follow-on: adds /discover search, source/publisher decisions, exact review and bounded host-measurement monitoring with stable scoped uncertain-request recovery. Handoff links select the exact existing package or tool operation and do not automatically install, activate or execute it. U04-M follow-on: adds /discover/mcp for current binding review, tools/resources/templates/prompts inspection, exact reference copy, explicit queued reconciliation, monitoring and enable/disable/revoke/cancel decisions with scoped uncertain-response recovery. U04-Q follow-on: adds /discover/mcp/qualification for scoped suite/case review, exact request/control/cancel decisions, bounded GET monitoring, explicit identical-request recovery and current versus historical task report inspection. U04-S follow-on: adds /discover/tasks for explicit context review, typed constraints, lexical/pending hybrid requests, explained shortlists/exclusions, progressive inspection and exact reviewed selections/cancellation. U04-T follow-on: adds a selection-bound /tools workbench with explicit check then launch, exact job resume, independent verification, fixed BFF routes and stable-key recovery. T05-A follow-on: adds /research from task/need creation through reviewed action and disclosure admission, exact run resume, source inspection, citation verification and historical comparison readback. T05-B/R7.1 follow-on: Displays all specialist source metadata and lineage under the existing research workflow, accepts the actual PostgreSQL/HTTP fixture, and retains the safe reasoning graph projection for interrupted runs. CFG01 follow-on adds /settings, seven revisioned preference controls, workspace-scoped inventories and swarm request review while retaining the active Home context.",
+      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance. U04-A binds the browser to fixed authenticated BFF routes, exact plans/revisions and the server-only setup capability; TypeScript/Node/build checks remain distinct from rendered-browser qualification. U04-X follow-on: Fixed authenticated BFF routes accept recipe IDs, exact commits and digest/revision decisions; host commands, private claims and setup secrets are not browser authority. Actual HTTP/PostgreSQL fixture projections and Node/type/build checks remain separate from rendered-browser acceptance. U04-D follow-on: Fixed authenticated BFF routes enforce byte/query limits, current workspace/principal projection and server-only setup capability. Actual HTTP fixture projections, browser state helpers and Node/type/build checks remain separate from rendered-browser acceptance. U04-M follow-on: Actual HTTP/PostgreSQL exported envelopes feed strict frontend projections. Browser mutations accept reviewed identities and digests only; private native profiles, setup capability and worker claims stay server-side. Node/type/build evidence is separate from rendered installed-host acceptance. U04-Q follow-on: Actual HTTP/PostgreSQL envelopes feed strict DTOs, fixed BFF routes and exact suite/attempt/report joins. Browser inputs cannot execute native work, upload reports, supply private cases or dispatch receipt recovery. Node/type/build gates do not claim a rendered installed-host qualification. U04-S follow-on: Strict actual HTTP/PostgreSQL projections, fixed BFF routes, scoped exact-command recovery and bounded GET monitoring expose no browser inference or execution. Production builds and unit checks do not establish rendered installed-host qualification. U04-T follow-on: Actual HTTP/PostgreSQL export consumption, unit checks, TypeScript and production build establish the implemented contract; rendered installed-host acceptance and live provider qualification remain separate. T05-A follow-on: Fixed BFF routes, scope fencing, exact recovery, actual HTTP fixture consumption, TypeScript and production build establish the implemented contract; rendered-host and live-provider qualification remain separate. T05-B/R7.1 follow-on: Strict projectors preserve complete original provider observations and native reservation parity. Raw steering context and principal/dispatch details do not pass through the graph projection. Source/type/build checks remain distinct from rendered installed-host qualification. CFG01 projections and the production build do not establish rendered desktop/mobile or screen-reader acceptance.",
       "remaining": [
         "Connect job-backed inference, principal-aware workspace discovery and resumable terminal/graph APIs",
         "Preserve exact orb, reduced-motion/accessibility and metric timing/denominator contracts"
@@ -5116,13 +5116,14 @@
         "U16"
       ],
       "status": "implemented_unqualified",
-      "assessment": "RW01 and RW02 planning foundation: immutable native environments/deployment registrations, operator-only RLS records, direct expiring/revocable grants, serialized cycle rejection and deterministic review-only host plans. Existing sandbox qualification remains required for its existing backend.",
+      "assessment": "RW01 and RW02 planning foundation: immutable native environments/deployment registrations, operator-only RLS records, direct expiring/revocable grants, serialized cycle rejection and deterministic review-only host plans. Existing sandbox qualification remains required for its existing backend. CFG01 adds a bounded swarm read model, an owner/setup-gated immutable revocation intent and an explicit native administrative apply command.",
       "support_scope": "56 Linux contract/CLI cases and 24 real disposable PostgreSQL cases (six new remote-workspace cases) passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54 in run 45459401549. This is source/isolated-database acceptance, not remote host, transport, inference or GUI qualification.",
       "remaining": [
         "Strict pinned SSH inspection and privileged apply/reconcile",
         "Released native Syn host role/custody and directed remote transport",
         "Dispatch/application records and live authenticated write adapters",
-        "Remote tool/model, control UI, Xpra and physically distinct two-machine acceptance"
+        "Remote tool/model, control UI, Xpra and physically distinct two-machine acceptance",
+        "Rendered swarm acceptance, live telemetry and native node lifecycle controls"
       ],
       "next_action": "Continue RW01 records/adapters and RW02 authenticated SSH inspection; keep apply and remote capability readiness unavailable until the actual postconditions pass.",
       "code": [
@@ -80988,6 +80989,88 @@
       "assessment": "Reviewed native planning/control foundation and generated explanatory media. Source and isolated database checks do not establish remote host execution; RW01-RW09 remaining gates remain explicit.",
       "sha256": "73d2ccec3f744c49b449d39626bee026d54a2d5e09e6418c6e3203da01d19358",
       "narrative": []
+    },
+    {
+      "path": "docs/images/settings-inventory-swarm.svg",
+      "families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Initial settings shell, existing preference writes, bounded metadata inventories and owner-reviewed native revocation handoff. The source illustration is not a UI capture; live layer editing, node lifecycle and rendered-host acceptance remain open.",
+      "sha256": "a610f83a5a82be04204c33d2879a77685c8e4041a7fa3726f368bde009e3f6d7",
+      "narrative": []
+    },
+    {
+      "path": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Initial settings shell, existing preference writes, bounded metadata inventories and owner-reviewed native revocation handoff. The source illustration is not a UI capture; live layer editing, node lifecycle and rendered-host acceptance remain open.",
+      "sha256": "cd109e8caa41215795cab7e5287b0160863306a4e52cc2b6ada72ac7091ba62d",
+      "narrative": [
+        {
+          "locator": "line:1-14",
+          "sha256": "e3cab7b6674f35d4911f30aab275349e7cfb78c0d5d5011ecfb47ece50be7620",
+          "excerpt": "# Potbot settings inventories and swarm management\n\nPotbot now has a `/settings` workbench with fourteen categories, a searchable\ncatalogue covering twenty-nine",
+          "families": [
+            "configuration",
+            "frontend",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:15-35",
+          "sha256": "c0f4ef09901ff1043349c30aec8fa994e7a011a8caf6039a60a7e04fd25f541c",
+          "excerpt": "## Open the settings workbench\n\nUse **Menu \u2192 All settings**, **Local model inventory**, **Local tool inventory**\nor **Workspace swarm**. The workspace selector ",
+          "families": [
+            "configuration",
+            "frontend",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:36-75",
+          "sha256": "36004d7128591cfcb57fc33910a2c431368566179cb6cc0f9f1aae5392aeba62",
+          "excerpt": "## Configure native inventory roots\n\nThe native operator selects project-relative roots in a private JSON profile.\nThe profile belongs to exactly one workspace.",
+          "families": [
+            "configuration",
+            "frontend",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:76-110",
+          "sha256": "084bd039e84b329d762e51f7022cd5b8a9bf33e1a9a65d4e29da3f79cc43eefb",
+          "excerpt": "## Review workspace swarm records\n\nThe swarm view reads registered node identity, pinned SSH fingerprints, the\ncurrent native deployment, direct control grants ",
+          "families": [
+            "configuration",
+            "frontend",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:111-140",
+          "sha256": "7182b11a6868743db4cad772c52f8c11d61e61cb1cb4777fe6c1d9ad3fd841c3",
+          "excerpt": "## Interfaces and verification\n\n| Next resource | Native API | Method |\n| --- | --- | --- |\n| `/api/ui/settings/catalogue` | `/v1/ui/settings/catalogue` | GET |",
+          "families": [
+            "configuration",
+            "frontend",
+            "models",
+            "native-remote-workspaces"
+          ]
+        }
+      ]
     }
   ],
   "requirements": [
@@ -90574,6 +90657,19 @@
         },
         "at_reviewed_base": false,
         "qualification_limit": "56 portable Linux and 24 isolated PostgreSQL cases passed at the recorded head. No SSH, native Syn identity/transport, remote process/model or Xpra route is qualified by this workflow."
+      },
+      {
+        "path": ".github/workflows/configuration-ui.yml",
+        "sha256": "86967b580146f57dc40a2f550e99e150f8930fc7c301c89ce181c18ab46df66b",
+        "name": "Configuration UI, inventories and swarm requests",
+        "state": "active",
+        "scope": [
+          "Metadata-only inventory and scoped HTTP/CLI regression checks",
+          "Real disposable PostgreSQL membership, revocation replay and anti-forgery acceptance",
+          "Actual SQL-backed HTTP fixture replay through frontend projections, full frontend tests and build"
+        ],
+        "at_reviewed_base": false,
+        "qualification_limit": "Execution is established only by the actual current-head run. Fixtures do not qualify a remote node, model runtime or rendered UI."
       }
     ],
     "baseline_checks": {
@@ -91090,7 +91186,7 @@
         },
         {
           "path": "frontend/src/components/Panels.tsx",
-          "sha256": "05f484cef90664f40b0c24e66de6e23f48d013c33ad669d671d44e6c9fb2c239"
+          "sha256": "8b5306e9a73ea125727a36d09276632e7b65638689549370b063e99fad0780d7"
         },
         {
           "path": "frontend/src/lib/server/skill-acquisition.ts",
@@ -91444,7 +91540,7 @@
         },
         {
           "path": "frontend/src/components/Panels.tsx",
-          "sha256": "05f484cef90664f40b0c24e66de6e23f48d013c33ad669d671d44e6c9fb2c239"
+          "sha256": "8b5306e9a73ea125727a36d09276632e7b65638689549370b063e99fad0780d7"
         },
         {
           "path": "frontend/src/lib/operation-catalogue.ts",
@@ -91991,7 +92087,7 @@
         },
         {
           "path": "frontend/src/components/Panels.tsx",
-          "sha256": "05f484cef90664f40b0c24e66de6e23f48d013c33ad669d671d44e6c9fb2c239"
+          "sha256": "8b5306e9a73ea125727a36d09276632e7b65638689549370b063e99fad0780d7"
         },
         {
           "path": "frontend/src/lib/acquisition-handoff.ts",
@@ -92387,7 +92483,7 @@
         },
         {
           "path": "frontend/src/components/Panels.tsx",
-          "sha256": "05f484cef90664f40b0c24e66de6e23f48d013c33ad669d671d44e6c9fb2c239"
+          "sha256": "8b5306e9a73ea125727a36d09276632e7b65638689549370b063e99fad0780d7"
         },
         {
           "path": "frontend/src/lib/mcp-discovery-client.ts",
@@ -92809,7 +92905,7 @@
         },
         {
           "path": "frontend/src/components/Panels.tsx",
-          "sha256": "05f484cef90664f40b0c24e66de6e23f48d013c33ad669d671d44e6c9fb2c239"
+          "sha256": "8b5306e9a73ea125727a36d09276632e7b65638689549370b063e99fad0780d7"
         },
         {
           "path": "frontend/src/lib/mcp-qualification-client.ts",
@@ -93286,7 +93382,7 @@
         },
         {
           "path": "frontend/src/components/Panels.tsx",
-          "sha256": "05f484cef90664f40b0c24e66de6e23f48d013c33ad669d671d44e6c9fb2c239"
+          "sha256": "8b5306e9a73ea125727a36d09276632e7b65638689549370b063e99fad0780d7"
         },
         {
           "path": "frontend/src/lib/server/task-discovery.ts",
@@ -94298,7 +94394,7 @@
         },
         {
           "path": "frontend/src/components/Panels.tsx",
-          "sha256": "05f484cef90664f40b0c24e66de6e23f48d013c33ad669d671d44e6c9fb2c239"
+          "sha256": "8b5306e9a73ea125727a36d09276632e7b65638689549370b063e99fad0780d7"
         },
         {
           "path": "frontend/src/lib/research-client.ts",
@@ -95133,6 +95229,102 @@
       "review_family": "native-remote-workspaces",
       "runtime_qualified": false,
       "evidence_boundary": "Source contracts, deterministic review-only manifest/probe and isolated PostgreSQL authority/replay acceptance. Real remote SSH, native Syn custody/transport, execution, models and GUI remain separate stages."
+    },
+    {
+      "id": "CFG01/settings-inventories-and-native-revocation",
+      "implementation_base": "7b8556546adc6e4bf3092e8915e36f8b35fb7c60",
+      "reviewed_on": "2026-11-24",
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "review_family": "frontend",
+      "runtime_qualified": false,
+      "evidence_boundary": "Initial settings and inventories implement scoped contracts, metadata-only observation and an intent/native-apply separation. Browser rendering, live computational layers and native host lifecycle qualification remain open.",
+      "code_evidence": [
+        {
+          "path": "src/potbot/domain/settings_catalogue.py",
+          "symbol": "catalogue",
+          "sha256": "0023fd4662b2de8cab3a85cdcf5ee8a3df87f942a0bc601287a80df87761ce41",
+          "symbol_sha256": "ac22f3c23f79b9a54b67404d70a11e4e5a559b9f94c5b3797a7bb57540c679c6",
+          "basis": "Coverage fails closed when an existing computational default lacks a descriptor."
+        },
+        {
+          "path": "src/potbot/tools/local_inventory.py",
+          "symbol": "inspect_local",
+          "sha256": "a02dfa0d014a6023091255ca6f9db22dce5089d85285e38846b428bda2cf6eba",
+          "symbol_sha256": "cc2ef0a67a37da1f516a6d471a8765813aa31174defa40e068174080fb78357d",
+          "basis": "Bounded native metadata; no model loads, imports, tool probes or outbound access."
+        },
+        {
+          "path": "src/potbot/controller/settings.py",
+          "symbol": "SettingsService",
+          "sha256": "f66b5b6273325b9f0064cf48cd349ce1483d82500cf681ac726b9397ec8ddd80",
+          "symbol_sha256": "5c23e0ceae960e7db258e08cdd4efc16e398ea96fa588e86d9d1ac76ae92050a",
+          "basis": "Each ledger read rechecks membership through the current RLS connection."
+        },
+        {
+          "path": "src/potbot/controller/swarm_requests.py",
+          "symbol": "apply_revocation",
+          "sha256": "d67da7a6738eb414f4fee747bfb35e7f18a23bad96c050cb0c05278d9a6fd87d",
+          "symbol_sha256": "2f782cb0aa1ece922cdea2f1ae124f9c20330b1381b78f0428fd3dd2250dc988",
+          "basis": "Only explicit native administration applies the exact reviewed next grant revision."
+        }
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/unit/test_settings_inventory.py",
+          "symbol": "test_crlf_metadata_stops_at_the_header_boundary",
+          "sha256": "65af8886aadfefb0b8702e9cc57014e7bc07e6772b9bdd46514453f419148ec2",
+          "symbol_sha256": "eb9da247bf63b44131b7846f7bf25e5efabef71d6c9c5a3c535f38167bea1511",
+          "basis": "CRLF description bodies cannot supply package identity."
+        },
+        {
+          "path": "tests/unit/test_ui_settings.py",
+          "symbol": "test_request_requires_setup_origin_exact_json_and_stable_identity",
+          "sha256": "9db8c535c2d635fec0f4afdad73b0bd4dca88b46c0f8a9c9bb46dabe649562b3",
+          "symbol_sha256": "f79794ba4eeb60920998a9a93aa721edcff0ca73d13968958e98e8580e262563",
+          "basis": "Exact confirmation and separate setup capability precede mutation."
+        },
+        {
+          "path": "tests/integration/test_ui_settings.py",
+          "symbol": "test_owner_request_is_not_revocation_and_native_apply_is_exactly_replayable",
+          "sha256": "7a57b63221332359922bc8fa2daeff49b72ace90808625bc7527160a4a51961c",
+          "symbol_sha256": "b40ec3910d638e764e8deb5aba3b02c63a0acfaff82adefc46b6b40147ece551",
+          "basis": "Real database request/native apply separation and immutable replay."
+        },
+        {
+          "path": "tests/integration/test_ui_settings.py",
+          "symbol": "test_forged_completion_journal_cannot_claim_a_grant_has_been_revoked",
+          "sha256": "7a57b63221332359922bc8fa2daeff49b72ace90808625bc7527160a4a51961c",
+          "symbol_sha256": "2adcc1a4440025877ce9a1e823eb2a3ee51b15dffe9d30d055e70414b78e6350",
+          "basis": "Protected grant state alone establishes observed completion."
+        }
+      ],
+      "frontend_evidence": [
+        {
+          "path": "frontend/src/app/settings/SettingsWorkbench.tsx",
+          "sha256": "f04e6b93b9ecae295370796e0ba8114131b35b51b9938d342eb5b3b3413694d6"
+        },
+        {
+          "path": "frontend/src/lib/settings.ts",
+          "sha256": "d478e9a1d69dab9627301ad3c8eb0f69c3f932c3ad039741fbac96ef9bb8427e"
+        },
+        {
+          "path": "frontend/src/lib/server/settings.ts",
+          "sha256": "e78dba8666e4687c2883a7e7ed160c3d99660d3b1a3726f541ec912ed37dbaf5"
+        },
+        {
+          "path": "frontend/tests/settings-contract.test.mjs",
+          "sha256": "7c524fdf6d1206dbc31c752f8c3b5d6acef0f15f6822ac1586cc501a0876a816"
+        },
+        {
+          "path": "frontend/tests/settings-routes.test.mjs",
+          "sha256": "a9a19b681ed7e876f94817afb21c920ab0d7c1ba470d23faee0904e4f94b1a7a"
+        },
+        {
+          "path": "frontend/src/components/Panels.tsx",
+          "sha256": "8b5306e9a73ea125727a36d09276632e7b65638689549370b063e99fad0780d7"
+        }
+      ],
+      "next_action": "Run the dedicated PostgreSQL/frontend CI and perform rendered desktop/mobile, keyboard and screen-reader acceptance when the supported browser connection is available; continue live configuration ownership and native lifecycle stages independently."
     }
   ],
   "current_delivery_order": {

@@ -218,6 +218,13 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/images/settings-inventory-swarm.svg",
+      "sha256": "a610f83a5a82be04204c33d2879a77685c8e4041a7fa3726f368bde009e3f6d7",
+      "bytes": 4038,
+      "kind": "media",
+      "interpretation": "asset_identity_only"
+    },
+    {
       "path": "docs/implementation/01-phase1-implementation.md",
       "sha256": "52c768833a0eb7d0b22bb2c68237e5b64331a22edd24491cc6fe68878bddcca4",
       "bytes": 8566,
@@ -1015,6 +1022,16 @@
       "text_sha256": "22aaabefa4b85c8d84b73f0aa051fb4f55a46836351bc728eb775ed6e2732c30",
       "characters": 6466,
       "lines": 112,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
+      "path": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "sha256": "cd109e8caa41215795cab7e5287b0160863306a4e52cc2b6ada72ac7091ba62d",
+      "bytes": 7679,
+      "kind": "narrative_text",
+      "text_sha256": "cd109e8caa41215795cab7e5287b0160863306a4e52cc2b6ada72ac7091ba62d",
+      "characters": 7677,
+      "lines": 140,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36574,6 +36591,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": ".github/workflows/configuration-ui.yml",
+      "sha256": "86967b580146f57dc40a2f550e99e150f8930fc7c301c89ce181c18ab46df66b",
+      "bytes": 5381,
+      "kind": "narrative_text",
+      "text_sha256": "86967b580146f57dc40a2f550e99e150f8930fc7c301c89ce181c18ab46df66b",
+      "characters": 5381,
+      "lines": 101,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": ".github/workflows/context-agent-rpc.yml",
       "sha256": "a144012a3525ec736d1a0ea3fda9a7d0d3ef772b4c1b850ec3913e2b6377aa41",
       "bytes": 6762,
@@ -36974,7 +37001,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "209221231a96a0a182e4df3bfb246f0fa02d45ec62c6bf60cbe4c36a5f1ed94f",
+  "review_sha256": "9b4b4a6a2d0c5e1690444a41126f9b1ab9e0a900bdec7a9827d6c9d58367596a",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -116038,6 +116065,66 @@
       ]
     },
     {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:1-14",
+      "sha256": "e3cab7b6674f35d4911f30aab275349e7cfb78c0d5d5011ecfb47ece50be7620",
+      "excerpt": "# Potbot settings inventories and swarm management\n\nPotbot now has a `/settings` workbench with fourteen categories, a searchable\ncatalogue covering twenty-nine",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:15-35",
+      "sha256": "c0f4ef09901ff1043349c30aec8fa994e7a011a8caf6039a60a7e04fd25f541c",
+      "excerpt": "## Open the settings workbench\n\nUse **Menu \u2192 All settings**, **Local model inventory**, **Local tool inventory**\nor **Workspace swarm**. The workspace selector ",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:36-75",
+      "sha256": "36004d7128591cfcb57fc33910a2c431368566179cb6cc0f9f1aae5392aeba62",
+      "excerpt": "## Configure native inventory roots\n\nThe native operator selects project-relative roots in a private JSON profile.\nThe profile belongs to exactly one workspace.",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:76-110",
+      "sha256": "084bd039e84b329d762e51f7022cd5b8a9bf33e1a9a65d4e29da3f79cc43eefb",
+      "excerpt": "## Review workspace swarm records\n\nThe swarm view reads registered node identity, pinned SSH fingerprints, the\ncurrent native deployment, direct control grants ",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
+      "source": "docs/implementation/cfg01-settings-inventory-and-swarm.md",
+      "locator": "line:111-140",
+      "sha256": "7182b11a6868743db4cad772c52f8c11d61e61cb1cb4777fe6c1d9ad3fd841c3",
+      "excerpt": "## Interfaces and verification\n\n| Next resource | Native API | Method |\n| --- | --- | --- |\n| `/api/ui/settings/catalogue` | `/v1/ui/settings/catalogue` | GET |",
+      "review_families": [
+        "configuration",
+        "frontend",
+        "models",
+        "native-remote-workspaces"
+      ]
+    },
+    {
       "source": "docs/implementation/ci-postgres-partitions.md",
       "locator": "line:1-69",
       "sha256": "46be370d18fcbd175da496cf9db6558c5d5118f18a6366d68e1dfbaf59862687",
@@ -128885,7 +128972,7 @@
           "basis": "source inspection; test definition is not an individual executed result"
         }
       ],
-      "assessment": "The operator records observed configuration states and protects the reverse history. A watched directory move or unmount fences new launches and preserves the previous head. T05-A follow-on: exposes safe configured provider descriptors, source policy, disclosure permission, ceilings and optional pinned PDF profile without returning credentials. T05-B/R7.1 follow-on: Supports any configured subset of nine providers, optional OpenAlex/Semantic Scholar fixed-header credentials and committed npm dependency installation.",
+      "assessment": "The operator records observed configuration states and protects the reverse history. A watched directory move or unmount fences new launches and preserves the previous head. T05-A follow-on: exposes safe configured provider descriptors, source policy, disclosure permission, ceilings and optional pinned PDF profile without returning credentials. T05-B/R7.1 follow-on: Supports any configured subset of nine providers, optional OpenAlex/Semantic Scholar fixed-header credentials and committed npm dependency installation. CFG01 follow-on describes all ten current computational defaults and seven preference keys; source references remain counts and live configuration-layer writes are unavailable.",
       "support_scope": "Linux inotify regression coverage for root and nested path replacement and existing inverse-record and operator lifetime tests. Qualified sandbox and rollback evidence remains separate. T05-A follow-on: Credential installation and native profile configuration remain explicit existing operator responsibilities; browser inputs cannot add endpoints or replace policy authority. T05-B/R7.1 follow-on: Browser policy descriptors cannot replace endpoint, credential or admission authority. Installed provider/account and aggregate rate qualification remain operator responsibilities.",
       "remaining": [
         "Qualify watcher loss/overflow, rollback, restart ownership, protected /etc/ai-past and indeterminate lease retention"
@@ -130323,8 +130410,8 @@
           "basis": "Effectful CLI entry points require deliberate confirmation before constructing runtime owners."
         }
       ],
-      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences. U04-A adds a complete /skills acquisition/review/install/activation/resource/update/rollback/disable/revoke workshop with scoped durable mutation recovery. U04-X follow-on: adds the complete /setup/tools source/review/build/test/promotion/repin/postflight/rollback/recovery workflow, preserving legacy tested approvals and exact scoped uncertain-request journals. U04-D follow-on: adds /discover search, source/publisher decisions, exact review and bounded host-measurement monitoring with stable scoped uncertain-request recovery. Handoff links select the exact existing package or tool operation and do not automatically install, activate or execute it. U04-M follow-on: adds /discover/mcp for current binding review, tools/resources/templates/prompts inspection, exact reference copy, explicit queued reconciliation, monitoring and enable/disable/revoke/cancel decisions with scoped uncertain-response recovery. U04-Q follow-on: adds /discover/mcp/qualification for scoped suite/case review, exact request/control/cancel decisions, bounded GET monitoring, explicit identical-request recovery and current versus historical task report inspection. U04-S follow-on: adds /discover/tasks for explicit context review, typed constraints, lexical/pending hybrid requests, explained shortlists/exclusions, progressive inspection and exact reviewed selections/cancellation. U04-T follow-on: adds a selection-bound /tools workbench with explicit check then launch, exact job resume, independent verification, fixed BFF routes and stable-key recovery. T05-A follow-on: adds /research from task/need creation through reviewed action and disclosure admission, exact run resume, source inspection, citation verification and historical comparison readback. T05-B/R7.1 follow-on: Displays all specialist source metadata and lineage under the existing research workflow, accepts the actual PostgreSQL/HTTP fixture, and retains the safe reasoning graph projection for interrupted runs.",
-      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance. U04-A binds the browser to fixed authenticated BFF routes, exact plans/revisions and the server-only setup capability; TypeScript/Node/build checks remain distinct from rendered-browser qualification. U04-X follow-on: Fixed authenticated BFF routes accept recipe IDs, exact commits and digest/revision decisions; host commands, private claims and setup secrets are not browser authority. Actual HTTP/PostgreSQL fixture projections and Node/type/build checks remain separate from rendered-browser acceptance. U04-D follow-on: Fixed authenticated BFF routes enforce byte/query limits, current workspace/principal projection and server-only setup capability. Actual HTTP fixture projections, browser state helpers and Node/type/build checks remain separate from rendered-browser acceptance. U04-M follow-on: Actual HTTP/PostgreSQL exported envelopes feed strict frontend projections. Browser mutations accept reviewed identities and digests only; private native profiles, setup capability and worker claims stay server-side. Node/type/build evidence is separate from rendered installed-host acceptance. U04-Q follow-on: Actual HTTP/PostgreSQL envelopes feed strict DTOs, fixed BFF routes and exact suite/attempt/report joins. Browser inputs cannot execute native work, upload reports, supply private cases or dispatch receipt recovery. Node/type/build gates do not claim a rendered installed-host qualification. U04-S follow-on: Strict actual HTTP/PostgreSQL projections, fixed BFF routes, scoped exact-command recovery and bounded GET monitoring expose no browser inference or execution. Production builds and unit checks do not establish rendered installed-host qualification. U04-T follow-on: Actual HTTP/PostgreSQL export consumption, unit checks, TypeScript and production build establish the implemented contract; rendered installed-host acceptance and live provider qualification remain separate. T05-A follow-on: Fixed BFF routes, scope fencing, exact recovery, actual HTTP fixture consumption, TypeScript and production build establish the implemented contract; rendered-host and live-provider qualification remain separate. T05-B/R7.1 follow-on: Strict projectors preserve complete original provider observations and native reservation parity. Raw steering context and principal/dispatch details do not pass through the graph projection. Source/type/build checks remain distinct from rendered installed-host qualification.",
+      "assessment": "Workspace/orb/panels, durable chat records, preferences/transfers and Xpra integration have foundations. Durable saved chat is not durable background inference; PTY reconnect, history/graph push and every-agent load remain incomplete. U04-E adds the complete operation form/check/launch/monitor/cancel/result workflow, retained uncertain-mutation identities and scoped late-response fences. U04-A adds a complete /skills acquisition/review/install/activation/resource/update/rollback/disable/revoke workshop with scoped durable mutation recovery. U04-X follow-on: adds the complete /setup/tools source/review/build/test/promotion/repin/postflight/rollback/recovery workflow, preserving legacy tested approvals and exact scoped uncertain-request journals. U04-D follow-on: adds /discover search, source/publisher decisions, exact review and bounded host-measurement monitoring with stable scoped uncertain-request recovery. Handoff links select the exact existing package or tool operation and do not automatically install, activate or execute it. U04-M follow-on: adds /discover/mcp for current binding review, tools/resources/templates/prompts inspection, exact reference copy, explicit queued reconciliation, monitoring and enable/disable/revoke/cancel decisions with scoped uncertain-response recovery. U04-Q follow-on: adds /discover/mcp/qualification for scoped suite/case review, exact request/control/cancel decisions, bounded GET monitoring, explicit identical-request recovery and current versus historical task report inspection. U04-S follow-on: adds /discover/tasks for explicit context review, typed constraints, lexical/pending hybrid requests, explained shortlists/exclusions, progressive inspection and exact reviewed selections/cancellation. U04-T follow-on: adds a selection-bound /tools workbench with explicit check then launch, exact job resume, independent verification, fixed BFF routes and stable-key recovery. T05-A follow-on: adds /research from task/need creation through reviewed action and disclosure admission, exact run resume, source inspection, citation verification and historical comparison readback. T05-B/R7.1 follow-on: Displays all specialist source metadata and lineage under the existing research workflow, accepts the actual PostgreSQL/HTTP fixture, and retains the safe reasoning graph projection for interrupted runs. CFG01 follow-on adds /settings, seven revisioned preference controls, workspace-scoped inventories and swarm request review while retaining the active Home context.",
+      "support_scope": "Backend resource owners; frontend TypeScript/source CI is recorded separately, not implied by Python tests. Node projector/BFF tests and TypeScript/build evidence remain separate from rendered operator-host acceptance. U04-A binds the browser to fixed authenticated BFF routes, exact plans/revisions and the server-only setup capability; TypeScript/Node/build checks remain distinct from rendered-browser qualification. U04-X follow-on: Fixed authenticated BFF routes accept recipe IDs, exact commits and digest/revision decisions; host commands, private claims and setup secrets are not browser authority. Actual HTTP/PostgreSQL fixture projections and Node/type/build checks remain separate from rendered-browser acceptance. U04-D follow-on: Fixed authenticated BFF routes enforce byte/query limits, current workspace/principal projection and server-only setup capability. Actual HTTP fixture projections, browser state helpers and Node/type/build checks remain separate from rendered-browser acceptance. U04-M follow-on: Actual HTTP/PostgreSQL exported envelopes feed strict frontend projections. Browser mutations accept reviewed identities and digests only; private native profiles, setup capability and worker claims stay server-side. Node/type/build evidence is separate from rendered installed-host acceptance. U04-Q follow-on: Actual HTTP/PostgreSQL envelopes feed strict DTOs, fixed BFF routes and exact suite/attempt/report joins. Browser inputs cannot execute native work, upload reports, supply private cases or dispatch receipt recovery. Node/type/build gates do not claim a rendered installed-host qualification. U04-S follow-on: Strict actual HTTP/PostgreSQL projections, fixed BFF routes, scoped exact-command recovery and bounded GET monitoring expose no browser inference or execution. Production builds and unit checks do not establish rendered installed-host qualification. U04-T follow-on: Actual HTTP/PostgreSQL export consumption, unit checks, TypeScript and production build establish the implemented contract; rendered installed-host acceptance and live provider qualification remain separate. T05-A follow-on: Fixed BFF routes, scope fencing, exact recovery, actual HTTP fixture consumption, TypeScript and production build establish the implemented contract; rendered-host and live-provider qualification remain separate. T05-B/R7.1 follow-on: Strict projectors preserve complete original provider observations and native reservation parity. Raw steering context and principal/dispatch details do not pass through the graph projection. Source/type/build checks remain distinct from rendered installed-host qualification. CFG01 projections and the production build do not establish rendered desktop/mobile or screen-reader acceptance.",
       "remaining": [
         "Connect job-backed inference, principal-aware workspace discovery and resumable terminal/graph APIs",
         "Preserve exact orb, reduced-motion/accessibility and metric timing/denominator contracts"
@@ -131057,13 +131144,14 @@
         "U16"
       ],
       "status": "implemented_unqualified",
-      "assessment": "RW01 and RW02 planning foundation: immutable native environments/deployment registrations, operator-only RLS records, direct expiring/revocable grants, serialized cycle rejection and deterministic review-only host plans. Existing sandbox qualification remains required for its existing backend.",
+      "assessment": "RW01 and RW02 planning foundation: immutable native environments/deployment registrations, operator-only RLS records, direct expiring/revocable grants, serialized cycle rejection and deterministic review-only host plans. Existing sandbox qualification remains required for its existing backend. CFG01 adds a bounded swarm read model, an owner/setup-gated immutable revocation intent and an explicit native administrative apply command.",
       "support_scope": "56 Linux contract/CLI cases and 24 real disposable PostgreSQL cases (six new remote-workspace cases) passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54 in run 45459401549. This is source/isolated-database acceptance, not remote host, transport, inference or GUI qualification.",
       "remaining": [
         "Strict pinned SSH inspection and privileged apply/reconcile",
         "Released native Syn host role/custody and directed remote transport",
         "Dispatch/application records and live authenticated write adapters",
-        "Remote tool/model, control UI, Xpra and physically distinct two-machine acceptance"
+        "Remote tool/model, control UI, Xpra and physically distinct two-machine acceptance",
+        "Rendered swarm acceptance, live telemetry and native node lifecycle controls"
       ],
       "next_action": "Continue RW01 records/adapters and RW02 authenticated SSH inspection; keep apply and remote capability readiness unavailable until the actual postconditions pass.",
       "code": [

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="600" viewBox="0 0 1080 600" role="img" aria-labelledby="title desc">
+  <title id="title">Potbot settings inventory and swarm contracts</title>
+  <desc id="desc">The settings workbench reads bounded native metadata and workspace-scoped PostgreSQL records. An owner submits a revocation intent, a protected native operator applies it, and a fresh ledger read confirms the change. This is an illustration rather than a UI screenshot.</desc>
+  <defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#71d8e9" stroke-width="1.6"/></marker></defs>
+  <rect width="1080" height="600" rx="20" fill="#101c2d"/>
+  <g font-family="system-ui,sans-serif" fill="#edf6ff">
+    <text x="42" y="50" font-size="25" font-weight="700">Potbot configuration</text>
+    <text x="42" y="78" font-size="13" fill="#b5c9de">Source contract illustration · files, records and completed actions remain distinct</text>
+    <rect x="42" y="118" width="260" height="150" rx="14" fill="#19374a" stroke="#71d8e9"/>
+    <text x="62" y="151" font-size="17" font-weight="600">Settings workbench</text>
+    <text x="62" y="182" font-size="13">14 categories · 29 groups</text>
+    <text x="62" y="208" font-size="13">7 saved preferences</text>
+    <text x="62" y="239" font-size="12" fill="#b5c9de">Target selection retains Home</text>
+    <rect x="397" y="118" width="295" height="150" rx="14" fill="#203044" stroke="#91a9bf"/>
+    <text x="417" y="151" font-size="17" font-weight="600">Native metadata inventory</text>
+    <text x="417" y="182" font-size="13">Operator selects project roots</text>
+    <text x="417" y="208" font-size="13">File stats · package headers</text>
+    <text x="417" y="239" font-size="12" fill="#b5c9de">No model loading or tool execution</text>
+    <rect x="775" y="118" width="263" height="150" rx="14" fill="#203044" stroke="#91a9bf"/>
+    <text x="795" y="151" font-size="17" font-weight="600">Workspace ledger</text>
+    <text x="795" y="182" font-size="13">Nodes · deployments · grants</text>
+    <text x="795" y="208" font-size="13">Fresh membership and RLS</text>
+    <text x="795" y="239" font-size="12" fill="#b5c9de">Registration only</text>
+    <path d="M397 186H316" fill="none" stroke="#71d8e9" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M908 268V292H172V269" fill="none" stroke="#71d8e9" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="42" y="326" font-size="20" font-weight="600">Owner reviewed grant revocation</text>
+    <g fill="#19374a" stroke="#71d8e9"><rect x="42" y="353" width="277" height="118" rx="14"/><rect x="400" y="353" width="277" height="118" rx="14"/><rect x="758" y="353" width="280" height="118" rx="14"/></g>
+    <text x="62" y="390" font-size="16" font-weight="600">1  Save exact intent</text>
+    <text x="62" y="421" font-size="13">Digest · revision · request ID</text>
+    <text x="62" y="448" font-size="12" fill="#b5c9de">Saved; awaiting native operator</text>
+    <text x="420" y="390" font-size="16" font-weight="600">2  Native operator applies</text>
+    <text x="420" y="421" font-size="13">Native admin credential</text>
+    <text x="420" y="448" font-size="12" fill="#b5c9de">Ownership and replay checks</text>
+    <text x="778" y="390" font-size="16" font-weight="600">3  Read protected ledger</text>
+    <text x="778" y="421" font-size="13">Exact next revoked revision</text>
+    <text x="778" y="448" font-size="12" fill="#b5c9de">Ledger confirms revocation</text>
+    <path d="M319 411H386M677 411H744" fill="none" stroke="#71d8e9" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="42" y="528" font-size="16" fill="#f1ce90">Still unavailable: live capacity, native node lifecycle controls and computational layer editing</text>
+    <text x="42" y="559" font-size="12" fill="#b5c9de">Web credentials remain scoped. No administrator DSN, private root or credential reference is returned to the browser.</text>
+  </g>
+</svg>

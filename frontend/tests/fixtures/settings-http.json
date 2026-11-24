@@ -1,0 +1,718 @@
+{
+  "_evidence": "Synthetic contract fixtures. PostgreSQL CI replaces these with actual authenticated HTTP responses.",
+  "catalogue": {
+    "schema": "potbot-settings/v1",
+    "workspaceId": "11111111-1111-4111-8111-111111111111",
+    "principalId": "22222222-2222-4222-8222-222222222222",
+    "categories": [
+      {
+        "id": "workspace",
+        "label": "Workspace and profiles",
+        "path": "/"
+      },
+      {
+        "id": "appearance",
+        "label": "Appearance and accessibility",
+        "path": "/settings/appearance"
+      },
+      {
+        "id": "models",
+        "label": "Models and providers",
+        "path": "/settings/models"
+      },
+      {
+        "id": "tools",
+        "label": "Tools, MCP and skills",
+        "path": "/settings/tools"
+      },
+      {
+        "id": "swarm",
+        "label": "Workspace swarm",
+        "path": "/settings/swarm"
+      },
+      {
+        "id": "execution",
+        "label": "Tasks and execution",
+        "path": "/tools"
+      },
+      {
+        "id": "context",
+        "label": "Context and memory",
+        "path": "/context"
+      },
+      {
+        "id": "research",
+        "label": "Research and sources",
+        "path": "/research"
+      },
+      {
+        "id": "applications",
+        "label": "Applications and browser",
+        "path": "/"
+      },
+      {
+        "id": "storage",
+        "label": "Storage and transfers",
+        "path": "/"
+      },
+      {
+        "id": "security",
+        "label": "Security and credentials",
+        "path": "/setup/apis"
+      },
+      {
+        "id": "services",
+        "label": "Services and network",
+        "path": "/setup/operator"
+      },
+      {
+        "id": "diagnostics",
+        "label": "Monitoring and audit",
+        "path": "/setup/operator"
+      },
+      {
+        "id": "updates",
+        "label": "Updates and recovery",
+        "path": "/setup/tools"
+      }
+    ],
+    "features": [
+      {
+        "id": "CFG01",
+        "label": "Workspace and profiles",
+        "category": "workspace",
+        "description": "Workspace identity, roots and layer provenance."
+      },
+      {
+        "id": "CFG02",
+        "label": "Saved appearance",
+        "category": "appearance",
+        "description": "Seven revisioned user preferences."
+      },
+      {
+        "id": "CFG03",
+        "label": "Local layout",
+        "category": "appearance",
+        "description": "Dockview coordinates and compact density stay browser-local."
+      },
+      {
+        "id": "CFG04",
+        "label": "Installed model library",
+        "category": "models",
+        "description": "Observe selected local roots without loading weights."
+      },
+      {
+        "id": "CFG05",
+        "label": "Inference deployments",
+        "category": "models",
+        "description": "Exact model, tokenizer, template and runtime identity."
+      },
+      {
+        "id": "CFG06",
+        "label": "Model routing",
+        "category": "models",
+        "description": "Reasoning, coding and specialist deployment selections."
+      },
+      {
+        "id": "CFG07",
+        "label": "Hosted providers",
+        "category": "models",
+        "description": "Provider status, native credentials and disclosure policy."
+      },
+      {
+        "id": "CFG08",
+        "label": "Generation and prompts",
+        "category": "models",
+        "description": "Supported generation and prompt-adapter limits."
+      },
+      {
+        "id": "CFG09",
+        "label": "Installed tools",
+        "category": "tools",
+        "description": "Installed metadata, release records and execution authority."
+      },
+      {
+        "id": "CFG10",
+        "label": "MCP and adapters",
+        "category": "tools",
+        "description": "Explicit discovery and installed qualification."
+      },
+      {
+        "id": "CFG11",
+        "label": "Skills and workflows",
+        "category": "tools",
+        "description": "Reviewed package identity and enabled state."
+      },
+      {
+        "id": "CFG12",
+        "label": "Agents and reasoning",
+        "category": "execution",
+        "description": "Versioned search policy, rounds and task revisions."
+      },
+      {
+        "id": "CFG13",
+        "label": "Budgets and ceilings",
+        "category": "execution",
+        "description": "Calls, tokens, time, money and resource reservations."
+      },
+      {
+        "id": "CFG14",
+        "label": "Scheduling and placement",
+        "category": "execution",
+        "description": "Current jobs; distributed placement remains planned."
+      },
+      {
+        "id": "CFG15",
+        "label": "Context and instructions",
+        "category": "context",
+        "description": "MODEL.md snapshots, ACLs, history and restore."
+      },
+      {
+        "id": "CFG16",
+        "label": "Embeddings and retrieval",
+        "category": "context",
+        "description": "Versioned embedding profiles and reindex dependencies."
+      },
+      {
+        "id": "CFG17",
+        "label": "Research and sources",
+        "category": "research",
+        "description": "Source access, disclosure, fetch and provider limits."
+      },
+      {
+        "id": "CFG18",
+        "label": "Applications and Xpra",
+        "category": "applications",
+        "description": "Launch, view, input and terminate remain separate rights."
+      },
+      {
+        "id": "CFG19",
+        "label": "Browser and egress",
+        "category": "applications",
+        "description": "Approved browser recipes and network policy."
+      },
+      {
+        "id": "CFG20",
+        "label": "Storage and downloads",
+        "category": "storage",
+        "description": "Project-local model caches, artifacts and transfer receipts."
+      },
+      {
+        "id": "CFG21",
+        "label": "Node identity and lifecycle",
+        "category": "swarm",
+        "description": "Registered hosts and actual setup records; no inferred liveness."
+      },
+      {
+        "id": "CFG22",
+        "label": "Membership and control",
+        "category": "swarm",
+        "description": "Owner-reviewed requests to revoke direct control grants."
+      },
+      {
+        "id": "CFG23",
+        "label": "Swarm resources",
+        "category": "swarm",
+        "description": "Deployment relationships; live cross-host capacity remains unavailable."
+      },
+      {
+        "id": "CFG24",
+        "label": "API and native services",
+        "category": "services",
+        "description": "Operator attachment and scoped server connections."
+      },
+      {
+        "id": "CFG25",
+        "label": "Credentials and trust",
+        "category": "security",
+        "description": "Native custody and credential status, never secret values."
+      },
+      {
+        "id": "CFG26",
+        "label": "Monitoring and audit",
+        "category": "diagnostics",
+        "description": "Actual events and qualified operator telemetry."
+      },
+      {
+        "id": "CFG27",
+        "label": "Updates and recovery",
+        "category": "updates",
+        "description": "Existing upgrade, history and reconciliation owners."
+      },
+      {
+        "id": "CFG28",
+        "label": "Feature availability",
+        "category": "diagnostics",
+        "description": "Distinguish supported, operator-managed and planned features."
+      },
+      {
+        "id": "CFG29",
+        "label": "Repositories and Types",
+        "category": "workspace",
+        "description": "Exact source snapshots, verification and Syn releases."
+      }
+    ],
+    "descriptors": [
+      {
+        "id": "configuration.policy_versions",
+        "label": "Versioned policies",
+        "category": "execution",
+        "kind": "snapshot",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "{\"reuse\": \"reuse-discovery-v1\", \"search\": \"bounded-depth-first-v1\", \"verification\": \"v1\"}",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "configuration.reasoning_models",
+        "label": "Reasoning models",
+        "category": "models",
+        "kind": "snapshot",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "[\"microsoft/Phi-4-mini-instruct\", \"google/gemma-3-4b-it\"]",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "configuration.coding_models",
+        "label": "Coding models",
+        "category": "models",
+        "kind": "snapshot",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "[\"Qwen/Qwen2.5-Coder-7B-Instruct\", \"google/codegemma-7b-it\", \"deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct\"]",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "configuration.allowed_tools",
+        "label": "Allowed tool selections",
+        "category": "tools",
+        "kind": "snapshot",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "[]",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "configuration.source_access",
+        "label": "Source access",
+        "category": "research",
+        "kind": "snapshot",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "0 configured",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "configuration.physical_inference_concurrency",
+        "label": "Physical inference concurrency",
+        "category": "execution",
+        "kind": "integer",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "1",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "configuration.max_packet_tokens",
+        "label": "Maximum context packet tokens",
+        "category": "execution",
+        "kind": "integer",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "2048",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "configuration.verification_policy",
+        "label": "Verification policy",
+        "category": "execution",
+        "kind": "snapshot",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "\"v1\"",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "configuration.embedding_profile",
+        "label": "Embedding profile",
+        "category": "context",
+        "kind": "snapshot",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "\"qwen3-embedding-0.6b-1024-v1\"",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "configuration.secret_refs",
+        "label": "Credential reference count",
+        "category": "security",
+        "kind": "snapshot",
+        "scopes": [
+          "installation",
+          "deployment",
+          "workspace",
+          "repository",
+          "task"
+        ],
+        "defaultValue": "0 configured",
+        "editable": false,
+        "apply": "next_admission",
+        "owner": "domain.configuration",
+        "reason": "Layer editing needs the reviewed configuration-change service.",
+        "options": []
+      },
+      {
+        "id": "preferences.theme",
+        "label": "Theme",
+        "category": "appearance",
+        "kind": "choice",
+        "scopes": [
+          "principal_workspace"
+        ],
+        "defaultValue": "Uses the current client default when unset",
+        "editable": true,
+        "apply": "client",
+        "owner": "ui_resources",
+        "reason": "Saved through the existing revisioned preferences API.",
+        "options": [
+          "system",
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "id": "preferences.graphDisplay",
+        "label": "Graph display",
+        "category": "appearance",
+        "kind": "choice",
+        "scopes": [
+          "principal_workspace"
+        ],
+        "defaultValue": "Uses the current client default when unset",
+        "editable": true,
+        "apply": "client",
+        "owner": "ui_resources",
+        "reason": "Saved through the existing revisioned preferences API.",
+        "options": [
+          "3d",
+          "list"
+        ]
+      },
+      {
+        "id": "preferences.reducedMotion",
+        "label": "Reduce motion",
+        "category": "appearance",
+        "kind": "boolean",
+        "scopes": [
+          "principal_workspace"
+        ],
+        "defaultValue": "Uses the current client default when unset",
+        "editable": true,
+        "apply": "client",
+        "owner": "ui_resources",
+        "reason": "Saved through the existing revisioned preferences API.",
+        "options": []
+      },
+      {
+        "id": "preferences.showGraphDiagnostics",
+        "label": "Graph diagnostics",
+        "category": "appearance",
+        "kind": "boolean",
+        "scopes": [
+          "principal_workspace"
+        ],
+        "defaultValue": "Uses the current client default when unset",
+        "editable": true,
+        "apply": "client",
+        "owner": "ui_resources",
+        "reason": "Saved through the existing revisioned preferences API.",
+        "options": []
+      },
+      {
+        "id": "preferences.orbAutoHide",
+        "label": "Automatically hide the orb",
+        "category": "appearance",
+        "kind": "boolean",
+        "scopes": [
+          "principal_workspace"
+        ],
+        "defaultValue": "Uses the current client default when unset",
+        "editable": true,
+        "apply": "client",
+        "owner": "ui_resources",
+        "reason": "Saved through the existing revisioned preferences API.",
+        "options": []
+      },
+      {
+        "id": "preferences.downloadNotifications",
+        "label": "Download notifications",
+        "category": "appearance",
+        "kind": "boolean",
+        "scopes": [
+          "principal_workspace"
+        ],
+        "defaultValue": "Uses the current client default when unset",
+        "editable": true,
+        "apply": "client",
+        "owner": "ui_resources",
+        "reason": "Saved through the existing revisioned preferences API.",
+        "options": []
+      },
+      {
+        "id": "preferences.xpraMaxFps",
+        "label": "Xpra client frame limit",
+        "category": "appearance",
+        "kind": "choice",
+        "scopes": [
+          "principal_workspace"
+        ],
+        "defaultValue": "Uses the current client default when unset",
+        "editable": true,
+        "apply": "client",
+        "owner": "ui_resources",
+        "reason": "Saved through the existing revisioned preferences API.",
+        "options": [
+          10,
+          15,
+          24,
+          30,
+          60
+        ]
+      }
+    ],
+    "layers": [
+      "installation",
+      "deployment",
+      "workspace",
+      "repository",
+      "task"
+    ],
+    "layerEditing": false
+  },
+  "effective": {
+    "schema": "potbot-settings/v1",
+    "workspaceId": "11111111-1111-4111-8111-111111111111",
+    "principalId": "22222222-2222-4222-8222-222222222222",
+    "liveLayersAvailable": false,
+    "defaults": [
+      {
+        "id": "configuration.policy_versions",
+        "value": "{\"reuse\": \"reuse-discovery-v1\", \"search\": \"bounded-depth-first-v1\", \"verification\": \"v1\"}"
+      },
+      {
+        "id": "configuration.reasoning_models",
+        "value": "[\"microsoft/Phi-4-mini-instruct\", \"google/gemma-3-4b-it\"]"
+      },
+      {
+        "id": "configuration.coding_models",
+        "value": "[\"Qwen/Qwen2.5-Coder-7B-Instruct\", \"google/codegemma-7b-it\", \"deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct\"]"
+      },
+      {
+        "id": "configuration.allowed_tools",
+        "value": "[]"
+      },
+      {
+        "id": "configuration.source_access",
+        "value": "0 configured"
+      },
+      {
+        "id": "configuration.physical_inference_concurrency",
+        "value": "1"
+      },
+      {
+        "id": "configuration.max_packet_tokens",
+        "value": "2048"
+      },
+      {
+        "id": "configuration.verification_policy",
+        "value": "\"v1\""
+      },
+      {
+        "id": "configuration.embedding_profile",
+        "value": "\"qwen3-embedding-0.6b-1024-v1\""
+      },
+      {
+        "id": "configuration.secret_refs",
+        "value": "0 configured"
+      }
+    ],
+    "latestRecordedSnapshot": null
+  },
+  "models": {
+    "schema": "potbot-settings/v1",
+    "workspaceId": "11111111-1111-4111-8111-111111111111",
+    "principalId": "22222222-2222-4222-8222-222222222222",
+    "kind": "models",
+    "observedAt": "2026-11-24T12:00:00+00:00",
+    "local": {
+      "status": "observed",
+      "nodeLabel": "Synthetic fixture",
+      "profileSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "truncated": false,
+      "unavailableRoots": 0
+    },
+    "items": [
+      {
+        "id": "local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "name": "fixture.gguf",
+        "version": "",
+        "origin": "local_file",
+        "location": "models/fixture.gguf",
+        "bytes": 32,
+        "presence": "observed",
+        "verification": "not_checked",
+        "qualification": "unknown",
+        "runtime": "unknown",
+        "permission": "not_evaluated",
+        "detail": "Synthetic metadata observation; never execution evidence."
+      }
+    ],
+    "recordsTruncated": false,
+    "runtimeProbed": false,
+    "permissionEvaluated": false
+  },
+  "tools": {
+    "schema": "potbot-settings/v1",
+    "workspaceId": "11111111-1111-4111-8111-111111111111",
+    "principalId": "22222222-2222-4222-8222-222222222222",
+    "kind": "tools",
+    "observedAt": "2026-11-24T12:00:00+00:00",
+    "local": {
+      "status": "observed",
+      "nodeLabel": "Synthetic fixture",
+      "profileSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "truncated": false,
+      "unavailableRoots": 0
+    },
+    "items": [
+      {
+        "id": "local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "name": "fixture-tool",
+        "version": "1.0",
+        "origin": "package_metadata",
+        "location": "packages/fixture.dist-info",
+        "bytes": null,
+        "presence": "observed",
+        "verification": "not_checked",
+        "qualification": "unknown",
+        "runtime": "unknown",
+        "permission": "not_evaluated",
+        "detail": "Synthetic metadata observation; never execution evidence."
+      }
+    ],
+    "recordsTruncated": false,
+    "runtimeProbed": false,
+    "permissionEvaluated": false
+  },
+  "swarm": {
+    "schema": "potbot-settings/v1",
+    "workspaceId": "11111111-1111-4111-8111-111111111111",
+    "principalId": "22222222-2222-4222-8222-222222222222",
+    "observedAt": "2026-11-24T12:00:00+00:00",
+    "nodes": [],
+    "deployments": [],
+    "grants": [
+      {
+        "id": "44444444-4444-4444-8444-444444444444",
+        "sourceWorkspaceId": "33333333-3333-4333-8333-333333333333",
+        "revision": 1,
+        "revocationGeneration": 1,
+        "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "permissions": [
+          "workspace.inspect",
+          "tool.execute"
+        ],
+        "expiresAt": "2026-12-31T12:00:00+00:00",
+        "state": "active",
+        "canRequestRevocation": true
+      }
+    ],
+    "requests": [],
+    "recordsTruncated": false,
+    "liveCapacityAvailable": false,
+    "workerTelemetryAvailable": false,
+    "nativeNodeActionsAvailable": false
+  }
+}
