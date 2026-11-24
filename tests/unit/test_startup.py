@@ -19,6 +19,7 @@ def test_explicit_commands_are_forwarded_without_install_or_database(monkeypatch
 
 
 def test_default_launch_delegates_to_oneclick_instead_of_printing_help(monkeypatch):
+    monkeypatch.setenv("POTBOT_LOCAL_UI", "web")
     received = []
     monkeypatch.setattr(oneclick, "main", lambda args: received.append(args) or 4)
     monkeypatch.setattr(cli, "main", lambda _: pytest.fail("CLI help is not a launch"))
@@ -28,6 +29,7 @@ def test_default_launch_delegates_to_oneclick_instead_of_printing_help(monkeypat
 
 @pytest.mark.parametrize("command", ("start", "stop", "restart", "status", "logs", "ui-password"))
 def test_simple_commands_have_no_intermediate_cli(monkeypatch, command):
+    monkeypatch.setenv("POTBOT_LOCAL_UI", "web")
     calls = []
     monkeypatch.setattr(oneclick, "main", lambda args: calls.append(args) or 0)
     assert startup.main([command]) == 0
@@ -57,8 +59,11 @@ assert not blocked.intersection(sys.modules)
 print('isolated')
 """
     result = subprocess.run(
-        [sys.executable, "-c", program], cwd=tmp_path,
-        capture_output=True, text=True, timeout=20,
+        [sys.executable, "-c", program],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=20,
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == "isolated"

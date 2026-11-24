@@ -41,9 +41,10 @@ test('authenticated preferences/download routes enforce origin, scope and whitel
  Object.assign(process.env,env);
  const oldFetch=globalThis.fetch;
  t.after(()=>{globalThis.fetch=oldFetch;for(const k of Object.keys(env)){if(k in original)process.env[k]=original[k];else delete process.env[k];}});
- assert.equal((await getPrefs(request('/api/ui/preferences'))).status,401);
+ assert.equal((await getPrefs(new Request('http://remote.invalid:3100/api/ui/preferences'))).status,403);
  const auth=await login(request('/api/ui/auth/login',{method:'POST',headers:{origin,'Content-Type':'application/json'},body:JSON.stringify({password:env.POTBOT_UI_PASSWORD})}));
- const cookie=auth.headers.get('set-cookie').split(';')[0];
+ assert.equal(auth.headers.get('set-cookie'), null);
+ const cookie='';
  await t.test('preferences read never expose backend secrets',async()=>{
   globalThis.fetch=async(url,init)=>{
    assert.equal(new URL(url).pathname,'/v1/ui/preferences');assert.equal(init.headers.Authorization,'Bearer DO-NOT-SHOW');

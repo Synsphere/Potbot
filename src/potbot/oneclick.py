@@ -22,14 +22,21 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote, urlsplit, urlunsplit
-from uuid import UUID, uuid4
+from uuid import uuid4
 
-from potbot.credentials import (CredentialStore, _hidden_prompt, credential_profile,
-                                resolve_postgres_dsn, validate_connection)
+from potbot.credentials import (
+    CredentialStore,
+    _hidden_prompt,
+    credential_profile,
+    resolve_postgres_dsn,
+)
 from potbot.dependencies import project_root
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import (
-    CapabilityUnavailableError, DomainError, InvalidInputError, ScopeDeniedError,
+    CapabilityUnavailableError,
+    DomainError,
+    InvalidInputError,
+    ScopeDeniedError,
 )
 
 _GUI_URL = "http://127.0.0.1:3100"
@@ -51,10 +58,15 @@ def _application_url(admin_dsn: str, user: str, password: str) -> str:
     if ":" in host:
         host = "[" + host + "]"
     port = ":" + str(parts.port) if parts.port else ""
-    return urlunsplit((
-        parts.scheme, f"{quote(user, safe='')}:{quote(password, safe='')}@{host}{port}",
-        parts.path, parts.query, "",
-    ))
+    return urlunsplit(
+        (
+            parts.scheme,
+            f"{quote(user, safe='')}:{quote(password, safe='')}@{host}{port}",
+            parts.path,
+            parts.query,
+            "",
+        )
+    )
 
 
 def _is_native_database_url(dsn: str) -> bool:
@@ -89,6 +101,7 @@ def _verified_application_role(app_dsn: str, admin_dsn: str, schema: str) -> str
     rather than treating the connected user's name as permission to bind it.
     """
     import psycopg
+
     from potbot.persistence.database import _restricted_login, admin_connection
 
     try:
@@ -114,8 +127,10 @@ def _existing_context(
 
     # Never allocate a workspace using an unchecked application identity.
     # A trusted database session supplies the role, not a browser/model input.
-    login = verified_role if verified_role is not None else _verified_application_role(
-        app_dsn, admin_dsn, schema
+    login = (
+        verified_role
+        if verified_role is not None
+        else _verified_application_role(app_dsn, admin_dsn, schema)
     )
     with admin_connection(admin_dsn, schema) as connection:
         rows = connection.execute(
@@ -143,6 +158,7 @@ def _new_workspace(admin_dsn: str, schema: str, role: str, root: Path) -> Worksp
 
 def _create_restricted_login(admin_dsn: str, schema: str, root: Path) -> WorkspaceContext:
     from psycopg import sql
+
     from potbot.persistence.database import Database, admin_connection
 
     store = CredentialStore(credential_profile())
@@ -153,10 +169,10 @@ def _create_restricted_login(admin_dsn: str, schema: str, root: Path) -> Workspa
     # the grants provisioned by Potbot's existing schema authority.
     with admin_connection(admin_dsn, schema) as connection:
         connection.execute(
-            sql.SQL("CREATE ROLE {} LOGIN PASSWORD {} NOSUPERUSER NOCREATEDB NOCREATEROLE "
-                    "NOREPLICATION NOBYPASSRLS NOINHERIT").format(
-                sql.Identifier(role), sql.Literal(password)
-            )
+            sql.SQL(
+                "CREATE ROLE {} LOGIN PASSWORD {} NOSUPERUSER NOCREATEDB NOCREATEROLE "
+                "NOREPLICATION NOBYPASSRLS NOINHERIT"
+            ).format(sql.Identifier(role), sql.Literal(password))
         )
     scope = _new_workspace(admin_dsn, schema, role, root)
     with Database(app_dsn, schema).transaction(scope):
@@ -164,7 +180,6 @@ def _create_restricted_login(admin_dsn: str, schema: str, root: Path) -> Workspa
     store.set("postgres.application", app_dsn)
     _notice("Created a restricted database login and private Potbot workspace")
     return scope
-
 
 
 def _provision_database(root: Path) -> WorkspaceContext:
@@ -194,7 +209,9 @@ def _provision_database(root: Path) -> WorkspaceContext:
                     "POTBOT_DSN points outside Potbot's native database. Remove the override "
                     "to use automatic native PostgreSQL setup."
                 )
-            _notice("Saved application connection targets another database; configuring a local restricted login")
+            _notice(
+                "Saved application connection targets another database; configuring a local restricted login"
+            )
             return _create_restricted_login(admin_dsn, schema, root)
         try:
             role = _verified_application_role(application, admin_dsn, schema)
@@ -209,7 +226,9 @@ def _provision_database(root: Path) -> WorkspaceContext:
                     "The saved application login is unavailable or privileged. Select a "
                     "restricted login for the configured external PostgreSQL database."
                 ) from None
-            _notice("Saved application credential is unsuitable; creating a private restricted login")
+            _notice(
+                "Saved application credential is unsuitable; creating a private restricted login"
+            )
             return _create_restricted_login(admin_dsn, schema, root)
         scope = _existing_context(application, admin_dsn, schema, verified_role=role)
         if scope is None:
@@ -315,7 +334,9 @@ def _install_or_upgrade(root: Path) -> tuple[Any, bool, bool]:
         scope = _provision_database(root)
         policy = _policy_path(root)
         config = service.ServiceConfig(
-            str(scope.workspace_id), str(scope.principal_id), str(policy.resolve()),
+            str(scope.workspace_id),
+            str(scope.principal_id),
+            str(policy.resolve()),
             frontend_enabled=True,
         )
     else:
@@ -328,7 +349,11 @@ def _install_or_upgrade(root: Path) -> tuple[Any, bool, bool]:
     # This work happens before touching the existing service manager: a failed
     # Node download/npm build must not take down a working backend.
     prepare_frontend(root)
-    if first_setup or not current.is_file() or not service.ServiceConfig.load(current).frontend_enabled:
+    if (
+        first_setup
+        or not current.is_file()
+        or not service.ServiceConfig.load(current).frontend_enabled
+    ):
         service._atomic_configuration(config)
     return config, password_chosen, first_setup
 
@@ -413,8 +438,11 @@ def _open_browser() -> None:
     # WSL's preferred GUI browser is often the Windows host browser.
     if "microsoft" in platform_release().lower() or "WSL_INTEROP" in os.environ:
         try:
-            subprocess.Popen(["cmd.exe", "/c", "start", "", _GUI_URL],
-                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.Popen(
+                ["cmd.exe", "/c", "start", "", _GUI_URL],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
             return
         except OSError:
             pass
@@ -473,7 +501,12 @@ def _start(*, open_browser: bool = True) -> int:
         # created random passwords without asking the operator.
         password_chosen = _ensure_secrets()
         current = service.ServiceConfig.load(saved)
-        if current.frontend_enabled and not password_chosen and _healthy(current) and _gui_accepts_current_password():
+        if (
+            current.frontend_enabled
+            and not password_chosen
+            and _healthy(current)
+            and _gui_accepts_current_password()
+        ):
             _notice("Potbot is already running: " + _GUI_URL)
             if open_browser and sys.stdout.isatty():
                 _open_browser()
@@ -482,7 +515,12 @@ def _start(*, open_browser: bool = True) -> int:
     password_chosen = password_chosen or newly_chosen
     if password_chosen:
         _notice("Your chosen GUI password is stored securely; restarting the GUI login service")
-    if not first_setup and not password_chosen and _healthy(config) and _gui_accepts_current_password():
+    if (
+        not first_setup
+        and not password_chosen
+        and _healthy(config)
+        and _gui_accepts_current_password()
+    ):
         _notice("Potbot is already running: " + _GUI_URL)
         if open_browser and sys.stdout.isatty():
             _open_browser()
@@ -536,13 +574,24 @@ def _change_password() -> int:
                 _notice("Potbot GUI restarted; sign in with the password you chose")
                 return 0
             time.sleep(1)
-        raise CapabilityUnavailableError("GUI password saved but the service did not become healthy")
+        raise CapabilityUnavailableError(
+            "GUI password saved but the service did not become healthy"
+        )
     return 0
 
 
 def main(arguments: list[str] | None = None) -> int:
     arguments = [] if arguments is None else arguments
-    if arguments not in ([], ["start"], ["stop"], ["restart"], ["status"], ["logs"], ["ui-password"], ["change-password"]):
+    if arguments not in (
+        [],
+        ["start"],
+        ["stop"],
+        ["restart"],
+        ["status"],
+        ["logs"],
+        ["ui-password"],
+        ["change-password"],
+    ):
         raise InvalidInputError("Unsupported simple launch command")
     try:
         from potbot import service
@@ -553,9 +602,15 @@ def main(arguments: list[str] | None = None) -> int:
         if action == "status":
             path = service.config_path()
             config = service.ServiceConfig.load(path) if path.is_file() else None
-            print(json.dumps({"configured": config is not None,
-                              "backend_and_gui_healthy": bool(config and _healthy(config)),
-                              "gui_url": _GUI_URL if config else None}))
+            print(
+                json.dumps(
+                    {
+                        "configured": config is not None,
+                        "backend_and_gui_healthy": bool(config and _healthy(config)),
+                        "gui_url": _GUI_URL if config else None,
+                    }
+                )
+            )
             return 0
         if action == "logs":
             return service.main(["logs"])
@@ -580,8 +635,11 @@ def main(arguments: list[str] | None = None) -> int:
     except (DomainError, OSError, ValueError) as error:
         # Credential / DB helpers already sanitize exception messages. Other
         # external stderr (node, docker, npm, OS manager) is never reflected here.
-        _notice(str(error) if isinstance(error, DomainError) else
-                "Startup failed. Check the native credential vault and Potbot service logs")
+        _notice(
+            str(error)
+            if isinstance(error, DomainError)
+            else "Startup failed. Check the native credential vault and Potbot service logs"
+        )
         return 1
 
 

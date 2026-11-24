@@ -63,12 +63,17 @@ from potbot.controller.atomic_graph_runtime import AtomicGraphService, AtomicLau
 # checks: per-leaf successful operation.check jobs from OperationWorkbench.check.
 service = AtomicGraphService(database)
 identity = uuid4()
-service.admit(actor, identity, planner, {
-    node_id: AtomicLaunchBinding(operation_id=check.operation_id,
-                                 check_job_id=check.job_id,
-                                 request=check.exact_request)
-    for node_id, check in checks.items()
-})
+service.admit(
+    actor,
+    identity,
+    planner,
+    {
+        node_id: AtomicLaunchBinding(
+            operation_id=check.operation_id, check_job_id=check.job_id, request=check.exact_request
+        )
+        for node_id, check in checks.items()
+    },
+)
 
 # An operator-owned scheduler tick, authenticated with the same setup token.
 service.launch_ready(actor, identity, setup_token=current_operator_token)

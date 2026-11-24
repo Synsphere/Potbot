@@ -398,6 +398,16 @@ def main(argv: list[str] | None = None) -> int:
             group.add_argument("--shuffle-seed", type=int, default=42)
             group.add_argument("--min-samples", type=int, default=12)
             group.add_argument("--store-text", action="store_true")
+    compare = command.add_parser("compare-atomic")
+    compare.add_argument("--suite", required=True, type=Path)
+    compare.add_argument("--models", required=True, type=Path)
+    compare.add_argument("--results", required=True, type=Path)
+    compare.add_argument("--baseline", required=True)
+    compare.add_argument("--candidate", required=True)
+    compare.add_argument("--variants", default="generic,family,model_role")
+    compare.add_argument("--repeat", type=int, default=1)
+    compare.add_argument("--minimum-cases", type=int, default=12)
+    compare.add_argument("--output", required=True, type=Path)
     monitor = command.add_parser("monitor")
     monitor.add_argument("--history-dir", required=True, type=Path)
     monitor.add_argument("--output", required=True, type=Path)
@@ -406,6 +416,22 @@ def main(argv: list[str] | None = None) -> int:
     )
     try:
         args = parser.parse_args(argv)
+        if args.command == "compare-atomic":
+            from potbot.evaluation.agentic_atomic_bench import compare_atomic
+
+            payload = compare_atomic(
+                _read(args.results, limit=16 * 1024 * 1024),
+                RoleSuite.from_dict(_read(args.suite)),
+                _targets(args.models),
+                baseline=args.baseline,
+                candidate=args.candidate,
+                variants=tuple(_parsed_variants(args.variants)),
+                repeat=args.repeat,
+                minimum_cases=args.minimum_cases,
+            )
+            _private_write(args.output, canonical_json(payload) + "\n")
+            print("Atomic comparison retained; no model calls or routing changes.")
+            return 0
         if args.command == "monitor":
             inputs = sorted(args.history_dir.glob("*/report.json"))
             if len(inputs) > 500:

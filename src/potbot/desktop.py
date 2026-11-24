@@ -11,7 +11,7 @@ from potbot.domain.errors import CapabilityUnavailableError, DomainError
 
 def main() -> int:
     try:
-        from PySide6.QtCore import QTimer, Qt, QUrl
+        from PySide6.QtCore import Qt, QTimer, QUrl
         from PySide6.QtGui import QDesktopServices
         from PySide6.QtWidgets import (
             QApplication,
@@ -35,7 +35,7 @@ def main() -> int:
 
     messages: SimpleQueue[tuple[str, str]] = SimpleQueue()
 
-    class WorkspaceWindow(QMainWindow):
+    class WorkspaceWindow(QMainWindow):  # type: ignore[misc]  # Optional Qt runtime.
         def __init__(self) -> None:
             super().__init__()
             self._starter: threading.Thread | None = None
@@ -58,7 +58,9 @@ def main() -> int:
             scene = QSplitter(Qt.Orientation.Horizontal)
             navigation = QListWidget()
             navigation.setObjectName("workspaceNav")
-            navigation.addItems(["Chat", "Reasoning graph", "Applications", "Models", "Preferences"])
+            navigation.addItems(
+                ["Chat", "Reasoning graph", "Applications", "Models", "Preferences"]
+            )
             navigation.setCurrentRow(0)
             navigation.setMaximumWidth(210)
             scene.addWidget(navigation)
@@ -173,7 +175,9 @@ def main() -> int:
                 except DomainError as error:
                     messages.put(("error", str(error)))
                 except Exception:
-                    messages.put(("error", "Potbot startup failed; inspect the local service logs."))
+                    messages.put(
+                        ("error", "Potbot startup failed; inspect the local service logs.")
+                    )
 
             self._starter = threading.Thread(
                 target=worker, name="potbot-native-startup", daemon=True
@@ -195,12 +199,8 @@ def main() -> int:
             self.status_labels["backend"].setText(
                 "Backend / managed WSL · " + self._label(status.backend)
             )
-            self.status_labels["xpra"].setText(
-                "Xpra applications · " + self._label(status.xpra)
-            )
-            self.status_labels["web"].setText(
-                "Remote web interface · " + self._label(status.web)
-            )
+            self.status_labels["xpra"].setText("Xpra applications · " + self._label(status.xpra))
+            self.status_labels["web"].setText("Remote web interface · " + self._label(status.web))
             self.web_button.setEnabled(status.web)
             self.retry_button.setEnabled(self._starter is None or not self._starter.is_alive())
             if status.xpra:

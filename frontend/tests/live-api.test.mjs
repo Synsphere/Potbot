@@ -23,14 +23,14 @@ test('authenticated UI routes enforce origin, scope and redact backend metadata'
   const realFetch=globalThis.fetch;
   t.after(()=>{globalThis.fetch=realFetch;for(const k of Object.keys(vars)){if(k in original)process.env[k]=original[k];else delete process.env[k];}});
   const initial=await authStatus(request('/api/ui/auth/status'));
-  assert.deepEqual(await initial.json(),{configured:true,authenticated:false});
-  await t.test('Login rejects wrong origin, accepts correct password, sets private cookie',async()=>{
+  assert.deepEqual(await initial.json(),{configured:true,authenticated:true});
+  await t.test('Loopback compatibility login rejects foreign origins and sets no cookie',async()=>{
     const wrong=await login(request('/api/ui/auth/login',{method:'POST',headers:{origin:'https://evil.invalid','Content-Type':'application/json'},body:JSON.stringify({password:vars.POTBOT_UI_PASSWORD})}));
     assert.equal(wrong.status,403);
     const right=await login(request('/api/ui/auth/login',{method:'POST',headers:{origin,'Content-Type':'application/json'},body:JSON.stringify({password:vars.POTBOT_UI_PASSWORD})}));
     assert.equal(right.status,200);
-    cookie=right.headers.get('set-cookie').split(';')[0];
-    assert.ok(right.headers.get('set-cookie').includes('HttpOnly'));
+    cookie='';
+    assert.equal(right.headers.get('set-cookie'),null);
   });
   await t.test('Bootstrap never exposes token and uses only explicitly configured workspace',async()=>{
     globalThis.fetch=async(input,init)=>{
@@ -87,10 +87,11 @@ test('authenticated UI routes enforce origin, scope and redact backend metadata'
     const bad=await reasoning(request('/api/ui/reasoning/../../oops',{headers:{cookie}}),{params:Promise.resolve({runId:'../invalid'})});
     assert.equal(bad.status,400);
   });
-  await t.test('Sign out clears cookie but cannot be cross-origin induced',async()=>{
+  await t.test('Compatibility logout stays loopback-bound and cannot be cross-origin induced',async()=>{
     assert.equal((await logout(request('/api/ui/auth/logout',{method:'POST',headers:{origin:'https://evil.invalid',cookie}}))).status,403);
     const response=await logout(request('/api/ui/auth/logout',{method:'POST',headers:{origin,cookie}}));
     assert.equal(response.status,200);
-    assert.match(response.headers.get('set-cookie'),/Max-Age=0/);
+    assert.equal(response.headers.get('set-cookie'),null);
+    assert.deepEqual(await response.json(),{authenticated:true});
   });
 });

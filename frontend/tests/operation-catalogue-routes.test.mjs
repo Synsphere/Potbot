@@ -29,7 +29,7 @@ test('operation BFF authenticates, confines reads and never reflects private bac
   }});
   let calls=0;
   globalThis.fetch=async()=>{calls++;throw new Error('unexpected network');};
-  assert.equal((await listing(new Request('http://localhost:3100/api/ui/operations'))).status,401);
+  assert.equal((await listing(new Request('http://remote.invalid:3100/api/ui/operations'))).status,403);
   assert.equal((await listing(request('?workspace_id=other'))).status,400);
   assert.equal((await listing(request('?q=a&q=b'))).status,400);
   assert.equal((await listing(request('',principalId))).status,503);

@@ -43,19 +43,24 @@ def actor():
 def test_tick_runs_only_admitted_ready_graph():
     current = FakeGraphService()
     graph_id = uuid4()
-    result = AtomicGraphPump(current).tick_graph(actor(), graph_id, setup_token="test-secret", limit=3)
+    result = AtomicGraphPump(current).tick_graph(
+        actor(), graph_id, setup_token="test-secret", limit=3
+    )
     assert result["decision"] == "launched"
     assert result["graph_id"] == str(graph_id)
     assert result["launched"][0]["node_id"] == "leaf"
     assert current.calls == [("test-secret", 3)]
 
 
-@pytest.mark.parametrize("state,outcome", [
-    ("interrupted", "interrupted"),
-    ("active", "needs_reconciliation"),
-    ("active", "blocked"),
-    ("active", "succeeded"),
-])
+@pytest.mark.parametrize(
+    "state,outcome",
+    [
+        ("interrupted", "interrupted"),
+        ("active", "needs_reconciliation"),
+        ("active", "blocked"),
+        ("active", "succeeded"),
+    ],
+)
 def test_terminal_graphs_never_dispatch(state, outcome):
     graph = FakeGraphService(state, outcome)
     result = AtomicGraphPump(graph).tick_graph(actor(), uuid4(), setup_token="test-secret")

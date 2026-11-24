@@ -42,6 +42,7 @@ potbot = "potbot.cli:main"
 
 [dependency-groups]
 dev = [
+  "dbus-next==0.2.3",
   "fastapi>=0.115,<1",
   "graphql-core==3.3.2",
   "grpcio>=1.75,<2",
@@ -94,11 +95,16 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
 
+# dbus-next consumes literal D-Bus signatures in these decorated methods.
+# Python annotation rewrites would corrupt the published wire interface.
+[tool.ruff.lint.per-file-ignores]
+"src/potbot/syn_release/secret_service_proxy.py" = ["F722", "F821", "UP037"]
+
 [tool.mypy]
 python_version = "3.12"
 files = ["src/potbot"]
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["psycopg", "psycopg.*"]
+module = ["psycopg", "psycopg.*", "syn_host_custody", "syn_host_custody.*", "PySide6", "PySide6.*", "dbus_next", "dbus_next.*"]
 ignore_missing_imports = true

@@ -10,9 +10,14 @@ from potbot.syn_release import host
 
 def test_windows_wsl_prerequisites_remove_linux_secret_service() -> None:
     assert "dbus-user-session" in host.PROVISION_UBUNTU
-    assert "for package in gnome-keyring libpam-gnome-keyring libsecret-tools" in host.PROVISION_UBUNTU
+    assert (
+        "for package in gnome-keyring libpam-gnome-keyring libsecret-tools" in host.PROVISION_UBUNTU
+    )
     assert "apt-get purge --yes $legacy_packages" in host.PROVISION_UBUNTU
-    assert "systemctl --global mask gnome-keyring-daemon.service gnome-keyring-daemon.socket" in host.PROVISION_UBUNTU
+    assert (
+        "systemctl --global mask gnome-keyring-daemon.service gnome-keyring-daemon.socket"
+        in host.PROVISION_UBUNTU
+    )
     assert "pkill -u synoperator -f" in host.PROVISION_UBUNTU
     assert "rm -f /etc/xdg/autostart/gnome-keyring-*.desktop" in host.PROVISION_UBUNTU
     assert "test ! -x /usr/bin/gnome-keyring-daemon" in host.PROVISION_UBUNTU
@@ -57,8 +62,7 @@ def test_legacy_ready_receipt_migrates_to_dpapi_without_starting_keyring(
     def run(argv: list[str], *, timeout: int = 30) -> str:
         calls.append((argv, timeout))
         return (
-            "POTBOT_WSL_CONFIG_CHANGED=0\n"
-            "syn-native-prerequisites-ready\n"
+            "POTBOT_WSL_CONFIG_CHANGED=0\nsyn-native-prerequisites-ready\n"
             if argv[-1] == host.PROVISION_UBUNTU
             else ""
         )

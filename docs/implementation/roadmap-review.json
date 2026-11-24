@@ -1,7 +1,7 @@
 {
   "schema": "potbot.roadmap-review/1",
   "reviewed_base": "95610037311c80cdf7163372998b08e1b8958926",
-  "reviewed_on": "2026-11-17",
+  "reviewed_on": "2026-11-24",
   "decision": "audit_complete",
   "runtime_qualified": false,
   "review_basis": "Agent source/code/test reconciliation of pinned main plus GitHub service records; no claim of human attestation, every acceptance executed, Word rendering, or exhaustive external inaccessible material.",
@@ -54,8 +54,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         }
       ],
       "tests": [
@@ -131,9 +131,9 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
           "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
-          "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-M follow-on: Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-Q follow-on: Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-S follow-on: Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. U04-T follow-on: Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-A follow-on: Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-M follow-on: Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-Q follow-on: Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-S follow-on: Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. U04-T follow-on: Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-A follow-on: Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/controller/task_execution.py",
@@ -794,8 +794,8 @@
         {
           "path": "src/potbot/tools/worker_telemetry.py",
           "symbol": "WorkerMonitorConfig",
-          "sha256": "41648a7f2031ccd50a8d4e6dea70778d237ab85a943b3ab5e42183dc9eb49183",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "4170dc76b86f68329de1f66b3d65abeb620cd9a5df56395b11278ca2540cbc8c",
+          "basis": "inspected integration owner; not whole-requirement implementation proof 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/tools/gateway.py",
@@ -2700,9 +2700,9 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
           "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
-          "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         }
       ],
       "tests": [
@@ -3821,8 +3821,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
+          "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/controller/registry_sources.py",
@@ -4559,7 +4559,7 @@
           "basis": "Exact URL grouping prevents conflicting late metadata from creating duplicate group identity or false cross-URL joins."
         }
       ],
-      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1–16 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons.",
+      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons.",
       "support_scope": "Current fixture, judge/calibration and ledger definitions, not completed B00-B10 external benchmark campaigns. U04-D follow-on: The deterministic forty-request discovery set checks class selection and hard exclusions, with adversarial name/popularity/keyword repetition and exact installed-owner preference. These retrieval fixtures are not general reasoning, tool execution or task-success benchmarks. U04-Q follow-on: Failed assertions, peer errors, malformed/changed outputs and missing stopped evidence cannot produce a successful task report. Server-provided success flags and hashes are not independent expected results. U04-S follow-on: Retrieval score, installation and provider-authored text are not general success measurements. Passing synthetic fixtures do not substitute for independent deployed model/task evidence. U04-T follow-on: Passing applies only to fixed assertions. It does not complete a whole task, independently qualify a deployed provider/host, or turn a truncated UI preview into outcome evidence. T05-A follow-on: Supported means verified cited-source agreement only. Different values remain unresolved; retrieval time does not replace publication time, and no need or task is automatically resolved.",
       "remaining": [
         "Freeze chronological tasks, independent graders, exact returned patch and real cost/time/resource provenance",
@@ -4599,14 +4599,14 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
+          "sha256": "ba6d56f5bbebf3d7a2a1ee1e15ca357292fb2cd2bf735b8b3e2f2befcf1dc4c5",
+          "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/service.py",
           "symbol": "ServiceConfig",
-          "sha256": "ec632c106b04c53064552581e9e26bef497e9225244ec563ed61ea9113c74948",
-          "basis": "inspected integration owner; not whole-requirement implementation proof"
+          "sha256": "975e47297a61771ff6fb7107a7ace37c68b373ad65fb21302b2d64c3f12ef772",
+          "basis": "inspected integration owner; not whole-requirement implementation proof 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "src/potbot/tools/tool_acquisition.py",
@@ -4654,9 +4654,9 @@
       "tests": [
         {
           "path": "tests/unit/test_startup.py",
-          "symbol": "test_explicit_commands_are_forwarded_without_postgres_or_model_preparation",
-          "sha256": "46edfc13e8e3cc8188fb2032ff8a9eb361c5e2fc46b86fae562034d545560909",
-          "basis": "source inspection; test definition is not an individual executed result"
+          "symbol": "test_explicit_commands_are_forwarded_without_install_or_database",
+          "sha256": "e68beef7f7270c3f3a4c0551e3c83b51bd31a90a265bedcec86156c082faca10",
+          "basis": "source inspection; test definition is not an individual executed result 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
           "path": "tests/integration/test_tool_acquisition.py",
@@ -5006,7 +5006,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "984e83137f10351f349f609fdfe38d1af7568bb1274187d2fff816adc2e02974",
+      "sha256": "8615ac459873160c41600d26f41b4e18951ddb5202f81854e82ab496333fc2a5",
       "families": [
         "durable",
         "evaluation",
@@ -5016,187 +5016,270 @@
         "research"
       ],
       "disposition": "reviewed_follow_on_with_explicit_runtime_limits",
-      "assessment": "Records bounded external research, source citations and literal agreement without broader runtime or task-completion claims. T05-B/R7.1 follow-on: Records the bounded specialist research and temporal steering increments, additive migration 48 and the user-directed Syn release deferral.",
+      "assessment": "Records bounded external research, source citations and literal agreement without broader runtime or task-completion claims. T05-B/R7.1 follow-on: Records the bounded specialist research and temporal steering increments, additive migration 48 and the user-directed Syn release deferral. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": [
         {
-          "locator": "line:1-189",
-          "sha256": "43c682936af2e8464752e70ed265963267b7cdcf9c8027d962032d13bce0fb15",
+          "locator": "line:1-194",
+          "sha256": "d0c482d8d0618f522d6407771b17b380162013172c6dad3076210bff99fc10e3",
           "families": [
-            "research",
-            "reasoning",
             "durable",
-            "identity"
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:190-262",
-          "sha256": "5f26eccfd87920c2708fbeaed5cbb98b75156b1d34439b5a3f335cbab91bd731",
+          "locator": "line:195-271",
+          "sha256": "394b8c050a40ba5cdbc86900df8b70b04e7543e6796d86b8b1bb5c1057c1c8d6",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:263-278",
+          "locator": "line:272-287",
           "sha256": "5689f55fe90f94c53113dd0b1bbda33d5657a0f6c1c93e4a556178e094a78299",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:279-297",
+          "locator": "line:288-306",
           "sha256": "4036e8789e575a45036555c7457f49d9bea65e48b66bb2118f94f4c27b4e27f0",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:298-318",
+          "locator": "line:307-327",
           "sha256": "4133870806c1292b693f0a1dc54d1b0e284520d91d8f995e4f8e1799f71e12a3",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:319-341",
+          "locator": "line:328-350",
           "sha256": "f6eb0f8ce0d9553bd770e3aa012be90acdf0ba12894b7c4f0668ac37c6dcba85",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:342-354",
+          "locator": "line:351-363",
           "sha256": "fab7a8976917a66451ea5cd7555038ba69463d2a9821c64a3d9a668f00baea42",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:355-375",
+          "locator": "line:364-384",
           "sha256": "96ad153d1dfaad68b6947f9cc63ac4b79f9bcea33512fd344719df58447d3cfb",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:376-384",
+          "locator": "line:385-393",
           "sha256": "f9d2022de0886f2ecdcf84e5e40516d96e024979eb788867c36955d4d064356c",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:385-412",
+          "locator": "line:394-421",
           "sha256": "28ea5a68406567ec887ab4bdd1c37858f30910ac26eec99967a054b251c26d6b",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:413-446",
+          "locator": "line:422-455",
           "sha256": "9688c327140530736187000f2da4c9c4cc01789f4f1aa49e0ab76a9130548057",
           "families": [
-            "audit",
-            "catalogue",
-            "retrieval",
+            "durable",
+            "evaluation",
             "frontend",
-            "durable"
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:447-468",
+          "locator": "line:456-477",
           "sha256": "10c9775a16cb363018ded062b71dd42564189ff410d9144aacfe9c168151f9b5",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:469-492",
+          "locator": "line:478-501",
           "sha256": "28b05a6ab181b79140a25d2968a553d6bb3c9885d8b5775b671076ba6f372449",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:493-506",
+          "locator": "line:502-515",
           "sha256": "c135f44d97c795b7faf116038158946f2ae2fe6321dba49b9de062187114e376",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:507-514",
+          "locator": "line:516-523",
           "sha256": "d383330052d8a2c31d599506dcf027476ab5741cc5b449c06a32763bb06023e6",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:515-528",
+          "locator": "line:524-537",
           "sha256": "b6e2a9c05e76b61c49a7a8dc33fd6af1a3dd21ee02892d3ad0e2ff482d585d29",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:529-538",
+          "locator": "line:538-547",
           "sha256": "39865c858d7b046cd4d93a5d3853113f664f3ac62b8f905400ab8d77f54d9214",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:539-551",
+          "locator": "line:548-560",
           "sha256": "730b080416e9551dc00d2bf5ebf2ab7bed609895618fa82c3e9256717376f0d6",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:552-559",
+          "locator": "line:561-568",
           "sha256": "5fa95998ef21805fb03a8636768bda09e5bfb2afec8acfd6bac63502c83be5fc",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:560-579",
+          "locator": "line:569-588",
           "sha256": "cd32e5febea707573895f57831105edf5ecfe8aaf31fa720ca9ef013d275556a",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:580-601",
+          "locator": "line:589-610",
           "sha256": "f2da1273708cc6fb7522280c8d6764c1aebac6274b58bbc317d9d5d8721845f5",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         },
         {
-          "locator": "line:602-621",
+          "locator": "line:611-630",
           "sha256": "bd90755f628c0be09c13ec76abd84d62275d698f99e8d97352c2a12ce7e32d14",
           "families": [
-            "audit",
-            "foundation"
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research"
           ]
         }
       ]
@@ -68237,12 +68320,12 @@
     },
     {
       "path": "docs/implementation/38-operator-worker-qualification.md",
-      "sha256": "32d80c30bf103f3ceaff354ab4c7bb39fa01ccca086039744eb40f491d97506c",
+      "sha256": "93ed6f29bec9368853b947cbc569555bbdd35bed6232f8130a876d64202ce8b8",
       "families": [
         "accounting"
       ],
       "disposition": "retained_requirement_or_implementation_narrative",
-      "assessment": "Describes worker admission, production qualification and the separate installed service check for live scoped accounting before worker start and restart.",
+      "assessment": "Describes worker admission, production qualification and the separate installed service check for live scoped accounting before worker start and restart. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": [
         {
           "locator": "line:1-37",
@@ -68259,56 +68342,56 @@
           ]
         },
         {
-          "locator": "line:49-70",
-          "sha256": "07cd50aa818f9e61fdc4b2fc7f9e0f7f64e5ef4e07233a6f8515db59d4fcea5c",
+          "locator": "line:49-78",
+          "sha256": "9f88ae14cf49482cc182c3a60bb976696e6fb7d083ce42a8b1ade1a2f012df39",
           "families": [
             "accounting"
           ]
         },
         {
-          "locator": "line:71-100",
+          "locator": "line:79-108",
           "sha256": "57d7e8b6def46f35cf835368dd67d9f8d5659df2a7a9b42563e13dc19a97b5eb",
           "families": [
             "accounting"
           ]
         },
         {
-          "locator": "line:101-141",
+          "locator": "line:109-149",
           "sha256": "3e9dfa4e71a506846cf5a67faa7959e431902968b3581f4ab05d5c38de26fcc3",
           "families": [
             "accounting"
           ]
         },
         {
-          "locator": "line:142-159",
+          "locator": "line:150-167",
           "sha256": "49ffff9f712c0da125cf1d7dd25906c733eaef89dc24ea9a8867ab0de292aeb1",
           "families": [
             "accounting"
           ]
         },
         {
-          "locator": "line:160-175",
+          "locator": "line:168-183",
           "sha256": "1e67e441a26a3464f39b4dc0dea39bb2b03b09fdacf6a1dfbe6c2eacc6351d6d",
           "families": [
             "accounting"
           ]
         },
         {
-          "locator": "line:176-200",
+          "locator": "line:184-208",
           "sha256": "8abf85e87ee0c07fa2e8916d8c083f5b10d1ab13c86f2abb6dba2cc3619ff325",
           "families": [
             "accounting"
           ]
         },
         {
-          "locator": "line:201-227",
+          "locator": "line:209-235",
           "sha256": "476e0b4bd2cfabb0142a6b161a7cfd55a17e23908a619e1f8f1e86e28b6aebc0",
           "families": [
             "accounting"
           ]
         },
         {
-          "locator": "line:228-263",
+          "locator": "line:236-271",
           "sha256": "f637b2e5d75307a75eb6afaa2619e76a70307a1653a001d537f5fd1f312f863e",
           "families": [
             "accounting"
@@ -70707,7 +70790,7 @@
         "devices"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Python-first debugger and typed session/target receipts are foundations. Android/Apple/remote native/profiler/board/probe/ICSP targets remain independently unqualified; no physical target has been supplied.",
+      "assessment": "Python-first debugger and typed session/target receipts are foundations. Android/Apple/remote native/profiler/board/probe/ICSP targets remain independently unqualified; no physical target has been supplied. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70735,7 +70818,7 @@
         "devices"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Python-first debugger and typed session/target receipts are foundations. Android/Apple/remote native/profiler/board/probe/ICSP targets remain independently unqualified; no physical target has been supplied.",
+      "assessment": "Python-first debugger and typed session/target receipts are foundations. Android/Apple/remote native/profiler/board/probe/ICSP targets remain independently unqualified; no physical target has been supplied. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70745,7 +70828,7 @@
         "devices"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Python-first debugger and typed session/target receipts are foundations. Android/Apple/remote native/profiler/board/probe/ICSP targets remain independently unqualified; no physical target has been supplied.",
+      "assessment": "Python-first debugger and typed session/target receipts are foundations. Android/Apple/remote native/profiler/board/probe/ICSP targets remain independently unqualified; no physical target has been supplied. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70791,7 +70874,7 @@
         "devices"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "The Python CPU slice compares the same bounded workload under the existing process supervisor with cProfile off and on. Other capture types and Cog admission require separate work.",
+      "assessment": "The Python CPU slice compares the same bounded workload under the existing process supervisor with cProfile off and on. Other capture types and Cog admission require separate work. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70801,7 +70884,7 @@
         "devices"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "The Python CPU slice compares the same bounded workload under the existing process supervisor with cProfile off and on. Other capture types and Cog admission require separate work.",
+      "assessment": "The Python CPU slice compares the same bounded workload under the existing process supervisor with cProfile off and on. Other capture types and Cog admission require separate work. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70812,7 +70895,7 @@
         "catalogue"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Separate retained source claims, reviewed obligations and executed acceptance. Preserve 21 ID namespaces and both P plan versions; audit closure does not close product work.; T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool.",
+      "assessment": "Separate retained source claims, reviewed obligations and executed acceptance. Preserve 21 ID namespaces and both P plan versions; audit closure does not close product work.; T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70822,7 +70905,7 @@
         "browser"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates.",
+      "assessment": "Visible Xpra Chromium, admitted browser Cogs, private displays, evidence/gallery and bounded capture recovery have implementations. Rendered fixture acceptance and production Xpra/kernel/network/provenance are independent gates. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70850,7 +70933,7 @@
         "tool-schema"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Typed installed Cogs, sealed ports, controller-only grants and distinct transformation/dispatch/verification receipts are implemented for selected core operations. Every adapter and specialist still needs its own admitted binding.",
+      "assessment": "Typed installed Cogs, sealed ports, controller-only grants and distinct transformation/dispatch/verification receipts are implemented for selected core operations. Every adapter and specialist still needs its own admitted binding. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70860,7 +70943,7 @@
         "tool-schema"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Typed installed Cogs, sealed ports, controller-only grants and distinct transformation/dispatch/verification receipts are implemented for selected core operations. Every adapter and specialist still needs its own admitted binding.",
+      "assessment": "Typed installed Cogs, sealed ports, controller-only grants and distinct transformation/dispatch/verification receipts are implemented for selected core operations. Every adapter and specialist still needs its own admitted binding. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70870,7 +70953,7 @@
         "browser"
       ],
       "disposition": "retained_media_evidence",
-      "assessment": "A rendered Chromium fixture frame shows the page after one directed browser command on managed WSL.",
+      "assessment": "A rendered Chromium fixture frame shows the page after one directed browser command on managed WSL. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70880,7 +70963,7 @@
         "syn-release"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "SYN-R01-R04 now have actual signed release acquisition and native operator/Agent deployment paths. Official Syn 0.4.0 consumer acceptance passed at its recorded source; successful package installation alone supplies no Cog execution authority.",
+      "assessment": "SYN-R01-R04 now have actual signed release acquisition and native operator/Agent deployment paths. Official Syn 0.4.0 consumer acceptance passed at its recorded source; successful package installation alone supplies no Cog execution authority. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70890,7 +70973,7 @@
         "syn-release"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "SYN-R01-R04 now have actual signed release acquisition and native operator/Agent deployment paths. Official Syn 0.4.0 consumer acceptance passed at its recorded source; successful package installation alone supplies no Cog execution authority.",
+      "assessment": "SYN-R01-R04 now have actual signed release acquisition and native operator/Agent deployment paths. Official Syn 0.4.0 consumer acceptance passed at its recorded source; successful package installation alone supplies no Cog execution authority. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70900,7 +70983,7 @@
         "syn-mesh"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "SYN-R05 binds one-use task/repository grants to real selected native identities and released private heartbeat transport. Official consumer CI 41526414147 passed Python 3.12/3.13; it explicitly dispatched no positive audited Cog process.",
+      "assessment": "SYN-R05 binds one-use task/repository grants to real selected native identities and released private heartbeat transport. Official consumer CI 41526414147 passed Python 3.12/3.13; it explicitly dispatched no positive audited Cog process. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70910,7 +70993,7 @@
         "syn-release"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "SYN-R01-R04 now have actual signed release acquisition and native operator/Agent deployment paths. Official Syn 0.4.0 consumer acceptance passed at its recorded source; successful package installation alone supplies no Cog execution authority.",
+      "assessment": "SYN-R01-R04 now have actual signed release acquisition and native operator/Agent deployment paths. Official Syn 0.4.0 consumer acceptance passed at its recorded source; successful package installation alone supplies no Cog execution authority. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70941,7 +71024,7 @@
         "catalogue"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Separate retained source claims, reviewed obligations and executed acceptance. Preserve 21 ID namespaces and both P plan versions; audit closure does not close product work.; T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool.",
+      "assessment": "Separate retained source claims, reviewed obligations and executed acceptance. Preserve 21 ID namespaces and both P plan versions; audit closure does not close product work.; T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70952,7 +71035,7 @@
         "catalogue"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Separate retained source claims, reviewed obligations and executed acceptance. Preserve 21 ID namespaces and both P plan versions; audit closure does not close product work.; T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool.",
+      "assessment": "Separate retained source claims, reviewed obligations and executed acceptance. Preserve 21 ID namespaces and both P plan versions; audit closure does not close product work.; T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70962,7 +71045,7 @@
         "evaluation"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence.",
+      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -70972,7 +71055,7 @@
         "foundation"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "The installable application, repository fixtures and restricted PostgreSQL transaction/migration owners exist. Current main core CI is green; installation on every supported operator host is a separate claim.",
+      "assessment": "The installable application, repository fixtures and restricted PostgreSQL transaction/migration owners exist. Current main core CI is green; installation on every supported operator host is a separate claim. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -71118,6 +71201,72 @@
             "identity",
             "journal",
             "syn-mesh"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/native-desktop-m1.md",
+      "sha256": "e9a7aba01bfd83144423d168a9f3f7d49eb0a6bf492f3a1ad0cd6cf22b82fe14",
+      "families": [
+        "frontend",
+        "recovery"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "narrative": [
+        {
+          "locator": "line:1-16",
+          "sha256": "e6a7893a765ee7d825891c162af7da44e5d0a53f73bea7b842094d66eda92225",
+          "families": [
+            "frontend",
+            "recovery"
+          ]
+        },
+        {
+          "locator": "line:17-24",
+          "sha256": "382eb7e2f810aadbc9d860cf7adbee7f04cb5bb735ed5c43cc086d5d4fdff174",
+          "families": [
+            "frontend",
+            "recovery"
+          ]
+        },
+        {
+          "locator": "line:25-36",
+          "sha256": "134817c42b903aa8209dc4489e6af059a2d507d2e1b151ec6c2e10d609a7ee70",
+          "families": [
+            "frontend",
+            "recovery"
+          ]
+        },
+        {
+          "locator": "line:37-44",
+          "sha256": "b5d8301ec5d75cc18af3b3da04e77742681b11f36d50df8eea15554941bc00ca",
+          "families": [
+            "frontend",
+            "recovery"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/one-click-startup.md",
+      "sha256": "afc8287ee59876429c775f106a67224f589325f6978d35281a03ff590d2ce883",
+      "families": [
+        "recovery",
+        "downloads",
+        "models"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "narrative": [
+        {
+          "locator": "line:1-72",
+          "sha256": "3e2d48d01c7f0b93f2c6933f37d9ed98629cd836d59844d072ade965848556ac",
+          "families": [
+            "recovery",
+            "downloads",
+            "models"
           ]
         }
       ]
@@ -71614,6 +71763,154 @@
             "frontend",
             "recovery",
             "syn-release"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/r7-2-atomic-scheduler-admission.md",
+      "sha256": "8baf81d3a2af6f9158ec25c06c395f60e4da56e1cd1bcd22abdec16a9ed12e57",
+      "families": [
+        "reasoning",
+        "durable"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "narrative": [
+        {
+          "locator": "line:1-22",
+          "sha256": "4701540e24dea83d318448e5bdc37c1efb027e6d9f52267b2bf951cf9e28a43f",
+          "families": [
+            "reasoning",
+            "durable"
+          ]
+        },
+        {
+          "locator": "line:23-39",
+          "sha256": "ad0105e997ad6cc2d74b0be90aa432b581213a9df72c4c5d46e403e577cf7be9",
+          "families": [
+            "reasoning",
+            "durable"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/r7-2-b-durable-atomic-graphs.md",
+      "sha256": "319030d3c3ed8f033418ec9d422dedf5ddc67afe6a6537d35b1a1d66b571523c",
+      "families": [
+        "reasoning",
+        "durable",
+        "accounting"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "narrative": [
+        {
+          "locator": "line:1-6",
+          "sha256": "159bae1ef733f14097c66c2d9e89cf614bc4b2a6ed8bb10898eb3ba9a89a74af",
+          "families": [
+            "reasoning",
+            "durable",
+            "accounting"
+          ]
+        },
+        {
+          "locator": "line:7-54",
+          "sha256": "c6b51c4bb96a8289db78147627c54755be47689d765c94a60e84cf3b95ad355c",
+          "families": [
+            "reasoning",
+            "durable",
+            "accounting"
+          ]
+        },
+        {
+          "locator": "line:55-89",
+          "sha256": "c278dda02148427cb377ddb3a15d7a73d915894382c985b883065b48005fc1da",
+          "families": [
+            "reasoning",
+            "durable",
+            "accounting"
+          ]
+        },
+        {
+          "locator": "line:90-108",
+          "sha256": "9e760aebbc009991e9042d18b8514039ad68189dc31cbdaddcb08639f7a85129",
+          "families": [
+            "reasoning",
+            "durable",
+            "accounting"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/r7-2-c-atomic-graph-operations.md",
+      "sha256": "8ab3b040963b583981489078ee5ef45348053468891efe32bd726fa1c1077797",
+      "families": [
+        "reasoning",
+        "durable",
+        "frontend"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "narrative": [
+        {
+          "locator": "line:1-30",
+          "sha256": "ac305fa28aae5e62b6c5466233944e4a80a289fd30b2a77340fb307614d84eb8",
+          "families": [
+            "reasoning",
+            "durable",
+            "frontend"
+          ]
+        },
+        {
+          "locator": "line:31-50",
+          "sha256": "4585ab230704803ba7a65fe2ba6b8b08408e6091ff75d3509b97ac6998d833b2",
+          "families": [
+            "reasoning",
+            "durable",
+            "frontend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/r7-3-a-paired-atomic-benchmarks.md",
+      "sha256": "8ac5f648f1ae1f4f7e08e2afd943aa87b4d8301b85903ac0e8d6760f98c4b14e",
+      "families": [
+        "evaluation",
+        "reasoning",
+        "models"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "narrative": [
+        {
+          "locator": "line:1-39",
+          "sha256": "bcde95d0365bf324d871118f44c0be6f649101ec5211f161ac23e39ef2a6bbf6",
+          "families": [
+            "evaluation",
+            "reasoning",
+            "models"
+          ]
+        },
+        {
+          "locator": "line:40-64",
+          "sha256": "e46ce2f65a46b52b5f861be6d7a5fb549a8b22e9d358a0793e183923234e03ac",
+          "families": [
+            "evaluation",
+            "reasoning",
+            "models"
+          ]
+        },
+        {
+          "locator": "line:65-81",
+          "sha256": "4268cc7c03c3f244a09d3b8bd439f1292b9a421df4cd9a64a4fd3e50f420ef49",
+          "families": [
+            "evaluation",
+            "reasoning",
+            "models"
           ]
         }
       ]
@@ -75107,7 +75404,7 @@
     },
     {
       "path": "docs/implementation/unified-development-roadmap.md",
-      "sha256": "8543127133f44bba68571f1a8eeb828ebce6e7bb0723dd4e72a0e1b95c733c99",
+      "sha256": "11cb0d2713c67a4f35ffe96623f5a232f30779610265a23e2d79d17019b215ed",
       "families": [
         "audit",
         "durable",
@@ -75119,298 +75416,375 @@
         "syn-release"
       ],
       "disposition": "reviewed_follow_on_with_explicit_runtime_limits",
-      "assessment": "Adds the scoped T05-A milestone while preserving historical statuses, global next U01-A and explicit deployed-runtime qualification limits. T05-B/R7.1 follow-on: Records the current delivery order through T05-B/R7.1 to R7.2 while preserving the historical U00 baseline, canonical stage identities and explicit runtime qualification limits.",
+      "assessment": "Adds the scoped T05-A milestone while preserving historical statuses, global next U01-A and explicit deployed-runtime qualification limits. T05-B/R7.1 follow-on: Records the current delivery order through T05-B/R7.1 to R7.2 while preserving the historical U00 baseline, canonical stage identities and explicit runtime qualification limits. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": [
         {
-          "locator": "line:1-8",
-          "sha256": "08df1fafa69af8ea73560a408117017da6a8dd00a5d3756648186628b35da9bf",
+          "locator": "line:1-20",
+          "sha256": "d452e21d69050deed557ed56806c8e1b4f2818359ee0fc5586e9dc3775fa7d2c",
           "families": [
             "audit",
-            "research",
-            "reasoning",
             "durable",
+            "evaluation",
+            "frontend",
             "identity",
-            "syn-release",
-            "frontend"
+            "reasoning",
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:9-172",
+          "locator": "line:21-184",
           "sha256": "535f53b812e2861b68a5f26913b82d310e59e1aeb4d109dfaa142254e784a6cc",
           "families": [
             "audit",
-            "research",
-            "reasoning",
             "durable",
+            "evaluation",
+            "frontend",
             "identity",
-            "syn-release",
-            "frontend"
+            "reasoning",
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:173-180",
+          "locator": "line:185-192",
           "sha256": "076016b54fff41fb78ff8fdcc90229d963fc5d746b89b7706eeebb49f54312c8",
           "families": [
             "audit",
-            "foundation",
             "durable",
-            "events",
-            "sandbox",
-            "accounting",
-            "identity",
-            "syn-release",
-            "syn-mesh",
-            "syn-operations",
-            "journal",
-            "tool-schema",
-            "mcp",
-            "api",
-            "catalogue",
-            "devices",
-            "artifacts",
-            "tool-upgrade",
-            "guest-logs",
-            "configuration",
-            "models",
-            "downloads",
-            "prompt",
-            "reasoning",
-            "patches",
-            "research",
-            "memory-admission",
-            "retrieval",
-            "semantic",
-            "object-memory",
-            "context",
-            "skills",
-            "compatibility",
-            "browser",
-            "frontend",
             "evaluation",
-            "automation",
-            "recovery",
-            "training"
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:181-214",
+          "locator": "line:193-226",
           "sha256": "4c193a4a608fa975564b4f8db4bfe008307a41cf3d1b25c33882bcb783543194",
           "families": [
             "audit",
-            "foundation",
             "durable",
-            "events",
-            "sandbox",
-            "accounting",
-            "identity",
-            "syn-release",
-            "syn-mesh",
-            "syn-operations",
-            "journal",
-            "tool-schema",
-            "mcp",
-            "api",
-            "catalogue",
-            "devices",
-            "artifacts",
-            "tool-upgrade",
-            "guest-logs",
-            "configuration",
-            "models",
-            "downloads",
-            "prompt",
-            "reasoning",
-            "patches",
-            "research",
-            "memory-admission",
-            "retrieval",
-            "semantic",
-            "object-memory",
-            "context",
-            "skills",
-            "compatibility",
-            "browser",
-            "frontend",
             "evaluation",
-            "automation",
-            "recovery",
-            "training"
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:215-236",
+          "locator": "line:227-248",
           "sha256": "3a83e4a3a3332d3ef4289fcfc3504ed4ab122ebf1cf45fdf94886f89bda19cce",
           "families": [
-            "accounting",
-            "artifacts",
             "audit",
-            "automation",
-            "browser",
-            "context",
             "durable",
             "evaluation",
             "frontend",
             "identity",
-            "models",
-            "object-memory",
             "reasoning",
-            "recovery",
-            "sandbox",
-            "skills",
-            "tool-schema"
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:237-238",
+          "locator": "line:249-250",
           "sha256": "730dc617da00361212299c3f3bf7caa292eeb8375c4645a26f895fe255a9c69d",
           "families": [
-            "audit"
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:239-244",
+          "locator": "line:251-256",
           "sha256": "092663dafe878c1956a3843788aa7a58148603391dc7efc03a2ab4bf50b05224",
           "families": [
-            "audit"
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:245-250",
+          "locator": "line:257-262",
           "sha256": "382e3775074d6d89fbfe589167a208ad320459466fe816e1e619c4a2326bceab",
           "families": [
+            "audit",
             "durable",
-            "sandbox",
-            "accounting",
+            "evaluation",
+            "frontend",
             "identity",
-            "journal"
+            "reasoning",
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:251-254",
+          "locator": "line:263-266",
           "sha256": "ee0b5d377f44b86a968882f762dcddf5486951504484fae6f57bbdc4b5d897cf",
           "families": [
-            "tool-schema",
-            "catalogue",
-            "mcp",
-            "api",
-            "artifacts",
-            "skills",
-            "browser"
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:255-258",
+          "locator": "line:267-270",
           "sha256": "9b8568dc87a1fd913d2775e2cea463e8cc54271de5fdbd471a3846c47413462e",
           "families": [
-            "models",
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
             "reasoning",
-            "prompt",
-            "context",
-            "memory-admission",
-            "retrieval",
-            "semantic"
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:259-264",
+          "locator": "line:271-276",
           "sha256": "9a38ce04ac2df10970d4c69ae459dab6757ed121e4c0135233670ccf0927cca1",
           "families": [
+            "audit",
+            "durable",
+            "evaluation",
             "frontend",
-            "evaluation"
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
           ]
         },
         {
-          "locator": "line:265-270",
+          "locator": "line:277-282",
           "sha256": "80b60f56644c374154018b6472010f50693d60ee0bd0831560224d401b134c72",
           "families": [
-            "automation",
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        },
+        {
+          "locator": "line:283-292",
+          "sha256": "4b39689d3f86890624016437f1019a9f443b42259c348acd3976344d39f5cb18",
+          "families": [
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        },
+        {
+          "locator": "line:293-303",
+          "sha256": "73ea150baabe9d4392b6c75e6ac5978672584992ebe9d0d26ba1c428568a0f6a",
+          "families": [
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        },
+        {
+          "locator": "line:304-331",
+          "sha256": "cbc4b785f9baeac0b04d3321ea4a8fed61bf8a1816999c534cb2eb9667797027",
+          "families": [
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        },
+        {
+          "locator": "line:332-345",
+          "sha256": "fad8ad3bc0f5c2f2834281f8aaa52d60a6cf39c7bbfccd4fae9aee0a7b60f130",
+          "families": [
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        },
+        {
+          "locator": "line:346-370",
+          "sha256": "964a68bc75a782ed821c3d4699dc79a85a3112888516cbf8487f770be9a63938",
+          "families": [
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        },
+        {
+          "locator": "line:371-382",
+          "sha256": "8fd9aa45ac7a56661637b71fa0a5607b1b2b45780bdea5c35f0434b61d7925a3",
+          "families": [
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        },
+        {
+          "locator": "line:383-387",
+          "sha256": "c6f1c77f80e48b91c4a197f815afa2760f516f5eff7fc07b87bbbe7ffc5b2197",
+          "families": [
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        },
+        {
+          "locator": "line:388-396",
+          "sha256": "a3a63964c24da210b3a841a4fa93e2529b30a3e255e67e78853aea0f4d0192ad",
+          "families": [
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        },
+        {
+          "locator": "line:397-401",
+          "sha256": "28dfd2784d97841df10d40c27bf4c7f21bc278c11ace17b0339a9ee74ece1daa",
+          "families": [
+            "audit",
+            "durable",
+            "evaluation",
+            "frontend",
+            "identity",
+            "reasoning",
+            "research",
+            "syn-release"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/windows-dpapi-host-setup.md",
+      "sha256": "602ffe0a61f176a64d46c758c7c73342587e33951ea1acc0ce5105520d6aca47",
+      "families": [
+        "identity",
+        "syn-release",
+        "recovery"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "narrative": [
+        {
+          "locator": "line:1-26",
+          "sha256": "cadb608aadf8e9831346144a1fff471a46ad0ece953521b63cc6be9fdcae4650",
+          "families": [
+            "identity",
+            "syn-release",
             "recovery"
           ]
         },
         {
-          "locator": "line:271-280",
-          "sha256": "4b39689d3f86890624016437f1019a9f443b42259c348acd3976344d39f5cb18",
+          "locator": "line:27-32",
+          "sha256": "87aeaec85380c707d96563426228b355b4e7cb2d798ca8c8513a725adc6d60ba",
           "families": [
-            "durable",
+            "identity",
+            "syn-release",
+            "recovery"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/windows-oneclick-wsl-core-runtime.md",
+      "sha256": "2784f291875bba9ca51980cc018a949f55abcd6aae0c3d66798dc4df401657e2",
+      "families": [
+        "identity",
+        "syn-release",
+        "sandbox",
+        "recovery"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "narrative": [
+        {
+          "locator": "line:1-71",
+          "sha256": "c19040fbdf47841d419f2960ce6ae9a1ab0285407d90c80dc1805f85f31448de",
+          "families": [
+            "identity",
+            "syn-release",
             "sandbox",
-            "identity",
-            "memory-admission"
+            "recovery"
           ]
         },
         {
-          "locator": "line:281-291",
-          "sha256": "73ea150baabe9d4392b6c75e6ac5978672584992ebe9d0d26ba1c428568a0f6a",
+          "locator": "line:72-97",
+          "sha256": "004264462481a8895ba687219b789ca090b3167f3c6d4ce74ecf5e50f73aa2dc",
           "families": [
-            "audit",
-            "research",
-            "reasoning",
-            "durable",
             "identity",
             "syn-release",
-            "frontend"
+            "sandbox",
+            "recovery"
           ]
         },
         {
-          "locator": "line:292-319",
-          "sha256": "cbc4b785f9baeac0b04d3321ea4a8fed61bf8a1816999c534cb2eb9667797027",
+          "locator": "line:98-114",
+          "sha256": "1ba3f9294a264509500fa955b366808e670e6faccbcfebfd3289c7cfce7ac039",
           "families": [
-            "audit",
-            "transport-recovery"
-          ]
-        },
-        {
-          "locator": "line:320-333",
-          "sha256": "fad8ad3bc0f5c2f2834281f8aaa52d60a6cf39c7bbfccd4fae9aee0a7b60f130",
-          "families": [
-            "accounting",
-            "identity",
-            "journal",
-            "tool-upgrade",
-            "guest-logs",
-            "context",
-            "frontend"
-          ]
-        },
-        {
-          "locator": "line:334-358",
-          "sha256": "964a68bc75a782ed821c3d4699dc79a85a3112888516cbf8487f770be9a63938",
-          "families": [
-            "audit",
-            "research",
-            "reasoning",
-            "durable",
             "identity",
             "syn-release",
-            "frontend"
-          ]
-        },
-        {
-          "locator": "line:359-370",
-          "sha256": "8fd9aa45ac7a56661637b71fa0a5607b1b2b45780bdea5c35f0434b61d7925a3",
-          "families": [
-            "audit"
-          ]
-        },
-        {
-          "locator": "line:371-375",
-          "sha256": "c6f1c77f80e48b91c4a197f815afa2760f516f5eff7fc07b87bbbe7ffc5b2197",
-          "families": [
-            "compatibility"
-          ]
-        },
-        {
-          "locator": "line:376-384",
-          "sha256": "a3a63964c24da210b3a841a4fa93e2529b30a3e255e67e78853aea0f4d0192ad",
-          "families": [
-            "compatibility",
-            "skills"
-          ]
-        },
-        {
-          "locator": "line:385-389",
-          "sha256": "28dfd2784d97841df10d40c27bf4c7f21bc278c11ace17b0339a9ee74ece1daa",
-          "families": [
-            "evaluation"
+            "sandbox",
+            "recovery"
           ]
         }
       ]
@@ -75546,7 +75920,7 @@
         "models"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "Model catalogs, typed generation/invocation, provider adapters and budget boundaries exist. Listed/default/tiny/hosted models remain distinct from measured host-qualified deployments; no paid or weight-loading calls occur in this audit.",
+      "assessment": "Model catalogs, typed generation/invocation, provider adapters and budget boundaries exist. Listed/default/tiny/hosted models remain distinct from measured host-qualified deployments; no paid or weight-loading calls occur in this audit. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -75556,7 +75930,7 @@
         "catalogue"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool.",
+      "assessment": "T01.1 source inventory and core semantic lookup exist. A catalog listing, dependency installation or package signature does not establish an admitted runnable tool. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -76036,7 +76410,7 @@
         "object-memory"
       ],
       "disposition": "asset_identity_only_not_execution_evidence",
-      "assessment": "All 32 MG stages and R01-R32/A01-A32 remain not_started/not_run. Registered context triples are not per-object memory graphs, effective Ember policy, accepted memory or federation.",
+      "assessment": "All 32 MG stages and R01-R32/A01-A32 remain not_started/not_run. Registered context triples are not per-object memory graphs, effective Ember policy, accepted memory or federation. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": []
     },
     {
@@ -78509,18 +78883,18 @@
     },
     {
       "path": "docs/startup.md",
-      "sha256": "1e61de091d94ccf72acdaa385b9626a8ca9cecd0b4ad34932f6e7a00d4337110",
+      "sha256": "0610be0d783274ed635e9b8e276f5914769540d0cd7e98ff7d909d2892778038",
       "families": [
         "recovery",
         "models",
         "downloads"
       ],
       "disposition": "retained_requirement_or_implementation_narrative",
-      "assessment": "Current launch, migration and package CI foundations are present; source previews are not the qualified operational baseline. Full backup/deletion-journal restore, outages, capacity and upgrade qualification remain required.; Model catalogs, typed generation/invocation, provider adapters and budget boundaries exist. Listed/default/tiny/hosted models remain distinct from measured host-qualified deployments; no paid or weight-loading calls occur in this audit.; Shared library/download admission and verified transfer records are present. Downloaded is not installed, selected, runnable or qualified; caches require the owning project and shared mount policy.",
+      "assessment": "Current launch, migration and package CI foundations are present; source previews are not the qualified operational baseline. Full backup/deletion-journal restore, outages, capacity and upgrade qualification remain required.; Model catalogs, typed generation/invocation, provider adapters and budget boundaries exist. Listed/default/tiny/hosted models remain distinct from measured host-qualified deployments; no paid or weight-loading calls occur in this audit.; Shared library/download admission and verified transfer records are present. Downloaded is not installed, selected, runnable or qualified; caches require the owning project and shared mount policy. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
       "narrative": [
         {
-          "locator": "line:1-7",
-          "sha256": "8d53f4f0508a912e6ec1c7aa2ad7e42375107852a49ef3719df6355372cf1b1c",
+          "locator": "line:1-12",
+          "sha256": "f4e297dc031fc0e688a4edcb44b57681e37e3bd55a0a51f16fa82f64e6991bcb",
           "families": [
             "recovery",
             "models",
@@ -78528,7 +78902,7 @@
           ]
         },
         {
-          "locator": "line:8-42",
+          "locator": "line:13-47",
           "sha256": "0ec315d6053134208f249928d3fee7b7aad0b876d4b17ef63918b865be11c4d5",
           "families": [
             "recovery",
@@ -78537,8 +78911,8 @@
           ]
         },
         {
-          "locator": "line:43-98",
-          "sha256": "d8e60ade2810a853616fea7aeaa20e0d24213ef41f253b8c96f86e7d9c133410",
+          "locator": "line:48-102",
+          "sha256": "0d1f9f21169bf862c2128defcdb6884970763bb8a2c07fb4ee11235101d8831a",
           "families": [
             "recovery",
             "models",
@@ -78546,7 +78920,7 @@
           ]
         },
         {
-          "locator": "line:99-133",
+          "locator": "line:103-137",
           "sha256": "cfb337c2297abc971da39a6cfb4c0e5025dea281ea0f35bc3eaf18e3c6bf3401",
           "families": [
             "recovery",
@@ -78555,7 +78929,7 @@
           ]
         },
         {
-          "locator": "line:134-157",
+          "locator": "line:138-161",
           "sha256": "258a0a8ca24ff6468d6a78c4aecdb901cc857c31e56320a608b219ec062450a3",
           "families": [
             "recovery",
@@ -78564,7 +78938,7 @@
           ]
         },
         {
-          "locator": "line:158-171",
+          "locator": "line:162-175",
           "sha256": "d5cead59adff211b3811f257cd9044a36cc88cdc0e1b8475fdd8d5882287b267",
           "families": [
             "recovery",
@@ -78573,7 +78947,7 @@
           ]
         },
         {
-          "locator": "line:172-197",
+          "locator": "line:176-201",
           "sha256": "9941250c63ef16e8aa229bdf5576659068a60c725b74258eae7a328932f86ef0",
           "families": [
             "recovery",
@@ -80774,8 +81148,8 @@
         "skills"
       ],
       "status": "partial",
-      "assessment": "Requirement: inventory/pin official specifications and sample package fixtures, mapping existing T01–T48 and C00–C09 milestones (no duplicate infrastructure).. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility. U04-D follow-on: records current primary registry API contracts with strict named fixtures and explicit unsupported behavior; no broader vendor behavioral qualification is inferred.",
-      "next_action": "For S00 (inventory/pin official specifications and sample package fixtures, mapping existing T01–T48 and C00–C09 milestones (no duplicate infrastructure).): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports."
+      "assessment": "Requirement: inventory/pin official specifications and sample package fixtures, mapping existing T01\u2013T48 and C00\u2013C09 milestones (no duplicate infrastructure).. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility. Managed skill drafts/releases/resources and controlled shared projections exist. Native authoring is not full OpenClaw/Codex/Claude parsing, hooks, aliases, install or portable execution compatibility. U04-D follow-on: records current primary registry API contracts with strict named fixtures and explicit unsupported behavior; no broader vendor behavioral qualification is inferred.",
+      "next_action": "For S00 (inventory/pin official specifications and sample package fixtures, mapping existing T01\u2013T48 and C00\u2013C09 milestones (no duplicate infrastructure).): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service. Extend the current skill catalogue and canonical Cog tool gateway under C/S milestones; preserve unsupported reports."
     },
     {
       "key": "external-skills:S01",
@@ -85904,8 +86278,8 @@
         "patches"
       ],
       "status": "partial",
-      "assessment": "Requirement: Multiple reasoners, independent coder candidates, settled work before selection, qualified finding reuse, and composed patches verified as new candidates. Original P057–P071; [Phase 6 controller][phase6], [model prompts][prompt18].. Bounded R6 reasoning, PostgreSQL checkpoints/steering and R6.1 task accounting exist. Shared ensemble selection, independent candidates, full temporal scheduling and safe cross-branch composition remain partial. The scripted patch vertical slice applies bounded text patches to isolated exact states and uses separate baseline/candidate verification. Scripted or agent-authored tests do not establish arbitrary coding capability.",
-      "next_action": "For RD06 (Multiple reasoners, independent coder candidates, settled work before selection, qualified finding reuse, and composed patches verified as new candidates. Original P057–P071; [Phase 6 controller][phase6], [model prompts][prompt18].): Extend PostgresReasoningStore, SteeringInbox and current graph; keep independent verifier and task-wide budgets authoritative. Reuse current candidate verification and immutable manifests; never promote application or source evidence to correctness."
+      "assessment": "Requirement: Multiple reasoners, independent coder candidates, settled work before selection, qualified finding reuse, and composed patches verified as new candidates. Original P057\u2013P071; [Phase 6 controller][phase6], [model prompts][prompt18].. Bounded R6 reasoning, PostgreSQL checkpoints/steering and R6.1 task accounting exist. Shared ensemble selection, independent candidates, full temporal scheduling and safe cross-branch composition remain partial. The scripted patch vertical slice applies bounded text patches to isolated exact states and uses separate baseline/candidate verification. Scripted or agent-authored tests do not establish arbitrary coding capability.",
+      "next_action": "For RD06 (Multiple reasoners, independent coder candidates, settled work before selection, qualified finding reuse, and composed patches verified as new candidates. Original P057\u2013P071; [Phase 6 controller][phase6], [model prompts][prompt18].): Extend PostgresReasoningStore, SteeringInbox and current graph; keep independent verifier and task-wide budgets authoritative. Reuse current candidate verification and immutable manifests; never promote application or source evidence to correctness."
     },
     {
       "key": "recent-development:RD07",
@@ -85934,7 +86308,7 @@
         "research"
       ],
       "status": "partial",
-      "assessment": "Requirement: Repository and external research, libraries/tools/internal workflows, reuse/adapt/build, examples and discriminating experiments. [Reasoning policy][policy], [Phase 7][phase7], original P072–P084.. Immutable repository inspection/audit and solve-graph linkage exist. General external source acquisition, evaluated example adaptation and authoritative need resolution still require admitted providers and independent effect evidence. T05-B/R7.1 follow-on: Adds seven scientific/archive providers with original metadata lineage; independent reuse/adapt/build and substantive coding verification remain separate work.",
+      "assessment": "Requirement: Repository and external research, libraries/tools/internal workflows, reuse/adapt/build, examples and discriminating experiments. [Reasoning policy][policy], [Phase 7][phase7], original P072\u2013P084.. Immutable repository inspection/audit and solve-graph linkage exist. General external source acquisition, evaluated example adaptation and authoritative need resolution still require admitted providers and independent effect evidence. T05-B/R7.1 follow-on: Adds seven scientific/archive providers with original metadata lineage; independent reuse/adapt/build and substantive coding verification remain separate work.",
       "next_action": "Continue R7.2 admitted atomic task scheduling through existing operation discovery, selected execution, graph and budget owners, then R7.3-R7.6 agentic evaluation and routing. New Syn integration, custody/enrollment rollout, transport cutovers and independent Agent installations are deferred at the user's request until Syn is ready for a release; resume by pinning and qualifying the released package. Existing authority checks remain enforced. Live research/provider/account quality, aggregate rate coordination, installed PDF/native host qualification and broader G07 formats retain separate gates. The historical U00 next milestone remains U01-A."
     },
     {
@@ -86068,8 +86442,8 @@
         "compatibility"
       ],
       "status": "partial",
-      "assessment": "Requirement: Browser networking sufficient for admitted real workflows and ecosystem compatibility. [S39 egress/input][egress40], [C00–C09][compat].. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility.",
-      "next_action": "For RD21 (Browser networking sufficient for admitted real workflows and ecosystem compatibility. [S39 egress/input][egress40], [C00–C09][compat].): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery. Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service."
+      "assessment": "Requirement: Browser networking sufficient for admitted real workflows and ecosystem compatibility. [S39 egress/input][egress40], [C00\u2013C09][compat].. Visible Xpra Chromium, admitted browser Cogs and bounded private evidence retain their existing implementation. Screenshot timeout/cancellation now fences the worker across later calls and retires the host channel before cleanup; captures have one owner and actions are not replayed. This closes a tested recovery gap, not the graphical compositor stall observed at baseline main. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility.",
+      "next_action": "For RD21 (Browser networking sufficient for admitted real workflows and ecosystem compatibility. [S39 egress/input][egress40], [C00\u2013C09][compat].): Rerun all four rendered profiles at the final patch commit, then qualify installed multi-Agent Xpra, private cookies/sockets, egress, provenance and operator lifecycle recovery. Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service."
     },
     {
       "key": "recent-development:RD22",
@@ -86142,8 +86516,8 @@
         "memory-admission"
       ],
       "status": "partial",
-      "assessment": "Requirement: Evidence-backed current state, history, disagreements, correction and model-change notifications. [Context stages 4/8][ctxplan], [inspection][ctx45], original P087–P092.. Application context migrations 29-33, registered-object lifecycle, projections, scoped RPC and ordinary worker launch integration exist. Root MODEL/MEMORY and standalone Stage 2 SQLite describe historical development contracts. General immutable memory proposals, accepted-head CAS, bitemporal correction, applicability, feedback/episodes/procedures and deletion-safe lifecycle are retained future requirements. Context triples and vectors do not implement them.",
-      "next_action": "For RD28 (Evidence-backed current state, history, disagreements, correction and model-change notifications. [Context stages 4/8][ctxplan], [inspection][ctx45], original P087–P092.): Extend Stage 10D rather than importing the standalone prototype as the authoritative application store. Build the admitted-memory slice on PostgreSQL/context identities and monitored Cogs; no parallel admission authority."
+      "assessment": "Requirement: Evidence-backed current state, history, disagreements, correction and model-change notifications. [Context stages 4/8][ctxplan], [inspection][ctx45], original P087\u2013P092.. Application context migrations 29-33, registered-object lifecycle, projections, scoped RPC and ordinary worker launch integration exist. Root MODEL/MEMORY and standalone Stage 2 SQLite describe historical development contracts. General immutable memory proposals, accepted-head CAS, bitemporal correction, applicability, feedback/episodes/procedures and deletion-safe lifecycle are retained future requirements. Context triples and vectors do not implement them.",
+      "next_action": "For RD28 (Evidence-backed current state, history, disagreements, correction and model-change notifications. [Context stages 4/8][ctxplan], [inspection][ctx45], original P087\u2013P092.): Extend Stage 10D rather than importing the standalone prototype as the authoritative application store. Build the admitted-memory slice on PostgreSQL/context identities and monitored Cogs; no parallel admission authority."
     },
     {
       "key": "recent-development:RD29",
@@ -86183,8 +86557,8 @@
         "retrieval"
       ],
       "status": "partial",
-      "assessment": "Requirement: Purpose-specific semantic retrieval and explicit applicability. [Vocabulary registry][profiles], [semantic integration][semantics], original P090–P110.. Pinned native Type catalogs, strict typed validation and exact snapshot lookup exist. Seven question profiles, typed descendants, semantic opposition/guards and all-examples completeness remain broader obligations. Standard local/named embedding and exact vector foundations exist, with supervised encoder and explicit immutable encoding identities. Hybrid memory quality, scoped eligibility, ANN and custom learned spaces are not thereby qualified.",
-      "next_action": "For RD32 (Purpose-specific semantic retrieval and explicit applicability. [Vocabulary registry][profiles], [semantic integration][semantics], original P090–P110.): Extend existing catalog and retrieval contracts with exact coverage manifests and semantic conformance, not another Type root. Finish standard-before-custom E01-E06/P095-P110 gates and keep E07-E09 optional experiments separate."
+      "assessment": "Requirement: Purpose-specific semantic retrieval and explicit applicability. [Vocabulary registry][profiles], [semantic integration][semantics], original P090\u2013P110.. Pinned native Type catalogs, strict typed validation and exact snapshot lookup exist. Seven question profiles, typed descendants, semantic opposition/guards and all-examples completeness remain broader obligations. Standard local/named embedding and exact vector foundations exist, with supervised encoder and explicit immutable encoding identities. Hybrid memory quality, scoped eligibility, ANN and custom learned spaces are not thereby qualified.",
+      "next_action": "For RD32 (Purpose-specific semantic retrieval and explicit applicability. [Vocabulary registry][profiles], [semantic integration][semantics], original P090\u2013P110.): Extend existing catalog and retrieval contracts with exact coverage manifests and semantic conformance, not another Type root. Finish standard-before-custom E01-E06/P095-P110 gates and keep E07-E09 optional experiments separate."
     },
     {
       "key": "recent-development:RD33",
@@ -86193,8 +86567,8 @@
         "retrieval"
       ],
       "status": "partial",
-      "assessment": "Requirement: Standard local embeddings first, then measured semantic/custom spaces. [Embeddings][embeddings], [named embeddings][named], addendum E01–E09.. Standard local/named embedding and exact vector foundations exist, with supervised encoder and explicit immutable encoding identities. Hybrid memory quality, scoped eligibility, ANN and custom learned spaces are not thereby qualified.",
-      "next_action": "For RD33 (Standard local embeddings first, then measured semantic/custom spaces. [Embeddings][embeddings], [named embeddings][named], addendum E01–E09.): Finish standard-before-custom E01-E06/P095-P110 gates and keep E07-E09 optional experiments separate."
+      "assessment": "Requirement: Standard local embeddings first, then measured semantic/custom spaces. [Embeddings][embeddings], [named embeddings][named], addendum E01\u2013E09.. Standard local/named embedding and exact vector foundations exist, with supervised encoder and explicit immutable encoding identities. Hybrid memory quality, scoped eligibility, ANN and custom learned spaces are not thereby qualified.",
+      "next_action": "For RD33 (Standard local embeddings first, then measured semantic/custom spaces. [Embeddings][embeddings], [named embeddings][named], addendum E01\u2013E09.): Finish standard-before-custom E01-E06/P095-P110 gates and keep E07-E09 optional experiments separate."
     },
     {
       "key": "recent-development:RD34",
@@ -86203,8 +86577,8 @@
         "memory-admission"
       ],
       "status": "planned",
-      "assessment": "Requirement: Immediate learning and correctable user feedback. Original P111–P117; [memory modernization][modern], [object memory][mg].. General immutable memory proposals, accepted-head CAS, bitemporal correction, applicability, feedback/episodes/procedures and deletion-safe lifecycle are retained future requirements. Context triples and vectors do not implement them.",
-      "next_action": "For RD34 (Immediate learning and correctable user feedback. Original P111–P117; [memory modernization][modern], [object memory][mg].): Build the admitted-memory slice on PostgreSQL/context identities and monitored Cogs; no parallel admission authority."
+      "assessment": "Requirement: Immediate learning and correctable user feedback. Original P111\u2013P117; [memory modernization][modern], [object memory][mg].. General immutable memory proposals, accepted-head CAS, bitemporal correction, applicability, feedback/episodes/procedures and deletion-safe lifecycle are retained future requirements. Context triples and vectors do not implement them.",
+      "next_action": "For RD34 (Immediate learning and correctable user feedback. Original P111\u2013P117; [memory modernization][modern], [object memory][mg].): Build the admitted-memory slice on PostgreSQL/context identities and monitored Cogs; no parallel admission authority."
     },
     {
       "key": "recent-development:RD35",
@@ -86214,8 +86588,8 @@
         "recovery"
       ],
       "status": "partial",
-      "assessment": "Requirement: Qualified accepted memory, targeted invalidation, forgetting and deletion-safe recovery. Original P085–P094/P143–P144; [MG04/MG06][mg].. General immutable memory proposals, accepted-head CAS, bitemporal correction, applicability, feedback/episodes/procedures and deletion-safe lifecycle are retained future requirements. Context triples and vectors do not implement them. Current launch, migration and package CI foundations are present; source previews are not the qualified operational baseline. Full backup/deletion-journal restore, outages, capacity and upgrade qualification remain required.",
-      "next_action": "For RD35 (Qualified accepted memory, targeted invalidation, forgetting and deletion-safe recovery. Original P085–P094/P143–P144; [MG04/MG06][mg].): Build the admitted-memory slice on PostgreSQL/context identities and monitored Cogs; no parallel admission authority. Retain exact release source/manifest and immutable assets; collect real migration/restore/endurance evidence before baseline certification."
+      "assessment": "Requirement: Qualified accepted memory, targeted invalidation, forgetting and deletion-safe recovery. Original P085\u2013P094/P143\u2013P144; [MG04/MG06][mg].. General immutable memory proposals, accepted-head CAS, bitemporal correction, applicability, feedback/episodes/procedures and deletion-safe lifecycle are retained future requirements. Context triples and vectors do not implement them. Current launch, migration and package CI foundations are present; source previews are not the qualified operational baseline. Full backup/deletion-journal restore, outages, capacity and upgrade qualification remain required.",
+      "next_action": "For RD35 (Qualified accepted memory, targeted invalidation, forgetting and deletion-safe recovery. Original P085\u2013P094/P143\u2013P144; [MG04/MG06][mg].): Build the admitted-memory slice on PostgreSQL/context identities and monitored Cogs; no parallel admission authority. Retain exact release source/manifest and immutable assets; collect real migration/restore/endurance evidence before baseline certification."
     },
     {
       "key": "recent-development:RD36",
@@ -86234,8 +86608,8 @@
         "evaluation"
       ],
       "status": "partial",
-      "assessment": "Requirement: Model-role comparisons, independent judges, prompt variants, specialists and model/workflow/assumption monitoring. [R6.6][bench23], [R7][atomic24], [B00–B10][bench], original P126–P137.. R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence.",
-      "next_action": "For RD37 (Model-role comparisons, independent judges, prompt variants, specialists and model/workflow/assumption monitoring. [R6.6][bench23], [R7][atomic24], [B00–B10][bench], original P126–P137.): Extend existing evaluation authority and B00-B10 adapters; keep synthetic, live, held-out and unsupported results separate."
+      "assessment": "Requirement: Model-role comparisons, independent judges, prompt variants, specialists and model/workflow/assumption monitoring. [R6.6][bench23], [R7][atomic24], [B00\u2013B10][bench], original P126\u2013P137.. R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence.",
+      "next_action": "For RD37 (Model-role comparisons, independent judges, prompt variants, specialists and model/workflow/assumption monitoring. [R6.6][bench23], [R7][atomic24], [B00\u2013B10][bench], original P126\u2013P137.): Extend existing evaluation authority and B00-B10 adapters; keep synthetic, live, held-out and unsupported results separate."
     },
     {
       "key": "recent-development:RD38",
@@ -86244,8 +86618,8 @@
         "compatibility"
       ],
       "status": "planned",
-      "assessment": "Requirement: OpenClaw/Codex/Claude instructions, skills, tools, hooks/workflows, bidirectional MCP, browser compatibility and external discovery. [C00–C09][compat], [external S00–S10][skills].. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility.",
-      "next_action": "For RD38 (OpenClaw/Codex/Claude instructions, skills, tools, hooks/workflows, bidirectional MCP, browser compatibility and external discovery. [C00–C09][compat], [external S00–S10][skills].): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service."
+      "assessment": "Requirement: OpenClaw/Codex/Claude instructions, skills, tools, hooks/workflows, bidirectional MCP, browser compatibility and external discovery. [C00\u2013C09][compat], [external S00\u2013S10][skills].. C00-C09 and external-skill S00-S10 require pinned behavioral compatibility. Sampled directory entries and outbound model adapters do not supply cross-agent tool/skill compatibility.",
+      "next_action": "For RD38 (OpenClaw/Codex/Claude instructions, skills, tools, hooks/workflows, bidirectional MCP, browser compatibility and external discovery. [C00\u2013C09][compat], [external S00\u2013S10][skills].): Map C/S requirements onto T/U owners; start C00/S00 fixtures without a second registry, scheduler or authorization service."
     },
     {
       "key": "recent-development:RD39",
@@ -86254,8 +86628,8 @@
         "recovery"
       ],
       "status": "partial",
-      "assessment": "Requirement: Complete operational baseline and recoverable release. Original P138–P148/G01–G24; [unified roadmap][unified], [benchmark release gates][bench].. Current launch, migration and package CI foundations are present; source previews are not the qualified operational baseline. Full backup/deletion-journal restore, outages, capacity and upgrade qualification remain required.",
-      "next_action": "For RD39 (Complete operational baseline and recoverable release. Original P138–P148/G01–G24; [unified roadmap][unified], [benchmark release gates][bench].): Retain exact release source/manifest and immutable assets; collect real migration/restore/endurance evidence before baseline certification."
+      "assessment": "Requirement: Complete operational baseline and recoverable release. Original P138\u2013P148/G01\u2013G24; [unified roadmap][unified], [benchmark release gates][bench].. Current launch, migration and package CI foundations are present; source previews are not the qualified operational baseline. Full backup/deletion-journal restore, outages, capacity and upgrade qualification remain required.",
+      "next_action": "For RD39 (Complete operational baseline and recoverable release. Original P138\u2013P148/G01\u2013G24; [unified roadmap][unified], [benchmark release gates][bench].): Retain exact release source/manifest and immutable assets; collect real migration/restore/endurance evidence before baseline certification."
     },
     {
       "key": "semantic-addendum:S01",
@@ -88871,7 +89245,7 @@
       },
       {
         "path": ".github/workflows/agentic-model-benchmark.yml",
-        "sha256": "387ef2fb4cb6e782344f1913829ab6785da67c222b86a80bc61e357bb0376389",
+        "sha256": "d7125f28fa125306cd9fc3b30d3da59b6eec89422c44b444bc8d4c5561a63b91",
         "name": "Agentic model benchmark preflight (no paid calls)",
         "state": "active",
         "scope": [
@@ -88889,7 +89263,7 @@
           "event": "push"
         },
         "at_reviewed_base": false,
-        "qualification_limit": "Passing means the selected jobs/steps succeeded at the recorded head only. Conditional live smoke, disabled device profiles, skipped publication and other host gates are not promoted. A workflow with an older head is historical evidence."
+        "qualification_limit": "Passing means the selected jobs/steps succeeded at the recorded head only. Conditional live smoke, disabled device profiles, skipped publication and other host gates are not promoted. A workflow with an older head is historical evidence. 24 November source update includes paired atomic evidence rejection tests and a routine blogworthiness record; prior remote CI evidence remains historical."
       },
       {
         "path": ".github/workflows/artifact-controller-s45.yml",
@@ -89400,7 +89774,7 @@
       },
       {
         "path": ".github/workflows/sandbox-system-image.yml",
-        "sha256": "2710a92225d72308f98c61c9bc9b3bfc48ad4d5951ee9f5c240638aab74cf107",
+        "sha256": "c11a43b15262aeb49cc6d4022f556d791e20a29ee3c7f93dc0789d8ca88f2ae6",
         "name": "Sandbox system image build and publication",
         "state": "active",
         "scope": [
@@ -89425,7 +89799,7 @@
           "event": "push"
         },
         "at_reviewed_base": false,
-        "qualification_limit": "Passing means the selected jobs/steps succeeded at the recorded head only. Conditional live smoke, disabled device profiles, skipped publication and other host gates are not promoted. A workflow with an older head is historical evidence."
+        "qualification_limit": "Passing means the selected jobs/steps succeeded at the recorded head only. Conditional live smoke, disabled device profiles, skipped publication and other host gates are not promoted. A workflow with an older head is historical evidence. 24 November source update includes paired atomic evidence rejection tests and a routine blogworthiness record; prior remote CI evidence remains historical."
       },
       {
         "path": ".github/workflows/sandbox-worker-s46.yml",
@@ -94159,23 +94533,33 @@
         }
       ],
       "next_action": "Continue R7.2 admitted atomic task scheduling through existing operation discovery, selected execution, graph and budget owners, then R7.3-R7.6 agentic evaluation and routing. New Syn integration, custody/enrollment rollout, transport cutovers and independent Agent installations are deferred at the user's request until Syn is ready for a release; resume by pinning and qualifying the released package. Existing authority checks remain enforced. Live research/provider/account quality, aggregate rate coordination, installed PDF/native host qualification and broader G07 formats retain separate gates. The historical U00 next milestone remains U01-A."
+    },
+    {
+      "id": "R7.3-A/paired-atomic-role-evidence",
+      "implementation_base": "336258b7038d91555e59f32cacd74617558c3361",
+      "reviewed_on": "2026-11-24",
+      "source": "docs/implementation/r7-3-a-paired-atomic-benchmarks.md",
+      "review_family": "evaluation",
+      "runtime_qualified": false,
+      "evidence_boundary": "Regrades bounded retained outputs, refuses changed identities and duplicate trials, and reports complete declared pairing with unknown metrics retained. No inference, provider authentication, live hardware qualification, deterministic-tool baseline or routing promotion is established."
     }
   ],
   "current_delivery_order": {
-    "recorded_on": "2026-11-18",
+    "recorded_on": "2026-11-24",
     "source": "docs/implementation/unified-development-roadmap.md",
     "completed_supported_increments": [
       "T05-B/specialist-scientific-and-archival-research",
-      "R7.1/durable-temporal-steering"
+      "R7.1/durable-temporal-steering",
+      "R7.2-A/B/C/source-implemented-atomic-scheduling",
+      "R7.3-A/offline-paired-atomic-evidence"
     ],
     "next_implementation_milestone": {
-      "id": "R7.2",
-      "title": "Admitted atomic task scheduling",
+      "id": "R7.3",
+      "title": "Reviewed atomic datasets, deterministic baselines and measured specialist comparisons",
       "existing_owners": [
-        "operation discovery",
-        "selected execution",
-        "reasoning graph",
-        "task budget"
+        "existing model benchmark runner",
+        "atomic task vocabulary",
+        "operator qualification and routing policy"
       ]
     },
     "deferred": {

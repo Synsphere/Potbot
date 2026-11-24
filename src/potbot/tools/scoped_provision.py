@@ -67,7 +67,8 @@ def _executable(path: Path, digest: str | None = None) -> None:
 
 def _keeper_unit(python: Path, uid: int, gid: int) -> dict[Path, str]:
     return {
-        UNIT_DIR / KEEPER: _MANAGED_HEADER + (
+        UNIT_DIR / KEEPER: _MANAGED_HEADER
+        + (
             "[Unit]\nDescription=Potbot scoped worker accounting subtree\n"
             "[Service]\nType=notify\nNotifyAccess=main\nSlice=system.slice\n"
             f"User={uid}\nGroup={gid}\n"
@@ -91,14 +92,16 @@ def _runtime_units(
     cgroup: Path,
 ) -> dict[Path, str]:
     return {
-        UNIT_DIR / BROKER: _MANAGED_HEADER + (
+        UNIT_DIR / BROKER: _MANAGED_HEADER
+        + (
             "[Unit]\nDescription=Potbot scoped worker launcher instance\n"
             "[Service]\nType=simple\nStandardInput=socket\nStandardOutput=journal\n"
             f"ExecStart={python} -I -m potbot.tools.scoped_launcher "
             f"accept {cgroup} {join} {uid} {gid} {auditor_uid} {auditor_gid}\n"
             "KillMode=control-group\nTimeoutStopSec=10\n"
         ),
-        UNIT_DIR / SOCKET: _MANAGED_HEADER + (
+        UNIT_DIR / SOCKET: _MANAGED_HEADER
+        + (
             "[Unit]\nDescription=Potbot scoped worker launcher\n"
             f"BindsTo={KEEPER}\nAfter={KEEPER}\n"
             "[Socket]\nAccept=yes\nRemoveOnStop=yes\n"
@@ -106,7 +109,8 @@ def _runtime_units(
             f"SocketUser=root\nSocketGroup={gid}\nSocketMode=0660\n"
             "[Install]\nWantedBy=sockets.target\n"
         ),
-        ENV_FILE: _MANAGED_HEADER + (
+        ENV_FILE: _MANAGED_HEADER
+        + (
             f"POTBOT_OPERATOR_AUDIT_ROOT={AUDIT}\n"
             f"POTBOT_OPERATOR_CGROUP_ROOT={cgroup}\n"
             f"POTBOT_OPERATOR_STRACE={tracer}\nPOTBOT_OPERATOR_STRACE_SHA256={tracer_sha}\n"
@@ -212,7 +216,9 @@ def _delegated_cgroup_from_membership(value: str) -> Path:
         raise CapabilityUnavailableError("Scoped launcher requires the unified cgroup hierarchy")
     process_cgroup = CGROUP_ROOT / rows[0][3:].lstrip("/")
     if process_cgroup.name != "keeper" or process_cgroup.parent.name != KEEPER:
-        raise CapabilityUnavailableError("Scoped launcher process is outside its delegated subgroup")
+        raise CapabilityUnavailableError(
+            "Scoped launcher process is outside its delegated subgroup"
+        )
     return process_cgroup.parent
 
 
@@ -280,9 +286,7 @@ def _inspect(path: Path, content: str) -> str:
         return "current"
     if _managed_existing(path, payload):
         return "stale"
-    raise CapabilityUnavailableError(
-        "A launcher file differs; existing configuration was kept."
-    )
+    raise CapabilityUnavailableError("A launcher file differs; existing configuration was kept.")
 
 
 def _temporary_file(path: Path, text: str) -> Path:
@@ -315,9 +319,7 @@ def _publish(path: Path, text: str, state: str) -> bytes | None:
                 "A launcher file changed during provisioning."
             ) from None
         if not _managed_existing(path, decoded):
-            raise CapabilityUnavailableError(
-                "A launcher file changed during provisioning."
-            )
+            raise CapabilityUnavailableError("A launcher file changed during provisioning.")
         snapshot = (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
 
     temporary = _temporary_file(path, text)
@@ -334,9 +336,7 @@ def _publish(path: Path, text: str, state: str) -> bytes | None:
                 current.st_mtime_ns,
             )
             if observed != snapshot:
-                raise CapabilityUnavailableError(
-                    "A launcher file changed during provisioning."
-                )
+                raise CapabilityUnavailableError("A launcher file changed during provisioning.")
             os.replace(temporary, path)
     finally:
         temporary.unlink(missing_ok=True)
@@ -384,14 +384,14 @@ def _audit_directory(uid: int, gid: int) -> bool:
                     "Existing private audit directory group migration failed."
                 ) from None
             migrated = AUDIT.lstat()
-            if (
-                not stat.S_ISDIR(migrated.st_mode)
-                or (migrated.st_uid, migrated.st_gid, stat.S_IMODE(migrated.st_mode))
-                != (uid, gid, 0o700)
-            ):
+            if not stat.S_ISDIR(migrated.st_mode) or (
+                migrated.st_uid,
+                migrated.st_gid,
+                stat.S_IMODE(migrated.st_mode),
+            ) != (uid, gid, 0o700):
                 raise CapabilityUnavailableError(
                     "Existing private audit directory group migration failed."
-                )
+                ) from None
         return False
     try:
         os.chmod(AUDIT, 0o700)
@@ -432,10 +432,11 @@ def _apply(
         raise CapabilityUnavailableError("Scoped launcher socket is active without its keeper")
     if (DEFAULT_SOCKET.exists() or DEFAULT_SOCKET.is_symlink()) and not pre_active:
         info = DEFAULT_SOCKET.lstat()
-        if (
-            not stat.S_ISSOCK(info.st_mode)
-            or (info.st_uid, info.st_gid, stat.S_IMODE(info.st_mode)) != (0, gid, 0o660)
-        ):
+        if not stat.S_ISSOCK(info.st_mode) or (
+            info.st_uid,
+            info.st_gid,
+            stat.S_IMODE(info.st_mode),
+        ) != (0, gid, 0o660):
             raise CapabilityUnavailableError(
                 "An existing launcher socket needs administrator review."
             )
@@ -530,8 +531,7 @@ def _apply(
             not stat.S_ISSOCK(info.st_mode)
             or (info.st_uid, info.st_gid, stat.S_IMODE(info.st_mode)) != (0, gid, 0o660)
             or cgroup.stat().st_uid != uid
-            or not set(CONTROLLERS)
-            <= set((cgroup / "cgroup.subtree_control").read_text().split())
+            or not set(CONTROLLERS) <= set((cgroup / "cgroup.subtree_control").read_text().split())
         ):
             raise CapabilityUnavailableError(
                 "Installed launcher or delegated controllers failed readback."
@@ -617,17 +617,12 @@ def _hold() -> None:
         os.geteuid() == 0
         or resolved != cgroup
         or not cgroup.is_relative_to(CGROUP_ROOT)
-        or not set(CONTROLLERS)
-        <= set((cgroup / "cgroup.controllers").read_text().split())
+        or not set(CONTROLLERS) <= set((cgroup / "cgroup.controllers").read_text().split())
         or (cgroup / "cgroup.procs").read_text().strip()
     ):
         raise CapabilityUnavailableError("systemd did not delegate the required worker cgroup.")
-    (cgroup / "cgroup.subtree_control").write_text(
-        " ".join("+" + name for name in CONTROLLERS)
-    )
-    if not set(CONTROLLERS) <= set(
-        (cgroup / "cgroup.subtree_control").read_text().split()
-    ):
+    (cgroup / "cgroup.subtree_control").write_text(" ".join("+" + name for name in CONTROLLERS))
+    if not set(CONTROLLERS) <= set((cgroup / "cgroup.subtree_control").read_text().split()):
         raise CapabilityUnavailableError("systemd did not enable the delegated controllers.")
     notify = os.environ["NOTIFY_SOCKET"]
     with socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM) as channel:

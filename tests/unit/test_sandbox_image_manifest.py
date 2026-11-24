@@ -108,14 +108,12 @@ def test_published_image_failure_summary_names_operator_checks() -> None:
 
 def test_published_qualifier_verifies_preprovisioned_scratch_without_chown() -> None:
     root = Path(__file__).resolve().parents[2]
-    source = (root / "scripts/qualify_published_sandbox_image.py").read_text(
-        encoding="utf-8"
-    )
+    source = (root / "scripts/qualify_published_sandbox_image.py").read_text(encoding="utf-8")
     assert "os.chown(tools" not in source
     assert "expected_layout = {" in source
     assert "tools: (os.geteuid(), 69, 0o2775)" in source
     assert "qualification scratch ownership or mode differs" in source
-    assert "(home / \".tmp\").mkdir(mode=0o700)" in source
+    assert '(home / ".tmp").mkdir(mode=0o700)' in source
 
 
 def test_published_qualifier_uses_scoped_taskstats_preflight_when_launcher_is_active(
@@ -159,9 +157,7 @@ def test_published_qualifier_keeps_direct_taskstats_for_native_linux(monkeypatch
     monkeypatch.setattr(
         qualifier,
         "qualify_scoped_worker",
-        lambda endpoint: (_ for _ in ()).throw(
-            AssertionError("scoped launcher must not run")
-        ),
+        lambda endpoint: (_ for _ in ()).throw(AssertionError("scoped launcher must not run")),
     )
 
     assert qualifier._accounting_gate() == expected
@@ -228,9 +224,7 @@ def test_taskstats_failure_summary_retains_safe_scoped_probe_phase(monkeypatch, 
     )
 
     def fail(endpoint):
-        raise qualifier.CapabilityUnavailableError(
-            f"Scoped worker preflight failed during {phase}"
-        )
+        raise qualifier.CapabilityUnavailableError(f"Scoped worker preflight failed during {phase}")
 
     monkeypatch.setattr(qualifier, "qualify_scoped_worker", fail)
     result = qualifier._accounting_gate()

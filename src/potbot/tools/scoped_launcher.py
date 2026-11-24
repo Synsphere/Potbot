@@ -30,9 +30,7 @@ _WSL_INFRASTRUCTURE_SHARES = (
     "/usr/lib/wsl/lib",
     "/init",
 )
-_WSL_INFRASTRUCTURE_PREFIXES = (
-    "/mnt/wslg",
-)
+_WSL_INFRASTRUCTURE_PREFIXES = ("/mnt/wslg",)
 _MODULE = "potbot.tools.scoped_launcher"
 _PACKET = 128 * 1024
 _MAX_FDS = 8
@@ -175,10 +173,9 @@ def _credentials(
     *,
     supplementary_gids: tuple[int, ...] = (),
 ) -> list[str]:
-    if (
-        any(type(value) is not int or value <= 0 for value in supplementary_gids)
-        or len(set(supplementary_gids)) != len(supplementary_gids)
-    ):
+    if any(type(value) is not int or value <= 0 for value in supplementary_gids) or len(
+        set(supplementary_gids)
+    ) != len(supplementary_gids):
         raise CapabilityUnavailableError("Invalid scoped launcher supplementary groups")
     group_args = (
         ["--groups=" + ",".join(str(value) for value in supplementary_gids)]
@@ -253,9 +250,7 @@ def _detach_wsl_infrastructure_shares(mounts: Path) -> None:
         )
     remaining = _windows_filesystem_mounts(mounts.read_text())
     if remaining:
-        raise CapabilityUnavailableError(
-            "Windows filesystems are visible inside the worker scope"
-        )
+        raise CapabilityUnavailableError("Windows filesystems are visible inside the worker scope")
 
 
 def _validate_worker(request: dict[str, Any], fds: list[int]) -> list[int]:
@@ -486,7 +481,17 @@ def main() -> int:
             case ["exec", fd, *received]:
                 _worker_exec(int(fd), [int(x) for x in received])
             case [
-                "scope", fd, leaf, uid, gid, auditor_uid, auditor_gid, join, pid_ns, net_ns, *mode
+                "scope",
+                fd,
+                leaf,
+                uid,
+                gid,
+                auditor_uid,
+                auditor_gid,
+                join,
+                pid_ns,
+                net_ns,
+                *mode,
             ] if mode in (
                 [],
                 ["probe"],

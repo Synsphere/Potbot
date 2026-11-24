@@ -68,16 +68,15 @@ def test_dependency_and_exclusive_locks_are_deterministic() -> None:
     planner.admit((_proposal("first"), _proposal("second"), _proposal("third")))
     assert tuple(c.task_id for c in planner.ready(completed=frozenset())) == ("first",)
     assert planner.ready(completed=frozenset(), in_flight=frozenset({"first"})) == ()
-    assert tuple(
-        c.task_id
-        for c in planner.ready(completed=frozenset({"first"}))
-    ) == ("second",)
+    assert tuple(c.task_id for c in planner.ready(completed=frozenset({"first"}))) == ("second",)
     assert planner.ready(completed=frozenset({"first"}), interrupted=True) == ()
-    assert planner.ready(completed=frozenset({"first", "second"}), held_locks=frozenset({"repo:abc"})) == ()
-    assert tuple(
-        c.task_id
-        for c in planner.ready(completed=frozenset({"first", "second"}))
-    ) == ("third",)
+    assert (
+        planner.ready(completed=frozenset({"first", "second"}), held_locks=frozenset({"repo:abc"}))
+        == ()
+    )
+    assert tuple(c.task_id for c in planner.ready(completed=frozenset({"first", "second"}))) == (
+        "third",
+    )
 
 
 def test_no_double_admission_or_untracked_flight() -> None:
@@ -97,7 +96,9 @@ def test_typed_cog_input_is_enforced() -> None:
     with pytest.raises((InvalidInputError, StateMismatchError)):
         planner.admit(
             (
-                ProposedLeaf("first", "run_registered_tool", TypedCogValue("syn://type/wrong-request", {})),
+                ProposedLeaf(
+                    "first", "run_registered_tool", TypedCogValue("syn://type/wrong-request", {})
+                ),
             )
         )
 

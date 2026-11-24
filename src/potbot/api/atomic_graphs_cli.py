@@ -60,7 +60,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         service = AtomicGraphService(database)
         pump = AtomicGraphPump(service)
         if args.command == "list":
-            result = pump.list(context, after=args.after, limit=args.limit, active_only=args.active_only)
+            result = pump.list(
+                context, after=args.after, limit=args.limit, active_only=args.active_only
+            )
         elif args.command == "inspect":
             result = service.inspect(context, args.graph_id)
         elif args.command == "interrupt":
@@ -71,8 +73,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = service.interrupt(context, args.graph_id)
         elif args.command == "tick":
             result = pump.pass_once(
-                context, setup_token=_setup_token(), after=args.after,
-                graphs=args.graphs, leaves_per_graph=args.leaves,
+                context,
+                setup_token=_setup_token(),
+                after=args.after,
+                graphs=args.graphs,
+                leaves_per_graph=args.leaves,
             )
         else:
             # This is a foreground, explicitly opted-in local service.
@@ -90,13 +95,19 @@ def main(argv: Sequence[str] | None = None) -> int:
                 # Fetch the current operator credential each tick so revocation
                 # takes effect without restarting this process.
                 result = pump.pass_once(
-                    context, setup_token=_setup_token(), after=cursor,
-                    graphs=args.graphs, leaves_per_graph=args.leaves,
+                    context,
+                    setup_token=_setup_token(),
+                    after=cursor,
+                    graphs=args.graphs,
+                    leaves_per_graph=args.leaves,
                 )
                 cursor = result["next_cursor"]
                 events = [
-                    {"graph_id": item["graph_id"], "decision": item["decision"],
-                     "launched": item["launched"]}
+                    {
+                        "graph_id": item["graph_id"],
+                        "decision": item["decision"],
+                        "launched": item["launched"],
+                    }
                     for item in result["decisions"]
                     if item["decision"] != "no_dispatch"
                 ]
@@ -111,7 +122,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     except DomainError as error:
         # Never print setup tokens, private job inputs, or raw SQL/HTTP bodies.
-        print(json.dumps({"error": error.code.value if hasattr(error, "code") else type(error).__name__}), flush=True)
+        print(
+            json.dumps(
+                {"error": error.code.value if hasattr(error, "code") else type(error).__name__}
+            ),
+            flush=True,
+        )
         return 2
 
 

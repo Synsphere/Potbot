@@ -472,8 +472,16 @@ def _supervise(config: ServiceConfig) -> int:
         + ["potbot.startup", "jobs", "worker", *common, "--provider-policy", policy],
         "atomic-scheduler": _service_command()[:2]
         + [
-            "potbot.startup", "atomic-graphs", *common, "worker",
-            "--interval", "2", "--graphs", "20", "--leaves", "8",
+            "potbot.startup",
+            "atomic-graphs",
+            *common,
+            "worker",
+            "--interval",
+            "2",
+            "--graphs",
+            "20",
+            "--leaves",
+            "8",
         ],
     }
     if config.debugger_forwarding is not None:
@@ -491,11 +499,16 @@ def _supervise(config: ServiceConfig) -> int:
             assert xpra_policy is not None and xpra_home is not None
             commands["xpra"] = _service_command()[:2] + [
                 "potbot.tools.x11_workspace_server",
-                "--workspace-id", config.workspace_id,
-                "--sandbox-root", str(xpra_home),
-                "--browser-origin", "http://127.0.0.1:3100",
-                "--port", "8766",
-                "--apps-policy", str(xpra_policy),
+                "--workspace-id",
+                config.workspace_id,
+                "--sandbox-root",
+                str(xpra_home),
+                "--browser-origin",
+                "http://127.0.0.1:3100",
+                "--port",
+                "8766",
+                "--apps-policy",
+                str(xpra_policy),
             ]
         commands["frontend"] = _service_command()[:2] + ["potbot.frontend_worker"]
     stopped = threading.Event()

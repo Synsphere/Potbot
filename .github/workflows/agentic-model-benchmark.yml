@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'src/potbot/evaluation/agentic_*'
+      - 'src/potbot/controller/atomic_tasks.py'
       - 'scripts/benchmark_agentic_models.py'
       - 'examples/agentic-benchmark/**'
       - 'tests/unit/test_agentic_*'
@@ -31,6 +32,7 @@ jobs:
       - name: Verify offline model-role and judge calibration contracts
         run: |
           uv run --locked python -m pytest -q \
+            tests/unit/test_agentic_atomic_bench.py \
             tests/unit/test_agentic_model_bench.py \
             tests/unit/test_agentic_benchmark_transport.py \
             tests/unit/test_agentic_benchmark_cli.py
@@ -47,3 +49,8 @@ jobs:
           name: agentic-benchmark-offline-plan
           path: artifacts/agentic-benchmark
           retention-days: 14
+      - name: Record run blogworthiness
+        if: always()
+        shell: bash
+        run: |
+          echo "Blogworthiness: FAIL - routine offline benchmark-contract verification. Evidence: the tests and unqualified preflight artifact at $GITHUB_SHA; no live model comparison or new deployment is established by this run." >> "$GITHUB_STEP_SUMMARY"

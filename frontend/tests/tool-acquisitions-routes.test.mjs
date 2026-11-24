@@ -22,7 +22,7 @@ test('acquisition BFF confines source, build and host controls to authenticated 
   t.after(()=>{globalThis.fetch=priorFetch;for(const key of [...Object.keys(env),'POTBOT_UI_WORKSPACES_JSON'])if(prior[key]===undefined)delete process.env[key];else process.env[key]=prior[key];});
   await t.test('authentication, exact origin, workspace and method gates run before network access',async()=>{
     let calls=0;globalThis.fetch=async()=>{calls++;throw Error('unexpected');};
-    assert.equal((await list(new Request(auth.publicOrigin+'/api/ui/tools/acquisitions'))).status,401);
+    assert.equal((await list(new Request('http://remote.invalid:3100'+'/api/ui/tools/acquisitions'))).status, 403);
     assert.equal((await list(request('GET',undefined,{headers:{Origin:'https://evil.example'}}))).status,403);
     assert.equal((await list(request('GET',undefined,{headers:{'X-Potbot-Workspace':principalId}}))).status,503);
     assert.equal((await toolAcquisitionRoute(request('PUT'),[])).status,400);
