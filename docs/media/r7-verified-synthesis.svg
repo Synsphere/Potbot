@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="406" viewBox="0 0 1040 406" role="img" aria-labelledby="title description">
+  <title id="title">How Potbot verifies a final answer</title>
+  <desc id="description">The final model stage receives the frozen records and a bounded reply schema. The application and database compare the original reply with those records. Correct answers complete the run. Wrong answers block it and preserve confirmed usage.</desc>
+  <defs>
+    <marker id="tip" viewBox="0 0 10 10" markerWidth="7" markerHeight="7" refX="8" refY="5" orient="auto">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#425878"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, sans-serif; fill: #172945; }
+      .heading { font-size: 28px; font-weight: 720; }
+      .name { font-size: 19px; font-weight: 700; }
+      .detail { font-size: 15px; }
+      .line { fill: none; stroke: #425878; stroke-width: 2; marker-end: url(#tip); }
+    </style>
+  </defs>
+  <rect width="1040" height="406" rx="20" fill="#f4f7fc"/>
+  <text class="heading" x="35" y="60">How Potbot verifies a final answer</text>
+  <rect x="35" y="107" width="225" height="126" rx="12" fill="#fff" stroke="#a4b3cb"/>
+  <text class="name" x="55" y="144">Frozen run plan</text>
+  <text class="detail" x="55" y="178">Records and answer check</text>
+  <text class="detail" x="55" y="201">Minimum cost or counts</text>
+  <path class="line" d="M260 170 H295"/>
+  <rect x="300" y="107" width="230" height="126" rx="12" fill="#e7efff" stroke="#8da9d2"/>
+  <text class="name" x="320" y="144">Checked model stage</text>
+  <text class="detail" x="320" y="178">Decoder follows the schema</text>
+  <text class="detail" x="320" y="201">Queue retains original reply</text>
+  <path class="line" d="M530 170 H565"/>
+  <rect x="570" y="107" width="236" height="126" rx="12" fill="#eae9fa" stroke="#a39ecb"/>
+  <text class="name" x="590" y="144">Independent checks</text>
+  <text class="detail" x="590" y="178">App recomputes the answer</text>
+  <text class="detail" x="590" y="201">Database checks completion</text>
+  <path class="line" d="M806 151 H839"/>
+  <path class="line" d="M806 199 H839"/>
+  <rect x="844" y="128" width="161" height="42" rx="9" fill="#d7efdf" stroke="#85b598"/>
+  <text class="detail" x="862" y="154">Match completes</text>
+  <rect x="844" y="181" width="161" height="42" rx="9" fill="#fce8de" stroke="#c99d87"/>
+  <text class="detail" x="862" y="207">Mismatch blocks</text>
+  <path class="line" d="M148 233 V272 H685 V240"/>
+  <text class="detail" x="250" y="299">Both checks use the same frozen facts</text>
+  <rect x="35" y="331" width="970" height="45" rx="9" fill="#e6edf7"/>
+  <text class="detail" x="55" y="359">Confirmed usage stays settled. Reading the result again triggers no model call.</text>
+</svg>

@@ -1,16 +1,18 @@
-"""Provider-neutral schemas for two frozen reasoning-role output contracts."""
+"""Provider-neutral schemas for frozen reasoning-role output contracts."""
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from typing import Any
 
 from potbot.domain.errors import InvalidInputError
-from potbot.domain.serialization import content_hash
+from potbot.domain.serialization import canonical_json, content_hash
+from potbot.models.reasoning_fact_check import fact_answer_schema, fact_check
 
 ROLE_SCHEMA_VARIANT = "model_role_schema_v1"
 ROLE_SCHEMA_PROMPT_VERSION = "model-aware-reasoning-role-schema-v1"
-STRUCTURED_ROLES = frozenset({"hypothesis_generator", "critic"})
+STRUCTURED_ROLES = frozenset({"hypothesis_generator", "critic", "synthesizer"})
 
 
 def _object(fields: dict[str, Any]) -> dict[str, Any]:
@@ -75,6 +77,7 @@ class ReasoningOutputSpec:
 
     role: str
     branch_ids: tuple[str, ...] = ()
+    answer_check_json: str | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.role, str) or self.role not in STRUCTURED_ROLES:
@@ -91,11 +94,29 @@ class ReasoningOutputSpec:
         ):
             raise InvalidInputError("A critique needs distinct bounded frozen branch IDs")
         object.__setattr__(self, "branch_ids", tuple(sorted(self.branch_ids)))
+        if (self.role == "synthesizer") != (self.answer_check_json is not None):
+            raise InvalidInputError("Structured synthesis requires its frozen answer check")
+        if self.answer_check_json is not None:
+            try:
+                if (
+                    not isinstance(self.answer_check_json, str)
+                    or len(self.answer_check_json) > 16384
+                ):
+                    raise ValueError
+                raw = json.loads(self.answer_check_json)
+            except (ValueError, RecursionError):
+                raise InvalidInputError("Invalid structured synthesis check") from None
+            if canonical_json(fact_check(raw)) != self.answer_check_json:
+                raise InvalidInputError("Structured synthesis check must be canonical")
 
     @classmethod
     def from_context(cls, role: str, context: object) -> ReasoningOutputSpec:
         if not isinstance(context, dict):
             raise InvalidInputError("Reasoning output requires frozen context")
+        if role == "synthesizer":
+            return cls(
+                role, answer_check_json=canonical_json(fact_check(context.get("answer_check")))
+            )
         if role != "critic":
             return cls(role)
         branches = context.get("branches")
@@ -111,11 +132,15 @@ class ReasoningOutputSpec:
 
     @property
     def name(self) -> str:
+        if self.answer_check_json is not None:
+            return "potbot_fact_answer_v1"
         return (
             "potbot_hypotheses_v1" if self.role == "hypothesis_generator" else "potbot_critique_v1"
         )
 
     def schema(self) -> dict[str, Any]:
+        if self.answer_check_json is not None:
+            return fact_answer_schema(json.loads(self.answer_check_json))
         return _hypotheses() if self.role == "hypothesis_generator" else _critique(self.branch_ids)
 
     @property

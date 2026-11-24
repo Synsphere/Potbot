@@ -82,6 +82,11 @@ on:
       - tests/unit/test_sandbox_image_manifest.py
       - .github/workflows/sandbox-system-image.yml
   workflow_dispatch:
+    inputs:
+      native_inference:
+        description: Build the opt-in CPU native-inference image
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -126,6 +131,10 @@ jobs:
       fail-fast: false
       matrix:
         arch: [amd64, arm64]
+    env:
+      SANDBOX_VARIANT: ${{ inputs.native_inference && 'native-inference-v1' || 'system-v1' }}
+      POTBOT_NATIVE_INFERENCE: ${{ inputs.native_inference && '1' || '0' }}
+      ARCH: ${{ matrix.arch }}
     permissions:
       contents: read
       packages: write
@@ -135,7 +144,7 @@ jobs:
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
       - name: Login only for publishing from main
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && (!inputs.native_inference || github.ref == 'refs/heads/main')
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -147,19 +156,41 @@ jobs:
           set -euo pipefail
           BASE_DIGEST="$(docker buildx imagetools inspect debian:bookworm-slim --format '{{.Manifest.Digest}}')"
           [[ "$BASE_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
-          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}-sandbox:system-v1-${GITHUB_SHA}-${{ matrix.arch }}"
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}-sandbox:${SANDBOX_VARIANT}-${GITHUB_SHA}-${ARCH}"
           echo "POTBOT_SANDBOX_BASE=debian:bookworm-slim@${BASE_DIGEST}" >> "$GITHUB_ENV"
           echo "POTBOT_SANDBOX_IMAGE=${IMAGE}" >> "$GITHUB_ENV"
-          echo "POTBOT_SANDBOX_PLATFORM=linux/${{ matrix.arch }}" >> "$GITHUB_ENV"
+          echo "POTBOT_SANDBOX_PLATFORM=linux/${ARCH}" >> "$GITHUB_ENV"
           echo "POTBOT_SOURCE_COMMIT=${GITHUB_SHA}" >> "$GITHUB_ENV"
           echo "IMAGE=${IMAGE}" >> "$GITHUB_ENV"
+      - name: Verify Compose build identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker compose -f sandbox/compose.build.yaml config --format json | python -c '
+          import json
+          import os
+          import sys
+
+          service = json.load(sys.stdin)["services"]["system-rootfs"]
+          variant = os.environ["SANDBOX_VARIANT"]
+          native_flag = {"system-v1": "0", "native-inference-v1": "1"}[variant]
+          expected_tag = f"{variant}-{os.environ["GITHUB_SHA"]}-{os.environ["ARCH"]}"
+          args = service["build"]["args"]
+          if (
+              service["image"].rsplit(":", 1)[-1] != expected_tag
+              or service["platform"] != f"linux/{os.environ["ARCH"]}"
+              or args["SOURCE_COMMIT"] != os.environ["GITHUB_SHA"]
+              or str(args["NATIVE_INFERENCE"]) != native_flag
+          ):
+              sys.exit("Compose build does not match the selected image variant and identity")
+          '
       - name: Build OCI rootfs image with Compose (never up/run)
         run: docker compose -f sandbox/compose.build.yaml build --progress=plain
       - name: Publish immutable-tagged image
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && (!inputs.native_inference || github.ref == 'refs/heads/main')
         run: docker compose -f sandbox/compose.build.yaml push
       - name: Record immutable image digest and manifest
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && (!inputs.native_inference || github.ref == 'refs/heads/main')
         shell: bash
         run: |
           set -euo pipefail
@@ -171,16 +202,16 @@ jobs:
             --output "artifacts/sandbox-images/${{ matrix.arch }}.json"
           echo "PUBLISHED_REF=${IMAGE%:*}@${DIGEST}" >> "$GITHUB_ENV"
       - name: Install signing client
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && (!inputs.native_inference || github.ref == 'refs/heads/main')
         uses: sigstore/cosign-installer@v3
       - name: Sign OCI release digest using OIDC
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && (!inputs.native_inference || github.ref == 'refs/heads/main')
         run: cosign sign --yes "$PUBLISHED_REF"
       - name: Retain build identity manifest
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && (!inputs.native_inference || github.ref == 'refs/heads/main')
         uses: actions/upload-artifact@v4
         with:
-          name: sandbox-image-${{ matrix.arch }}
+          name: ${{ inputs.native_inference && 'sandbox-native-inference-image' || 'sandbox-image' }}-${{ matrix.arch }}
           path: artifacts/sandbox-images/${{ matrix.arch }}.json
           if-no-files-found: error
           retention-days: 30

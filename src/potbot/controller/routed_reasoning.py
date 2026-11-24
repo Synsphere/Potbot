@@ -7,6 +7,7 @@ from typing import Any
 from uuid import UUID
 
 from potbot.controller.checked_reasoning import CheckedReasoning
+from potbot.controller.model_reasoning_results import ReasoningFactCheckError
 from potbot.controller.model_route_bindings import compile_route_request
 from potbot.domain.auth import WorkspaceContext
 from potbot.domain.errors import (
@@ -18,6 +19,8 @@ from potbot.domain.errors import (
 from potbot.domain.model_routing import bind_route_request
 from potbot.domain.operation_workbench import canonical_uuid, parse_request
 from potbot.domain.serialization import canonical_json, content_hash
+from potbot.models.reasoning_fact_check import fact_check
+from potbot.models.reasoning_schema import ROLE_SCHEMA_VARIANT
 from potbot.persistence.database import Database
 
 ROLES = ("hypothesis_generator", "critic", "synthesizer")
@@ -37,7 +40,8 @@ def _key(run_id: UUID, stage: int) -> str:
 
 
 def _plan(value: object) -> tuple[dict[str, Any], UUID]:
-    if not isinstance(value, dict) or set(value) != {"task", "constraints", "evidence", "stages"}:
+    required = {"task", "constraints", "evidence", "stages"}
+    if not isinstance(value, dict) or set(value) not in (required, required | {"answer_check"}):
         raise InvalidInputError("Routed reasoning needs one task, evidence and its stage plan")
     try:
         raw = canonical_json(value)
@@ -46,6 +50,8 @@ def _plan(value: object) -> tuple[dict[str, Any], UUID]:
         plan: dict[str, Any] = json.loads(raw)
     except (UnicodeError, ValueError):
         raise InvalidInputError("Routed reasoning plan exceeds its JSON bounds") from None
+    if "answer_check" in plan:
+        plan["answer_check"] = fact_check(plan["answer_check"])
     stages = plan["stages"]
     if not isinstance(stages, list) or len(stages) != len(ROLES):
         raise InvalidInputError("Routed reasoning requires the three ordered roles")
@@ -158,6 +164,13 @@ class RoutedReasoning:
                     raise ScopeDeniedError("Each stage requires an owned compiled reasoning policy")
                 if policy["recipe"]["role"] != stage["role"]:
                     raise StateMismatchError("Stage role differs from its policy recipe")
+                if stage["role"] == "synthesizer" and (
+                    (policy["recipe"]["variant"] == ROLE_SCHEMA_VARIANT)
+                    != ("answer_check" in selected)
+                ):
+                    raise StateMismatchError(
+                        "Structured synthesis and its frozen answer check must be paired"
+                    )
                 exact, _ = compile_route_request(
                     policy["recipe"], _facts(selected, {}), stage["request"], fill=True
                 )
@@ -199,6 +212,8 @@ class RoutedReasoning:
             context["stage_outputs"] = [item["output_sha256"] for item in receipts]
         if len(receipts) == 2:
             context["critiques"] = self._verified(actor, receipts[1])["parsed"]
+            if "answer_check" in row["plan"]:
+                context["answer_check"] = row["plan"]["answer_check"]
         return _facts(row["plan"], context)
 
     def _check_facts(self, actor: WorkspaceContext, row: dict[str, Any], decision_id: UUID) -> None:
@@ -275,6 +290,8 @@ class RoutedReasoning:
                 try:
                     self._check_facts(actor, row, decision_id)
                     answer = self.checked.result(actor, decision_id)
+                except ReasoningFactCheckError:
+                    return self._close(actor, row, "answer_check_failed")
                 except (InvalidInputError, StateMismatchError, ScopeDeniedError):
                     return self._close(actor, row, "invalid_result")
                 return self._adopt(actor, row, answer)

@@ -26,3 +26,5 @@ The PostgreSQL tests verify the exact schema sent from the original check, a nor
 A local Qwen3.5 2B test used the existing model and a test adapter that passed the exact hosted wire schema to Ollama. In three isolated probes, adding the schema to the frozen prompts fixed all three earlier role-output refusals. Four full investigations used the same task inputs as the previous run. All four reached synthesis, compared with one before. Manual grading found three correct answers. The USB-drive answer recommended a model whose capacity was below the minimum, despite mentioning the expected values elsewhere. The keyword check therefore gave a false positive. The 12 requests settled once each, with 15,196 reported tokens and no outstanding holds. [Ollama Structured Outputs](https://docs.ollama.com/capabilities/structured-outputs)
 
 These small local cases exercise the checked path and actual decoding through an adapter. Live OpenAI compatibility and the signed native worker over directed Syn retain separate qualification gates.
+
+The [verified synthesis follow-up](r7-4-j-verified-synthesis.md) adds independent checks for final numeric choices and counts.

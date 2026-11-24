@@ -27,6 +27,8 @@ from potbot.models.native_results import (
     validate_native_request,
 )
 from potbot.models.providers.contracts import ProviderUsage
+from potbot.models.reasoning_fact_check import verify_fact_answer
+from potbot.models.reasoning_schema import ROLE_SCHEMA_VARIANT
 from potbot.models.registry import DeploymentSpec
 from potbot.persistence.artifacts import ArtifactStore, LocalArtifactBackend
 from potbot.persistence.database import Database
@@ -82,6 +84,10 @@ def native_reasoning_deployment(
         raise StateMismatchError("Native deployment or declared reasoning prompt differs")
     validate_native_request(value, spec)
     return spec
+
+
+class ReasoningFactCheckError(StateMismatchError):
+    """The retained structured synthesis did not match the frozen facts."""
 
 
 class ModelReasoningResultReader:
@@ -210,9 +216,18 @@ class ModelReasoningResultReader:
             text, usage, finish = parsed["text"], parsed["usage"], parsed["finish_reason"]
             if finish != "stop":
                 raise StateMismatchError("Native model completion was interrupted")
-        parsed_role = validate_reasoning_output(
-            recipe["recipe"]["role"], text, compiled["facts"]["context"]
-        )
+        role_recipe = recipe["recipe"]
+        context = compiled["facts"]["context"]
+        parsed_role = validate_reasoning_output(role_recipe["role"], text, context)
+        correctness = "not_evaluated"
+        if role_recipe["role"] == "synthesizer" and role_recipe["variant"] == ROLE_SCHEMA_VARIANT:
+            try:
+                parsed_role = verify_fact_answer(context.get("answer_check"), text)
+            except (InvalidInputError, StateMismatchError):
+                raise ReasoningFactCheckError(
+                    "The retained synthesis contradicts or differs from its frozen answer check"
+                ) from None
+            correctness = "verified_against_frozen_records"
         return {
             "schema": "potbot.checked-reasoning-result/1",
             "decision_id": str(d["id"]),
@@ -227,7 +242,7 @@ class ModelReasoningResultReader:
             "finish_reason": finish,
             "parsed": parsed_role,
             "role_contract_valid": True,
-            "semantic_correctness": "not_evaluated",
+            "semantic_correctness": correctness,
             "runtime_qualified": False,
             "replayed": False,
         }
