@@ -100,11 +100,14 @@ class RoutedReasoning:
         self.research = ResearchEvidence(research or ResearchWorkbench(database))
 
     @staticmethod
-    def _read(conn: Any, actor: WorkspaceContext, run_id: UUID) -> dict[str, Any]:
+    def _read(
+        conn: Any, actor: WorkspaceContext, run_id: UUID, *, lock_run: bool = False
+    ) -> dict[str, Any]:
         if not isinstance(run_id, UUID):
             raise InvalidInputError("Routed reasoning requires a run UUID")
         row = conn.execute(
             "SELECT r.*, d.id AS decision_id,d.check_job_id,d.job_id,"
+            "g.constraints AS operator_constraints,"
             "(e.status='running' AND e.active_contract_id=r.contract_revision_id) AS current_contract "
             "FROM routed_reasoning_runs r JOIN episodes e "
             "ON e.workspace_id=r.workspace_id AND e.id=r.episode_id "
@@ -112,7 +115,10 @@ class RoutedReasoning:
             "AND d.principal_id=r.principal_id "
             "AND d.policy_id::text=(r.plan->'stages'->r.stage_index->>'policy_id') "
             "AND d.allocation_key='rrun-v1:'||r.id::text||':'||r.stage_index::text "
-            "WHERE r.workspace_id=%s AND r.principal_id=%s AND r.id=%s",
+            "LEFT JOIN routed_reasoning_guidance g ON g.workspace_id=r.workspace_id "
+            "AND g.principal_id=r.principal_id AND g.run_id=r.id AND g.stage_index=r.stage_index "
+            "WHERE r.workspace_id=%s AND r.principal_id=%s AND r.id=%s"
+            + (" FOR UPDATE OF r" if lock_run else ""),
             (actor.workspace_id, actor.principal_id, run_id),
         ).fetchone()
         if row is None:
@@ -136,6 +142,11 @@ class RoutedReasoning:
             "job_id": str(row["job_id"]) if row["job_id"] else None,
             "error_code": row["error_code"],
             "completed": row["results"],
+            **(
+                {"operator_constraints": row["operator_constraints"]}
+                if row["operator_constraints"] is not None
+                else {}
+            ),
         }
 
     def inspect(self, actor: WorkspaceContext, run_id: UUID) -> dict[str, Any]:
@@ -223,6 +234,54 @@ class RoutedReasoning:
                 raise ScopeDeniedError("The running task or requested run identity is unavailable")
             return self._view(self._read(conn, actor, run_id))
 
+    def guide(
+        self, actor: WorkspaceContext, run_id: UUID, expected_stage: int, constraints: object
+    ) -> dict[str, Any]:
+        """Record operator guidance once, before allocating this successor stage."""
+        from psycopg.types.json import Jsonb
+
+        if type(expected_stage) is not int or expected_stage not in (1, 2):
+            raise InvalidInputError("Guidance applies to a critique or synthesis checkpoint")
+        if (
+            not isinstance(constraints, list)
+            or not 1 <= len(constraints) <= 4
+            or any(
+                not isinstance(item, str)
+                or not item.isprintable()
+                or item != item.strip()
+                or not 1 <= len(item.encode("utf-8")) <= 256
+                for item in constraints
+            )
+            or len(set(constraints)) != len(constraints)
+        ):
+            raise InvalidInputError("Supply one to four distinct bounded operator constraints")
+        with self.database.transaction(actor) as conn:
+            row = self._read(conn, actor, run_id, lock_run=True)
+            key = (actor.workspace_id, actor.principal_id, run_id, expected_stage)
+            prior = conn.execute(
+                "SELECT constraints FROM routed_reasoning_guidance "
+                "WHERE workspace_id=%s AND principal_id=%s AND run_id=%s AND stage_index=%s",
+                key,
+            ).fetchone()
+            if prior is not None:
+                if prior["constraints"] != constraints:
+                    raise StateMismatchError("Saved guidance cannot be replaced")
+            elif (
+                row["state"] != "active"
+                or not row["current_contract"]
+                or row["stage_index"] != expected_stage
+                or row["decision_id"] is not None
+            ):
+                raise StateMismatchError("Inspect the run before guiding an unallocated stage")
+            else:
+                conn.execute(
+                    "INSERT INTO routed_reasoning_guidance "
+                    "(workspace_id,principal_id,run_id,stage_index,constraints) "
+                    "VALUES (%s,%s,%s,%s,%s)",
+                    (*key, Jsonb(constraints)),
+                )
+            return self._view(self._read(conn, actor, run_id))
+
     def _verified(self, actor: WorkspaceContext, receipt: dict[str, Any]) -> dict[str, Any]:
         result = self.checked.result(actor, UUID(receipt["decision_id"]))
         if result["output_sha256"] != receipt["output_sha256"]:
@@ -243,6 +302,8 @@ class RoutedReasoning:
             context["critiques"] = self._verified(actor, receipts[1])["parsed"]
             if "answer_check" in row["plan"]:
                 context["answer_check"] = row["plan"]["answer_check"]
+        if row["operator_constraints"] is not None:
+            context["operator_constraints"] = row["operator_constraints"]
         return _facts(row["plan"], context)
 
     def _check_facts(self, actor: WorkspaceContext, row: dict[str, Any], decision_id: UUID) -> None:
@@ -344,7 +405,8 @@ class RoutedReasoning:
             # Never try a second key or authorize a different route here.
             current = self._read_owned(actor, run_id)
             if current["state"] != "active" or any(
-                current[field] != row[field] for field in ("stage_index", "check_job_id", "job_id")
+                current[field] != row[field]
+                for field in ("stage_index", "check_job_id", "job_id", "operator_constraints")
             ):
                 return self._view(current)
             return self._close(

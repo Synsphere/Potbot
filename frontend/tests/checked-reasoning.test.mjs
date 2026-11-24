@@ -81,4 +81,35 @@ test("checked reasoning forwards exactly the admitted action and leaves retries 
     decision_id: principal, job_id: principal, output_sha256: digest,
     text: "Compared both options.", semantic_correctness: "not_evaluated",
   });
+
+  await t.test("guide admits one bounded successor-stage command without setup capability", async () => {
+    upstream.length = 0;
+    const constraints = ["Check capacity before cost.", "é".repeat(128)];
+    const guide = { confirm: true, expected_stage: 1, constraints };
+    assert.equal((await request([run, "guide"], guide, { Origin: "https://other.invalid" })).status, 403);
+    assert.equal((await request([run, "guide"], guide, { "X-Potbot-Expected-Principal": "" })).status, 400);
+    for (const invalid of [[], ["same", "same"], [" a"], ["a "], ["a\u2028b"], ["a\u0007b"], ["🚀".repeat(65)]]) {
+      assert.equal((await request([run, "guide"], { ...guide, constraints: invalid })).status, 400);
+    }
+    assert.equal((await request([run, "guide"], { ...guide, expected_stage: 0 })).status, 400);
+    assert.equal((await request([run, "guide"], { ...guide, provider: "unapproved" })).status, 400);
+    assert.equal(upstream.length, 0);
+
+    const saved = { ...status, stage_index: 1, phase: "critic", operator_constraints: constraints,
+      completed: [{ decision_id: principal, output_sha256: digest }] };
+    fixture = { ...saved, private_prompt: "do not expose" };
+    const confirmed = await request([run, "guide"], guide, { "X-Potbot-Setup-Token": "caller-token" });
+    assert.equal(confirmed.status, 200);
+    assert.deepEqual(await confirmed.json(), saved);
+    assert.equal(upstream.length, 1);
+    assert.equal(upstream[0].url, "http://127.0.0.1:8100/v1/ui/checked-reasoning/" + run + "/guide");
+    assert.deepEqual(JSON.parse(upstream[0].init.body), guide);
+    assert.equal(upstream[0].init.headers["X-Potbot-Setup-Token"], undefined);
+    assert.equal(upstream[0].init.headers["X-Potbot-Expected-Principal"], principal);
+
+    fixture = { ...status, operator_constraints: constraints };
+    assert.equal((await request([run])).status, 502);
+    fixture = { ...saved, operator_constraints: [" x"] };
+    assert.equal((await request([run])).status, 502);
+  });
 });

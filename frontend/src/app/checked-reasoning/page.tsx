@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MAX_REASONING_PLAN, REASONING_ROLE_LABELS, object, reasoningPlan,
+import { MAX_REASONING_PLAN, REASONING_ROLE_LABELS, guidanceConstraints, object, reasoningPlan,
   reasoningResult, reasoningStatus, type ReasoningResult, type ReasoningStatus } from "../../lib/checked-reasoning.ts";
 import { projectOperationListing } from "../../lib/operation-catalogue.ts";
 import { UUID } from "../../lib/operation-workbench.ts";
@@ -9,7 +9,7 @@ import { parseMcpJSON } from "../../lib/task-discovery.ts";
 import styles from "../skills/skills.module.css";
 
 type Workspace = { id: string; name: string };
-type Action = "start" | "advance" | "interrupt";
+type Action = "start" | "advance" | "guide" | "interrupt";
 type Plan = { name: string; text: string; data: Record<string, unknown> };
 const endpoint = "/api/ui/checked-reasoning";
 const sameOrigin = { cache: "no-store", credentials: "same-origin" } as const;
@@ -21,6 +21,7 @@ function CheckedReasoningWorkbench({ workspace, initialRun }: { workspace: strin
   const [plan, setPlan] = useState<Plan | null>(null);
   const [status, setStatus] = useState<ReasoningStatus | null>(null);
   const [result, setResult] = useState<ReasoningResult | null>(null);
+  const [guidanceDraft, setGuidanceDraft] = useState("");
   const [notice, setNotice] = useState("Reading workspace authority…");
   const [busy, setBusy] = useState(false);
   const [uncertain, setUncertain] = useState(false);
@@ -46,6 +47,7 @@ function CheckedReasoningWorkbench({ workspace, initialRun }: { workspace: strin
 
   function selectRun(value: string) {
     setRunId(value);
+    setGuidanceDraft("");
     setStatus(null);
     setResult(null);
     setUncertain(false);
@@ -74,16 +76,23 @@ function CheckedReasoningWorkbench({ workspace, initialRun }: { workspace: strin
     }
   }
 
+  const canGuide = status?.state === "active" && (status.stage_index === 1 || status.stage_index === 2) &&
+    status.decision_id === null && status.check_job_id === null && status.job_id === null && !status.operator_constraints;
+  const unsavedGuidance = canGuide && guidanceDraft.length > 0;
+  const constraints = guidanceConstraints(guidanceDraft.split("\n"));
+
   async function request(action: Action | "status" | "result") {
     if (pending.current || !UUID.test(runId) || !principal) return;
     const mutation = action !== "status" && action !== "result";
     const body = action === "start" && plan && !status ? { confirm: true, plan: plan.data } :
-      action === "advance" && status?.state === "active" ? { confirm: true, expected_stage: status.stage_index } :
+      action === "advance" && status?.state === "active" && !unsavedGuidance ? { confirm: true, expected_stage: status.stage_index } :
+      action === "guide" && canGuide && constraints ? { confirm: true, expected_stage: status.stage_index, constraints } :
       action === "interrupt" && status?.state === "active" ? { confirm: true } : null;
     if (mutation) {
       if (!body || uncertain) return;
       const prompt = action === "start" ? "Save this exact plan under the selected run ID?" :
         action === "advance" ? "Advance the checked stage? An eligible job may use the configured model and budget." :
+        action === "guide" ? "Save this guidance for the current stage? Advancing the stage may disclose these constraints to the configured model." :
           "Interrupt this run? An in-flight job may still require reconciliation.";
       if (!window.confirm(prompt)) return;
     }
@@ -108,16 +117,18 @@ function CheckedReasoningWorkbench({ workspace, initialRun }: { workspace: strin
       } else {
         const observed = reasoningStatus(raw, runId);
         if (!observed) throw new Error("Status scope changed");
+        if (observed.stage_index !== status?.stage_index || observed.operator_constraints) setGuidanceDraft("");
         setStatus(observed);
         setUncertain(false);
       }
-      setNotice(action === "start" ? "Plan saved. Review the stage before advancing." : "Retained evidence refreshed.");
+      setNotice(action === "start" ? "Plan saved. Review the stage before advancing." :
+        action === "guide" ? "Guidance saved. Review the stage before advancing." : "Retained evidence refreshed.");
     } catch {
       if (mutation) {
         setUncertain(true);
         setNotice("The command was not confirmed. Inspect retained status before issuing another command.");
       } else {
-        if (action === "status") setStatus(null);
+        if (action === "status") { setStatus(null); setGuidanceDraft(""); }
         setResult(null);
         setNotice("Cannot read the selected run in this workspace.");
       }
@@ -174,9 +185,24 @@ function CheckedReasoningWorkbench({ workspace, initialRun }: { workspace: strin
             {status.check_job_id && <><dt>Check job</dt><dd><code>{status.check_job_id}</code></dd></>}
             {status.job_id && <><dt>Model job</dt><dd><code>{status.job_id}</code></dd></>}
           </dl>}
+          {status.operator_constraints && <section aria-label="Saved stage guidance">
+            <strong>Saved stage guidance</strong>
+            <ul>{status.operator_constraints.map(value => <li key={value}>{value}</li>)}</ul>
+          </section>}
+          {canGuide && <fieldset disabled={!mayMutate}>
+            <label className={styles.field}>Operator guidance
+              <textarea rows={3} maxLength={1027} value={guidanceDraft}
+                onChange={event => setGuidanceDraft(event.target.value)}
+                aria-describedby="reasoning-guidance-help" />
+            </label>
+            <p id="reasoning-guidance-help">Enter one to four distinct constraints, one per line,
+              up to 256 UTF-8 bytes each. The checked stage may disclose them to the configured model.
+              {unsavedGuidance && " Save or clear the draft before advancing."}</p>
+            <button type="button" disabled={!constraints} onClick={() => void request("guide")}>Save stage guidance</button>
+          </fieldset>}
           <div className={styles.actions}>
             {status.state === "active" && <>
-              <button type="button" className={styles.primary} disabled={!mayMutate}
+              <button type="button" className={styles.primary} disabled={!mayMutate || unsavedGuidance}
                 onClick={() => void request("advance")}>Advance checked stage</button>
               <button type="button" className={styles.danger} disabled={!mayMutate}
                 onClick={() => void request("interrupt")}>Interrupt run</button>

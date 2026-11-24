@@ -1,5 +1,5 @@
 /** Explicit routes for the operator-owned checked reasoning lifecycle. */
-import { MAX_REASONING_PLAN, object, reasoningPlan, reasoningResult, reasoningStatus } from "../checked-reasoning.ts";
+import { MAX_REASONING_PLAN, guidanceConstraints, object, reasoningPlan, reasoningResult, reasoningStatus } from "../checked-reasoning.ts";
 import { UUID } from "../operation-workbench.ts";
 import { potbotConfigForRequest, upstream, upstreamFailure } from "./potbot.ts";
 import { requireOperator, safeError, validOrigin } from "./security.ts";
@@ -11,7 +11,7 @@ export async function checkedReasoningRoute(request: Request, path: string[]): P
   const [id, action] = path;
   const post = request.method === "POST";
   const allowed = post
-    ? path.length === 2 && ["start", "advance", "interrupt"].includes(action)
+    ? path.length === 2 && ["start", "advance", "guide", "interrupt"].includes(action)
     : request.method === "GET" && (path.length === 1 || path.length === 2 && action === "result");
   if (!UUID.test(id ?? "") || !allowed || new URL(request.url).search)
     return safeError("Unsupported checked reasoning route.", 400);
@@ -29,13 +29,16 @@ export async function checkedReasoningRoute(request: Request, path: string[]): P
     if (request.headers.get("content-type")?.split(";", 1)[0] !== "application/json")
       return safeError("Checked reasoning requires JSON.", 400);
     try {
-      const row = object(await taskDiscoveryJSON(request, action === "start" ? MAX_REASONING_PLAN + 256 : 256));
+      const limit = action === "start" ? MAX_REASONING_PLAN + 256 : action === "guide" ? 4096 : 256;
+      const row = object(await taskDiscoveryJSON(request, limit));
       if (!row || row.confirm !== true) return safeError("Confirm the exact reasoning request.", 400);
       const keys = Object.keys(row).sort().join(",");
       if (action === "start" && (keys !== "confirm,plan" || !reasoningPlan(row.plan)) ||
           action === "advance" && (keys !== "confirm,expected_stage" ||
             typeof row.expected_stage !== "number" || !Number.isInteger(row.expected_stage) ||
             row.expected_stage < 0 || row.expected_stage > 2) ||
+          action === "guide" && (keys !== "confirm,constraints,expected_stage" ||
+            (row.expected_stage !== 1 && row.expected_stage !== 2) || !guidanceConstraints(row.constraints)) ||
           action === "interrupt" && keys !== "confirm")
         return safeError("The exact reasoning request is invalid.", 400);
       body = row;

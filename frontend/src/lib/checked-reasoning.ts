@@ -17,6 +17,7 @@ export type ReasoningStatus = {
   job_id: string | null;
   error_code: string | null;
   completed: Receipt[];
+  operator_constraints?: string[];
 };
 export type ReasoningResult = Receipt & {
   job_id: string;
@@ -34,6 +35,16 @@ function uuid(value: unknown): value is string {
 }
 function hash(value: unknown): value is string {
   return typeof value === "string" && SHA256.test(value);
+}
+
+export function guidanceConstraints(value: unknown): string[] | null {
+  if (!Array.isArray(value) || value.length < 1 || value.length > 4 ||
+      !value.every((item): item is string => typeof item === "string" &&
+        item.length > 0 && item === item.trim() &&
+        !/[\p{C}\p{Z}]/u.test(item.replaceAll(" ", "")) &&
+        new TextEncoder().encode(item).length <= 256) ||
+      new Set(value).size !== value.length) return null;
+  return value;
 }
 
 export function reasoningPlan(value: unknown): Record<string, unknown> | null {
@@ -74,10 +85,13 @@ export function reasoningStatus(value: unknown, runId: string): ReasoningStatus 
     if (!record) return null;
     completed.push(record);
   }
+  const constraints = guidanceConstraints(row.operator_constraints);
+  if (Object.hasOwn(row, "operator_constraints") && (!constraints || (index !== 1 && index !== 2))) return null;
   return {
     run_id: row.run_id, state, stage_index: index, phase: REASONING_ROLES[index] ?? null,
     decision_id: row.decision_id, check_job_id: row.check_job_id, job_id: row.job_id,
     error_code: row.error_code, completed,
+    ...(constraints ? { operator_constraints: constraints } : {}),
   };
 }
 

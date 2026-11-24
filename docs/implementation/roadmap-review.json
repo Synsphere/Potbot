@@ -54,7 +54,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "f0a9b1f50a16588bd927f021c825cfba00c1a698f0b4bae5cef3b971a8910383",
+          "sha256": "e076fd093ebcb5c80faad1821246c4cc6d7b06ca0de4f112848cb532cbcc6d38",
           "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         }
       ],
@@ -131,7 +131,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "f0a9b1f50a16588bd927f021c825cfba00c1a698f0b4bae5cef3b971a8910383",
+          "sha256": "e076fd093ebcb5c80faad1821246c4cc6d7b06ca0de4f112848cb532cbcc6d38",
           "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
           "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-M follow-on: Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-Q follow-on: Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-S follow-on: Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. U04-T follow-on: Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-A follow-on: Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
@@ -210,7 +210,7 @@
         {
           "path": "src/potbot/controller/routed_reasoning.py",
           "symbol": "advance",
-          "sha256": "7398f7371fb1ff6c08ad54714b1f07248ef83ea9fa67ba6c8a4f9a331bf969db",
+          "sha256": "6ad3ee28bcd1c5c87c19f4799c0bf3b7a41c8bfa835811b6aba2f359b79a97d6",
           "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
         },
         {
@@ -222,7 +222,7 @@
         {
           "path": "src/potbot/api/ui_checked_reasoning.py",
           "symbol": "register_checked_reasoning_routes",
-          "sha256": "a1713ab0fc38eecafc967b4c62b73db2095281212a03e680b6326d2493ad888e",
+          "sha256": "d3af3d04163d8e88d0492195995c63856f40bb6c33874994b2fa8c0443d8f858",
           "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
         }
       ],
@@ -537,9 +537,15 @@
           "symbol": "test_operator_interrupt_fences_through_same_owned_scope",
           "sha256": "bf1c4e49485f28f18429b96356f741b41c5656fbc624571958f62b9bd37fa642",
           "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
+        },
+        {
+          "path": "tests/integration/test_checked_reasoning_guidance.py",
+          "symbol": "test_postgres_refuses_late_guidance_even_for_the_owner",
+          "sha256": "357afac972033136d6acbfa3edd4dadbef1ff9cf18badf028ff00635eff77050",
+          "basis": "Append-only owner guidance is checked before successor allocation and part of the compiled stage facts. Real PostgreSQL rejected a raced stale compilation and a late owner insert. The operator can recover retained state without replay. Signed installed runtime and independently reviewed rollout remain separate."
         }
       ],
-      "assessment": "Existing action intents, durable receipts, recovery claims, at-least-once outbox and generation fences already cover the local supervised-tool path. This is not exactly-once execution across arbitrary remote producers. U04-E also retains purpose-signed checks, a unique run per check, immutable request bindings and same-key recovery on the existing queue; possible effects are never replayed automatically. U04-X follow-on: uses original committed command receipts and fenced phase/action claims on the existing approval owner. Recovery invalidates delayed build, promotion and postflight claims; uncertain effects are held, not automatically rescheduled. U04-D follow-on: retains original source/control/review/handoff command receipts and fences one explicit measurement attempt. Same-key recovery reads committed evidence before native setup; an incomplete attempt is not dispatched again and cancellation does not prove process stop. U04-M follow-on: retains exact admitted reconciliation requests, one fenced native claim, immutable complete snapshots, current terminal recovery and stopped invocation receipts. Original command recovery never silently dispatches a second native attempt. U04-Q follow-on: retains prepared case identities before dispatch and joins finished results to existing actions, reservations, artifacts and stopped receipts. Exact command recovery never repeats native tool calls. U04-S follow-on: retains exact reviewed commands, fenced native claims, immutable shortlists/selections and original receipts through existing signed persistence and idempotency owners. U04-T follow-on: uses additive migration 46 and the existing jobs queue for immutable selected provenance, one run per check, exact original receipts and bounded retained history. T05-A follow-on: extends the existing research queue with additive migration 47, immutable external authorization and request receipts, original command recovery and bounded history. T05-B/R7.1 follow-on: Uses the existing research queue and PostgreSQL reasoning run/inbox owners. Additive migration 48 stores temporal source/dispatch state without a second scheduler. R7.4-C implements persistent baseline-only shadow admission and opt-in literal JSON prompt contracts; candidate execution and production routing qualification remain blocked. R7.4-D binds opt-in compiled shadow requests to their private input provenance and observed worker admission configuration; independently qualified model/server identity, canary and rollback remain unfinished. R7.4-E adds private terminal outcome snapshots, explicit reviewer disclosure and independently recorded regression fencing; model/server qualification, protected paired holdouts, canaries and qualified fallback remain unfinished. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection.",
+      "assessment": "Existing action intents, durable receipts, recovery claims, at-least-once outbox and generation fences already cover the local supervised-tool path. This is not exactly-once execution across arbitrary remote producers. U04-E also retains purpose-signed checks, a unique run per check, immutable request bindings and same-key recovery on the existing queue; possible effects are never replayed automatically. U04-X follow-on: uses original committed command receipts and fenced phase/action claims on the existing approval owner. Recovery invalidates delayed build, promotion and postflight claims; uncertain effects are held, not automatically rescheduled. U04-D follow-on: retains original source/control/review/handoff command receipts and fences one explicit measurement attempt. Same-key recovery reads committed evidence before native setup; an incomplete attempt is not dispatched again and cancellation does not prove process stop. U04-M follow-on: retains exact admitted reconciliation requests, one fenced native claim, immutable complete snapshots, current terminal recovery and stopped invocation receipts. Original command recovery never silently dispatches a second native attempt. U04-Q follow-on: retains prepared case identities before dispatch and joins finished results to existing actions, reservations, artifacts and stopped receipts. Exact command recovery never repeats native tool calls. U04-S follow-on: retains exact reviewed commands, fenced native claims, immutable shortlists/selections and original receipts through existing signed persistence and idempotency owners. U04-T follow-on: uses additive migration 46 and the existing jobs queue for immutable selected provenance, one run per check, exact original receipts and bounded retained history. T05-A follow-on: extends the existing research queue with additive migration 47, immutable external authorization and request receipts, original command recovery and bounded history. T05-B/R7.1 follow-on: Uses the existing research queue and PostgreSQL reasoning run/inbox owners. Additive migration 48 stores temporal source/dispatch state without a second scheduler. R7.4-C implements persistent baseline-only shadow admission and opt-in literal JSON prompt contracts; candidate execution and production routing qualification remain blocked. R7.4-D binds opt-in compiled shadow requests to their private input provenance and observed worker admission configuration; independently qualified model/server identity, canary and rollback remain unfinished. R7.4-E adds private terminal outcome snapshots, explicit reviewer disclosure and independently recorded regression fencing; model/server qualification, protected paired holdouts, canaries and qualified fallback remain unfinished. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection. R7.4-L fences stage guidance before the checked allocation.",
       "support_scope": "Actual tests define lost-ack receipt recovery, unknown mutation quarantine, expiry, duplicate delivery and restart for the existing owners. Operation jobs and events now enforce the submitting principal in both controller queries and PostgreSQL RLS. U04-X follow-on: Real PostgreSQL tests cover principal privacy, same-key recovery after progress, competing claims, active-tool serialization, setup-key rotation and native-outcome acknowledgment. This does not establish arbitrary distributed exactly-once execution. U04-D follow-on: Source/publisher refresh and revocation, report expiry, changed runtime/claim bindings and key rotation invalidate new actions without erasing retained evidence. Atomic existing-owner handoff does not establish distributed exactly-once arbitrary remote execution. U04-M follow-on: Concurrent claim, cancellation, disable/revoke, failed refresh, TTL, replacement and changed-profile cases preserve history while withdrawing new authority. A cancellation record does not claim process stop, and uncertain effects remain held for explicit recovery. U04-Q follow-on: Real claim races, explicit cancellation, prepared-only recovery, stopped receipt reconciliation and older-attempt recovery preserve lifetime and current-history boundaries; unknown outcomes remain indeterminate. U04-S follow-on: One fresh native claim wins a race. Exact retries recover original receipts without a second inference; cancellation and uncertain outcomes remain explicit. U04-T follow-on: There is no second scheduler or attempt owner. Recovery reuses original jobs and keys; cancellation remains negative authority when positive admission is unavailable. T05-A follow-on: There is no new scheduler. Local and external claim paths remain separated, and every later send rechecks the existing current scope and lease. T05-B/R7.1 follow-on: Exact source records and component decisions are retained; expired writers cannot consume components or authorize new dispatch, and uncertain effects are never automatically replayed.",
       "remaining": [
         "Cross-producer crash boundaries and durable approval/cancellation adoption remain incomplete",
@@ -2886,7 +2892,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "f0a9b1f50a16588bd927f021c825cfba00c1a698f0b4bae5cef3b971a8910383",
+          "sha256": "e076fd093ebcb5c80faad1821246c4cc6d7b06ca0de4f112848cb532cbcc6d38",
           "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
           "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         }
@@ -3397,7 +3403,7 @@
         {
           "path": "src/potbot/models/prompt_compiler.py",
           "symbol": "PromptProfile",
-          "sha256": "546ee0c8fe21549beee26a42efe7ece66415956323d1bf5051a368657bda4976",
+          "sha256": "96cf5b741711c6fa8b0852ba36cbe6863f0d6da9b7783db6b022301d9a2e2add",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
         },
         {
@@ -3410,7 +3416,7 @@
         {
           "path": "src/potbot/models/prompt_compiler.py",
           "symbol": "compile_reasoning_prompt",
-          "sha256": "546ee0c8fe21549beee26a42efe7ece66415956323d1bf5051a368657bda4976",
+          "sha256": "96cf5b741711c6fa8b0852ba36cbe6863f0d6da9b7783db6b022301d9a2e2add",
           "basis": "Reviewed persistent baseline-only shadow decisions, authenticated separate reviewer, exact signed job binding, database-clock and revocation fencing, no replay, and explicitly opt-in syntax-only prompt evaluation. No model promotion or installed-runtime qualification."
         },
         {
@@ -3557,7 +3563,7 @@
         {
           "path": "src/potbot/controller/routed_reasoning.py",
           "symbol": "_check_facts",
-          "sha256": "7398f7371fb1ff6c08ad54714b1f07248ef83ea9fa67ba6c8a4f9a331bf969db",
+          "sha256": "6ad3ee28bcd1c5c87c19f4799c0bf3b7a41c8bfa835811b6aba2f359b79a97d6",
           "basis": "Three ordered owner-scoped reasoning stages follow the existing checked job queue. PostgreSQL records one result receipt, validates literal plan binding, and fences subsequent dispatch. Restricted database, mocked hosted provider, and actual CLI tests; signed live Syn stays open."
         },
         {
@@ -3565,6 +3571,12 @@
           "symbol": "freeze_citations",
           "sha256": "89a412fc6c1e2c9a58f4c4706c72dd7aebc970256e6837f2e2985d89fdee2260",
           "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
+        },
+        {
+          "path": "src/potbot/controller/routed_reasoning.py",
+          "symbol": "guide",
+          "sha256": "6ad3ee28bcd1c5c87c19f4799c0bf3b7a41c8bfa835811b6aba2f359b79a97d6",
+          "basis": "Append-only owner guidance is checked before successor allocation and part of the compiled stage facts. Real PostgreSQL rejected a raced stale compilation and a late owner insert. The operator can recover retained state without replay. Signed installed runtime and independently reviewed rollout remain separate."
         }
       ],
       "tests": [
@@ -3675,9 +3687,15 @@
           "symbol": "test_citation_pin_survives_concurrent_start_and_source_unavailability",
           "sha256": "1d5a0a43936323226303f334c61a97c98e2032ac40ed565cfb2fbcef8357ae1c",
           "basis": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
+        },
+        {
+          "path": "tests/integration/test_checked_reasoning_guidance.py",
+          "symbol": "test_guidance_racing_advance_is_checked_on_the_next_attempt",
+          "sha256": "357afac972033136d6acbfa3edd4dadbef1ff9cf18badf028ff00635eff77050",
+          "basis": "Append-only owner guidance is checked before successor allocation and part of the compiled stage facts. Real PostgreSQL rejected a raced stale compilation and a late owner insert. The operator can recover retained state without replay. Signed installed runtime and independently reviewed rollout remain separate."
         }
       ],
-      "assessment": "Bounded R6 reasoning, PostgreSQL checkpoints/steering and R6.1 task accounting exist. Shared ensemble selection, independent candidates, full temporal scheduling and safe cross-branch composition remain partial. T05-B/R7.1 follow-on: Connects urgent/deferred/background components to the existing single reasoning owner with immutable source ranges, explicit predecessors, context epochs and dispatch fencing. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection.",
+      "assessment": "Bounded R6 reasoning, PostgreSQL checkpoints/steering and R6.1 task accounting exist. Shared ensemble selection, independent candidates, full temporal scheduling and safe cross-branch composition remain partial. T05-B/R7.1 follow-on: Connects urgent/deferred/background components to the existing single reasoning owner with immutable source ranges, explicit predecessors, context epochs and dispatch fencing. R7.4-F adds typed native result reading and shared reasoning-role validation after original completion/accounting. Engine installation, native token/outcome accounting, production dispatch adapter, protected holdouts and canaries remain open. R7.4-G adds an opt-in sealed model worker, durable reported token settlement, native outcome review and an explicit controller adapter for checked reasoning. Managed signed worker acceptance, temporal investigator integration, protected holdouts and canaries retain separate gates. R7.4-H adds a restartable hypothesis, critique and synthesis sequence with one task revision, authenticated checks, verified predecessor receipts and a final dispatch fence. Interactive steering integration, live native qualification and promotion remain open. R7.4-I adds opt-in schema-constrained decoding with an exact retained digest and independent role validation. Factual accuracy, managed worker qualification and rollout remain separate gates. R7.4-J adds independent verification of final minimum-cost choices and counts. R7.4-K adds owned checked reasoning controls and exact citation selection. R7.4-L fences stage guidance before the checked allocation.",
       "support_scope": "Current graph/store/lease contracts and real database restart/stale-writer tests, not a new scheduler or proof of live model superiority. T05-B/R7.1 follow-on: An accepted urgent directive fences subsequent work; in-flight outcomes and task budget holds retain their actual receipts. Current-goal changes wait for a confirmed predecessor, next-goal work remains pending for a future admitted scheduler, and background facts never become independently verified evidence.",
       "remaining": [
         "R7.1 supplies bounded urgent/deferred/background integration; R7.2 atomic leaves, admitted next-goal execution and parallel scheduling remain to be connected to the existing owners.",
@@ -4277,7 +4295,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "f0a9b1f50a16588bd927f021c825cfba00c1a698f0b4bae5cef3b971a8910383",
+          "sha256": "e076fd093ebcb5c80faad1821246c4cc6d7b06ca0de4f112848cb532cbcc6d38",
           "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
@@ -5337,7 +5355,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "f0a9b1f50a16588bd927f021c825cfba00c1a698f0b4bae5cef3b971a8910383",
+          "sha256": "e076fd093ebcb5c80faad1821246c4cc6d7b06ca0de4f112848cb532cbcc6d38",
           "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt."
         },
         {
@@ -82258,7 +82276,7 @@
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
       "assessment": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open.",
-      "sha256": "e4d943fd4c2d05131db8151bcad4060e25e48b37185ddb22c86392450f776625",
+      "sha256": "8b9c623c676697c1d461132fffc23b551d7e8e42e6a0db588d3a8710426ecfcb",
       "narrative": [
         {
           "locator": "line:1-8",
@@ -82294,8 +82312,8 @@
           ]
         },
         {
-          "locator": "line:48-52",
-          "sha256": "024edff8bb2b60603cc96aafe5e2d3f58b37cf466f0f2d7b64a9806c8ae8ae1b",
+          "locator": "line:48-54",
+          "sha256": "865937a2e7840e5b7db1b9d180fa5d94a605f8870d2a096118a689e8e63aeb82",
           "excerpt": "## Verification\n\nDisposable PostgreSQL tests drive all three roles through the operator adapter, restart, reject a stale advance, and recover the original settl",
           "families": [
             "durable",
@@ -82315,6 +82333,64 @@
       "disposition": "implemented_contract_with_separate_runtime_gates",
       "assessment": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open.",
       "sha256": "8f476fb7cbcc438c19a55a70604ee24ef9a0989202439c6316fe88cacd7501b3",
+      "narrative": []
+    },
+    {
+      "path": "docs/implementation/r7-4-l-stage-guidance.md",
+      "families": [
+        "durable",
+        "models",
+        "reasoning",
+        "accounting"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Append-only owner guidance is checked before successor allocation and part of the compiled stage facts. Real PostgreSQL rejected a raced stale compilation and a late owner insert. The operator can recover retained state without replay. Signed installed runtime and independently reviewed rollout remain separate.",
+      "sha256": "26f50172dda508caf92304da38b199531fe618e4f46c7c66907bf9906c03e835",
+      "narrative": [
+        {
+          "locator": "line:1-8",
+          "sha256": "ef2f7ea339f9f37010240844210cdf424a1d8b3c7d96eea085e85e3a5aacd22b",
+          "excerpt": "# R7.4-L guidance at a checked stage\n\nAn operator can add guidance to a critique or synthesis after reviewing the preceding checkpoint and before the next stage",
+          "families": [
+            "durable",
+            "models",
+            "reasoning",
+            "accounting"
+          ]
+        },
+        {
+          "locator": "line:9-16",
+          "sha256": "b5af2faffb493fdde1d2aa147b6cffd52373b5935c2b16dae27733fd4c6b7086",
+          "excerpt": "## Guide the current stage\n\nInspect an active run before starting the next check. At an unallocated critique or synthesis, enter one constraint per line and sel",
+          "families": [
+            "durable",
+            "models",
+            "reasoning",
+            "accounting"
+          ]
+        },
+        {
+          "locator": "line:17-21",
+          "sha256": "8f5c9c8abd6300d01bdb54d004f1e03838bd2911e3adc431258e777cd6f388b7",
+          "excerpt": "## Evidence\n\nThe PostgreSQL test saved guidance after the controller had read the next stage and before it allocated the check. It observed an empty queue after",
+          "families": [
+            "durable",
+            "models",
+            "reasoning",
+            "accounting"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/media/r7-stage-guidance.png",
+      "families": [
+        "durable",
+        "reasoning"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Append-only owner guidance is checked before successor allocation and part of the compiled stage facts. Real PostgreSQL rejected a raced stale compilation and a late owner insert. The operator can recover retained state without replay. Signed installed runtime and independently reviewed rollout remain separate.",
+      "sha256": "56762d9242ea9b8bc071d3071b6f3d412263a2ad6ef2ce68daa66fc93a2040af",
       "narrative": []
     }
   ],
@@ -96539,6 +96615,15 @@
       "review_family": "reasoning",
       "runtime_qualified": false,
       "evidence_boundary": "An authenticated local operator can inspect, advance and interrupt a durable checked run. Selected settled research citations are bound to the run at creation. Fixture-backed controller, frontend and database checks preserve original usage and prevent replay. Protected rollout and installed signed native qualification remain open."
+    },
+    {
+      "id": "R7.4-L/stage-guidance",
+      "implementation_base": "c62bf9f654e272de4bca092c0d429fe7617a942b",
+      "reviewed_on": "2026-11-24",
+      "source": "docs/implementation/r7-4-l-stage-guidance.md",
+      "review_family": "reasoning",
+      "runtime_qualified": false,
+      "evidence_boundary": "Append-only owner guidance is checked before successor allocation and part of the compiled stage facts. Real PostgreSQL rejected a raced stale compilation and a late owner insert. The operator can recover retained state without replay. Signed installed runtime and independently reviewed rollout remain separate."
     }
   ],
   "current_delivery_order": {
@@ -96564,7 +96649,8 @@
       "R7.4-H/source-implemented-routed-investigations",
       "R7.4-I/source-implemented-structured-reasoning",
       "R7.4-J/source-implemented-verified-synthesis",
-      "R7.4-K/source-implemented-checked-reasoning-workbench"
+      "R7.4-K/source-implemented-checked-reasoning-workbench",
+      "R7.4-L/source-implemented-stage-guidance"
     ],
     "next_implementation_milestone": {
       "id": "R7.3",

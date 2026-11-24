@@ -100,6 +100,19 @@ def register_checked_reasoning_routes(
         )
         return JSONResponse(value, headers=_HEADERS)
 
+    @app.post(_RUN + "/guide")
+    async def guide(request: Request, run_id: str) -> JSONResponse:
+        scope = actor(request, mutation=True)
+        command = await confirmed(request, "expected_stage", "constraints")
+        value = await run_in_threadpool(
+            service.guide,
+            scope,
+            canonical_uuid(run_id),
+            command["expected_stage"],
+            command["constraints"],
+        )
+        return JSONResponse(value, headers=_HEADERS)
+
     @app.post(_RUN + "/interrupt")
     async def interrupt(request: Request, run_id: str) -> JSONResponse:
         scope = actor(request, mutation=True)

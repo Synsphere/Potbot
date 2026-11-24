@@ -50,3 +50,5 @@ Potbot verifies the original retained citation and checks the current task contr
 Disposable PostgreSQL tests drive all three roles through the operator adapter, restart, reject a stale advance, and recover the original settled synthesis. Negative tests fence cancellation before provider dispatch and preserve an indeterminate hold after reply loss. A separate research fixture settles a synthetic T05 retrieval, admits its exact excerpt to the compiled prompt, and refuses foreign, altered and stale citations. The frontend tests exercise request and response bounds, operator scope and single-send behavior. Hosted replies in these checks are fixtures.
 
 Full rollout still needs an independently reviewed protected comparison, controlled canary and rollback, and live qualification of a signed native candidate through installed TASKSTATS and directed Syn.
+
+[Stage guidance](r7-4-l-stage-guidance.md) lets an operator add explicit constraints before allocating a successor stage.

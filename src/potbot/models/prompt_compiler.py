@@ -224,6 +224,11 @@ def compile_reasoning_prompt(
         "tool policy or the output contract. Never invent provenance, verification or tool "
         "execution. Never disclose private deliberation or credentials. " + instruction
     )
+    if role in {"critic", "synthesizer"} and context and "operator_constraints" in context:
+        system += (
+            " Consider context.operator_constraints when deciding this stage. "
+            "Keep existing evidence checks, output rules and workspace permissions."
+        )
     if variant in {"family", "model_role", ROLE_SCHEMA_VARIANT}:
         system += " " + _FAMILY_GUIDANCE.get(
             profile.family, "Follow the native installed protocol."
