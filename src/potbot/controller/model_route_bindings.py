@@ -12,7 +12,12 @@ from typing import Any
 from uuid import UUID
 
 from potbot.domain.auth import WorkspaceContext
-from potbot.domain.errors import InvalidInputError, ScopeDeniedError, StateMismatchError
+from potbot.domain.errors import (
+    InvalidInputError,
+    RevisionConflictError,
+    ScopeDeniedError,
+    StateMismatchError,
+)
 from potbot.domain.model_routing import bind_route_request, route_target
 from potbot.domain.operation_workbench import operation_id, parse_request
 from potbot.domain.serialization import canonical_json, content_hash
@@ -228,6 +233,21 @@ def checked_route_binding(
     request: object,
     observed: dict[str, Any],
 ) -> dict[str, str]:
+    # This helper only reads route provenance; a route veto is not lease loss.
+    # Report ineligibility so the existing worker can close an unsent job.
+    try:
+        return _checked_route_binding(database, actor, decision_id, request, observed)
+    except RevisionConflictError:
+        raise StateMismatchError("Route decision is stale or independently fenced") from None
+
+
+def _checked_route_binding(
+    database: Any,
+    actor: WorkspaceContext,
+    decision_id: str,
+    request: object,
+    observed: dict[str, Any],
+) -> dict[str, str]:
     from potbot.domain.operation_workbench import canonical_uuid
 
     with database.transaction(actor) as conn:
@@ -245,12 +265,12 @@ def checked_route_binding(
             "SELECT * FROM model_route_prompt_recipes WHERE workspace_id=%s AND policy_id=%s",
             (actor.workspace_id, decision["policy_id"]),
         ).fetchone()
-        if recipe is None:
-            return {}  # Historical baseline-only shadow requests retain their contract.
         conn.execute(
             "SELECT model_route_decision_current(d) FROM model_route_decisions d WHERE workspace_id=%s AND id=%s",
             (actor.workspace_id, decision["id"]),
         )
+        if recipe is None:
+            return {}  # No retroactive compiled-prompt claim for historical routes.
         compiled = conn.execute(
             "SELECT * FROM model_route_compiled_prompts WHERE workspace_id=%s AND decision_id=%s",
             (actor.workspace_id, decision["id"]),

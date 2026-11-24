@@ -114,3 +114,5 @@ protected paired holdout outcomes, bounded canary accounting, explicit promotion
 regression rollback to a still-qualified route, and installed-controller
 qualification with signed Syn packages. Full R7.4 remains unfinished. No model
 was promoted, production database changed or paid call made for this increment.
+
+Follow-on: [R7.4-E reviewed route outcomes](r7-4-e-reviewed-route-outcomes.md) adds explicit output sharing, independent verdicts and a policy-local regression veto. It does not enable candidates or qualify a live model.

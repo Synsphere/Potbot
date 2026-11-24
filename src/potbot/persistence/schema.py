@@ -172,6 +172,7 @@ def application_migrations(*, lineage: str = "main") -> tuple[SchemaMigration, .
         (49, "atomic_graph_schema"),
         (50, "model_routing_schema"),
         (51, "model_route_binding_schema"),
+        (52, "model_route_outcome_schema"),
     ):
         module = import_module(f"potbot.persistence.{module_name}")
         migrations.append(
