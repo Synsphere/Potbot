@@ -266,7 +266,7 @@ def _deployment_admission(
 
 
 def _experiment_evidence(args: argparse.Namespace) -> dict[str, Any]:
-    return {
+    evidence = {
         name: _strict_read(getattr(args, name)) if getattr(args, name, None) else None
         for name in (
             "candidate_package",
@@ -276,6 +276,9 @@ def _experiment_evidence(args: argparse.Namespace) -> dict[str, Any]:
             "review_bundle",
         )
     }
+    if getattr(args, "shadow_policy", None) is not None:
+        evidence["shadow_policy"] = _strict_read(args.shadow_policy)
+    return evidence
 
 
 def _experiment_admission(
@@ -286,6 +289,8 @@ def _experiment_admission(
 ) -> dict[str, Any] | None:
     path = getattr(args, "experiment_plan", None)
     if path is None:
+        if getattr(args, "shadow_policy", None) is not None:
+            raise InvalidInputError("shadow criteria require their frozen experiment plan")
         return None
     from potbot.evaluation.agentic_experiments import (
         admit_atomic_experiment,
@@ -573,6 +578,7 @@ def main(argv: list[str] | None = None) -> int:
         group.add_argument("--deployment-bindings", type=Path)
         group.add_argument("--project-root", type=Path)
         group.add_argument("--experiment-plan", type=Path)
+        group.add_argument("--shadow-policy", type=Path)
         group.add_argument("--shuffle-seed", type=int, default=42)
         group.add_argument("--variants", default="generic,family,model_role")
         group.add_argument("--repeat", type=int, default=1)
@@ -587,7 +593,7 @@ def main(argv: list[str] | None = None) -> int:
             group.add_argument("--max-judge-pairs", type=int, default=8)
             group.add_argument("--min-samples", type=int, default=12)
             group.add_argument("--store-text", action="store_true")
-    for name in ("prepare-experiment", "audit-experiment"):
+    for name in ("prepare-experiment", "audit-experiment", "shadow-routing"):
         experiment = command.add_parser(name)
         experiment.add_argument("--suite", type=Path, required=True)
         experiment.add_argument("--models", type=Path, required=True)
@@ -598,6 +604,7 @@ def main(argv: list[str] | None = None) -> int:
             "dataset-card",
             "deployment-bindings",
             "review-bundle",
+            "shadow-policy",
         ):
             experiment.add_argument("--" + binding, type=Path)
         if name == "prepare-experiment":
@@ -659,7 +666,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     try:
         args = parser.parse_args(argv)
-        if args.command in {"prepare-experiment", "audit-experiment"}:
+        if args.command in {"prepare-experiment", "audit-experiment", "shadow-routing"}:
             from potbot.evaluation.agentic_experiments import (
                 audit_atomic_experiment,
                 freeze_atomic_experiment,
@@ -678,6 +685,17 @@ def main(argv: list[str] | None = None) -> int:
                     shuffle_seed=args.shuffle_seed,
                     evidence=evidence,
                 )
+            elif args.command == "shadow-routing":
+                from potbot.evaluation.agentic_shadow import evaluate_atomic_shadow
+
+                payload = evaluate_atomic_shadow(
+                    evidence.get("shadow_policy"),
+                    read_experiment_document(args.experiment_plan),
+                    read_experiment_document(args.results),
+                    suite,
+                    models,
+                    evidence=evidence,
+                )
             else:
                 payload = audit_atomic_experiment(
                     read_experiment_document(args.experiment_plan),
@@ -688,7 +706,14 @@ def main(argv: list[str] | None = None) -> int:
                 )
             _private_write(args.output, canonical_json(payload) + "\n")
             print(json.dumps({"plan_sha256": payload.get("plan_sha256"), "qualified": False}))
-            return 2 if payload.get("complete_for_analysis") is False else 0
+            return (
+                2
+                if (
+                    payload.get("complete_for_analysis") is False
+                    or payload.get("all_offline_limits_met") is False
+                )
+                else 0
+            )
         if args.command == "prepare-atomic-dataset":
             from potbot.evaluation.agentic_candidate_dataset import (
                 gold_review_request,

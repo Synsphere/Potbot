@@ -94,9 +94,13 @@ def freeze_atomic_experiment(
         "Invalid frozen experiment bounds",
     )
     _require(
-        isinstance(evidence, dict) and set(evidence) == _EVIDENCE,
+        isinstance(evidence, dict) and _EVIDENCE <= set(evidence) <= _EVIDENCE | {"shadow_policy"},
         "Experiment evidence must declare every supported binding",
     )
+    if evidence.get("shadow_policy") is not None:
+        from potbot.evaluation.agentic_shadow import validate_shadow_policy
+
+        validate_shadow_policy(evidence["shadow_policy"], suite, models, variants)
     kinds = {kind.name for kind in ATOMIC_KINDS}
     seen: set[str] = set()
     count = 0
@@ -140,7 +144,10 @@ def freeze_atomic_experiment(
         "shuffle_seed": shuffle_seed,
         "evidence_sha256": {
             key: content_hash(evidence[key]) if evidence[key] is not None else None
-            for key in sorted(_EVIDENCE)
+            for key in sorted(
+                _EVIDENCE
+                | ({"shadow_policy"} if evidence.get("shadow_policy") is not None else set())
+            )
         },
         "cells": cells,
     }

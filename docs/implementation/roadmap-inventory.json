@@ -1394,6 +1394,16 @@
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
+      "path": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "sha256": "c0a99c589f44fec7f020484844f0454e8ad05c3063daf6c520a46f8d0756dc71",
+      "bytes": 7161,
+      "kind": "narrative_text",
+      "text_sha256": "c0a99c589f44fec7f020484844f0454e8ad05c3063daf6c520a46f8d0756dc71",
+      "characters": 7161,
+      "lines": 130,
+      "interpretation": "source_content_not_runtime_evidence"
+    },
+    {
       "path": "docs/implementation/recent-potbot-development-reconciliation.md",
       "sha256": "d59f71e908931fd516d8c4de4f5c3e19b849e20555328a54dbde37d80315fca5",
       "bytes": 55034,
@@ -1755,12 +1765,12 @@
     },
     {
       "path": "docs/implementation/unified-development-roadmap.md",
-      "sha256": "7b09d11e87bb15fb7b1e7cd8ddf03cd8647537d3313ca0136c01b2e306d5849f",
-      "bytes": 45878,
+      "sha256": "3ecd61ea09c1f04c4ab6f46256355ff5f2326969ecb4eaddfff7d89d5a1b8d2b",
+      "bytes": 46207,
       "kind": "narrative_text",
-      "text_sha256": "7b09d11e87bb15fb7b1e7cd8ddf03cd8647537d3313ca0136c01b2e306d5849f",
-      "characters": 45718,
-      "lines": 421,
+      "text_sha256": "3ecd61ea09c1f04c4ab6f46256355ff5f2326969ecb4eaddfff7d89d5a1b8d2b",
+      "characters": 46047,
+      "lines": 425,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -34246,7 +34256,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U00",
       "title": "Repository audit and roadmap reconciliation",
-      "locator": "line:251",
+      "locator": "line:255",
       "source_claim": "requirements_only",
       "requirement_sha256": "8e02c7ec68153a9ea09c732dec24853b9d7a65b2a370e9a8f4738bfa9147c8a3",
       "unified_owners": [
@@ -34278,7 +34288,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U01",
       "title": "Durable execution and provenance",
-      "locator": "line:252",
+      "locator": "line:256",
       "source_claim": "requirements_only",
       "requirement_sha256": "9acdee3308aa30755f1fe04ec78556f755c8fdaea9f3650d1e91888677f1e70d",
       "unified_owners": [
@@ -34338,7 +34348,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U02",
       "title": "Sandbox and shared filesystem",
-      "locator": "line:253",
+      "locator": "line:257",
       "source_claim": "requirements_only",
       "requirement_sha256": "f27fdf68725090cd51f00f3e8e157e472beffda2bec5975494fa151feccd2fcb",
       "unified_owners": [
@@ -34372,7 +34382,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U03",
       "title": "Worker/Cog resource supervision",
-      "locator": "line:254",
+      "locator": "line:258",
       "source_claim": "requirements_only",
       "requirement_sha256": "6fd056f50d44fd62e2b1400ccaef0bd8fa3533bf3359fc38f87327b70ac49e54",
       "unified_owners": [
@@ -34413,7 +34423,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U04",
       "title": "Semantic tool platform",
-      "locator": "line:255",
+      "locator": "line:259",
       "source_claim": "requirements_only",
       "requirement_sha256": "7f1a1e829ccf1f5ddca50253821fed65731cd7210251bfe4e3ca4a1cf0c1f083",
       "unified_owners": [
@@ -34483,7 +34493,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U05",
       "title": "Artifact transfer and GitHub concurrency",
-      "locator": "line:256",
+      "locator": "line:260",
       "source_claim": "requirements_only",
       "requirement_sha256": "ed7818d7731f55710e5596d2c7140fe8019d9f7aea09798f7beb98c9325bcd3d",
       "unified_owners": [
@@ -34518,7 +34528,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U06",
       "title": "Syn identity and security",
-      "locator": "line:257",
+      "locator": "line:261",
       "source_claim": "requirements_only",
       "requirement_sha256": "b1c9ad84bd4653b301fc1c4018085bbe1682203c76101ec7699a150a61575e86",
       "unified_owners": [
@@ -34552,7 +34562,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U07",
       "title": "Models, providers and credentials",
-      "locator": "line:258",
+      "locator": "line:262",
       "source_claim": "requirements_only",
       "requirement_sha256": "fb5a6e3ca91f5eb19db215baa1ad991f2c8dfbaef5a49235b6078a3656f438aa",
       "unified_owners": [
@@ -34587,7 +34597,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U08",
       "title": "Reasoning graph and steering",
-      "locator": "line:259",
+      "locator": "line:263",
       "source_claim": "requirements_only",
       "requirement_sha256": "acd521ce50bb19d6a89620dbd8c6b7d22c0b5fdfbfc12473defc60181486ae9b",
       "unified_owners": [
@@ -34622,7 +34632,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U09",
       "title": "Prompt/context and MODEL.md",
-      "locator": "line:260",
+      "locator": "line:264",
       "source_claim": "requirements_only",
       "requirement_sha256": "bf7f84edb02e60ef8572c505c67b36685ed81f02f76d975b7579d467aec1c647",
       "unified_owners": [
@@ -34659,7 +34669,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U10",
       "title": "Memory and embeddings",
-      "locator": "line:261",
+      "locator": "line:265",
       "source_claim": "requirements_only",
       "requirement_sha256": "b6213afccf90e68ccc7c32c0570bfb65875adfcee9e8d122c302949b726b8a53",
       "unified_owners": [
@@ -34698,7 +34708,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U11",
       "title": "Plugin and skills ecosystem",
-      "locator": "line:262",
+      "locator": "line:266",
       "source_claim": "requirements_only",
       "requirement_sha256": "322a12f1c3178717f393a21212982f61c81d989ac76dfb3750bc2aa78fb7daf7",
       "unified_owners": [
@@ -34748,7 +34758,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U12",
       "title": "Browser automation",
-      "locator": "line:263",
+      "locator": "line:267",
       "source_claim": "requirements_only",
       "requirement_sha256": "aa5729d418f9e0fe07f81549990e6b9f43eec398d40b8162c1b9b3e989e51e9f",
       "unified_owners": [
@@ -34785,7 +34795,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U13",
       "title": "Next.js operator frontend",
-      "locator": "line:264",
+      "locator": "line:268",
       "source_claim": "requirements_only",
       "requirement_sha256": "61130383fd5028063cb79292776e3db7c15abb9d82b934f4fc4ccaff5e813962",
       "unified_owners": [
@@ -34858,7 +34868,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U14",
       "title": "Evaluation and adaptation",
-      "locator": "line:265",
+      "locator": "line:269",
       "source_claim": "requirements_only",
       "requirement_sha256": "ece56c3dd0f7832182cab7633829be39bed5d475573ed31c82e1a8e61ecd69a3",
       "unified_owners": [
@@ -34894,7 +34904,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U15",
       "title": "Automation and interoperability",
-      "locator": "line:266",
+      "locator": "line:270",
       "source_claim": "requirements_only",
       "requirement_sha256": "4d287b3521c0deaa365e86a77a852cab18577f972d57b0eeb333c4133c8051f1",
       "unified_owners": [
@@ -34927,7 +34937,7 @@
       "source": "docs/implementation/unified-development-roadmap.md",
       "id": "U16",
       "title": "CI, release and deployment qualification",
-      "locator": "line:267",
+      "locator": "line:271",
       "source_claim": "requirements_only",
       "requirement_sha256": "6330a8cf848154f92867c2ad12aac0d10db7444dc291e3bf4026b961941c4fb2",
       "unified_owners": [
@@ -36468,12 +36478,12 @@
     },
     {
       "path": ".github/workflows/agentic-model-benchmark.yml",
-      "sha256": "db1fbee81a9170677033fce77f40ce49f3bf0f44140136728630ada738b9965e",
-      "bytes": 5212,
+      "sha256": "52bffeab33b5b1dbf0c84c3252e4d47577800a7a1b530c10ad58bdea1c5a77f9",
+      "bytes": 5260,
       "kind": "narrative_text",
-      "text_sha256": "db1fbee81a9170677033fce77f40ce49f3bf0f44140136728630ada738b9965e",
-      "characters": 5212,
-      "lines": 103,
+      "text_sha256": "52bffeab33b5b1dbf0c84c3252e4d47577800a7a1b530c10ad58bdea1c5a77f9",
+      "characters": 5260,
+      "lines": 104,
       "interpretation": "source_content_not_runtime_evidence"
     },
     {
@@ -36957,7 +36967,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "9e572a562e27fb8a6e4c390ca0cffbcc041f999a41a8fc9604cd29d4d5c3141f",
+  "review_sha256": "997c57d5bc5c6ea1540f2af35b88b3ba1d1c8caaf7129b5b8fff5be923cf2b01",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
@@ -117269,6 +117279,46 @@
       ]
     },
     {
+      "source": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "locator": "line:1-24",
+      "sha256": "6d6fda626bc97c6bea21d79c7be0f1b71dfad567fa6dcff7796268abad0ebd6b",
+      "excerpt": "# R7.4-A: frozen offline routing shadow evaluation\n\nThis increment evaluates explicit role-specific criteria against the retained\nR7.3 experiment. It performs n",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "locator": "line:25-84",
+      "sha256": "d32a9ab13d0f86a941620ad39a664066cd8583a2d33bac603b14038b9097e4c5",
+      "excerpt": "## Declare the criteria before execution\n\nA `potbot.atomic-shadow-policy/1` document has exactly `schema` and `rules`.\nSupply one rule for every planned holdout",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "locator": "line:85-114",
+      "sha256": "dafac050a07716d2728eb5822f84a93cb039304f3bed4822b4def8883fb2bea6",
+      "excerpt": "## Interpret the result\n\n| Evidence or criterion | Offline result |\n|---|---|\n| Any planned result missing, uncertain or model-mismatched | Whole experiment rem",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
+      "source": "docs/implementation/r7-4-a-offline-routing-shadow.md",
+      "locator": "line:115-130",
+      "sha256": "44bc23d1855b0eaeb655a84be3309d496a46682003ff0b5580a84ed5ec300d1f",
+      "excerpt": "## Promotion, compatibility and rollback\n\nEvery report keeps `qualified: false`, `promotion_ready: false`,\n`prior_registration_authenticated: false`, zero model",
+      "review_families": [
+        "audit",
+        "evaluation"
+      ]
+    },
+    {
       "source": "docs/implementation/recent-potbot-development-reconciliation.md",
       "locator": "line:1-14",
       "sha256": "89924394f3dbaac8e30f4e41cddcb3276ad41637303bb596648260787484be6a",
@@ -120700,9 +120750,9 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:1-40",
-      "sha256": "fd2f487717273addd464f8ca91e79cd889271415827a4e1c31882a7b8c79a786",
-      "excerpt": "# Potbot unified development roadmap\n\n**24 November 2026, R7.3-A through F in the review stack:** R7.2-A/B/C are\nsource-implemented; installed atomic-scheduler ",
+      "locator": "line:1-44",
+      "sha256": "4c804c32355f8fe6e61e21a7c63d3914a9efa5a66466deb6c09c517342283e56",
+      "excerpt": "# Potbot unified development roadmap\n\n**24 November 2026, R7.3-A through F and R7.4-A in the review stack:** R7.2-A/B/C are\nsource-implemented; installed atomic",
       "review_families": [
         "audit",
         "durable",
@@ -120716,7 +120766,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:41-204",
+      "locator": "line:45-208",
       "sha256": "535f53b812e2861b68a5f26913b82d310e59e1aeb4d109dfaa142254e784a6cc",
       "excerpt": "## Current delivery order \u2014 18 November 2026\n\nThe current batch finishes the remaining supported T05 implementation with\n[T05-B specialist research](t05-b-speci",
       "review_families": [
@@ -120732,7 +120782,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:205-212",
+      "locator": "line:209-216",
       "sha256": "076016b54fff41fb78ff8fdcc90229d963fc5d746b89b7706eeebb49f54312c8",
       "excerpt": "## Baseline and source-of-truth rules\n\nOlder README phase summaries (`0.5.0.dev8`/`dev9`) are historical; the reviewed main reports `0.5.0.dev11`. They are not ",
       "review_families": [
@@ -120748,7 +120798,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:213-246",
+      "locator": "line:217-250",
       "sha256": "4c193a4a608fa975564b4f8db4bfe008307a41cf3d1b25c33882bcb783543194",
       "excerpt": "## Existing plans to reconcile\n\n| Source | Scope |\n|---|---|\n| `docs/implementation/09-tool-plan-gap-audit.md` | 18 additional requirement groups and independen",
       "review_families": [
@@ -120764,7 +120814,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:247-268",
+      "locator": "line:251-272",
       "sha256": "3a83e4a3a3332d3ef4289fcfc3504ed4ab122ebf1cf45fdf94886f89bda19cce",
       "excerpt": "## Unified work packages\n\n| ID | Workstream | Remaining / qualification scope | Modernization | Dependencies |\n|---|---|---|---|---|\n| U00 | Repository audit an",
       "review_families": [
@@ -120780,7 +120830,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:269-270",
+      "locator": "line:273-274",
       "sha256": "730dc617da00361212299c3f3bf7caa292eeb8375c4645a26f895fe255a9c69d",
       "excerpt": "## Delivery waves and gates",
       "review_families": [
@@ -120796,7 +120846,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:271-276",
+      "locator": "line:275-280",
       "sha256": "092663dafe878c1956a3843788aa7a58148603391dc7efc03a2ab4bf50b05224",
       "excerpt": "### Wave 0 \u2014 Inventory, reconcile and pin (U00)\n\nPin current main SHA. Enumerate every `docs/` plan, issue, PR, stage-status document and CI acceptance job. Bui",
       "review_families": [
@@ -120812,7 +120862,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:277-282",
+      "locator": "line:281-286",
       "sha256": "382e3775074d6d89fbfe589167a208ad320459466fe816e1e619c4a2326bceab",
       "excerpt": "### Wave 1 \u2014 Secure durable foundation (U01\u2013U03, U06)\n\nExtend existing PostgreSQL/Syn execution rather than introducing a second job engine. Add fenced leases, ",
       "review_families": [
@@ -120828,7 +120878,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:283-286",
+      "locator": "line:287-290",
       "sha256": "ee0b5d377f44b86a968882f762dcddf5486951504484fae6f57bbdc4b5d897cf",
       "excerpt": "### Wave 2 \u2014 Tools, plugins, transport and browser (U04\u2013U05, U11\u2013U12)\n\nComplete existing T01\u2013T04 milestones, typed Cog contracts, debugger, discovery, concurren",
       "review_families": [
@@ -120844,7 +120894,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:287-290",
+      "locator": "line:291-294",
       "sha256": "9b8568dc87a1fd913d2775e2cea463e8cc54271de5fdbd471a3846c47413462e",
       "excerpt": "### Wave 3 \u2014 Intelligence and memory (U07\u2013U10)\n\nQualify actual local/hosted models and inference costs. Integrate live multi-model reasoning graphs, scheduling,",
       "review_families": [
@@ -120860,7 +120910,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:291-296",
+      "locator": "line:295-300",
       "sha256": "9a38ce04ac2df10970d4c69ae459dab6757ed121e4c0135233670ccf0927cca1",
       "excerpt": "### Wave 4 \u2014 Frontend and empirical optimization (U13\u2013U14)\n\nFinish real backend streaming, workspace controls, monitoring sprite, graph checkpoint timeline, pro",
       "review_families": [
@@ -120876,7 +120926,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:297-302",
+      "locator": "line:301-306",
       "sha256": "80b60f56644c374154018b6472010f50693d60ee0bd0831560224d401b134c72",
       "excerpt": "### Wave 5 \u2014 Automation and release (U15\u2013U16)\n\nAdd durable event subscriptions, schedules, A2A and channels under the same operator policy. Qualify all supporte",
       "review_families": [
@@ -120892,7 +120942,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:303-312",
+      "locator": "line:307-316",
       "sha256": "4b39689d3f86890624016437f1019a9f443b42259c348acd3976344d39f5cb18",
       "excerpt": "## Critical engineering invariants\n\n1. Do not create parallel authoritative PostgreSQL stores, schedulers, plugin registries or Syn event logs.\n2. Preserve the ",
       "review_families": [
@@ -120908,7 +120958,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:313-323",
+      "locator": "line:317-327",
       "sha256": "73ea150baabe9d4392b6c75e6ac5978672584992ebe9d0d26ba1c428568a0f6a",
       "excerpt": "### Syn transport for application RPC\n\n**Deferred pending a Syn release, 18 November 2026.** The following sequence is\nretained for resumption; the active deliv",
       "review_families": [
@@ -120924,7 +120974,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:324-351",
+      "locator": "line:328-355",
       "sha256": "cbc4b785f9baeac0b04d3321ea4a8fed61bf8a1816999c534cb2eb9667797027",
       "excerpt": "## First next milestone\n\n**U01-A: durable side-effect and crash recovery gap closure.** U00-A's\n[reviewed closeout](u00-a-closeout.md) is complete. Preserve the",
       "review_families": [
@@ -120940,7 +120990,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:352-365",
+      "locator": "line:356-369",
       "sha256": "fad8ad3bc0f5c2f2834281f8aaa52d60a6cf39c7bbfccd4fae9aee0a7b60f130",
       "excerpt": "## Required follow-through from the monitoring chat\n\n| Work item | Existing U owner | Deliverable and gate |\n|---|---|---|\n| U03-Q | U03, U02, U16 | Qualify eve",
       "review_families": [
@@ -120956,7 +121006,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:366-390",
+      "locator": "line:370-394",
       "sha256": "964a68bc75a782ed821c3d4699dc79a85a3112888516cbf8487f770be9a63938",
       "excerpt": "## Required follow-through from the other recent development conversations\n\n| Work item | Existing U owner | Deliverable and gate in the recent-development reco",
       "review_families": [
@@ -120972,7 +121022,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:391-402",
+      "locator": "line:395-406",
       "sha256": "8fd9aa45ac7a56661637b71fa0a5607b1b2b45780bdea5c35f0434b61d7925a3",
       "excerpt": "## References\n\n- `docs/implementation/agent-runtime-modernization.md`\n- `docs/implementation/09-tool-plan-gap-audit.md`\n- `docs/implementation/plugin-discovery-",
       "review_families": [
@@ -120988,7 +121038,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:403-407",
+      "locator": "line:407-411",
       "sha256": "c6f1c77f80e48b91c4a197f815afa2760f516f5eff7fc07b87bbbe7ffc5b2197",
       "excerpt": "## Cross-agent ecosystem compatibility (C00\u2013C09)\n\nAdd the companion [cross-agent compatibility plan](cross-agent-compatibility.md) as a required cross-cutting w",
       "review_families": [
@@ -121004,7 +121054,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:408-416",
+      "locator": "line:412-420",
       "sha256": "a3a63964c24da210b3a841a4fa93e2529b30a3e255e67e78853aea0f4d0192ad",
       "excerpt": "## External skill ecosystem discovery and native execution (S00\u2013S10)\n\nThe cross-agent C00\u2013C09 programme is extended by [external skill ecosystem integration](po",
       "review_families": [
@@ -121020,7 +121070,7 @@
     },
     {
       "source": "docs/implementation/unified-development-roadmap.md",
-      "locator": "line:417-421",
+      "locator": "line:421-425",
       "sha256": "28dfd2784d97841df10d40c27bf4c7f21bc278c11ace17b0339a9ee74ece1daa",
       "excerpt": "## Agent benchmarking and testing (B00\u2013B10)\n\nAdd [Potbot agent benchmarking and testing](potbot-agent-benchmarking-plan.md) as the qualification specification f",
       "review_families": [
@@ -130446,20 +130496,32 @@
         {
           "path": "src/potbot/evaluation/agentic_experiments.py",
           "symbol": "freeze_atomic_experiment",
-          "sha256": "aa51b3114cf8474f705f1fc913bce3424ab5225d2b7c698ae10bc3c6ab408e05",
+          "sha256": "37fe3ec2743bbbae49eb1d245a1369c68690e979ae826efdaab7e957590c4e43",
           "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
         },
         {
           "path": "src/potbot/evaluation/agentic_experiments.py",
           "symbol": "audit_atomic_experiment",
-          "sha256": "aa51b3114cf8474f705f1fc913bce3424ab5225d2b7c698ae10bc3c6ab408e05",
+          "sha256": "37fe3ec2743bbbae49eb1d245a1369c68690e979ae826efdaab7e957590c4e43",
           "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
         },
         {
           "path": "scripts/benchmark_agentic_models.py",
           "symbol": "_experiment_admission",
-          "sha256": "bf14cea983ef623e342e2be79cb701d401b602f7b15e2465956be6cb9fe09abf",
+          "sha256": "5d5608c54a8560f495a66e2fd9f93cbc05f362d5c963b32c6908e396a2ec94d2",
           "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_shadow.py",
+          "symbol": "validate_shadow_policy",
+          "sha256": "b27fecd4598d604db1bfb75ceed0425453a023b2e3ef65ffb735581ecbd03fd3",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_shadow.py",
+          "symbol": "evaluate_atomic_shadow",
+          "sha256": "b27fecd4598d604db1bfb75ceed0425453a023b2e3ef65ffb735581ecbd03fd3",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
         }
       ],
       "tests": [
@@ -130637,9 +130699,27 @@
           "symbol": "test_invalid_json_is_refused",
           "sha256": "ffef5b08434f54c6588d585f01ff8e7d6dcbc4dbe29d8698198ae710f499e6f5",
           "basis": "R7.3-F frozen primary matrices, exact pre-transport admission, retained plan and full-cohort regrading. Synthetic/reference protocols do not qualify independent gold, actual model resources or live routing."
+        },
+        {
+          "path": "tests/unit/test_agentic_shadow.py",
+          "symbol": "test_complete_favorable_evidence_is_only_a_hypothetical_selection",
+          "sha256": "0467f1a163eacc7c1cb9488d665e297ef91857ee4fc4cde051c7bdded382ea45",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "tests/unit/test_agentic_shadow.py",
+          "symbol": "test_cli_freeze_run_and_shadow_bind_policy_before_dispatch",
+          "sha256": "0467f1a163eacc7c1cb9488d665e297ef91857ee4fc4cde051c7bdded382ea45",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
+        },
+        {
+          "path": "tests/unit/test_agentic_shadow.py",
+          "symbol": "test_policy_is_detached_and_changed_criteria_cannot_reinterpret_an_old_run",
+          "sha256": "0467f1a163eacc7c1cb9488d665e297ef91857ee4fc4cde051c7bdded382ea45",
+          "basis": "R7.4-A frozen offline criteria, original full-cohort regrading and paired quality/resource limits. Hypothetical choices do not qualify a baseline, live route, shadow traffic or promotion."
         }
       ],
-      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route. R7.3-C adds frozen anonymous reviewer task pairs, exact bundle admission before inference and complete retained-matrix calibration. Repeated verdicts and reversed positions count as one source task; declared self-model aliases are refused. Synthetic correctness and self-consistent gold do not authenticate a provider, independent oracle or deployed model. R7.3-D reuses the existing LocalHostProfile/DeploymentSpec preflight, binds exact target configuration and retains returned labels/origins. A known mismatch stops primary and derived requests with partial journals, observed charges and held admission reservations preserved; offline paired/reviewer quality excludes those rows. Short pytest IDs preserve the original oversized malformed-input tests on Windows. Real server identity/loading, protected independent gold, resource measurements and promotion remain separate. R7.3-E separates proposed gold and oracle controls from blind task/context review, reuses the existing duplicate-input and rubric owners, and blocks candidate experiments on missing, uncertain or conflicting declared answers. Exact reviewer identity, access isolation, representative protected data and actual model/worker quality remain unqualified. R7.3-F freezes the complete primary experiment and supporting input digests before runner dispatch, retains its exact plan, and audits all planned denominators without replay. Historical prior registration, independent gold, host resource measurement and live routing remain separately unqualified.",
+      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route. R7.3-C adds frozen anonymous reviewer task pairs, exact bundle admission before inference and complete retained-matrix calibration. Repeated verdicts and reversed positions count as one source task; declared self-model aliases are refused. Synthetic correctness and self-consistent gold do not authenticate a provider, independent oracle or deployed model. R7.3-D reuses the existing LocalHostProfile/DeploymentSpec preflight, binds exact target configuration and retains returned labels/origins. A known mismatch stops primary and derived requests with partial journals, observed charges and held admission reservations preserved; offline paired/reviewer quality excludes those rows. Short pytest IDs preserve the original oversized malformed-input tests on Windows. Real server identity/loading, protected independent gold, resource measurements and promotion remain separate. R7.3-E separates proposed gold and oracle controls from blind task/context review, reuses the existing duplicate-input and rubric owners, and blocks candidate experiments on missing, uncertain or conflicting declared answers. Exact reviewer identity, access isolation, representative protected data and actual model/worker quality remain unqualified. R7.3-F freezes the complete primary experiment and supporting input digests before runner dispatch, retains its exact plan, and audits all planned denominators without replay. Historical prior registration, independent gold, host resource measurement and live routing remain separately unqualified. R7.4-A adds policy-bound offline routing shadow analysis over the existing frozen experiment and paired evidence, with explicit independent runtime/promotion blockers and zero dispatch or routing mutations.",
       "support_scope": "Current fixture, judge/calibration and ledger definitions, not completed B00-B10 external benchmark campaigns. U04-D follow-on: The deterministic forty-request discovery set checks class selection and hard exclusions, with adversarial name/popularity/keyword repetition and exact installed-owner preference. These retrieval fixtures are not general reasoning, tool execution or task-success benchmarks. U04-Q follow-on: Failed assertions, peer errors, malformed/changed outputs and missing stopped evidence cannot produce a successful task report. Server-provided success flags and hashes are not independent expected results. U04-S follow-on: Retrieval score, installation and provider-authored text are not general success measurements. Passing synthetic fixtures do not substitute for independent deployed model/task evidence. U04-T follow-on: Passing applies only to fixed assertions. It does not complete a whole task, independently qualify a deployed provider/host, or turn a truncated UI preview into outcome evidence. T05-A follow-on: Supported means verified cited-source agreement only. Different values remain unresolved; retrieval time does not replace publication time, and no need or task is automatically resolved.",
       "remaining": [
         "Freeze chronological tasks, independent graders, exact returned patch and real cost/time/resource provenance",
