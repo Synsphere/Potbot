@@ -51,6 +51,14 @@ def _read(path: Path, *, limit: int = 1024 * 1024) -> Any:
     return json.loads(raw.decode("utf-8"))
 
 
+def _strict_read(path: Path, *, limit: int = 8 * 1024 * 1024) -> Any:
+    from potbot.models.envelopes import strict_json
+
+    with path.open("rb") as stream:
+        raw = stream.read(limit + 1)
+    return strict_json(raw, max_output_bytes=limit)
+
+
 def _targets(path: Path) -> list[ModelTarget]:
     document = _read(path)
     if (
@@ -214,6 +222,27 @@ def _review_admission(
     return str(bundle["bundle_sha256"])
 
 
+def _candidate_admission(args: argparse.Namespace, suite: RoleSuite) -> dict[str, Any] | None:
+    path = getattr(args, "candidate_package", None)
+    review_path = getattr(args, "gold_review", None)
+    if path is None:
+        if review_path is not None:
+            raise InvalidInputError("gold review requires its exact candidate package")
+        return None
+    if getattr(args, "dataset_card", None) is not None:
+        raise InvalidInputError("public fixture cards and private candidates are separate inputs")
+    from potbot.evaluation.agentic_candidate_dataset import (
+        audit_candidate_review,
+        candidate_package,
+    )
+
+    document = _strict_read(path)
+    frozen, package = candidate_package(document)
+    if frozen != suite:
+        raise InvalidInputError("candidate suite differs from its frozen package")
+    return audit_candidate_review(package, _strict_read(review_path) if review_path else None)
+
+
 def _deployment_admission(
     args: argparse.Namespace, suite: RoleSuite, models: list[ModelTarget]
 ) -> dict[str, Any]:
@@ -249,6 +278,9 @@ def _execute(
     if not 1 <= args.repeat <= 5:
         raise InvalidInputError("repeats must be between one and five")
     review_bundle_sha256 = _review_admission(args, suite, models)
+    candidate_review = _candidate_admission(args, suite)
+    if candidate_review is not None and candidate_review["status"] != "declared_agreement":
+        raise InvalidInputError("candidate gold review is incomplete or conflicting")
     deployment_inspection = _deployment_admission(args, suite, models)
     if deployment_inspection["status"] == "blocked":
         raise InvalidInputError("local benchmark deployment preflight is blocked")
@@ -449,6 +481,7 @@ def _execute(
         if all(m.backend == "deterministic" for m in models)
         else "measured_requests",
         "dataset_audit": dataset_audit,
+        "candidate_dataset_review": candidate_review,
         "deployment_inspection": deployment_inspection,
         "execution": {
             "status": "stopped_model_identity_mismatch" if identity_mismatch else "completed",
@@ -486,6 +519,8 @@ def main(argv: list[str] | None = None) -> int:
         group.add_argument("--suite", type=Path, required=True)
         group.add_argument("--models", type=Path, required=True)
         group.add_argument("--dataset-card", type=Path)
+        group.add_argument("--candidate-package", type=Path)
+        group.add_argument("--gold-review", type=Path)
         group.add_argument("--review-bundle", type=Path)
         group.add_argument("--deployment-bindings", type=Path)
         group.add_argument("--project-root", type=Path)
@@ -503,6 +538,15 @@ def main(argv: list[str] | None = None) -> int:
             group.add_argument("--shuffle-seed", type=int, default=42)
             group.add_argument("--min-samples", type=int, default=12)
             group.add_argument("--store-text", action="store_true")
+    prepare = command.add_parser("prepare-atomic-dataset")
+    prepare.add_argument("--suite", type=Path, required=True)
+    prepare.add_argument("--provenance", type=Path, required=True)
+    prepare.add_argument("--controls", type=Path, required=True)
+    prepare.add_argument("--output-dir", type=Path, required=True)
+    gold = command.add_parser("audit-atomic-gold-review")
+    gold.add_argument("--candidate-package", type=Path, required=True)
+    gold.add_argument("--gold-review", type=Path)
+    gold.add_argument("--output", type=Path, required=True)
     build = command.add_parser("build-review-suite")
     build.add_argument("--suite", required=True, type=Path)
     build.add_argument("--models", required=True, type=Path)
@@ -546,6 +590,51 @@ def main(argv: list[str] | None = None) -> int:
     )
     try:
         args = parser.parse_args(argv)
+        if args.command == "prepare-atomic-dataset":
+            from potbot.evaluation.agentic_candidate_dataset import (
+                gold_review_request,
+                prepare_candidate_package,
+            )
+
+            package = prepare_candidate_package(
+                RoleSuite.from_dict(_strict_read(args.suite)),
+                _strict_read(args.provenance),
+                _strict_read(args.controls),
+            )
+            request = gold_review_request(package)
+            args.output_dir.mkdir(mode=0o700, parents=True, exist_ok=False)
+            _private_write(
+                args.output_dir / "candidate-package.json", canonical_json(package) + "\n"
+            )
+            _private_write(args.output_dir / "review-request.json", canonical_json(request) + "\n")
+            print(
+                json.dumps(
+                    {
+                        "package_sha256": package["package_sha256"],
+                        "case_count": len(package["suite"]["cases"]),
+                        "qualified": False,
+                    }
+                )
+            )
+            return 0
+        if args.command == "audit-atomic-gold-review":
+            from potbot.evaluation.agentic_candidate_dataset import audit_candidate_review
+
+            report = audit_candidate_review(
+                _strict_read(args.candidate_package),
+                _strict_read(args.gold_review) if args.gold_review else None,
+            )
+            _private_write(args.output, canonical_json(report) + "\n")
+            print(
+                json.dumps(
+                    {
+                        "status": report["status"],
+                        "case_count": report["case_count"],
+                        "qualified": False,
+                    }
+                )
+            )
+            return 0 if report["status"] == "declared_agreement" else 2
         if args.command == "build-review-suite":
             from potbot.evaluation.agentic_reviewers import build_reviewer_bundle
 
@@ -673,6 +762,7 @@ def main(argv: list[str] | None = None) -> int:
             review_bundle_sha256 = _review_admission(args, suite, models)
             plan = _preflight(models, suite, variants, args.repeat)
             plan["deployment_inspection"] = _deployment_admission(args, suite, models)
+            plan["candidate_dataset_review"] = _candidate_admission(args, suite)
             if review_bundle_sha256 is not None:
                 plan["review_bundle_sha256"] = review_bundle_sha256
             if args.dataset_card is not None:
@@ -680,7 +770,18 @@ def main(argv: list[str] | None = None) -> int:
 
                 plan["dataset_audit"] = audit_atomic_dataset(suite, _read(args.dataset_card))
             print(json.dumps(plan, indent=2))
-            return 2 if plan["deployment_inspection"]["status"] == "blocked" else 0
+            candidate_review = plan["candidate_dataset_review"]
+            return (
+                2
+                if (
+                    plan["deployment_inspection"]["status"] == "blocked"
+                    or (
+                        candidate_review is not None
+                        and candidate_review["status"] != "declared_agreement"
+                    )
+                )
+                else 0
+            )
         if (
             not 1 <= args.max_judge_pairs <= 30
             or not 1 <= args.min_samples <= 10000

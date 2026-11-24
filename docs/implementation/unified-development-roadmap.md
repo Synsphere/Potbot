@@ -1,11 +1,12 @@
 # Potbot unified development roadmap
 
-**24 November 2026, R7.3-A through D in the review stack:** R7.2-A/B/C are
+**24 November 2026, R7.3-A through E in the review stack:** R7.2-A/B/C are
 source-implemented; installed atomic-scheduler qualification remains separate.
 [Paired analysis](r7-3-a-paired-atomic-benchmarks.md),
 [source-pinned references](r7-3-b-reference-baselines.md),
-[frozen reviewer calibration](r7-3-c-reviewer-calibration.md) and
-[deployment bindings](r7-3-d-deployment-bindings.md) now share the existing
+[frozen reviewer calibration](r7-3-c-reviewer-calibration.md),
+[deployment bindings](r7-3-d-deployment-bindings.md) and
+[blind candidate gold review](r7-3-e-private-dataset-review.md) share the existing
 opt-in benchmark and retained-evidence owners. Returned-model mismatches stop
 dispatch and preserve the partial journal, usage and observed costs.
 
@@ -14,7 +15,8 @@ flowchart LR
     A[Paired task evidence] --> B[Deterministic baselines]
     B --> C[Calibrated reviewer protocol]
     C --> D[Exact deployment declarations]
-    D --> G[Protected gold and actual deployment measurements]
+    D --> E[Frozen candidate and blind-review workflow]
+    E --> G[Authenticated gold and actual deployment measurements]
     G --> R[Separately admitted R7.4 routing policy]
 ```
 
