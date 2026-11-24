@@ -204,54 +204,67 @@ class ModelRoutingService:
         *,
         prompt_facts: object = None,
     ) -> dict[str, Any]:
+        with self.database.transaction(context) as conn:
+            return self.allocate_in_transaction(
+                conn, context, policy_id, allocation_key, request, prompt_facts=prompt_facts
+            )
+
+    def allocate_in_transaction(
+        self,
+        conn: Any,
+        context: WorkspaceContext,
+        policy_id: UUID,
+        allocation_key: str,
+        request: object,
+        *,
+        prompt_facts: object = None,
+    ) -> dict[str, Any]:
+        """Bind a checked decision in its caller's existing workspace transaction."""
         from psycopg.types.json import Jsonb
+
+        from potbot.controller.model_route_bindings import persist_compilation, prepare_compilation
 
         spec = parse_request(request)
         if not isinstance(allocation_key, str) or not 1 <= len(allocation_key.encode()) <= 160:
             raise InvalidInputError("Model route allocation key exceeds its bound")
-        with self.database.transaction(context) as conn:
-            conn.execute("SELECT model_route_lock(%s,%s)", (context.workspace_id, _uuid(policy_id)))
-            policy = conn.execute(
-                "SELECT * FROM model_route_policies WHERE workspace_id=%s AND id=%s AND principal_id=%s",
-                (context.workspace_id, policy_id, context.principal_id),
-            ).fetchone()
-            if policy is None:
-                raise ScopeDeniedError("Model route is unavailable")
-            bind_route_request(policy["manifest"]["baseline"], request)
-            from potbot.controller.model_route_bindings import prepare_compilation
-
-            compilation = prepare_compilation(conn, context, policy, request, prompt_facts)
+        conn.execute("SELECT model_route_lock(%s,%s)", (context.workspace_id, _uuid(policy_id)))
+        policy = conn.execute(
+            "SELECT * FROM model_route_policies WHERE workspace_id=%s AND id=%s AND principal_id=%s",
+            (context.workspace_id, policy_id, context.principal_id),
+        ).fetchone()
+        if policy is None:
+            raise ScopeDeniedError("Model route is unavailable")
+        bind_route_request(policy["manifest"]["baseline"], request)
+        compilation = prepare_compilation(conn, context, policy, request, prompt_facts)
+        row = conn.execute(
+            "SELECT * FROM model_route_decisions WHERE workspace_id=%s AND policy_id=%s AND allocation_key=%s",
+            (context.workspace_id, policy_id, allocation_key),
+        ).fetchone()
+        if row is not None:
+            if row["request"] != spec.to_dict():
+                raise StateMismatchError("An allocation cannot be rebound to another request")
+        else:
             row = conn.execute(
-                "SELECT * FROM model_route_decisions WHERE workspace_id=%s AND policy_id=%s AND allocation_key=%s",
-                (context.workspace_id, policy_id, allocation_key),
+                "INSERT INTO model_route_decisions(workspace_id,id,policy_id,principal_id,epoch,review_id,allocation_key,request,episode_id,contract_revision_id,expires_at) SELECT %s,%s,%s,%s,%s,model_route_current(%s,%s),%s,%s,%s,e.active_contract_id,clock_timestamp()+interval '5 minutes' FROM episodes e WHERE e.workspace_id=%s AND e.id=%s RETURNING *",
+                (
+                    context.workspace_id,
+                    uuid4(),
+                    policy_id,
+                    context.principal_id,
+                    policy["epoch"],
+                    context.workspace_id,
+                    policy_id,
+                    allocation_key,
+                    Jsonb(spec.to_dict()),
+                    spec.episode_id,
+                    context.workspace_id,
+                    spec.episode_id,
+                ),
             ).fetchone()
-            if row is not None:
-                if row["request"] != spec.to_dict():
-                    raise StateMismatchError("An allocation cannot be rebound to another request")
-            else:
-                row = conn.execute(
-                    "INSERT INTO model_route_decisions(workspace_id,id,policy_id,principal_id,epoch,review_id,allocation_key,request,episode_id,contract_revision_id,expires_at) SELECT %s,%s,%s,%s,%s,model_route_current(%s,%s),%s,%s,%s,e.active_contract_id,clock_timestamp()+interval '5 minutes' FROM episodes e WHERE e.workspace_id=%s AND e.id=%s RETURNING *",
-                    (
-                        context.workspace_id,
-                        uuid4(),
-                        policy_id,
-                        context.principal_id,
-                        policy["epoch"],
-                        context.workspace_id,
-                        policy_id,
-                        allocation_key,
-                        Jsonb(spec.to_dict()),
-                        spec.episode_id,
-                        context.workspace_id,
-                        spec.episode_id,
-                    ),
-                ).fetchone()
-                if row is None:
-                    raise ScopeDeniedError("The task is unavailable")
-            from potbot.controller.model_route_bindings import persist_compilation
-
-            persist_compilation(conn, context, row, compilation)
-            return self._decision(row)
+            if row is None:
+                raise ScopeDeniedError("The task is unavailable")
+        persist_compilation(conn, context, row, compilation)
+        return self._decision(row)
 
     def configure_prompt(
         self, context: WorkspaceContext, policy_id: UUID, recipe: object
