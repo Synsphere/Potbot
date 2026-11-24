@@ -159,6 +159,7 @@ def compile_reasoning_prompt(
     constraints: tuple[str, ...] = (),
     context: dict[str, Any] | None = None,
     variant: PromptVariant = "model_role",
+    output_contract: Literal["json_object_v1"] | None = None,
 ) -> CompiledPrompt:
     if variant not in {"generic", "family", "model_role"}:
         raise InvalidInputError("unsupported prompt candidate variant")
@@ -180,6 +181,10 @@ def compile_reasoning_prompt(
         raise InvalidInputError("constraints must be bounded")
     if context is not None and not isinstance(context, dict):
         raise InvalidInputError("context must be a JSON record")
+    if output_contract is not None and (
+        output_contract != "json_object_v1" or role == "synthesizer"
+    ):
+        raise InvalidInputError("This prompt role has no requested JSON object contract")
     profile = profile_for_model(model)
     facts = {
         "task": task,
@@ -207,16 +212,27 @@ def compile_reasoning_prompt(
         system += (
             " For this role, prioritize evidence quality over verbosity and avoid duplicate work. "
         )
+    version = _PROMPT_VERSION
+    if output_contract == "json_object_v1":
+        version = "model-aware-reasoning-json-object-v1"
+        system += (
+            " Output contract json_object_v1: return exactly one JSON object. "
+            "The first non-whitespace character must be { and the last must be }. "
+            "Do not wrap it in Markdown or add prose outside the object. "
+            "Use the role's exact fields and ordinary JSON values; no duplicate keys, "
+            "NaN or Infinity. A valid shape is not evidence of a correct answer."
+        )
     # No raw model tokenizer delimiters, tool call syntax or private thinking tags.
     user = "Authoritative task and evidence packet (JSON data):\n" + encoded
-    identity = content_hash(
-        {
-            "version": _PROMPT_VERSION,
-            "variant": variant,
-            "role": role,
-            "profile": profile.to_dict(),
-            "system": system,
-            "user": user,
-        }
-    )
-    return CompiledPrompt(role, model, system, user, profile, _PROMPT_VERSION, identity)
+    identity_body = {
+        "version": version,
+        "variant": variant,
+        "role": role,
+        "profile": profile.to_dict(),
+        "system": system,
+        "user": user,
+    }
+    if output_contract is not None:
+        identity_body["output_contract"] = output_contract
+    identity = content_hash(identity_body)
+    return CompiledPrompt(role, model, system, user, profile, version, identity)

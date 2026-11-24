@@ -5,6 +5,9 @@ on:
     paths:
       - 'src/potbot/evaluation/agentic_*'
       - 'src/potbot/controller/atomic_tasks.py'
+      - 'src/potbot/models/prompt_compiler.py'
+      - 'src/potbot/evaluation/prompt_contracts.py'
+      - 'tests/unit/test_prompt_contracts.py'
       - 'scripts/benchmark_agentic_models.py'
       - 'examples/agentic-benchmark/**'
       - 'tests/unit/test_agentic_*'
@@ -32,6 +35,9 @@ jobs:
       - name: Verify offline model-role and judge calibration contracts
         run: |
           uv run --locked python -m pytest -q \
+            tests/unit/test_prompt_contracts.py \
+            tests/unit/test_model_routing_contract.py \
+            tests/unit/test_model_routing_authorization.py \
             tests/unit/test_agentic_shadow.py \
             tests/unit/test_agentic_ollama_transport.py \
             tests/unit/test_agentic_openai_profile.py \
