@@ -245,7 +245,7 @@ class OperationChecks:
                 bindings.update(native_bindings)
             elif request.job_type == "model.generate":
                 bindings["policySha256"] = self.gateway.policy.fingerprint
-                demand = self._hosted(request, check)
+                demand = self._hosted(actor, request, check, routing_decision_id)
             else:
                 raise CapabilityUnavailableError(
                     "No execution handler is installed for this operation."
@@ -295,11 +295,22 @@ class OperationChecks:
         )
 
     def _hosted(
-        self, request: JobSpec, check: Callable[[str, Callable[[], Any]], Any]
+        self,
+        actor: WorkspaceContext,
+        request: JobSpec,
+        check: Callable[[str, Callable[[], Any]], Any],
+        routing_decision_id: str | None,
     ) -> dict[str, int]:
         def policy() -> list[tuple[Any, int, Any]]:
+            from potbot.controller.model_route_bindings import checked_output_spec
+
+            output_spec = (
+                checked_output_spec(self.jobs.database, actor, decision_id=routing_decision_id)
+                if routing_decision_id is not None
+                else None
+            )
             return [
-                self.gateway.policy.request(selection, request.input)
+                self.gateway.policy.request(selection, request.input, output_spec=output_spec)
                 for selection in request.selected_models
             ]
 
@@ -311,8 +322,8 @@ class OperationChecks:
                 redactor = CaptureRedactor(
                     tuple(dict.fromkeys((key, *self.gateway.protected_values)))
                 )
-                prompt = (generation.prompt + generation.system).encode()
-                if any(pattern in prompt for pattern in redactor.patterns):
+                disclosure = generation.disclosure_bytes
+                if any(pattern in disclosure for pattern in redactor.patterns):
                     raise ScopeDeniedError("A protected value cannot be disclosed in a prompt.")
 
         check("provider_credentials", credentials)

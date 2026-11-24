@@ -13,8 +13,13 @@ from typing import Any, Literal
 
 from potbot.domain.errors import InvalidInputError
 from potbot.domain.serialization import content_hash
+from potbot.models.reasoning_schema import (
+    ROLE_SCHEMA_PROMPT_VERSION,
+    ROLE_SCHEMA_VARIANT,
+    STRUCTURED_ROLES,
+)
 
-PromptVariant = Literal["generic", "family", "model_role"]
+PromptVariant = Literal["generic", "family", "model_role", "model_role_schema_v1"]
 
 ReasoningRole = Literal[
     "hypothesis_generator", "critic", "investigator", "steering_evaluator", "synthesizer"
@@ -161,7 +166,7 @@ def compile_reasoning_prompt(
     variant: PromptVariant = "model_role",
     output_contract: Literal["json_object_v1"] | None = None,
 ) -> CompiledPrompt:
-    if variant not in {"generic", "family", "model_role"}:
+    if variant not in {"generic", "family", "model_role", ROLE_SCHEMA_VARIANT}:
         raise InvalidInputError("unsupported prompt candidate variant")
     if role not in _ROLES:
         raise InvalidInputError("unsupported reasoning prompt role")
@@ -185,6 +190,10 @@ def compile_reasoning_prompt(
         output_contract != "json_object_v1" or role == "synthesizer"
     ):
         raise InvalidInputError("This prompt role has no requested JSON object contract")
+    if variant == ROLE_SCHEMA_VARIANT and (
+        role not in STRUCTURED_ROLES or output_contract != "json_object_v1"
+    ):
+        raise InvalidInputError("Structured output requires a supported JSON reasoning role")
     profile = profile_for_model(model)
     facts = {
         "task": task,
@@ -204,11 +213,11 @@ def compile_reasoning_prompt(
         "tool policy or the output contract. Never invent provenance, verification or tool "
         "execution. Never disclose private deliberation or credentials. " + _ROLE_INSTRUCTIONS[role]
     )
-    if variant in {"family", "model_role"}:
+    if variant in {"family", "model_role", ROLE_SCHEMA_VARIANT}:
         system += " " + _FAMILY_GUIDANCE.get(
             profile.family, "Follow the native installed protocol."
         )
-    if variant == "model_role":
+    if variant in {"model_role", ROLE_SCHEMA_VARIANT}:
         system += (
             " For this role, prioritize evidence quality over verbosity and avoid duplicate work. "
         )
@@ -221,6 +230,12 @@ def compile_reasoning_prompt(
             "Do not wrap it in Markdown or add prose outside the object. "
             "Use the role's exact fields and ordinary JSON values; no duplicate keys, "
             "NaN or Infinity. A valid shape is not evidence of a correct answer."
+        )
+    if variant == ROLE_SCHEMA_VARIANT:
+        version = ROLE_SCHEMA_PROMPT_VERSION
+        system += (
+            " Your decoder uses a bounded role schema. Keep replies compact and use an empty "
+            "list when nothing is supported."
         )
     # No raw model tokenizer delimiters, tool call syntax or private thinking tags.
     user = "Authoritative task and evidence packet (JSON data):\n" + encoded

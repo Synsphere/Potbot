@@ -38,3 +38,5 @@ Migration 54 records the run, stage index and accepted outcome receipts. The con
 The PostgreSQL acceptance tests exercise normal workbench checks and worker calls with controlled provider responses. They include fresh controller instances between phases, verified predecessor handoff, one charge per confirmed execution, interrupted dispatch, and refusal to advance after reply loss. The foreground CLI is opt-in. The interactive chat investigator's steering and evidence-tool loop still need to migrate onto durable stages. Qualification of the signed native worker over live Syn and protected rollout gates remains open.
 
 The preceding [sealed native worker increment](r7-4-g-native-model-workers.md) documents installation and model accounting.
+
+The [schema-constrained reasoning increment](r7-4-i-structured-reasoning.md) shows how hosted hypothesis and critique stages can opt into strict decoding.

@@ -27,6 +27,7 @@ from potbot.domain.errors import (
     StateMismatchError,
 )
 from potbot.domain.jobs import JobLease
+from potbot.domain.operation_workbench import parse_check_report
 from potbot.domain.serialization import content_hash
 from potbot.models.hosted_policy import HostedPolicy
 from potbot.models.providers import (
@@ -276,15 +277,33 @@ class HostedInferenceGateway:
     ) -> dict[str, Any]:
         from psycopg.types.json import Jsonb
 
+        from potbot.controller.model_route_bindings import checked_output_spec
+
         if type(ordinal) is not int or not 0 <= ordinal < len(lease.selected_models):
             raise InvalidInputError("The hosted request ordinal is invalid.")
         selection = lease.selected_models[ordinal]
         try:
-            request, input_allowance, rate = self.policy.request(selection, lease.input)
+            output_spec = None
+            if lease.operation_check_id is not None:
+                prior = self.jobs.operation_check(context, lease)
+                if prior is None:
+                    raise ScopeDeniedError(
+                        "The hosted launch has no owned successful operation check."
+                    )
+                output_spec = checked_output_spec(self.database, context, job_id=lease.job_id)
+                bindings = parse_check_report(prior["result"]["operation_check"])["bindings"]
+                checked_digest = bindings.get("modelOutputSchemaSha256")
+                if checked_digest != (output_spec.fingerprint if output_spec is not None else None):
+                    raise StateMismatchError(
+                        "Hosted output schema differs from the retained check."
+                    )
+            request, input_allowance, rate = self.policy.request(
+                selection, lease.input, output_spec=output_spec
+            )
             key = self.secret_resolver(request.selection.credential_ref)
             redactor = CaptureRedactor(tuple(dict.fromkeys((key, *self.protected_values))))
-            prompt_bytes = (request.prompt + request.system).encode()
-            if any(pattern in prompt_bytes for pattern in redactor.patterns):
+            disclosure = request.disclosure_bytes
+            if any(pattern in disclosure for pattern in redactor.patterns):
                 raise ScopeDeniedError(
                     "A service credential cannot be disclosed in a model prompt."
                 )

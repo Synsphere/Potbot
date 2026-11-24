@@ -22,12 +22,15 @@ def request_body(request: ProviderRequest) -> tuple[str, dict[str, Any]]:
     """Return a fixed-origin relative route and exactly one protocol's fields."""
     selection = request.selection
     protocol = selection.protocol
+    schema = request.response_schema
     body: dict[str, Any] = {"model": selection.model, "stream": True}
     if protocol == "responses":
         body.update(input=request.prompt, max_output_tokens=request.max_output_tokens, store=False)
         if request.system:
             body["instructions"] = request.system
-        if request.response_format == "json_object":
+        if schema is not None:
+            body["text"] = {"format": {"type": "json_schema", **schema}}
+        elif request.response_format == "json_object":
             body["text"] = {"format": {"type": "json_object"}}
         path = "/v1/responses"
     elif protocol in {"chat_completions", "messages"}:
@@ -50,7 +53,9 @@ def request_body(request: ProviderRequest) -> tuple[str, dict[str, Any]]:
             )
             body[output_field] = request.max_output_tokens
             body["stream_options"] = {"include_usage": True}
-            if request.response_format == "json_object":
+            if schema is not None:
+                body["response_format"] = {"type": "json_schema", "json_schema": schema}
+            elif request.response_format == "json_object":
                 body["response_format"] = {"type": "json_object"}
             path = "/v1/chat/completions"
     else:

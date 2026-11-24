@@ -19,9 +19,53 @@ from potbot.domain.errors import (
     StateMismatchError,
 )
 from potbot.domain.model_routing import bind_route_request, route_target
-from potbot.domain.operation_workbench import operation_id, parse_request
+from potbot.domain.operation_workbench import canonical_uuid, operation_id, parse_request
 from potbot.domain.serialization import canonical_json, content_hash
 from potbot.models.prompt_compiler import compile_reasoning_prompt
+from potbot.models.reasoning_schema import ROLE_SCHEMA_VARIANT, ReasoningOutputSpec
+
+
+def _structured_target(recipe: dict[str, Any], executor: dict[str, Any]) -> None:
+    if recipe["variant"] == ROLE_SCHEMA_VARIANT and (
+        executor["job_type"] != "model.generate"
+        or [model["provider"] for model in executor["selected_models"]] != ["openai"]
+    ):
+        raise ScopeDeniedError("Structured reasoning requires one OpenAI model job")
+
+
+def _structured_output(recipe: dict[str, Any], facts: object) -> ReasoningOutputSpec | None:
+    if recipe["variant"] != ROLE_SCHEMA_VARIANT:
+        return None
+    if recipe["output_contract"] != "json_object_v1" or not isinstance(facts, dict):
+        raise StateMismatchError("The structured reasoning prompt has no frozen facts or contract")
+    return ReasoningOutputSpec.from_context(recipe["role"], facts.get("context"))
+
+
+def checked_output_spec(
+    database: Any,
+    actor: WorkspaceContext,
+    *,
+    decision_id: str | UUID | None = None,
+    job_id: UUID | None = None,
+) -> ReasoningOutputSpec | None:
+    """Resolve format from immutable owned route records, never job input."""
+    if (decision_id is None) == (job_id is None):
+        raise InvalidInputError("Structured output lookup needs one decision or job")
+    decision = canonical_uuid(str(decision_id)) if decision_id is not None else None
+    with database.transaction(actor) as conn:
+        row = conn.execute(
+            "SELECT r.recipe,f.facts,d.request FROM model_route_decisions d "
+            "JOIN model_route_prompt_recipes r ON r.workspace_id=d.workspace_id "
+            "AND r.policy_id=d.policy_id AND r.principal_id=d.principal_id "
+            "LEFT JOIN model_route_compiled_prompts f ON f.workspace_id=d.workspace_id "
+            "AND f.decision_id=d.id AND f.principal_id=d.principal_id "
+            "WHERE d.workspace_id=%s AND d.principal_id=%s AND (d.id=%s OR d.job_id=%s)",
+            (actor.workspace_id, actor.principal_id, decision, job_id),
+        ).fetchone()
+    if row is None:
+        return None
+    _structured_target(row["recipe"], row["request"])
+    return _structured_output(row["recipe"], row["facts"])
 
 
 def prompt_recipe(value: object) -> dict[str, Any]:
@@ -78,6 +122,7 @@ def compile_route_request(
     )
     spec = parse_request(request)
     result = spec.to_dict()
+    _structured_target(selected, result)
     if spec.job_type == "model.generate":
         if len(spec.selected_models) != 1 or spec.selected_models[0]["model"] != selected["model"]:
             raise ScopeDeniedError("Compiled prompt model differs from the selected executor")
@@ -138,6 +183,7 @@ def configure_recipe(
         if policy["manifest"]["prompt_contract_sha256"] != digest:
             raise StateMismatchError("Prompt recipe differs from the frozen route contract")
         target = policy["manifest"]["baseline"]["executor"]
+        _structured_target(selected, target)
         model = (
             target["selected_models"][0]["model"]
             if target["job_type"] == "model.generate"
@@ -173,6 +219,7 @@ def prepare_compilation(
         return None
     exact, identity = compile_route_request(recipe["recipe"], facts, request)
     bind_route_request(policy["manifest"]["baseline"], exact)
+    _structured_output(recipe["recipe"], facts)
     return {
         "facts": json.loads(canonical_json(facts)),
         "prompt_sha256": identity,
@@ -248,8 +295,6 @@ def _checked_route_binding(
     request: object,
     observed: dict[str, Any],
 ) -> dict[str, str]:
-    from potbot.domain.operation_workbench import canonical_uuid
-
     with database.transaction(actor) as conn:
         decision = conn.execute(
             "SELECT * FROM model_route_decisions WHERE workspace_id=%s AND id=%s AND principal_id=%s",
@@ -297,8 +342,12 @@ def _checked_route_binding(
         runtime = worker_admission_identity(target, observed)
         if runtime != target["runtime_identity_sha256"]:
             raise StateMismatchError("Observed worker admission differs from the accepted route")
-        return {
+        result = {
             "modelRoutingSha256": compiled["binding_sha256"],
             "modelPromptSha256": prompt_sha,
             "modelRuntimeSha256": runtime,
         }
+        output = _structured_output(recipe["recipe"], compiled["facts"])
+        if output is not None:
+            result["modelOutputSchemaSha256"] = output.fingerprint
+        return result
