@@ -422,7 +422,7 @@ def create_settings_widget(
             tree.addTopLevelItem(item)
 
         def _client(self) -> NativeSettingsClient:
-            index = self.target.currentIndex()
+            index = int(self.target.currentIndex())
             if not 0 <= index < len(self._clients):
                 raise NativeSettingsError("configuration")
             return self._clients[index]
@@ -555,7 +555,7 @@ def create_settings_widget(
 
             self._start("load", work)
 
-        @Slot(object)
+        @Slot(object)  # type: ignore[untyped-decorator, unused-ignore]
         def _finished(self, payload: Any) -> None:
             epoch, identity, kind, data, error = payload
             self._jobs.pop(identity, None)

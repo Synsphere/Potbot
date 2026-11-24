@@ -81104,7 +81104,7 @@
     },
     {
       "path": "docs/implementation/cfg02-native-python-settings.md",
-      "sha256": "71d32acf0d482e3094c9e56a2561c14702cc430f58d56eb348d2ff5e86773a38",
+      "sha256": "dc11ff043f6b8da2c8b5dc0726e7747d277f562522c5e35e4c60c16e22d05167",
       "families": [
         "frontend",
         "configuration",
@@ -81170,8 +81170,8 @@
           ]
         },
         {
-          "locator": "line:87-108",
-          "sha256": "3387a41424de89205379d48e7d46fbc4e1249fb0825c262fec3342da4c764735",
+          "locator": "line:87-110",
+          "sha256": "fa75732967ecc3270a053242f20676005bd05e60ff0f5ee89ae367a87a22c2a4",
           "excerpt": "## Verification and remaining acceptance\n\nThe [native acceptance workflow](../../.github/workflows/native-settings.yml)\nrequires actual Qt tests on Windows and ",
           "families": [
             "frontend",
@@ -90783,7 +90783,7 @@
       },
       {
         "path": ".github/workflows/native-settings.yml",
-        "sha256": "986a167d6203cdee453d7bbcc5236fa6365d17ceef8b3b04f6cf1ef2e22341ad",
+        "sha256": "3f5819c204f06a57a3300d4ce98120cad3d14f70c58605751f4221d531c9a619",
         "name": "Native Python settings and swarm UI",
         "state": "active",
         "at_reviewed_base": false,
@@ -95461,8 +95461,8 @@
         {
           "path": "src/potbot/desktop_settings.py",
           "symbol": "create_settings_widget",
-          "sha256": "5e6f4cc38d0bad582bdc319d18397d5bc4c7ec50f043183a3aea42848f72e549",
-          "symbol_sha256": "db76c2426a9cc3f5c189b87f84a9936c88f8259c3a482e90fe65b1e80be15e5b",
+          "sha256": "d58b2bac2909c462502eb3861f791effdb496c9f5397f5d421585f6b4cc5fd86",
+          "symbol_sha256": "1ca2c3fea79a3bc4de90fa8e410e5f6f82a6345f224a15eaa4d693ad373bea4f",
           "basis": "Real native widgets, generation-fenced reads, conflict review and explicit grant intent."
         },
         {

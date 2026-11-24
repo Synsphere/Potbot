@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -45,5 +47,32 @@ def test_local_ui_defaults_to_native_but_headless_linux_keeps_web_mode() -> None
 
 
 def test_pyside_is_lazy_imported_so_non_desktop_commands_stay_lightweight() -> None:
-    source = Path(desktop.__file__).read_text(encoding="utf-8")
-    assert source.index("def main()") < source.index("from PySide6.QtCore import")
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            """
+import importlib.abc
+import sys
+class NoQt(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname == "PySide6" or fullname.startswith("PySide6."):
+            raise ImportError("Qt deliberately unavailable in this child process")
+sys.meta_path.insert(0, NoQt())
+from potbot import desktop, desktop_settings, desktop_settings_client, desktop_settings_state
+from potbot.domain.errors import CapabilityUnavailableError
+assert not any(name.startswith("PySide6") for name in sys.modules)
+try:
+    desktop.main()
+except CapabilityUnavailableError:
+    print("optional-desktop-boundary-passed")
+else:
+    raise AssertionError("Missing Qt did not fail qualification")
+""",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=True,
+    )
+    assert result.stdout.strip() == "optional-desktop-boundary-passed"

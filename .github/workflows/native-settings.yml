@@ -5,6 +5,7 @@ on:
       - 'src/potbot/desktop*.py'
       - 'tests/unit/test_desktop*.py'
       - 'tests/integration/test_desktop_settings.py'
+      - 'tests/fixtures/mypy-native-headless.toml'
       - '.github/workflows/native-settings.yml'
   pull_request:
   workflow_dispatch:
@@ -63,6 +64,7 @@ jobs:
           uv run --locked --extra desktop --extra credentials ruff check $files tests/unit/test_desktop_settings_client.py tests/unit/test_desktop_settings_qt.py tests/integration/test_desktop_settings.py
           uv run --locked --extra desktop --extra credentials ruff format --check $files tests/unit/test_desktop_settings_client.py tests/unit/test_desktop_settings_qt.py tests/integration/test_desktop_settings.py
           uv run --locked --extra desktop --extra credentials mypy $files
+          uv run --locked --extra desktop --extra credentials mypy --config-file tests/fixtures/mypy-native-headless.toml --cache-dir .potbot/native-settings/mypy-headless $files
       - name: Retain native fixture captures and test results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

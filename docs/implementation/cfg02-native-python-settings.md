@@ -88,7 +88,9 @@ receipts. They are excluded from packages and Git.
 
 The [native acceptance workflow](../../.github/workflows/native-settings.yml)
 requires actual Qt tests on Windows and Linux, with the locked desktop runtime
-installed and no skipped native cases. It also exercises Qt interactions through
+installed and no skipped native cases. Type checks cover both installed Qt and
+Qt treated as unavailable, while a child-process test verifies imports stay light
+and native startup fails closed without its desktop runtime. CI also exercises Qt interactions through
 the existing HTTP handlers against disposable PostgreSQL: preference saves and
 conflict rebase, actual metadata inventory, owner review, pending intent, separate
 protected native application and independent ledger readback. CI retains JUnit,
