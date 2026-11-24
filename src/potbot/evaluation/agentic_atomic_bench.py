@@ -43,48 +43,32 @@ def _metrics(rows: list[Observation]) -> dict[str, Any]:
     return result
 
 
-def compare_atomic(
+def validated_atomic_observations(
     document: dict[str, Any],
     suite: RoleSuite,
     models: list[ModelTarget],
     *,
-    baseline: str,
-    candidate: str,
-    variants: tuple[PromptVariant, ...] = ("generic", "family", "model_role"),
-    repeat: int = 1,
-    minimum_cases: int = 12,
-) -> dict[str, Any]:
-    """Regrade retained bytes and compare the complete declared holdout matrix.
-
-    Repeats never increase independent sample size. Missing/uncertain attempts
-    stay visible and block comparison readiness, rather than improving a score.
-    """
+    variants: tuple[PromptVariant, ...],
+    repeat: int,
+) -> dict[tuple[str, str, str, int], Observation]:
+    """Recheck bounded retained bytes; this does not authenticate provider claims."""
     _reject(
         type(repeat) is not int
         or not 1 <= repeat <= 5
-        or type(minimum_cases) is not int
-        or not 4 <= minimum_cases <= 200
         or not variants
         or len(set(variants)) != len(variants)
         or bool(set(variants) - {"generic", "family", "model_role"}),
-        "Invalid atomic comparison bounds",
+        "Invalid observation matrix bounds",
     )
     targets = {model.id: model for model in models}
     _reject(
-        len(targets) != len(models)
-        or baseline == candidate
-        or baseline not in targets
-        or candidate not in targets,
-        "Comparison needs two distinct configured targets",
-    )
-    selected = (targets[baseline], targets[candidate])
-    _reject(
-        (selected[0].model, selected[0].revision, selected[0].backend, selected[0].provider)
-        == (selected[1].model, selected[1].revision, selected[1].backend, selected[1].provider),
-        "Aliases for the same model revision are not independent targets",
+        not 1 <= len(targets) <= 16 or len(targets) != len(models),
+        "Observation targets must be distinct and bounded",
     )
     _reject(
-        document.get("schema_version") != 1
+        not isinstance(document, dict)
+        or type(document.get("schema_version")) is not int
+        or document.get("schema_version") != 1
         or document.get("suite_sha256") != suite.identity
         or document.get("qualified") is not False
         or document.get("auto_promoted") is not False
@@ -108,6 +92,27 @@ def compare_atomic(
             row = Observation(**raw)
         except TypeError:
             raise InvalidInputError("Invalid benchmark observation fields") from None
+        _reject(
+            any(
+                not isinstance(getattr(row, field), str)
+                for field in (
+                    "model_id",
+                    "model",
+                    "revision",
+                    "role",
+                    "case_id",
+                    "split",
+                    "variant",
+                    "input_sha256",
+                    "prompt_sha256",
+                    "status",
+                    "backend",
+                    "tier",
+                    "grader",
+                )
+            ),
+            "Observation identities must be text",
+        )
         model = targets.get(row.model_id)
         _reject(row.case_id not in cases, "Unknown observation case")
         case = cases[row.case_id]
@@ -169,6 +174,54 @@ def compare_atomic(
                 "Uncertain attempts cannot contain completed metrics",
             )
         indexed[key] = row
+
+    return indexed
+
+
+def compare_atomic(
+    document: dict[str, Any],
+    suite: RoleSuite,
+    models: list[ModelTarget],
+    *,
+    baseline: str,
+    candidate: str,
+    variants: tuple[PromptVariant, ...] = ("generic", "family", "model_role"),
+    repeat: int = 1,
+    minimum_cases: int = 12,
+) -> dict[str, Any]:
+    """Regrade retained bytes and compare the complete declared holdout matrix.
+
+    Repeats never increase independent sample size. Missing/uncertain attempts
+    stay visible and block comparison readiness, rather than improving a score.
+    """
+    _reject(
+        type(repeat) is not int
+        or not 1 <= repeat <= 5
+        or type(minimum_cases) is not int
+        or not 4 <= minimum_cases <= 200
+        or not variants
+        or len(set(variants)) != len(variants)
+        or bool(set(variants) - {"generic", "family", "model_role"}),
+        "Invalid atomic comparison bounds",
+    )
+    targets = {model.id: model for model in models}
+    _reject(
+        len(targets) != len(models)
+        or baseline == candidate
+        or baseline not in targets
+        or candidate not in targets,
+        "Comparison needs two distinct configured targets",
+    )
+    selected = (targets[baseline], targets[candidate])
+    _reject(
+        (selected[0].model, selected[0].revision, selected[0].backend, selected[0].provider)
+        == (selected[1].model, selected[1].revision, selected[1].backend, selected[1].provider),
+        "Aliases for the same model revision are not independent targets",
+    )
+    indexed = validated_atomic_observations(
+        document, suite, models, variants=variants, repeat=repeat
+    )
+    kinds = {kind.name for kind in ATOMIC_KINDS}
 
     groups: dict[tuple[str, str], list[Any]] = defaultdict(list)
     for case in suite.cases:

@@ -187,6 +187,27 @@ def _parsed_variants(raw: str) -> list[PromptVariant]:
     return variants  # type: ignore[return-value]
 
 
+def _review_admission(
+    args: argparse.Namespace, suite: RoleSuite, models: list[ModelTarget]
+) -> str | None:
+    marked = suite.id.startswith("atomic-review-") or any(
+        "review_pair_sha256" in (case.context or {}) for case in suite.cases
+    )
+    path = getattr(args, "review_bundle", None)
+    if path is None:
+        if marked:
+            raise InvalidInputError("frozen reviewer tasks require their exact provenance bundle")
+        return None
+    from potbot.evaluation.agentic_reviewers import admit_reviewer_models, reviewer_suite
+
+    bundle = _read(path, limit=16 * 1024 * 1024)
+    frozen, _, subjects = reviewer_suite(bundle)
+    if frozen != suite:
+        raise InvalidInputError("reviewer suite differs from its frozen bundle")
+    admit_reviewer_models(models, subjects)
+    return str(bundle["bundle_sha256"])
+
+
 def _execute(
     args: argparse.Namespace,
     suite: RoleSuite,
@@ -199,6 +220,7 @@ def _execute(
 ) -> dict[str, Any]:
     if not 1 <= args.repeat <= 5:
         raise InvalidInputError("repeats must be between one and five")
+    review_bundle_sha256 = _review_admission(args, suite, models)
     plan = _preflight(models, suite, variants, args.repeat)
     if not plan["matrix_attempts"] or plan["matrix_attempts"] > 1600:
         raise InvalidInputError("benchmark matrix is empty or exceeds 1600 attempts")
@@ -315,6 +337,8 @@ def _execute(
         )
     judge_rows: list[Observation] = []
     if args.judge_derived:
+        from potbot.evaluation.agentic_reviewers import model_revision_identity
+
         # Only derive a pair when independently graded outputs have different
         # correctness. Never ask a model to judge its own output.
         by_case: dict[tuple[str, str, int], list[Observation]] = {}
@@ -333,10 +357,15 @@ def _execute(
                 # Never silently truncate candidate evidence before judging it.
                 continue
             for judge_model in models:
-                if "judge" not in judge_model.roles or judge_model.id in {
-                    first.model_id,
-                    second.model_id,
-                }:
+                source_identities = {
+                    model_revision_identity(model)
+                    for model in models
+                    if model.id in {first.model_id, second.model_id}
+                }
+                if (
+                    "judge" not in judge_model.roles
+                    or model_revision_identity(judge_model) in source_identities
+                ):
                     continue
                 for reverse in (False, True):
                     jcase = judge_case(
@@ -377,6 +406,7 @@ def _execute(
         if all(m.backend == "deterministic" for m in models)
         else "measured_requests",
         "dataset_audit": dataset_audit,
+        "review_bundle_sha256": review_bundle_sha256,
         "reference_runtime": None,
         "admission_ceiling_microunits": args.max_cost_microunits,
         "reserved_ceiling_microunits": cost_reserved,
@@ -405,6 +435,7 @@ def main(argv: list[str] | None = None) -> int:
         group.add_argument("--suite", type=Path, required=True)
         group.add_argument("--models", type=Path, required=True)
         group.add_argument("--dataset-card", type=Path)
+        group.add_argument("--review-bundle", type=Path)
         group.add_argument("--variants", default="generic,family,model_role")
         group.add_argument("--repeat", type=int, default=1)
         if name == "run":
@@ -419,6 +450,25 @@ def main(argv: list[str] | None = None) -> int:
             group.add_argument("--shuffle-seed", type=int, default=42)
             group.add_argument("--min-samples", type=int, default=12)
             group.add_argument("--store-text", action="store_true")
+    build = command.add_parser("build-review-suite")
+    build.add_argument("--suite", required=True, type=Path)
+    build.add_argument("--models", required=True, type=Path)
+    build.add_argument("--results", required=True, type=Path)
+    build.add_argument("--first", required=True)
+    build.add_argument("--second", required=True)
+    build.add_argument("--source-variant", default="generic")
+    build.add_argument("--source-trial", type=int, default=1)
+    build.add_argument("--variants", default="generic,family,model_role")
+    build.add_argument("--repeat", type=int, default=1)
+    build.add_argument("--output-dir", required=True, type=Path)
+    calibration = command.add_parser("calibrate-reviewers")
+    calibration.add_argument("--review-bundle", required=True, type=Path)
+    calibration.add_argument("--models", required=True, type=Path)
+    calibration.add_argument("--results", required=True, type=Path)
+    calibration.add_argument("--variants", default="generic,family,model_role")
+    calibration.add_argument("--repeat", type=int, default=1)
+    calibration.add_argument("--minimum-pairs", type=int, default=12)
+    calibration.add_argument("--output", required=True, type=Path)
     pin = command.add_parser("pin-reference")
     pin.add_argument("--output", required=True, type=Path)
     audit = command.add_parser("audit-atomic-suite")
@@ -443,6 +493,50 @@ def main(argv: list[str] | None = None) -> int:
     )
     try:
         args = parser.parse_args(argv)
+        if args.command == "build-review-suite":
+            from potbot.evaluation.agentic_reviewers import build_reviewer_bundle
+
+            payload = build_reviewer_bundle(
+                _read(args.results, limit=16 * 1024 * 1024),
+                RoleSuite.from_dict(_read(args.suite)),
+                _targets(args.models),
+                first=args.first,
+                second=args.second,
+                variants=tuple(_parsed_variants(args.variants)),
+                repeat=args.repeat,
+                source_variant=args.source_variant,
+                source_trial=args.source_trial,
+            )
+            args.output_dir.mkdir(mode=0o700, parents=True, exist_ok=False)
+            _private_write(args.output_dir / "review-bundle.json", canonical_json(payload) + "\n")
+            _private_write(
+                args.output_dir / "review-suite.json", canonical_json(payload["suite"]) + "\n"
+            )
+            print(
+                json.dumps(
+                    {
+                        "bundle_sha256": payload["bundle_sha256"],
+                        "source_tasks": len(payload["pairs"]),
+                        "output_dir": str(args.output_dir),
+                        "qualified": False,
+                    }
+                )
+            )
+            return 0
+        if args.command == "calibrate-reviewers":
+            from potbot.evaluation.agentic_reviewers import calibrate_reviewers
+
+            payload = calibrate_reviewers(
+                _read(args.review_bundle, limit=16 * 1024 * 1024),
+                _read(args.results, limit=16 * 1024 * 1024),
+                _targets(args.models),
+                variants=tuple(_parsed_variants(args.variants)),
+                repeat=args.repeat,
+                minimum_pairs=args.minimum_pairs,
+            )
+            _private_write(args.output, canonical_json(payload) + "\n")
+            print("Reviewer calibration retained; no model calls or routing changes.")
+            return 0
         if args.command == "pin-reference":
             from potbot.evaluation.agentic_reference import (
                 REFERENCE_MODEL,
@@ -523,7 +617,10 @@ def main(argv: list[str] | None = None) -> int:
         if not 1 <= args.repeat <= 5:
             raise InvalidInputError("invalid repeat count")
         if args.command == "preflight":
+            review_bundle_sha256 = _review_admission(args, suite, models)
             plan = _preflight(models, suite, variants, args.repeat)
+            if review_bundle_sha256 is not None:
+                plan["review_bundle_sha256"] = review_bundle_sha256
             if args.dataset_card is not None:
                 from potbot.evaluation.agentic_dataset import audit_atomic_dataset
 

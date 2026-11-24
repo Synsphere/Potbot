@@ -4470,6 +4470,24 @@
           "symbol": "audit_atomic_dataset",
           "sha256": "9ee81d92c0e2dcffeb8a617ca39607af253a28827dd1673cd8ad159b1c2ca9aa",
           "basis": "R7.3-B pure reference and public-fixture contract checks; no independent gold or deployed-model qualification"
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_atomic_bench.py",
+          "symbol": "validated_atomic_observations",
+          "sha256": "93bdb1928af4c6c7561f94b7a2415ee1f347c15b0466faf599255e752b5e866a",
+          "basis": "R7.3-C frozen reviewer protocol and synthetic observation/CLI acceptance. No live reviewer, gold-authority, host or routing qualification."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_reviewers.py",
+          "symbol": "build_reviewer_bundle",
+          "sha256": "a740c58c0f952ac9c6ea46a431291bc1abb78cd8f571cbec0e1c910ddd00a278",
+          "basis": "R7.3-C frozen reviewer protocol and synthetic observation/CLI acceptance. No live reviewer, gold-authority, host or routing qualification."
+        },
+        {
+          "path": "src/potbot/evaluation/agentic_reviewers.py",
+          "symbol": "calibrate_reviewers",
+          "sha256": "a740c58c0f952ac9c6ea46a431291bc1abb78cd8f571cbec0e1c910ddd00a278",
+          "basis": "R7.3-C frozen reviewer protocol and synthetic observation/CLI acceptance. No live reviewer, gold-authority, host or routing qualification."
         }
       ],
       "tests": [
@@ -4581,15 +4599,33 @@
           "symbol": "test_changed_gold_changes_score_but_never_reference_output_or_prompt",
           "sha256": "eb64125b4ecabd39ace3571a27fe60fbb4409e3d5f2674e4c7fdd2969fbf12a6",
           "basis": "R7.3-B pure reference and public-fixture contract checks; no independent gold or deployed-model qualification"
+        },
+        {
+          "path": "tests/unit/test_agentic_reviewers.py",
+          "symbol": "test_perfect_synthetic_reviewer_counts_sources_once_despite_orders_and_repeats",
+          "sha256": "cb130808bb71427872b50b3307a445a0236c177eaa58ec7e736678b9d96bb1d3",
+          "basis": "R7.3-C frozen reviewer protocol and synthetic observation/CLI acceptance. No live reviewer, gold-authority, host or routing qualification."
+        },
+        {
+          "path": "tests/unit/test_agentic_reviewers.py",
+          "symbol": "test_always_first_position_exposes_wrong_answer_approval_and_inconsistent_pairs",
+          "sha256": "cb130808bb71427872b50b3307a445a0236c177eaa58ec7e736678b9d96bb1d3",
+          "basis": "R7.3-C frozen reviewer protocol and synthetic observation/CLI acceptance. No live reviewer, gold-authority, host or routing qualification."
+        },
+        {
+          "path": "tests/unit/test_agentic_reviewers.py",
+          "symbol": "test_runner_refuses_self_review_before_transport_construction",
+          "sha256": "cb130808bb71427872b50b3307a445a0236c177eaa58ec7e736678b9d96bb1d3",
+          "basis": "R7.3-C frozen reviewer protocol and synthetic observation/CLI acceptance. No live reviewer, gold-authority, host or routing qualification."
         }
       ],
-      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route.",
+      "assessment": "R6.6/R7 and deterministic benchmark/monitoring foundations exist. Authored synthetic success@k is not held-out model quality; imported benchmarks need license, independent oracle and exact source/runtime evidence. U04-Q follow-on: adds bounded independent typed equals, literal contains and length_equals assertions over verified normalized gateway output. Reports disclose booleans and safe reasons without expected/actual values or JSON pointers. U04-S follow-on: adds deterministic ranking recall fixtures, hard-negative constraint tests and independent task-report joins, preserving cost/latency/general-quality unknowns. U04-T follow-on: evaluates 1\u201316 predeclared literal JSON assertions over complete owned hosted text or typed Cog output, retaining binding, acceptance, output and evidence hashes. T05-A follow-on: verifies exact codepoint-safe UTF-8 quotes from authenticated retained source bytes and compares operator-grouped literal values with explicit freshness and unavailable-evidence reasons. R7.3-B adds source-pinned pure atomic references through the existing benchmark runner and a public synthetic-fixture provenance/leakage audit. It neither authenticates independent gold review nor qualifies an installed Cog, model or route. R7.3-C adds frozen anonymous reviewer task pairs, exact bundle admission before inference and complete retained-matrix calibration. Repeated verdicts and reversed positions count as one source task; declared self-model aliases are refused. Synthetic correctness and self-consistent gold do not authenticate a provider, independent oracle or deployed model.",
       "support_scope": "Current fixture, judge/calibration and ledger definitions, not completed B00-B10 external benchmark campaigns. U04-D follow-on: The deterministic forty-request discovery set checks class selection and hard exclusions, with adversarial name/popularity/keyword repetition and exact installed-owner preference. These retrieval fixtures are not general reasoning, tool execution or task-success benchmarks. U04-Q follow-on: Failed assertions, peer errors, malformed/changed outputs and missing stopped evidence cannot produce a successful task report. Server-provided success flags and hashes are not independent expected results. U04-S follow-on: Retrieval score, installation and provider-authored text are not general success measurements. Passing synthetic fixtures do not substitute for independent deployed model/task evidence. U04-T follow-on: Passing applies only to fixed assertions. It does not complete a whole task, independently qualify a deployed provider/host, or turn a truncated UI preview into outcome evidence. T05-A follow-on: Supported means verified cited-source agreement only. Different values remain unresolved; retrieval time does not replace publication time, and no need or task is automatically resolved.",
       "remaining": [
         "Freeze chronological tasks, independent graders, exact returned patch and real cost/time/resource provenance",
         "Compare roles/prompts/routing with uncertainty, regression/security gates and reversible promotion"
       ],
-      "next_action": "Continue R7.3 with independent gold review, protected holdouts, exact small/strong deployments, measured resources and A/B reviewer calibration; preserve R7.4 promotion gates. Historical U00 requirements and runtime dispositions remain unchanged."
+      "next_action": "Continue R7.3 with independently reviewed protected gold, measured selected small/strong and reviewer deployments using existing pinned local-host profiles, exact runtime/licence/quantization evidence and measured RAM/VRAM. Preserve R7.4 promotion gates and historical U00 qualification decisions."
     },
     {
       "id": "automation",
@@ -80509,7 +80545,7 @@
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
       "assessment": "Source-reviewed R7.3-B pure reference algorithms and dataset integrity. Public, agent-authored fixtures retain pending independent review; passing them proves protocol behavior only. No live inference, installed worker, independent sample distribution or routing promotion is established.",
-      "sha256": "bff0cbecfeb9fd5fbf02db6973ab6258992329002ae8213dbe4bf9646750c532",
+      "sha256": "6753d7f88c9866194b9b78439bd369e7375617089303401f68fe823b7c6f96ab",
       "narrative": [
         {
           "locator": "line:1-25",
@@ -80532,9 +80568,52 @@
           ]
         },
         {
-          "locator": "line:71-104",
-          "sha256": "239935718097381ef5ebcc8560633e78645e73121c59fa9ee737a6251182564c",
+          "locator": "line:71-106",
+          "sha256": "3c0efeb701cd10d449e54438313f75e1dec14dbfc1e77270a3f8adc5dbb914cc",
           "excerpt": "## Dataset integrity and review boundary\n\nThe source-pinned card labels the supplied cases as **public synthetic fixtures**\nwith **independent review pending**.",
+          "families": [
+            "evaluation",
+            "reasoning",
+            "models"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/r7-3-c-reviewer-calibration.md",
+      "families": [
+        "evaluation",
+        "reasoning",
+        "models"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Source-reviewed frozen reviewer inputs and paired calibration through the existing opt-in benchmark runner. Actual model/provider identity, protected independent gold and host quality remain separate. The documented synthetic table tests protocol mathematics, not live reviewer accuracy.",
+      "sha256": "9cbe62008b6e04b4f2e864bbc548e3a951a14a86b40ebb30e4839313d40c290a",
+      "narrative": [
+        {
+          "locator": "line:1-25",
+          "sha256": "4bb31b4885faa78dcf563ee08f4f6f0e0bb14b2c619885a4ff92c24f5ec2c70f",
+          "excerpt": "# R7.3-C: frozen peer-review suites and paired calibration\n\nThis increment extends [R7.3-A](r7-3-a-paired-atomic-benchmarks.md) and\n[R7.3-B](r7-3-b-reference-ba",
+          "families": [
+            "evaluation",
+            "reasoning",
+            "models"
+          ]
+        },
+        {
+          "locator": "line:26-83",
+          "sha256": "07adf97781ffecd43332148b5626a1746da4ec7e5691b391e3005e4aab730ede",
+          "excerpt": "## Freeze, run, then calibrate\n\n```sh\npython scripts/benchmark_agentic_models.py build-review-suite \\\n  --suite private/source-suite.json --models private/sourc",
+          "families": [
+            "evaluation",
+            "reasoning",
+            "models"
+          ]
+        },
+        {
+          "locator": "line:84-118",
+          "sha256": "6e46833413c9c479913422c9bc1ff56203f2d5b8e56c188992ab4ddca9b77450",
+          "excerpt": "## Read the measurements correctly\n\n| Synthetic protocol example | Result from 12 source tasks |\n|---|---|\n| Always choose A in both orientations | 24 valid ver",
           "families": [
             "evaluation",
             "reasoning",
@@ -89315,7 +89394,7 @@
       },
       {
         "path": ".github/workflows/agentic-model-benchmark.yml",
-        "sha256": "068ba84fa2bf92f2c712a14ade7b5c11ffa7a8c3fcf86f6e9612be2c42572218",
+        "sha256": "db865eeebe78fd1ad6e61bd3ac791c2fb203e773bd25edf8e8243c2b6c36a2da",
         "name": "Agentic model benchmark preflight (no paid calls)",
         "state": "active",
         "scope": [
@@ -89333,7 +89412,7 @@
           "event": "push"
         },
         "at_reviewed_base": false,
-        "qualification_limit": "Offline protocol tests, public synthetic fixtures, source-pinned pure references and an unqualified report. No provider calls, independent gold review, protected holdout, installed Cog or routing qualification."
+        "qualification_limit": "Offline model/reference/reviewer protocol tests, public synthetic fixtures and unqualified artifacts. No provider calls, authenticated gold, protected holdout, installed model/Cog or routing qualification."
       },
       {
         "path": ".github/workflows/artifact-controller-s45.yml",
@@ -94621,6 +94700,15 @@
       "review_family": "evaluation",
       "runtime_qualified": false,
       "evidence_boundary": "Four pure algorithms, 56 public protocol fixtures and exact-source/provenance audit. Independent gold review, protected holdouts, measured model deployments and R7.4 promotion remain open."
+    },
+    {
+      "id": "R7.3-C/frozen-reviewer-calibration",
+      "implementation_base": "ea689d379c11c396289f9b994fedd6eb03775029",
+      "reviewed_on": "2026-11-24",
+      "source": "docs/implementation/r7-3-c-reviewer-calibration.md",
+      "review_family": "evaluation",
+      "runtime_qualified": false,
+      "evidence_boundary": "Fixed source-cell selection, reconstructed anonymous orientation pairs, pre-dispatch self-alias refusal and conditional retained-verdict diagnostics. All actual gold/provider/deployment authentication and R7.4 promotion remain open."
     }
   ],
   "current_delivery_order": {

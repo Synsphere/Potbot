@@ -93,10 +93,12 @@ CI is configured to retain the offline reference report and its integrity audit.
 No database
 migration, installed service change or Syn rollout is required.
 
-Next R7.3 gates are independent gold review, independently collected protected
-holdouts, real selected small/strong deployments with exact runtime, licence and
-quantization identities, measured RAM/VRAM, and independent A/B reviewer
-calibration. R7.4 remains a separate promotion decision.
+[R7.3-C](r7-3-c-reviewer-calibration.md) adds frozen reviewer suites and paired
+A/B calibration through the existing runner. Independent gold review,
+independently collected protected holdouts, real selected small/strong
+deployments with exact runtime, licence and quantization identities, measured
+RAM/VRAM and actual reviewer quality remain open. R7.4 retains its separate
+promotion decision.
 
 The existing generated HTML report is the visual result surface. This CLI
 increment adds no native interface or live model deployment to film; no screenshot
