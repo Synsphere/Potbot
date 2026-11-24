@@ -15,6 +15,8 @@ on:
       - 'tests/unit/test_browser_rendered_gate.py'
       - 'scripts/check_browser_rendered.py'
       - 'scripts/browser_rendered_runtime.py'
+      - 'scripts/browser_display_readiness.py'
+      - 'tests/unit/test_browser_display_readiness.py'
       - 'tests/unit/test_browser_rendered_runtime.py'
       - 'conftest.py'
       - 'pyproject.toml'
@@ -27,6 +29,8 @@ on:
       - 'tests/**'
       - 'scripts/check_browser_rendered.py'
       - 'scripts/browser_rendered_runtime.py'
+      - 'scripts/browser_display_readiness.py'
+      - 'tests/unit/test_browser_display_readiness.py'
       - 'tests/unit/test_browser_rendered_runtime.py'
       - 'conftest.py'
       - 'pyproject.toml'
@@ -89,6 +93,7 @@ jobs:
             tests/unit/test_browser_capture_recovery.py \
             tests/unit/test_browser_rendered_gate.py \
             tests/unit/test_browser_rendered_runtime.py \
+            tests/unit/test_browser_display_readiness.py \
             --junitxml=artifacts/browser-rendered/unit.xml
       - name: Exercise real pixels, accessibility, picker, input and worker pipes
         # Do not use uv run here: re-syncing would remove the separately pinned
