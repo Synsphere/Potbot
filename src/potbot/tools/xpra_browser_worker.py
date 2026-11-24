@@ -524,9 +524,10 @@ class BrowserWorker:
     async def _capture_jpeg(self) -> bytes:
         """Capture the visible page through the *private* CDP session.
 
-        Direct CDP surface capture avoids Page.screenshot's font-readiness
-        helper and the headful view capture path. A completed native capture
-        failure may use the view path once. A timeout or cancellation cannot
+        Prefer Chromium's native view snapshot for this headed worker. The
+        surface path reapplies device emulation and resizes the view, which can
+        stall its first frame even after X11 reports a mapped window. A completed
+        native capture failure may use the surface path once. A timeout or cancellation cannot
         prove that Chromium stopped its request, so fence the worker across
         later calls and let its owner tear down the session. Both paths remain
         private reads; neither broadens public CDP authority or retries actions.
@@ -546,7 +547,7 @@ class BrowserWorker:
         # native error may authorize.
         try:
             async with asyncio.timeout(6.0):
-                for from_surface in (True, False):
+                for from_surface in (False, True):
                     try:
                         reply = await self.cdp.send(
                             "Page.captureScreenshot",
@@ -564,7 +565,7 @@ class BrowserWorker:
                         ).__module__ == f"{self.engine}._impl._errors" and str(error).endswith(
                             "Protocol error (Page.captureScreenshot): Unable to capture screenshot"
                         )
-                        if not from_surface or not capture_unavailable:
+                        if from_surface or not capture_unavailable:
                             raise
         except (TimeoutError, asyncio.CancelledError):
             # Cancelling CDPSession.send only cancels our wait, not the native
