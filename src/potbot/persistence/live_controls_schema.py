@@ -89,6 +89,12 @@ MIGRATION_STATEMENTS = (
         "FOR ALL USING (true) WITH CHECK (false)"
         for table in ("node_runtime_controls", "node_control_events")
     ),
+    # WITH CHECK protects INSERT/UPDATE; DELETE needs its own false USING.
+    # Keep SELECT/row-lock visibility for the restricted claim/review paths.
+    *tuple(
+        f"CREATE POLICY native_control_delete ON {table} AS RESTRICTIVE FOR DELETE USING (false)"
+        for table in ("node_runtime_controls", "node_control_events")
+    ),
     # The trigger uses the trusted trigger-table schema with pg_catalog as its
     # search path. Temporary tables cannot shadow the protected runtime owner.
     """CREATE FUNCTION node_claim_guard() RETURNS trigger

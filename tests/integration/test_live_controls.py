@@ -338,6 +338,19 @@ def test_drain_fences_claims_then_waits_for_jobs_and_both_kinds_of_holds(app_env
 def test_protected_receipts_and_claim_trigger_cannot_be_forged(app_env, managed):
     supervisor, _children, nodes = managed
     review = node_review(read_nodes(app_env, nodes))
+    with app_env.db.transaction(app_env.context) as connection:
+        assert (
+            connection.execute(
+                "DELETE FROM node_runtime_controls WHERE node_id=%s RETURNING node_id",
+                (supervisor.node_id,),
+            ).fetchall()
+            == []
+        )
+        protected = connection.execute(
+            "SELECT incarnation FROM node_runtime_controls WHERE node_id=%s",
+            (supervisor.node_id,),
+        ).fetchone()
+    assert protected["incarnation"] == supervisor.incarnation
     with pytest.raises(ScopeDeniedError):
         with app_env.db.transaction(app_env.context) as connection:
             connection.execute("UPDATE node_runtime_controls SET phase='ready',desired='active'")
