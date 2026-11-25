@@ -144,3 +144,9 @@ def register_settings_routes(
             },
         )
         return JSONResponse(result, status_code=202, headers=_HEADERS)
+
+    from potbot.api.live_controls import register_live_control_routes
+
+    register_live_control_routes(
+        app, database, actor, _HEADERS, setup_available=authorize_setup is not None
+    )

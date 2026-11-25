@@ -168,7 +168,18 @@ class TaskService:
         with self.database.transaction(context) as conn:
 
             def create() -> dict[str, Any]:
-                resolved = resolve_configuration(self._configuration_layers)
+                from potbot.controller.live_configuration import resolve_live
+
+                # Historical migration fixtures retain the original resolver.
+                # The live editing API itself requires migration 59.
+                installed = conn.execute(
+                    "SELECT to_regclass('workspace_configuration_revisions') AS relation"
+                ).fetchone()
+                resolved = (
+                    resolve_live(conn, context, self._configuration_layers)
+                    if installed and installed["relation"] is not None
+                    else resolve_configuration(self._configuration_layers)
+                )
                 repository = conn.execute(
                     "SELECT id FROM repositories WHERE workspace_id=%s AND id=%s",
                     (context.workspace_id, repository_id),

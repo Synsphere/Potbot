@@ -12,8 +12,11 @@ Potbot now has two intentional user interfaces:
 M1 established persistent workspace chrome, startup status and an application
 area. CFG02 now adds native settings, all seven saved preferences, local model and
 Python tool inventories, workspace swarm inspection and reviewed grant-revocation
-requests through the existing backend APIs. Chat, graph and Xpra application panes
-retain their next milestones.
+requests through the existing backend APIs. CFG03 extends it with live workspace
+configuration and native worker drain/restart controls backed by protected SQL
+state and a node-host supervisor. See the
+[live-controls guide](cfg03-live-configuration-and-node-controls.md). Chat, graph
+and Xpra application panes retain their next milestones.
 
 ![Implemented native model inventory](../images/native-settings-models.png)
 

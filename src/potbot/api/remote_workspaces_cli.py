@@ -72,9 +72,14 @@ def plan_from_file(path: Path) -> dict[str, Any]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    if argv and argv[0] == "supervise-node":
+        from potbot.tools.node_supervisor import main as supervise
+
+        return supervise(argv[1:])
     parser = argparse.ArgumentParser(prog="potbot remote-workspace")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("probe", help="print native facts on this host without changing it")
+    commands.add_parser("supervise-node", help="manage one native node worker service")
     plan = commands.add_parser("plan", help="build a deterministic plan from supplied public facts")
     plan.add_argument("--input", type=Path, required=True)
     revoke = commands.add_parser(

@@ -10,8 +10,9 @@ browser, and they remain usable while Xpra or the web interface is unavailable.
 Start Potbot through the existing native desktop entry point. Select **Settings**
 in the left navigation for all fourteen categories and twenty-nine feature groups,
 or select a specific inventory or Preferences. The ten computational settings show
-installation defaults and the latest recorded snapshot. Their live layer editor
-remains unavailable under the existing API contract.
+installation defaults and the latest recorded snapshot. The overview retains the existing snapshot contract. Choose **Live workspace
+configuration…** for the new revisioned workspace editor; see the
+[live configuration and node-control guide](cfg03-live-configuration-and-node-controls.md).
 
 Preferences edits all seven current appearance options. Saves use the existing
 revisioned API. A concurrent change retains the draft and offers **Rebase my draft
@@ -49,9 +50,11 @@ shown explicitly. See the [inventory profile guide](cfg01-settings-inventory-and
 
 Workspace swarm has native tabs for nodes, deployments, direct control grants
 and management requests. Registered nodes remain distinct from authenticated
-contact and runtime qualification. Live capacity and node drain, restart,
-installation and deletion actions remain unavailable because those backend
-capabilities are not implemented.
+contact and runtime qualification. Choose **Node drain and restart…** for the new owner/setup-gated native worker
+controls. A native supervisor on the registered host confirms drain and restart
+completion through the protected backend ledger. Live capacity, installation and
+deletion remain separate capabilities; see the
+[node-control guide](cfg03-live-configuration-and-node-controls.md#drain-restart-and-inspect-completion).
 
 Select a grant and choose **Review revocation request**. The dialog shows the exact
 target, owner, grant digest, revision, generation and retained request ID. Cancel

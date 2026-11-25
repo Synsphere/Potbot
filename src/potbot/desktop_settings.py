@@ -201,10 +201,14 @@ def create_settings_widget(
             overview_layout = QVBoxLayout(overview)
             overview_layout.addWidget(
                 self.label(
-                    "Installation defaults and the latest recorded run snapshot. Live layer editing is not available.",
+                    "Installation defaults and recorded task snapshots. Open the live workspace editor for current overrides and reviewed changes.",
                     "settingsHelp",
                 )
             )
+            self.live_configuration = QPushButton("Live workspace configuration…")
+            self.live_configuration.setObjectName("openLiveConfiguration")
+            self.live_configuration.clicked.connect(lambda: self._open_live("configuration"))
+            overview_layout.addWidget(self.live_configuration)
             self.values = self.tree(
                 ["Setting", "Installation default", "Recorded snapshot", "Apply", "Owner"],
                 "configurationTree",
@@ -356,6 +360,10 @@ def create_settings_widget(
             buttons = QHBoxLayout()
             buttons.addWidget(self.revoke)
             buttons.addWidget(self.copy_handoff)
+            self.live_nodes = QPushButton("Node drain and restart…")
+            self.live_nodes.setObjectName("openNodeControls")
+            self.live_nodes.clicked.connect(lambda: self._open_live("nodes"))
+            buttons.addWidget(self.live_nodes)
             buttons.addStretch()
             swarm_layout.addLayout(buttons)
             self.swarm_details = QPlainTextEdit()
@@ -364,7 +372,7 @@ def create_settings_widget(
             swarm_layout.addWidget(self.swarm_details, 1)
             swarm_layout.addWidget(
                 self.label(
-                    "Registered nodes are not proven online or qualified. Capacity, drain, restart and other native node lifecycle actions are unavailable. A saved request is not a revoked grant or a stopped process.",
+                    "Registered nodes retain separate runtime qualification. Native worker controls provide drain/restart for configured supervisors. Capacity and host installation remain separate. A queued request is not completion.",
                     "settingsHelp",
                 )
             )
@@ -951,6 +959,35 @@ def create_settings_widget(
                         "Copied the native operator command. It has not been executed."
                     )
 
+        def _open_live(self, mode: str) -> None:
+            if self._busy or self._mutating or not self._principal:
+                return
+            from potbot.desktop_live_settings import create_live_dialog
+
+            dialog = create_live_dialog(
+                self,
+                self._client(),
+                self._principal,
+                mode,
+                journal=RevocationJournal(self._journal.directory.parent / "live"),
+            )
+            self.live_dialog = dialog
+            self._mutating = True
+            self.mutationBusy.emit(True)
+            self.target.currentIndexChanged.connect(dialog.invalidate_scope)
+
+            def released(_result: int) -> None:
+                self.target.currentIndexChanged.disconnect(dialog.invalidate_scope)
+                self._mutating = False
+                self.mutationBusy.emit(False)
+                self._controls()
+                if not self._closed:
+                    self.reload()
+
+            dialog.finished.connect(released)
+            self._controls()
+            dialog.open()
+
         def _prepare_revocation(self) -> None:
             item = self.grants.currentItem()
             if not item or not self._document or self._busy:
@@ -1016,6 +1053,8 @@ def create_settings_widget(
         def _controls(self) -> None:
             available = bool(self._catalogue and self._principal)
             self.refresh.setEnabled(not self._busy)
+            self.live_configuration.setEnabled(available and not self._busy and not self._mutating)
+            self.live_nodes.setEnabled(available and not self._busy and not self._mutating)
             self.target.setEnabled(not self._mutating)
             self.category.setEnabled(not self._mutating)
             state = self._draft()
