@@ -34,6 +34,14 @@ function New-TestRule([string]$Name, [string]$Program = 'C:\uv\python.exe') {
     }
 }
 $script:LiveProgram = 'C:\uv\python.exe'
+$script:CreatedRuleName = ''
+$script:ActiveReadbackDelay = 0
+$script:ActiveQueries = 0
+$script:ReadbackSleeps = @()
+$script:FailDisableName = ''
+$script:FailEnableName = ''
+$script:FailRemove = $false
+function Start-Sleep { param($Milliseconds) $script:ReadbackSleeps += $Milliseconds }
 function Assert-LiveEndpoint($Request) { return $script:LiveProgram }
 function Get-NetIPAddress { [pscustomobject]@{ InterfaceIndex=1 } }
 function Get-NetConnectionProfile { [pscustomobject]@{ NetworkCategory='Private' } }
@@ -52,7 +60,17 @@ function Get-NetFirewallRule {
 }
 function Get-NetFirewallApplicationFilter {
     param($PolicyStore, [Parameter(ValueFromPipeline)]$Rule)
-    process { if ($Rule) { $Rule.Application } else { $script:Rules.Application } }
+    process {
+        if ($Rule) { $Rule.Application } else {
+            if ($PolicyStore -eq 'ActiveStore') { $script:ActiveQueries++ }
+            if ($PolicyStore -eq 'ActiveStore' -and $script:CreatedRuleName -and
+                $script:ActiveReadbackDelay -gt 0) {
+                $script:ActiveReadbackDelay--
+                $script:Rules | Where-Object Name -ne $script:CreatedRuleName |
+                    ForEach-Object Application
+            } else { $script:Rules.Application }
+        }
+    }
 }
 function Get-NetFirewallServiceFilter {
     param([Parameter(ValueFromPipeline)]$Rule) process { $Rule.ServiceFilter }
@@ -80,6 +98,7 @@ function New-NetFirewallRule {
     $new.AddressFilter.LocalAddress = $LocalAddress
     $new.AddressFilter.RemoteAddress = $RemoteAddress
     $script:Rules += $new
+    $script:CreatedRuleName = $Name
 }
 function Set-NetFirewallRule {
     param($Name, $Program, $LocalAddress, $RemoteAddress, $Enabled, $PolicyStore, $ErrorAction)
@@ -90,15 +109,19 @@ function Set-NetFirewallRule {
 }
 function Disable-NetFirewallRule {
     param($Name, $PolicyStore)
-    if ($script:FailDisable) { throw 'simulated policy update failure' }
+    if ($script:FailDisable -or $Name -eq $script:FailDisableName) {
+        throw 'simulated policy update failure'
+    }
     ($script:Rules | Where-Object { $_.Name -like $Name }).Enabled = 'False'
 }
 function Enable-NetFirewallRule {
     param($Name, $PolicyStore, $ErrorAction)
+    if ($Name -eq $script:FailEnableName) { throw 'simulated block rollback failure' }
     ($script:Rules | Where-Object { $_.Name -like $Name }).Enabled = 'True'
 }
 function Remove-NetFirewallRule {
     param($Name, $PolicyStore, $ErrorAction)
+    if ($script:FailRemove) { throw 'simulated allowance rollback failure' }
     $script:Rules = @($script:Rules | Where-Object { $_.Name -notlike $Name })
 }
 
@@ -117,7 +140,9 @@ $script:Rules = @((New-TestRule 'matching-tcp'), $unrelated, $udp)
 $plan = Get-FirewallPlan $request
 Assert-Equal @($plan.blocks) @('matching-tcp') 'Only the exact TCP program block should change'
 Assert-Equal $plan.repair $true 'A matching block requires repair'
-Invoke-FirewallRepair $request $plan
+$verified = Invoke-FirewallRepair $request $plan
+Assert-Equal $verified.repair $false 'Successful repair must return its verified final plan'
+Assert-Equal @($verified.blocks) @() 'Returned plan must not retain repaired blocks'
 Assert-Equal (Get-FirewallPlan $request).repair $false 'Effective policy must allow custody'
 Assert-Equal $unrelated.Enabled 'True' 'Unrelated Python rules must remain enabled'
 Assert-Equal $udp.Enabled 'True' 'UDP rules must remain enabled'
@@ -130,7 +155,7 @@ $request.port = 49510
 Assert-Equal (Get-FirewallPlan $request).repair $false 'A new ephemeral port keeps the same allowance'
 $request.guest_address = '172.27.44.69'
 Assert-Equal (Get-FirewallPlan $request).repair $true 'A changed WSL peer needs an updated allowance'
-Invoke-FirewallRepair $request (Get-FirewallPlan $request)
+$null = Invoke-FirewallRepair $request (Get-FirewallPlan $request)
 Assert-Equal (Get-FirewallPlan $request).repair $false 'Owned rule must track the new WSL peer'
 Assert-Equal @($script:Rules | Where-Object Action -eq 'Allow').Count 1 'Repair must update its own rule'
 $request.guest_address = '172.27.44.68'
@@ -158,7 +183,7 @@ $script:FailDisable = $true
 Assert-Throws { Invoke-FirewallRepair $request $plan } 'simulated policy update failure'
 Assert-Equal @($script:Rules.Name) @('block[1]', 'block1') 'Failed repair must remove its new allowance'
 $script:FailDisable = $false
-Invoke-FirewallRepair $request $plan
+$null = Invoke-FirewallRepair $request $plan
 Assert-Equal @($script:Rules | Where-Object Action -eq 'Block' | ForEach-Object Enabled) `
     @('False', 'False') 'Rule identifiers containing wildcards must be matched literally'
 
@@ -182,7 +207,7 @@ $databaseRequest = [pscustomobject]@{
 $databasePlan = Get-FirewallPlan $databaseRequest
 Assert-Equal $databasePlan.name ('Potbot-Database-' + $request.installation_id) 'Database rule identity'
 Assert-Equal $databasePlan.profile 'potbot.database-firewall/1' 'Database result profile'
-Invoke-FirewallRepair $databaseRequest $databasePlan
+$null = Invoke-FirewallRepair $databaseRequest $databasePlan
 $databaseRule = $script:Rules | Where-Object Name -eq $databasePlan.name
 Assert-Equal $databaseRule.DisplayName 'Potbot WSL Database' 'Database display name'
 Assert-Equal $databaseRule.Group 'Potbot WSL database' 'Database rule group'
@@ -194,6 +219,66 @@ Assert-Equal (Get-FirewallPlan $databaseRequest).repair $false 'Database ephemer
 $databaseRequest.purpose = 'arbitrary'
 Assert-Throws { Get-FirewallPlan $databaseRequest } 'Invalid managed firewall purpose'
 $script:LiveProgram = 'C:\uv\python.exe'
+
+# The persistent write can succeed before a queried active view includes the
+# allowance. Retry only that incomplete view, keeping the same narrow rule.
+$script:Rules = @((New-TestRule 'delayed-block'))
+$script:CreatedRuleName = ''
+$plan = Get-FirewallPlan $request
+$script:ActiveReadbackDelay = 2
+$before = $script:ActiveQueries
+$script:ReadbackSleeps = @()
+$verified = Invoke-FirewallRepair $request $plan
+Assert-Equal $verified.repair $false 'Delayed readback must return the final successful plan'
+Assert-Equal ($script:ActiveQueries - $before) 3 'Delayed readback must requery effective policy'
+Assert-Equal $script:ReadbackSleeps @(250, 250) 'Effective-policy retries must have bounded waits'
+Assert-Equal @($script:Rules | Where-Object Action -eq 'Allow').Count 1 'Retries must not add rules'
+
+# A permanently ineffective repair still rolls back the allowance and blocks.
+$block = New-TestRule 'permanent-block'
+$script:Rules = @($block)
+$script:CreatedRuleName = ''
+$plan = Get-FirewallPlan $request
+$script:ActiveReadbackDelay = 100
+$before = $script:ActiveQueries
+$script:ReadbackSleeps = @()
+Assert-Throws { Invoke-FirewallRepair $request $plan } 'not effective after verification'
+Assert-Equal ($script:ActiveQueries - $before) 4 'Readback attempts must be bounded'
+Assert-Equal $script:ReadbackSleeps @(250, 250, 250) 'Readback must stop after three waits'
+Assert-Equal @($script:Rules.Name) @('permanent-block') 'Ineffective allowance must be removed'
+Assert-Equal $block.Enabled 'True' 'Ineffective repair must restore the disabled block'
+$script:ActiveReadbackDelay = 0
+
+# A policy error is definitive and must not be retried as a transient view.
+$script:CreatedRuleName = ''
+$plan = Get-FirewallPlan $request
+$script:Profiles[0].AllowLocalFirewallRules = 'False'
+$script:ReadbackSleeps = @()
+Assert-Throws { Invoke-FirewallRepair $request $plan } 'policy disables local inbound exceptions'
+Assert-Equal $script:ReadbackSleeps @() 'Policy restrictions must fail without retry'
+Assert-Equal @($script:Rules.Name) @('permanent-block') 'Policy failure must remove its allowance'
+Assert-Equal $block.Enabled 'True' 'Policy failure must restore the disabled block'
+$script:Profiles[0].AllowLocalFirewallRules = 'True'
+
+# Rollback is best effort across all changed rules; its own errors must not
+# replace the initiating error or prevent the remaining cleanup operations.
+$script:Rules = @((New-TestRule 'first-block'), (New-TestRule 'second-block'))
+$script:CreatedRuleName = ''
+$plan = Get-FirewallPlan $request
+$script:FailDisableName = 'second-block'
+$script:FailEnableName = 'first-block'
+$script:FailRemove = $true
+$caught = $null
+try { $null = Invoke-FirewallRepair $request $plan } catch { $caught = $_ }
+Assert-Equal ($null -ne $caught) $true 'Failed repair must throw even when rollback also fails'
+Assert-Equal $caught.Exception.Message 'simulated policy update failure' 'Preserve initiating error'
+$rollback = @($caught.Exception.Data['PotbotFirewallRollbackErrors'])
+Assert-Equal $rollback.Count 2 'Both rollback failures must remain available for diagnostics'
+Assert-Equal ($rollback[0] -like '*simulated block rollback failure') $true 'Block rollback detail'
+Assert-Equal ($rollback[1] -like '*simulated allowance rollback failure') $true 'Allowance rollback detail'
+$script:FailDisableName = ''
+$script:FailEnableName = ''
+$script:FailRemove = $false
 
 # A delayed UAC approval cannot repair an abandoned startup or an unrelated
 # process that happens to reuse the same port/PID.

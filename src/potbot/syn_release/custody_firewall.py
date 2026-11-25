@@ -15,6 +15,7 @@ import os
 import re
 import subprocess
 import time
+import uuid
 from collections.abc import Callable
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
@@ -43,13 +44,19 @@ def _encode_command(source: str) -> str:
     return base64.b64encode(loader.encode("utf-16-le")).decode("ascii")
 
 
-def _encoded_script(request: dict[str, Any], mode: str) -> str:
+def _encoded_script(
+    request: dict[str, Any], mode: str, *, result_pipe: str | None = None,
+) -> str:
     if mode not in {"Inspect", "Repair"}:
         raise ValueError("Unknown custody firewall operation")
     # JSON is data, never PowerShell source. Base64 contains no quotes or escapes.
     payload = base64.b64encode(json.dumps(request).encode()).decode("ascii")
     source = Path(__file__).with_suffix(".ps1").read_text(encoding="utf-8")
     script = f"& {{\n{source}\n}} -RequestBase64 '{payload}' -Mode '{mode}'"
+    if result_pipe is not None:
+        if mode != "Repair" or re.fullmatch(r"potbot-firewall-[0-9a-f]{32}", result_pipe) is None:
+            raise ValueError("Invalid firewall result pipe")
+        script += f" -ResultPipe '{result_pipe}'"
     return _encode_command(script)
 
 
@@ -58,9 +65,12 @@ def _run(
 ) -> subprocess.CompletedProcess[str]:
     from .host import windows_environment
 
+    argv = [powershell, "-NoLogo", "-NoProfile", "-NonInteractive",
+            "-Command" if command else "-EncodedCommand", source]
+    if len(subprocess.list2cmdline(argv)) >= 32760:
+        raise CapabilityUnavailableError("Windows Firewall helper exceeds the process command limit")
     return subprocess.run(
-        [powershell, "-NoLogo", "-NoProfile", "-NonInteractive",
-         "-Command" if command else "-EncodedCommand", source],
+        argv,
         stdin=subprocess.DEVNULL,
         capture_output=True,
         text=True,
@@ -69,6 +79,7 @@ def _run(
         check=False,
         timeout=timeout,
         env=windows_environment(),
+        cwd=str(Path(powershell).parent),
         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
     )
 
@@ -98,29 +109,57 @@ def _inspect(powershell: str, request: dict[str, Any]) -> dict[str, Any]:
 
 
 def _elevate(powershell: str, request: dict[str, Any]) -> int:
-    encoded = _encoded_script(request, "Repair")
+    purpose = request.get("purpose", "custody")
+    pipe_name = "potbot-firewall-" + uuid.uuid4().hex
+    encoded = _encoded_script(request, "Repair", result_pipe=pipe_name)
     # The only elevated executable is the system PowerShell. No downloaded
     # interpreter, repository path or user-controlled command is run as admin.
     # Revalidation inside the helper prevents a late UAC acceptance after the
     # requesting authority/controller has gone away from changing the firewall.
-    wrapper = """
-$ErrorActionPreference = 'Stop'
-try {
-    $p = Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -Verb RunAs `
-        -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-EncodedCommand','ENCODED') `
-        -PassThru -Wait
-    exit $p.ExitCode
-} catch {
-    $errorObject = $_.Exception
-    while ($errorObject) {
-        if ($errorObject -is [ComponentModel.Win32Exception] -and
-            $errorObject.NativeErrorCode -eq 1223) { exit 1223 }
-        $errorObject = $errorObject.InnerException
-    }
-    exit 1
-}
-""".replace("ENCODED", encoded)
-    return _run(powershell, wrapper, timeout=180, command=True).returncode
+    # RunAs cannot redirect the elevated child's console streams. The launcher
+    # relays a bounded, one-way diagnostic receipt over a private local pipe.
+    # This carries firewall status only; no keystore protocol or data uses it.
+    source = Path(__file__).with_name("custody_firewall_elevation.ps1").read_text(encoding="utf-8")
+    wrapper = f"& {{\n{source}\n}} -EncodedRepair '{encoded}' -ResultPipe '{pipe_name}'"
+    result = _run(powershell, wrapper, timeout=180, command=True)
+    if result.returncode == 1223:
+        return 1223
+    detail = " ".join(result.stderr.split())[-3000:]
+    try:
+        if len(result.stdout) > 16384:
+            raise ValueError
+        receipt = json.loads(result.stdout.lstrip("\ufeff"))
+        if (
+            not isinstance(receipt, dict)
+            or receipt.get("profile") != "potbot.firewall-result/1"
+            or receipt.get("purpose") != purpose
+            or type(receipt.get("exit_code")) is not int
+            or receipt["exit_code"] != result.returncode
+            or not isinstance(receipt.get("message"), str)
+            or len(receipt["message"]) > 4096
+            or not isinstance(receipt.get("operation"), str)
+            or re.fullmatch(r"[a-z-]{1,64}", receipt["operation"]) is None
+            or (result.returncode == 0 and receipt.get("repair") is not False)
+        ):
+            raise ValueError
+    except (TypeError, ValueError):
+        if result.returncode:
+            raise CapabilityUnavailableError(
+                f"Windows Firewall {purpose} administrator repair failed "
+                f"(exit {result.returncode}): " + (detail or "the elevated helper returned no diagnostic")
+            ) from None
+        raise CapabilityUnavailableError(
+            f"Windows Firewall {purpose} administrator repair returned no valid completion result"
+            + (": " + detail if detail else "")
+        ) from None
+    if result.returncode:
+        message = " ".join(receipt["message"].split())
+        raise CapabilityUnavailableError(
+            f"Windows Firewall {purpose} administrator repair failed "
+            f"(exit {result.returncode}, {receipt['operation']}): "
+            + (message or detail or "no diagnostic returned")
+        )
+    return 0
 
 
 def _programs(python: Path) -> list[str]:

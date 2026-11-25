@@ -1,0 +1,1258 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index ea544fa4a66dd4c9e6578597c2e07dfdc3bdc0c2..0bdc5ae221cbf606e7a45fe93b9cdfa3beef5b1b 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -46,10 +46,21 @@ jobs:
+       - name: Verify native PowerShell and BAT startup contracts
+         shell: powershell
+         run: .\tests\windows\launcher-smoke.ps1
++      - name: Verify Windows PowerShell 5.1 firewall policy repair and rollback
++        shell: powershell
++        run: .\tests\windows\custody-firewall-unit.ps1
++      - name: Verify Windows PowerShell 5.1 elevation result transport
++        shell: powershell
++        run: .\tests\windows\custody-firewall-elevation-unit.ps1
++      - name: Verify Windows PowerShell 5.1 helper success and error receipts
++        shell: powershell
++        run: .\tests\windows\custody-firewall-result-unit.ps1
+       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+         with:
+           version: "0.12.23"
+           enable-cache: true
++      - name: Verify conditional firewall elevation and database handoff
++        run: uv run --locked python -m pytest -q tests/unit/test_custody_firewall.py tests/unit/test_windows_database_handoff.py
+       - name: Verify Windows temporary files, child readback and cleanup
+         run: uv run --locked --extra security --extra semantics python -m pytest -q tests/unit/test_temporary.py tests/unit/test_pytest_temp_isolation.py tests/unit/test_check_runner.py tests/unit/test_syn_export.py tests/unit/test_identity_cli.py tests/unit/test_artifact_ranges.py tests/unit/test_artifact_uploads.py tests/unit/test_syn_operator_deployment.py
+       - name: Verify WSL kernel bundles and activation transactions
+diff --git a/docs/startup.md b/docs/startup.md
+index adce1f2ffecb446b0d31919b27b6b9a58f9cc113..5895f682703b6ec416c855b1b3cdea4412823fd0 100644
+--- a/docs/startup.md
++++ b/docs/startup.md
+@@ -80,6 +80,15 @@ prompt. An interpreter or WSL address change can require another repair.
+ Custom, generic or centrally managed block rules are reported for administrator
+ review. Firewall profiles and the default inbound policy are not disabled.
+ Declining UAC reports a specific failure and does not produce a prompt loop.
++On Windows PowerShell 5.1, the launcher waits on the elevated helper's process
++handle instead of using `Start-Process -Wait` across the UAC boundary. The helper
++returns its final result through a temporary local diagnostic pipe. Errors,
++including the failing operation, PowerShell error identifier and HRESULT, appear
++in Potbot's main service log even after the elevated window closes. The result
++channel carries firewall diagnostics only. It connects before any repair, so
++accepting an abandoned prompt cannot start a new firewall update.
++Effective-policy verification has a bounded retry, and a failed repair reports
++its original error together with any rollback errors.
+ After a repair, startup checks WSL TCP connectivity and the existing authenticated
+ custody health response before admitting the WSL runtime.
+ 
+diff --git a/src/potbot/syn_release/custody_firewall.ps1 b/src/potbot/syn_release/custody_firewall.ps1
+index bbd670580801847a65f28f94e649c429bf1b69ac..2baa580c468b519a4a7575992d83737ab1a892e4 100644
+--- a/src/potbot/syn_release/custody_firewall.ps1
++++ b/src/potbot/syn_release/custody_firewall.ps1
+@@ -1,6 +1,7 @@
+ param(
+     [string]$RequestBase64,
+-    [ValidateSet('Inspect', 'Repair')][string]$Mode = 'Inspect'
++    [ValidateSet('Inspect', 'Repair')][string]$Mode = 'Inspect',
++    [string]$ResultPipe
+ )
+ 
+ # This helper is encoded and passed directly to Windows PowerShell. Elevated
+@@ -244,29 +245,74 @@ function Invoke-FirewallRepair($Request, $Plan) {
+                 -Name ([Management.Automation.WildcardPattern]::Escape($name)) | Out-Null
+             $changed += $name
+         }
+-        if ((Get-FirewallPlan $Request).repair) { throw 'Firewall repair is not effective' }
++        # Retry only an incomplete effective-policy view. Validation and policy
++        # errors must still abort immediately, without weakening the exception.
++        for ($attempt = 0; $attempt -lt 4; $attempt++) {
++            $verified = Get-FirewallPlan $Request
++            if (-not $verified.repair) { return $verified }
++            if ($attempt -lt 3) { Start-Sleep -Milliseconds 250 }
++        }
++        throw 'Firewall repair is not effective after verification'
+     } catch {
++        $repairFailure = $_
++        $rollbackFailures = @()
+         foreach ($name in $changed) {
+-            Enable-NetFirewallRule -PolicyStore PersistentStore `
+-                -Name ([Management.Automation.WildcardPattern]::Escape($name)) `
+-                -ErrorAction Continue |
+-                Out-Null
++            try {
++                Enable-NetFirewallRule -PolicyStore PersistentStore `
++                    -Name ([Management.Automation.WildcardPattern]::Escape($name)) `
++                    -ErrorAction Stop | Out-Null
++            } catch {
++                $rollbackFailures += ('Restore block ' + $name + ': ' + $_.Exception.Message)
++            }
+         }
+         if ($created) {
+-            Remove-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name `
+-                -ErrorAction Continue
++            try {
++                Remove-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name `
++                    -ErrorAction Stop | Out-Null
++            } catch {
++                $rollbackFailures += ('Remove allowance ' + $Plan.name + ': ' + $_.Exception.Message)
++            }
+         } elseif ($previous) {
+-            Set-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name @previous `
+-                -ErrorAction Continue | Out-Null
++            try {
++                Set-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name @previous `
++                    -ErrorAction Stop | Out-Null
++            } catch {
++                $rollbackFailures += ('Restore allowance ' + $Plan.name + ': ' + $_.Exception.Message)
++            }
++        }
++        if ($rollbackFailures.Count) {
++            $repairFailure.Exception.Data['PotbotFirewallRollbackErrors'] = $rollbackFailures
+         }
+-        throw
++        throw $repairFailure
+     }
+ }
+ 
+ if ($RequestBase64) {
++    $resultStream = $null
++    $resultWriter = $null
++    $receipt = $null
++    $exitCode = 0
++    $purpose = 'custody'
++    $operation = 'connect-result'
+     try {
++        if ($ResultPipe) {
++            if ($Mode -ne 'Repair' -or $ResultPipe -cnotmatch '^potbot-firewall-[0-9a-f]{32}$') {
++                throw 'Invalid firewall result channel'
++            }
++            # Connect before any firewall mutation. A late UAC acceptance after
++            # the unelevated launcher has gone away cannot perform a repair.
++            # The client receives no commands; the server cannot impersonate it.
++            $resultStream = New-Object IO.Pipes.NamedPipeClientStream('.', $ResultPipe,
++                [IO.Pipes.PipeAccessRights]::WriteData, [IO.Pipes.PipeOptions]::None,
++                [Security.Principal.TokenImpersonationLevel]::Anonymous,
++                [IO.HandleInheritability]::None)
++            $resultStream.Connect(10000)
++            $resultWriter = New-Object IO.StreamWriter($resultStream, (New-Object Text.UTF8Encoding($false)))
++        }
++        $operation = 'validate-request'
+         $request = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($RequestBase64)) |
+             ConvertFrom-Json
++        $purpose = (Get-FirewallIdentity $request).purpose
+         if ($request.installation_id -notmatch '^[0-9a-f]{32}$' -or
+             $request.controller_created -notmatch '^[0-9]{10,20}$' -or
+             $request.controller_pid -lt 1 -or $request.authority_pid -lt 1 -or
+@@ -278,23 +324,66 @@ if ($RequestBase64) {
+                 throw 'Firewall exception requires private WSL IPv4 addresses'
+             }
+         }
++        $operation = 'inspect-policy'
+         $plan = Get-FirewallPlan $request
+-        if ($Mode -eq 'Repair' -and $plan.repair) { Invoke-FirewallRepair $request $plan }
+-        @{profile=$plan.profile; repair=$plan.repair; program=$plan.program;
+-            blocks=@($plan.blocks)} | ConvertTo-Json -Compress
+-        exit 0
++        if ($Mode -eq 'Repair' -and $plan.repair) {
++            $operation = 'repair-policy'
++            $plan = Invoke-FirewallRepair $request $plan
++        }
++        if ($resultWriter) {
++            $receipt = @{
++                profile='potbot.firewall-result/1'; purpose=$purpose; exit_code=0
++                operation='complete'; message=''; repair=$plan.repair
++            }
++        } else {
++            @{profile=$plan.profile; repair=$plan.repair; program=$plan.program;
++                blocks=@($plan.blocks)} | ConvertTo-Json -Compress
++        }
+     } catch {
+-        [Console]::Error.WriteLine($_.Exception.Message)
+-        $failure = $_.Exception
++        $errorRecord = $_
++        $failure = $errorRecord.Exception
++        $exitCode = 1
+         while ($failure) {
+             if ($failure -is [UnauthorizedAccessException] -or
+                 ($failure.HResult -band 0xFFFFFFFFL) -eq 0x80070005L -or
+                 ($failure -is [ComponentModel.Win32Exception] -and
+                     $failure.NativeErrorCode -eq 5) -or
+                 ($failure.GetType().FullName -eq 'Microsoft.Management.Infrastructure.CimException' -and
+-                    [string]$failure.NativeErrorCode -eq 'AccessDenied')) { exit 5 }
++                    [string]$failure.NativeErrorCode -eq 'AccessDenied')) { $exitCode = 5; break }
+             $failure = $failure.InnerException
+         }
+-        exit 1
++        $command = ''
++        if ($errorRecord.InvocationInfo -and $errorRecord.InvocationInfo.MyCommand) {
++            $command = [string]$errorRecord.InvocationInfo.MyCommand.Name
++        }
++        $message = $errorRecord.Exception.Message + ' [' + $errorRecord.FullyQualifiedErrorId +
++            '; HRESULT=0x' + ($errorRecord.Exception.HResult -band 0xFFFFFFFFL).ToString('X8') + ']'
++        if ($command) { $message = $command + ': ' + $message }
++        if ($errorRecord.Exception.Data.Contains('PotbotFirewallRollbackErrors')) {
++            $message += '; rollback: ' + ($errorRecord.Exception.Data['PotbotFirewallRollbackErrors'] -join '; ')
++        }
++        # These diagnostics contain only firewall/process identity, never the
++        # database DSN, authority token or vault contents. JSON may escape each
++        # code unit into six bytes; reserve room within the 16 KiB pipe bound.
++        if ($message.Length -gt 2000) { $message = $message.Substring(0, 2000) }
++        [Console]::Error.WriteLine($message)
++        $receipt = @{
++            profile='potbot.firewall-result/1'; purpose=$purpose; exit_code=$exitCode
++            operation=$operation; message=$message; repair=$true
++        }
++    } finally {
++        try {
++            if ($resultWriter -and $receipt) {
++                $resultWriter.WriteLine(($receipt | ConvertTo-Json -Compress))
++                $resultWriter.Flush()
++            }
++        } catch {
++            [Console]::Error.WriteLine('Cannot return the firewall repair result: ' + $_.Exception.Message)
++            $exitCode = 1
++        } finally {
++            if ($resultWriter) { $resultWriter.Dispose() }
++            if ($resultStream) { $resultStream.Dispose() }
++        }
+     }
++    exit $exitCode
+ }
+diff --git a/src/potbot/syn_release/custody_firewall.py b/src/potbot/syn_release/custody_firewall.py
+index 0221273160069f747648b58dc1f411e41da6d830..b453f3d8a71ff6b83e649fad09957da78c0ff3a1 100644
+--- a/src/potbot/syn_release/custody_firewall.py
++++ b/src/potbot/syn_release/custody_firewall.py
+@@ -15,6 +15,7 @@ import os
+ import re
+ import subprocess
+ import time
++import uuid
+ from collections.abc import Callable
+ from pathlib import Path
+ from typing import TYPE_CHECKING, Any, Literal
+@@ -43,13 +44,19 @@ def _encode_command(source: str) -> str:
+     return base64.b64encode(loader.encode("utf-16-le")).decode("ascii")
+ 
+ 
+-def _encoded_script(request: dict[str, Any], mode: str) -> str:
++def _encoded_script(
++    request: dict[str, Any], mode: str, *, result_pipe: str | None = None,
++) -> str:
+     if mode not in {"Inspect", "Repair"}:
+         raise ValueError("Unknown custody firewall operation")
+     # JSON is data, never PowerShell source. Base64 contains no quotes or escapes.
+     payload = base64.b64encode(json.dumps(request).encode()).decode("ascii")
+     source = Path(__file__).with_suffix(".ps1").read_text(encoding="utf-8")
+     script = f"& {{\n{source}\n}} -RequestBase64 '{payload}' -Mode '{mode}'"
++    if result_pipe is not None:
++        if mode != "Repair" or re.fullmatch(r"potbot-firewall-[0-9a-f]{32}", result_pipe) is None:
++            raise ValueError("Invalid firewall result pipe")
++        script += f" -ResultPipe '{result_pipe}'"
+     return _encode_command(script)
+ 
+ 
+@@ -58,9 +65,12 @@ def _run(
+ ) -> subprocess.CompletedProcess[str]:
+     from .host import windows_environment
+ 
++    argv = [powershell, "-NoLogo", "-NoProfile", "-NonInteractive",
++            "-Command" if command else "-EncodedCommand", source]
++    if len(subprocess.list2cmdline(argv)) >= 32760:
++        raise CapabilityUnavailableError("Windows Firewall helper exceeds the process command limit")
+     return subprocess.run(
+-        [powershell, "-NoLogo", "-NoProfile", "-NonInteractive",
+-         "-Command" if command else "-EncodedCommand", source],
++        argv,
+         stdin=subprocess.DEVNULL,
+         capture_output=True,
+         text=True,
+@@ -69,6 +79,7 @@ def _run(
+         check=False,
+         timeout=timeout,
+         env=windows_environment(),
++        cwd=str(Path(powershell).parent),
+         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+     )
+ 
+@@ -98,29 +109,57 @@ def _inspect(powershell: str, request: dict[str, Any]) -> dict[str, Any]:
+ 
+ 
+ def _elevate(powershell: str, request: dict[str, Any]) -> int:
+-    encoded = _encoded_script(request, "Repair")
++    purpose = request.get("purpose", "custody")
++    pipe_name = "potbot-firewall-" + uuid.uuid4().hex
++    encoded = _encoded_script(request, "Repair", result_pipe=pipe_name)
+     # The only elevated executable is the system PowerShell. No downloaded
+     # interpreter, repository path or user-controlled command is run as admin.
+     # Revalidation inside the helper prevents a late UAC acceptance after the
+     # requesting authority/controller has gone away from changing the firewall.
+-    wrapper = """
+-$ErrorActionPreference = 'Stop'
+-try {
+-    $p = Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -Verb RunAs `
+-        -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-EncodedCommand','ENCODED') `
+-        -PassThru -Wait
+-    exit $p.ExitCode
+-} catch {
+-    $errorObject = $_.Exception
+-    while ($errorObject) {
+-        if ($errorObject -is [ComponentModel.Win32Exception] -and
+-            $errorObject.NativeErrorCode -eq 1223) { exit 1223 }
+-        $errorObject = $errorObject.InnerException
+-    }
+-    exit 1
+-}
+-""".replace("ENCODED", encoded)
+-    return _run(powershell, wrapper, timeout=180, command=True).returncode
++    # RunAs cannot redirect the elevated child's console streams. The launcher
++    # relays a bounded, one-way diagnostic receipt over a private local pipe.
++    # This carries firewall status only; no keystore protocol or data uses it.
++    source = Path(__file__).with_name("custody_firewall_elevation.ps1").read_text(encoding="utf-8")
++    wrapper = f"& {{\n{source}\n}} -EncodedRepair '{encoded}' -ResultPipe '{pipe_name}'"
++    result = _run(powershell, wrapper, timeout=180, command=True)
++    if result.returncode == 1223:
++        return 1223
++    detail = " ".join(result.stderr.split())[-3000:]
++    try:
++        if len(result.stdout) > 16384:
++            raise ValueError
++        receipt = json.loads(result.stdout.lstrip("\ufeff"))
++        if (
++            not isinstance(receipt, dict)
++            or receipt.get("profile") != "potbot.firewall-result/1"
++            or receipt.get("purpose") != purpose
++            or type(receipt.get("exit_code")) is not int
++            or receipt["exit_code"] != result.returncode
++            or not isinstance(receipt.get("message"), str)
++            or len(receipt["message"]) > 4096
++            or not isinstance(receipt.get("operation"), str)
++            or re.fullmatch(r"[a-z-]{1,64}", receipt["operation"]) is None
++            or (result.returncode == 0 and receipt.get("repair") is not False)
++        ):
++            raise ValueError
++    except (TypeError, ValueError):
++        if result.returncode:
++            raise CapabilityUnavailableError(
++                f"Windows Firewall {purpose} administrator repair failed "
++                f"(exit {result.returncode}): " + (detail or "the elevated helper returned no diagnostic")
++            ) from None
++        raise CapabilityUnavailableError(
++            f"Windows Firewall {purpose} administrator repair returned no valid completion result"
++            + (": " + detail if detail else "")
++        ) from None
++    if result.returncode:
++        message = " ".join(receipt["message"].split())
++        raise CapabilityUnavailableError(
++            f"Windows Firewall {purpose} administrator repair failed "
++            f"(exit {result.returncode}, {receipt['operation']}): "
++            + (message or detail or "no diagnostic returned")
++        )
++    return 0
+ 
+ 
+ def _programs(python: Path) -> list[str]:
+diff --git a/src/potbot/syn_release/custody_firewall_elevation.ps1 b/src/potbot/syn_release/custody_firewall_elevation.ps1
+new file mode 100644
+index 0000000000000000000000000000000000000000..af307892dae1420f5ea2f7710a43c46a5d00f49e
+--- /dev/null
++++ b/src/potbot/syn_release/custody_firewall_elevation.ps1
+@@ -0,0 +1,137 @@
++param(
++    [string]$EncodedRepair,
++    [ValidatePattern('^potbot-firewall-[0-9a-f]{32}$')][string]$ResultPipe,
++    [ValidateRange(1, 180)][int]$TimeoutSeconds = 150
++)
++
++# This launcher remains unelevated. The elevated helper writes only a bounded
++# diagnostic receipt to this pipe; it never writes a caller-selected file.
++$ErrorActionPreference = 'Stop'
++Set-StrictMode -Version 2
++[Console]::OutputEncoding = New-Object Text.UTF8Encoding($false)
++
++function Wait-FirewallAsync($Pending, $Process, $Clock, [int]$Timeout, [string]$Operation) {
++    while (-not $Pending.AsyncWaitHandle.WaitOne(100)) {
++        if ($Clock.Elapsed.TotalSeconds -ge $Timeout) {
++            throw ('Timed out ' + $Operation + ' from the elevated firewall helper')
++        }
++        if ($Process.HasExited -and -not $Pending.AsyncWaitHandle.WaitOne(100)) {
++            throw ('Elevated firewall helper exited with code ' + $Process.ExitCode +
++                ' before ' + $Operation)
++        }
++    }
++    if ($Clock.Elapsed.TotalSeconds -ge $Timeout) {
++        throw ('Timed out ' + $Operation + ' from the elevated firewall helper')
++    }
++}
++
++function Read-FirewallReceipt($Pipe, $Process, $Clock, [int]$Timeout) {
++    # One UTF-8 JSON line, at most 16 KiB including its newline. Async reads
++    # allow a helper that crashes or stalls to fail without hanging startup.
++    $buffer = New-Object byte[] 16384
++    $used = 0
++    while ($used -lt $buffer.Length) {
++        $pending = $Pipe.BeginRead($buffer, $used, $buffer.Length - $used, $null, $null)
++        $completed = $false
++        try {
++            Wait-FirewallAsync $pending $Process $Clock $Timeout 'receiving its diagnostic receipt'
++            $count = $Pipe.EndRead($pending)
++            $completed = $true
++        } finally {
++            if (-not $completed) { $Pipe.Dispose() }
++            $pending.AsyncWaitHandle.Close()
++        }
++        if ($count -eq 0) { throw 'Elevated firewall helper closed its pipe without a complete receipt' }
++        $end = $used + $count
++        for ($index = $used; $index -lt $end; $index++) {
++            if ($buffer[$index] -eq 10) {
++                if ($index -ne $end - 1) { throw 'Elevated firewall helper returned extra receipt data' }
++                $utf8 = New-Object Text.UTF8Encoding($false, $true)
++                return $utf8.GetString($buffer, 0, $index).TrimEnd([char]13)
++            }
++        }
++        $used = $end
++    }
++    throw 'Elevated firewall helper diagnostic receipt exceeded 16 KiB'
++}
++
++function New-FirewallResultPipe([string]$Name) {
++    $security = New-Object IO.Pipes.PipeSecurity
++    $security.SetAccessRuleProtection($true, $false)
++    $owner = [Security.Principal.WindowsIdentity]::GetCurrent().User
++    $administrators = New-Object Security.Principal.SecurityIdentifier('S-1-5-32-544')
++    $security.AddAccessRule((New-Object IO.Pipes.PipeAccessRule(
++        $owner, [IO.Pipes.PipeAccessRights]::FullControl, 'Allow')))
++    $security.AddAccessRule((New-Object IO.Pipes.PipeAccessRule(
++        $administrators, [IO.Pipes.PipeAccessRights]::Write, 'Allow')))
++    return New-Object IO.Pipes.NamedPipeServerStream(
++        $Name, [IO.Pipes.PipeDirection]::In, 1, [IO.Pipes.PipeTransmissionMode]::Byte,
++        [IO.Pipes.PipeOptions]::Asynchronous, 16384, 16384, $security)
++}
++
++function Invoke-FirewallElevation([string]$Encoded, [string]$PipeName, [int]$Timeout) {
++    $pipe = $null
++    $process = $null
++    $connection = $null
++    $clock = [Diagnostics.Stopwatch]::StartNew()
++    try {
++        $pipe = New-FirewallResultPipe $PipeName
++        $connection = $pipe.BeginWaitForConnection($null, $null)
++        # RunAs cannot redirect standard streams. Do not use Start-Process
++        # -Wait: its job tracking can fail when crossing the elevation boundary.
++        $process = Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -Verb RunAs `
++            -ArgumentList @('-NoLogo', '-NoProfile', '-NonInteractive', '-EncodedCommand', $Encoded) `
++            -WorkingDirectory $PSHOME -PassThru
++        # Keep a process handle while the helper is alive so its exit status
++        # remains available even if it finishes before a subsequent query.
++        $null = $process.Handle
++        Wait-FirewallAsync $connection $process $clock $Timeout 'connecting its diagnostic pipe'
++        $pipe.EndWaitForConnection($connection)
++        $connection.AsyncWaitHandle.Close()
++        $connection = $null
++        $line = Read-FirewallReceipt $pipe $process $clock $Timeout
++        $receipt = $line | ConvertFrom-Json
++        if ($receipt.profile -cne 'potbot.firewall-result/1' -or
++            $receipt.purpose -cnotin @('custody', 'database') -or
++            ($receipt.exit_code -isnot [int] -and $receipt.exit_code -isnot [long]) -or
++            $receipt.exit_code -lt 0 -or $receipt.exit_code -gt 65535 -or
++            $receipt.operation -isnot [string] -or $receipt.message -isnot [string]) {
++            throw 'Elevated firewall helper returned an invalid diagnostic receipt'
++        }
++        if ($receipt.exit_code -eq 0 -and
++            ($receipt.repair -isnot [bool] -or $receipt.repair)) {
++            throw 'Elevated firewall helper did not confirm completed repair'
++        }
++        $remaining = [Math]::Max(0, [int](1000 * $Timeout - $clock.Elapsed.TotalMilliseconds))
++        if (-not $process.WaitForExit($remaining)) {
++            throw 'Elevated firewall helper did not exit after its diagnostic receipt'
++        }
++        $code = $process.ExitCode
++        if ($null -eq $code -or $code -ne $receipt.exit_code) {
++            throw ('Elevated firewall helper exit code disagrees with its receipt: ' + $code)
++        }
++        [Console]::Out.WriteLine($line)
++        return [int]$code
++    } catch {
++        $failure = $_.Exception
++        while ($failure) {
++            if ($failure -is [ComponentModel.Win32Exception] -and
++                $failure.NativeErrorCode -eq 1223) { return 1223 }
++            $failure = $failure.InnerException
++        }
++        $message = [string]$_.Exception.Message
++        if ($message.Length -gt 1500) { $message = $message.Substring(0, 1500) }
++        [Console]::Error.WriteLine('Windows Firewall elevation failed: ' + $message)
++        return 1
++    } finally {
++        if ($pipe) { $pipe.Dispose() }
++        if ($connection) { $connection.AsyncWaitHandle.Close() }
++        if ($process) { $process.Dispose() }
++        $clock.Stop()
++    }
++}
++
++if ($EncodedRepair) {
++    if (-not $ResultPipe) { throw 'The firewall result pipe is required' }
++    exit (Invoke-FirewallElevation $EncodedRepair $ResultPipe $TimeoutSeconds)
++}
+diff --git a/tests/unit/test_custody_firewall.py b/tests/unit/test_custody_firewall.py
+index 67370dfa59f755fc5db1c0acae7fae6ce84a3f32..9842411479d76e785dc5ecc8ecdb59e6838cf5ab 100644
+--- a/tests/unit/test_custody_firewall.py
++++ b/tests/unit/test_custody_firewall.py
+@@ -185,6 +185,10 @@ def test_uac_command_fits_windows_and_carries_only_public_identity(monkeypatch):
+     assert firewall._elevate("powershell.exe", request) == 1223
+     assert len(commands[0]) < 32000
+     assert len(firewall._encoded_script(request, "Repair")) < 32000
++    assert len(subprocess.list2cmdline([
++        r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
++        "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", commands[0],
++    ])) < 32760
+     assert "-Verb RunAs" in commands[0]
+ 
+ 
+@@ -254,3 +258,105 @@ def test_unsupported_purpose_is_rejected_before_any_firewall_action(setup_firewa
+     with pytest.raises(CapabilityUnavailableError, match="Unsupported managed firewall purpose"):
+         firewall.ensure_custody_firewall(manager, **options, purpose="arbitrary", tcp_probe=lambda: False)
+     assert not stages and not elevations
++
++
++def repair_receipt(*, code=0, purpose="database", **changes):
++    return {
++        "profile": "potbot.firewall-result/1", "purpose": purpose,
++        "exit_code": code, "operation": "complete" if code == 0 else "repair-policy",
++        "message": "", "repair": code != 0, **changes,
++    }
++
++
++@pytest.mark.parametrize("purpose", ["custody", "database"])
++def test_elevated_repair_requires_a_matching_verified_completion(monkeypatch, purpose):
++    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
++        returncode=0, stdout=json.dumps(repair_receipt(purpose=purpose)), stderr="",
++    ))
++    assert firewall._elevate("powershell.exe", {"purpose": purpose}) == 0
++
++
++@pytest.mark.parametrize("stdout", [
++    "", "[]", "not-json", "x" * 16385,
++    json.dumps(repair_receipt(purpose="custody")),
++    json.dumps(repair_receipt(repair=True)),
++    json.dumps(repair_receipt(exit_code=True)),
++    json.dumps(repair_receipt(exit_code=1)),
++    json.dumps(repair_receipt(operation="")),
++    json.dumps(repair_receipt(message="x" * 4097)),
++])
++def test_process_exit_zero_without_valid_receipt_cannot_count_as_repair(monkeypatch, stdout):
++    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
++        returncode=0, stdout=stdout, stderr="",
++    ))
++    with pytest.raises(CapabilityUnavailableError, match="no valid completion result"):
++        firewall._elevate("powershell.exe", {"purpose": "database"})
++
++
++def test_uac_approved_helper_error_reaches_the_startup_failure(setup_firewall, monkeypatch):
++    manager, options, stages, _elevations = setup_firewall
++    # Exercise the real elevation result parser through the caller, with the
++    # Windows launcher itself stubbed. This is the previously lost error path.
++    monkeypatch.undo()
++    monkeypatch.setattr(firewall, "_programs", lambda _python: [r"C:\uv\python.exe"])
++    monkeypatch.setattr(firewall, "_inspect", lambda *_args: plan())
++    message = "New-NetFirewallRule: The parameter is incorrect [HRESULT=0x80070057]"
++    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
++        returncode=1, stdout=json.dumps(repair_receipt(code=1, message=message)), stderr="",
++    ))
++    with pytest.raises(CapabilityUnavailableError) as failure:
++        firewall.ensure_custody_firewall(
++            manager, **options, purpose="database", tcp_probe=lambda: False,
++        )
++    assert message in str(failure.value)
++    assert "database" in str(failure.value)
++    assert "exit 1, repair-policy" in str(failure.value)
++    assert "declined" not in str(failure.value)
++    assert stages == ["database-firewall", "database-firewall-admin", "database-firewall-failed"]
++
++
++def test_elevation_launcher_exception_keeps_its_error_and_exit_code(monkeypatch):
++    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
++        returncode=1, stdout="", stderr="Windows Firewall elevation failed: Access is denied\n",
++    ))
++    with pytest.raises(CapabilityUnavailableError, match=r"database.*exit 1.*Access is denied"):
++        firewall._elevate("powershell.exe", {"purpose": "database"})
++
++
++def test_reported_access_denial_is_not_uac_cancellation(monkeypatch):
++    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
++        returncode=5,
++        stdout=json.dumps(repair_receipt(code=5, message="Firewall provider denied access")),
++        stderr="",
++    ))
++    with pytest.raises(CapabilityUnavailableError, match=r"exit 5.*provider denied access"):
++        firewall._elevate("powershell.exe", {"purpose": "database"})
++
++
++@pytest.mark.parametrize("pipe", ["..\\report.txt", "potbot-firewall-'", "", "x" * 200])
++def test_result_channel_is_only_a_generated_pipe_name(pipe):
++    with pytest.raises(ValueError, match="Invalid firewall result pipe"):
++        firewall._encoded_script({}, "Repair", result_pipe=pipe)
++
++
++def test_firewall_shell_uses_its_system_directory_and_sanitized_environment(monkeypatch):
++    calls = []
++    monkeypatch.setenv("SystemRoot", "C:/Windows")
++    monkeypatch.setenv("POTBOT_DSN", "must-not-reach-helper")
++    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_SERVER_TOKEN", "must-not-reach-helper")
++    monkeypatch.setattr(firewall.subprocess, "run", lambda command, **kwargs:
++                        calls.append((command, kwargs)) or SimpleNamespace(returncode=0))
++    powershell = "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
++    firewall._run(powershell, "Write-Output 'public status'", timeout=10, command=True)
++    command, kwargs = calls[0]
++    assert command[0] == powershell
++    assert kwargs["cwd"] == str(Path(powershell).parent)
++    assert "POTBOT_DSN" not in kwargs["env"]
++    assert "POTBOT_PARENT_KEYSTORE_SERVER_TOKEN" not in kwargs["env"]
++
++
++def test_oversized_helper_command_is_rejected_before_windows_launch(monkeypatch):
++    monkeypatch.setattr(firewall.subprocess, "run", lambda *_a, **_kw:
++                        pytest.fail("oversized command reached Windows"))
++    with pytest.raises(CapabilityUnavailableError, match="process command limit"):
++        firewall._run("powershell.exe", "x" * 32760, timeout=10)
+diff --git a/tests/windows/custody-firewall-elevation-unit.ps1 b/tests/windows/custody-firewall-elevation-unit.ps1
+new file mode 100644
+index 0000000000000000000000000000000000000000..3e83c6ed70f21e8fdae91ba81830cab11f9f1c30
+--- /dev/null
++++ b/tests/windows/custody-firewall-elevation-unit.ps1
+@@ -0,0 +1,287 @@
++# Exercises real child processes and named pipes, with only UAC launch mocked.
++# Windows firewall policy is never queried or changed by this test.
++param([switch]$InMemory)
++
++$ErrorActionPreference = 'Stop'
++. (Join-Path $PSScriptRoot '../../src/potbot/syn_release/custody_firewall_elevation.ps1')
++$script:NativePipeFactory = (Get-Command New-FirewallResultPipe).ScriptBlock
++$script:TestPowerShell = [Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
++$script:WindowsHost = [Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT
++$script:LaunchMode = 'child'
++$script:Children = @()
++
++function Assert-True($Condition, [string]$Message) {
++    if (-not $Condition) { throw $Message }
++}
++
++if ($InMemory) {
++    # Some CI/container policies forbid Unix sockets. Exercise the production
++    # deadline, framing and launcher code with deterministic asynchronous I/O.
++    Add-Type -TypeDefinition @'
++using System;
++using System.IO;
++using System.Threading;
++public sealed class PotbotFirewallPending : IAsyncResult {
++    public int Count;
++    public object AsyncState { get { return null; } }
++    public WaitHandle AsyncWaitHandle { get; private set; }
++    public bool CompletedSynchronously { get { return IsCompleted; } }
++    public bool IsCompleted { get; private set; }
++    public PotbotFirewallPending(bool ready, int count) {
++        IsCompleted = ready; Count = count; AsyncWaitHandle = new ManualResetEvent(ready);
++    }
++}
++public sealed class PotbotFirewallTestPipe : MemoryStream {
++    public bool ConnectionReady = true, ReadReady = true, WasDisposed;
++    public int ChunkSize = 16384;
++    public PotbotFirewallTestPipe(byte[] bytes) : base(bytes) {}
++    public IAsyncResult BeginWaitForConnection(AsyncCallback callback, object state) {
++        return new PotbotFirewallPending(ConnectionReady, 0);
++    }
++    public void EndWaitForConnection(IAsyncResult pending) {}
++    public override IAsyncResult BeginRead(byte[] bytes, int offset, int count, AsyncCallback callback, object state) {
++        int read = ReadReady ? Read(bytes, offset, Math.Min(count, ChunkSize)) : 0;
++        return new PotbotFirewallPending(ReadReady, read);
++    }
++    public override int EndRead(IAsyncResult pending) { return ((PotbotFirewallPending)pending).Count; }
++    protected override void Dispose(bool disposing) { WasDisposed = true; base.Dispose(disposing); }
++}
++public sealed class PotbotFirewallTestProcess : IDisposable {
++    public IntPtr Handle { get { return new IntPtr(1); } }
++    public bool HasExited = true, WaitResult = true, WasDisposed, Waited;
++    public int ExitCode;
++    public bool WaitForExit(int milliseconds) { Waited = true; return WaitResult; }
++    public void Dispose() { WasDisposed = true; }
++}
++'@
++    function New-FirewallResultPipe([string]$Name) { return $script:TestPipe }
++    function Start-Process {
++        [CmdletBinding()]
++        param([string]$FilePath, [string]$Verb, [string[]]$ArgumentList,
++            [string]$WorkingDirectory, [switch]$PassThru)
++        Assert-True ($Verb -eq 'RunAs' -and $PassThru) 'UAC launch flags changed'
++        Assert-True ($WorkingDirectory -eq $PSHOME) 'System working directory is required'
++        if ($script:LaunchMode -eq 'declined') {
++            throw (New-Object ComponentModel.Win32Exception(1223, 'Approval cancelled'))
++        }
++        if ($script:LaunchMode -eq 'failure') { throw 'Simulated ShellExecute failure' }
++        return $script:TestProcess
++    }
++    function Invoke-MemoryCase([byte[]]$Bytes, [int]$Code = 0, [string]$Scenario = '') {
++        $script:TestPipe = New-Object PotbotFirewallTestPipe(,$Bytes)
++        $script:TestProcess = New-Object PotbotFirewallTestProcess
++        $script:TestProcess.ExitCode = $Code
++        if ($Scenario -eq 'crash') { $script:TestPipe.ConnectionReady = $false }
++        if ($Scenario -eq 'fragmented') { $script:TestPipe.ChunkSize = 3 }
++        if ($Scenario -eq 'stall') {
++            $script:TestPipe.ReadReady = $false; $script:TestProcess.HasExited = $false
++        }
++        if ($Scenario -eq 'wait') { $script:TestProcess.WaitResult = $false }
++        $output = New-Object IO.StringWriter
++        $errorOutput = New-Object IO.StringWriter
++        $oldOut = [Console]::Out; $oldError = [Console]::Error
++        try {
++            [Console]::SetOut($output); [Console]::SetError($errorOutput)
++            $code = Invoke-FirewallElevation 'encoded' ('potbot-firewall-' + ('a' * 32)) 1
++            Assert-True $script:TestPipe.WasDisposed 'Pipe was not disposed'
++            if ($script:LaunchMode -eq 'child') {
++                Assert-True $script:TestProcess.WasDisposed 'Process handle was not disposed'
++            }
++            return [pscustomobject]@{ Code=$code; Output=$output.ToString(); Error=$errorOutput.ToString() }
++        } finally {
++            [Console]::SetOut($oldOut); [Console]::SetError($oldError)
++            $output.Dispose(); $errorOutput.Dispose()
++        }
++    }
++    function Get-ReceiptBytes([int]$Code = 0, [string]$Message = '', [bool]$Repair = $false) {
++        $line = @{
++            profile='potbot.firewall-result/1'; purpose='database'; exit_code=$Code
++            operation='verify-policy'; message=$Message; repair=$Repair
++        } | ConvertTo-Json -Compress
++        return ,([Text.Encoding]::UTF8.GetBytes($line + "`n"))
++    }
++    $good = Get-ReceiptBytes
++    $result = Invoke-MemoryCase $good
++    Assert-True ($result.Code -eq 0 -and -not $result.Error) ('Success failed: ' + $result.Error)
++    $result = Invoke-MemoryCase $good 0 'fragmented'
++    Assert-True ($result.Code -eq 0) 'Fragmented UTF-8 receipt must survive multiple asynchronous reads'
++    $result = Invoke-MemoryCase (Get-ReceiptBytes 1 'New-NetFirewallRule failed (0x80070005)') 1
++    Assert-True ($result.Code -eq 1 -and $result.Output -like '*0x80070005*') 'Helper diagnostics lost'
++    $script:LaunchMode = 'declined'
++    Assert-True ((Invoke-MemoryCase $good).Code -eq 1223) 'UAC cancellation code changed'
++    $script:LaunchMode = 'failure'
++    $result = Invoke-MemoryCase $good
++    Assert-True ($result.Error -like '*Simulated ShellExecute failure*') 'Launcher diagnostic lost'
++    $script:LaunchMode = 'child'
++    $result = Invoke-MemoryCase $good 7 'crash'
++    Assert-True ($result.Error -like '*exited with code 7*') 'Early child exit must not wait for timeout'
++    $result = Invoke-MemoryCase ([byte[]]@())
++    Assert-True ($result.Error -like '*without a complete receipt*') 'Missing receipt accepted'
++    $result = Invoke-MemoryCase ([Text.Encoding]::UTF8.GetBytes('{broken' + "`n"))
++    Assert-True ($result.Code -eq 1) 'Malformed JSON accepted'
++    $result = Invoke-MemoryCase ([byte[]]@(255, 10))
++    Assert-True ($result.Code -eq 1) 'Invalid UTF-8 accepted'
++    $result = Invoke-MemoryCase ($good + $good)
++    Assert-True ($result.Error -like '*extra receipt data*') 'Multiple receipts accepted'
++    $result = Invoke-MemoryCase ([Text.Encoding]::UTF8.GetBytes(('A' * 16384)))
++    Assert-True ($result.Error -like '*exceeded 16 KiB*') 'Oversized receipt accepted'
++    $result = Invoke-MemoryCase $good 9
++    Assert-True ($result.Error -like '*disagrees with its receipt: 9*') 'Conflicting exit status accepted'
++    $result = Invoke-MemoryCase (Get-ReceiptBytes 0 '' $true)
++    Assert-True ($result.Error -like '*did not confirm completed repair*') 'Incomplete repair accepted'
++    $result = Invoke-MemoryCase $good 0 'wait'
++    Assert-True ($result.Error -like '*did not exit after*') 'A stuck process was accepted'
++    $result = Invoke-MemoryCase $good 0 'stall'
++    Assert-True ($result.Error -like '*Timed out*') 'A stuck read exceeded its deadline'
++    Write-Output 'Custody firewall elevation tests passed (15 in-memory cases).'
++    return
++}
++
++function New-FirewallResultPipe([string]$Name) {
++    if ($script:WindowsHost) { return & $script:NativePipeFactory $Name }
++    # Unix has no Windows DACL constructor; use its local named-pipe transport.
++    return New-Object IO.Pipes.NamedPipeServerStream(
++        $Name, [IO.Pipes.PipeDirection]::In, 1, [IO.Pipes.PipeTransmissionMode]::Byte,
++        [IO.Pipes.PipeOptions]::Asynchronous, 16384, 16384)
++}
++
++function Start-Process {
++    [CmdletBinding()]
++    param([string]$FilePath, [string]$Verb, [string[]]$ArgumentList,
++        [string]$WorkingDirectory, [switch]$PassThru)
++    Assert-True ($Verb -eq 'RunAs' -and $PassThru) 'The helper must request UAC explicitly'
++    Assert-True ($WorkingDirectory -eq $PSHOME) 'Elevation must use a known system directory'
++    Assert-True ($FilePath -eq (Join-Path $PSHOME 'powershell.exe')) 'Use only system PowerShell'
++    if ($script:LaunchMode -eq 'declined') {
++        throw (New-Object ComponentModel.Win32Exception(1223, 'Approval cancelled'))
++    }
++    if ($script:LaunchMode -eq 'failure') { throw 'Simulated ShellExecute failure' }
++    $child = Microsoft.PowerShell.Management\Start-Process -FilePath $script:TestPowerShell `
++        -ArgumentList $ArgumentList -WorkingDirectory $PSScriptRoot -PassThru
++    $script:Children += $child.Id
++    return $child
++}
++
++function Invoke-Case([string]$Body, [int]$Timeout = 15) {
++    $name = 'potbot-firewall-' + [Guid]::NewGuid().ToString('N')
++    $source = $Body.Replace('PIPE_NAME', $name)
++    $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($source))
++    $output = New-Object IO.StringWriter
++    $errorOutput = New-Object IO.StringWriter
++    $oldOut = [Console]::Out
++    $oldError = [Console]::Error
++    try {
++        [Console]::SetOut($output)
++        [Console]::SetError($errorOutput)
++        $code = Invoke-FirewallElevation $encoded $name $Timeout
++        return [pscustomobject]@{ Code=$code; Output=$output.ToString(); Error=$errorOutput.ToString() }
++    } finally {
++        [Console]::SetOut($oldOut)
++        [Console]::SetError($oldError)
++        $output.Dispose()
++        $errorOutput.Dispose()
++    }
++}
++
++$clientPrefix = @'
++$ErrorActionPreference = 'Stop'
++if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
++    # Match the production helper: generic Write requests more permissions than
++    # the Administrators ACE grants when UAC uses a different administrator.
++    $client = New-Object IO.Pipes.NamedPipeClientStream(
++        '.', 'PIPE_NAME', [IO.Pipes.PipeAccessRights]::WriteData, [IO.Pipes.PipeOptions]::None,
++        [Security.Principal.TokenImpersonationLevel]::Anonymous, [IO.HandleInheritability]::None)
++} else {
++    $client = New-Object IO.Pipes.NamedPipeClientStream(
++        '.', 'PIPE_NAME', [IO.Pipes.PipeDirection]::Out, [IO.Pipes.PipeOptions]::None,
++        [Security.Principal.TokenImpersonationLevel]::Anonymous)
++}
++$client.Connect(5000)
++'@
++$receipt = @{
++    profile='potbot.firewall-result/1'; purpose='database'; exit_code=0
++    operation='verify-policy'; message=''; repair=$false
++} | ConvertTo-Json -Compress
++$writer = @'
++$bytes = [Text.Encoding]::UTF8.GetBytes('RECEIPT' + "`n")
++try { $client.Write($bytes, 0, $bytes.Length); $client.Flush() } finally { $client.Dispose() }
++exit EXIT_CODE
++'@
++
++try {
++    if ($script:WindowsHost) {
++        $aclPipe = & $script:NativePipeFactory ('potbot-firewall-' + [Guid]::NewGuid().ToString('N'))
++        try {
++            $rules = $aclPipe.GetAccessControl().GetAccessRules(
++                $true, $false, [Security.Principal.SecurityIdentifier])
++            $adminRules = @($rules | Where-Object {
++                $_.IdentityReference.Value -eq 'S-1-5-32-544' -and $_.AccessControlType -eq 'Allow'
++            })
++            Assert-True ($adminRules.Count -eq 1) 'The pipe must have one explicit Administrators ACE'
++            $rights = $adminRules[0].PipeAccessRights
++            Assert-True (($rights -band [IO.Pipes.PipeAccessRights]::WriteData) -ne 0) `
++                'Administrators must be allowed to write the diagnostic receipt'
++            Assert-True (($rights -band [IO.Pipes.PipeAccessRights]::CreateNewInstance) -eq 0) `
++                'Administrators must not gain permission to create another pipe server instance'
++        } finally {
++            $aclPipe.Dispose()
++        }
++    }
++    $successBody = $clientPrefix + "`n" + $writer.Replace('RECEIPT', $receipt).Replace('EXIT_CODE', '0')
++    $result = Invoke-Case $successBody
++    Assert-True ($result.Code -eq 0 -and -not $result.Error) ('Success failed: ' + $result.Error)
++    Assert-True (($result.Output | ConvertFrom-Json).repair -eq $false) 'Success receipt was lost'
++
++    $failedReceipt = $receipt.Replace('"exit_code":0', '"exit_code":1').Replace(
++        '"message":""', '"message":"New-NetFirewallRule: access denied (0x80070005)"')
++    $result = Invoke-Case ($clientPrefix + "`n" + $writer.Replace(
++        'RECEIPT', $failedReceipt).Replace('EXIT_CODE', '1'))
++    Assert-True ($result.Code -eq 1 -and $result.Output -like '*access denied*') `
++        'The actual elevated failure must reach the parent'
++
++    $script:LaunchMode = 'declined'
++    $result = Invoke-Case 'exit 0'
++    Assert-True ($result.Code -eq 1223) 'UAC cancellation must retain its exact exit code'
++    $script:LaunchMode = 'failure'
++    $result = Invoke-Case 'exit 0'
++    Assert-True ($result.Code -eq 1 -and $result.Error -like '*Simulated ShellExecute failure*') `
++        'Launcher errors must not disappear'
++    $script:LaunchMode = 'child'
++
++    $result = Invoke-Case 'exit 7'
++    Assert-True ($result.Code -eq 1 -and $result.Error -like '*exited with code 7*') `
++        'A helper exiting before connection must fail promptly with its exit code'
++
++    $result = Invoke-Case ($clientPrefix + "`n" + '$client.Dispose(); exit 8')
++    Assert-True ($result.Code -eq 1 -and $result.Error -like '*without a complete receipt*') `
++        'Empty receipts cannot imply a successful repair'
++
++    $result = Invoke-Case ($clientPrefix + "`n" + $writer.Replace(
++        'RECEIPT', '{broken').Replace('EXIT_CODE', '0'))
++    Assert-True ($result.Code -eq 1) 'Malformed JSON cannot imply a successful repair'
++
++    $result = Invoke-Case ($successBody.Replace('exit 0', 'exit 9'))
++    Assert-True ($result.Code -eq 1 -and $result.Error -like '*disagrees with its receipt: 9*') `
++        'The real child exit code must agree with the receipt'
++
++    $oversized = $clientPrefix + "`n" + @'
++$bytes = New-Object byte[] 16384
++for ($i = 0; $i -lt $bytes.Length; $i++) { $bytes[$i] = 65 }
++try { $client.Write($bytes, 0, $bytes.Length); $client.Flush() } finally { $client.Dispose() }
++exit 0
++'@
++    $result = Invoke-Case $oversized
++    Assert-True ($result.Code -eq 1 -and $result.Error -like '*exceeded 16 KiB*') `
++        'Receipt reading must have a fixed memory bound'
++
++    $result = Invoke-Case ($clientPrefix + "`n" + 'Start-Sleep -Seconds 10; $client.Dispose(); exit 0') 2
++    Assert-True ($result.Code -eq 1 -and $result.Error -like '*Timed out*') `
++        'A connected helper that stalls must fail within the deadline'
++    Write-Output 'Custody firewall elevation transport tests passed (10 cases).'
++} finally {
++    foreach ($childId in $script:Children) {
++        $child = Get-Process -Id $childId -ErrorAction SilentlyContinue
++        if ($child -and -not $child.HasExited) { Stop-Process -Id $childId -Force }
++        if ($child) { $child.Dispose() }
++    }
++}
+diff --git a/tests/windows/custody-firewall-result-unit.ps1 b/tests/windows/custody-firewall-result-unit.ps1
+new file mode 100644
+index 0000000000000000000000000000000000000000..edad4b56d3200020033117f40e7269a876e05104
+--- /dev/null
++++ b/tests/windows/custody-firewall-result-unit.ps1
+@@ -0,0 +1,171 @@
++# Exercise the real helper main block and its result pipe in child PowerShells.
++# Only policy functions are replaced; no firewall changes or elevation occur.
++# Runs with Windows PowerShell 5.1 or pwsh.
++$ErrorActionPreference = 'Stop'
++Set-StrictMode -Version 2
++$helperPath = Join-Path $PSScriptRoot '../../src/potbot/syn_release/custody_firewall.ps1'
++$helperSource = [IO.File]::ReadAllText($helperPath)
++$mainMarker = 'if ($RequestBase64) {'
++if (-not $helperSource.Contains($mainMarker)) { throw 'Firewall helper main block was not found' }
++$shellPath = (Get-Process -Id $PID).Path
++$useNamedPipe = [Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT
++
++function Assert-Equal($Actual, $Expected, [string]$Message) {
++    if (($Actual | ConvertTo-Json -Compress) -cne ($Expected | ConvertTo-Json -Compress)) {
++        throw ($Message + '; actual=' + ($Actual | ConvertTo-Json -Compress))
++    }
++}
++
++function Invoke-HelperCase([ValidateSet('success', 'failure', 'denied', 'rollback', 'invalid', 'escaped')]
++    [string]$Case) {
++    $overrides = @'
++function Get-FirewallPlan($Request) {
++    if ($script:TestCase -eq 'invalid') { throw 'Policy must not run for an invalid request' }
++    if ($script:TestCase -eq 'denied') {
++        throw (New-Object UnauthorizedAccessException('simulated access denied'))
++    }
++    return @{profile='potbot.database-firewall/1'; repair=$true; program='C:\runtime\python.exe'; blocks=@()}
++}
++function Invoke-FirewallRepair($Request, $Plan) {
++    if ($script:TestCase -eq 'failure') { throw 'simulated rule rejected' }
++    if ($script:TestCase -eq 'escaped') {
++        throw ('simulated escaped error: ' + (([string][char]1) * 3000))
++    }
++    if ($script:TestCase -eq 'rollback') {
++        $failure = New-Object InvalidOperationException('simulated original repair failure')
++        $failure.Data['PotbotFirewallRollbackErrors'] = @('simulated cleanup failure')
++        throw $failure
++    }
++    return @{profile='potbot.database-firewall/1'; repair=$false; program='C:\runtime\python.exe'; blocks=@()}
++}
++'@
++    $overrides = "`$script:TestCase = '$Case'`n" + $overrides + "`n"
++    if (-not $useNamedPipe) {
++        # Restricted Linux executors may forbid the Unix socket that .NET uses
++        # for named pipes. Keep the real writer/main code, substituting only the
++        # client transport with the child's redirected stdout stream.
++        $overrides += @'
++function New-Object {
++    param([string]$TypeName, [object[]]$ArgumentList)
++    if ($TypeName -eq 'IO.Pipes.NamedPipeClientStream') {
++        $stream = [Console]::OpenStandardOutput()
++        Add-Member -InputObject $stream -MemberType ScriptMethod -Name Connect -Value { param($Timeout) }
++        return $stream
++    }
++    Microsoft.PowerShell.Utility\New-Object -TypeName $TypeName -ArgumentList $ArgumentList
++}
++'@
++        $overrides += "`n"
++    }
++    $testSource = $helperSource.Replace($mainMarker, $overrides + $mainMarker)
++    $testFile = Join-Path ([IO.Path]::GetTempPath()) ('potbot-firewall-test-' + [Guid]::NewGuid().ToString('N') + '.ps1')
++    $request = @{
++        purpose='database'; installation_id=('a' * 32); controller_created='123456789012345678'
++        controller_pid=123; authority_pid=123; port=53117
++        host_address='172.27.32.1'; guest_address='172.27.44.68'
++        programs=@('C:\runtime\python.exe')
++    }
++    if ($Case -eq 'invalid') { $request.port = 0 }
++    $payload = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes(($request | ConvertTo-Json -Compress)))
++    $pipeName = 'potbot-firewall-' + [Guid]::NewGuid().ToString('N')
++    $server = $null
++    $reader = $null
++    $process = $null
++    $started = $false
++    $waiting = $null
++    try {
++        [IO.File]::WriteAllText($testFile, $testSource, (New-Object Text.UTF8Encoding($false)))
++        if ($useNamedPipe) {
++            $server = New-Object IO.Pipes.NamedPipeServerStream($pipeName, [IO.Pipes.PipeDirection]::In,
++                1, [IO.Pipes.PipeTransmissionMode]::Byte, [IO.Pipes.PipeOptions]::Asynchronous)
++            $waiting = $server.BeginWaitForConnection($null, $null)
++        }
++        # A short encoded driver avoids command-line length/quoting differences
++        # between Windows PowerShell and pwsh; the full helper stays in a temp file.
++        $quotedFile = $testFile.Replace("'", "''")
++        $driver = "& ([ScriptBlock]::Create([IO.File]::ReadAllText('$quotedFile'))) -RequestBase64 '$payload' -Mode Repair -ResultPipe '$pipeName'"
++        $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($driver))
++        $start = New-Object Diagnostics.ProcessStartInfo
++        $start.FileName = $shellPath
++        $start.Arguments = '-NoLogo -NoProfile -NonInteractive -EncodedCommand ' + $encoded
++        $start.UseShellExecute = $false
++        $start.CreateNoWindow = $true
++        $start.RedirectStandardOutput = $true
++        $start.RedirectStandardError = $true
++        $process = New-Object Diagnostics.Process
++        $process.StartInfo = $start
++        $null = $process.Start()
++        $started = $true
++        $null = $process.Handle
++        $stdout = $process.StandardOutput.ReadToEndAsync()
++        $stderr = $process.StandardError.ReadToEndAsync()
++        if ($useNamedPipe) {
++            if (-not $waiting.AsyncWaitHandle.WaitOne(10000)) { throw ('Helper did not connect: ' + $Case) }
++            $server.EndWaitForConnection($waiting)
++            $reader = New-Object IO.StreamReader($server, [Text.Encoding]::UTF8)
++            $lineTask = $reader.ReadLineAsync()
++            if (-not $lineTask.Wait(10000)) { throw ('Helper did not report: ' + $Case) }
++        }
++        if (-not $process.WaitForExit(10000)) { throw ('Helper did not exit: ' + $Case) }
++        if (-not $stdout.Wait(10000) -or -not $stderr.Wait(10000)) { throw 'Helper output did not close' }
++        $receiptText = if ($useNamedPipe) { $lineTask.Result } else { $stdout.Result.Trim() }
++        if (-not $receiptText) { throw ('Helper returned no receipt: ' + $stderr.Result) }
++        return @{
++            receipt=($receiptText | ConvertFrom-Json); exit_code=$process.ExitCode
++            receipt_bytes=[Text.Encoding]::UTF8.GetByteCount($receiptText + [Environment]::NewLine)
++            stdout=$stdout.Result; stderr=$stderr.Result
++        }
++    } finally {
++        if ($process) {
++            if ($started -and -not $process.HasExited) { $process.Kill(); $null = $process.WaitForExit(5000) }
++            $process.Dispose()
++        }
++        if ($reader) { $reader.Dispose() }
++        if ($server) { $server.Dispose() }
++        if ($waiting) { $waiting.AsyncWaitHandle.Dispose() }
++        if ([IO.File]::Exists($testFile)) { [IO.File]::Delete($testFile) }
++    }
++}
++
++$result = Invoke-HelperCase 'success'
++Assert-Equal $result.exit_code 0 'Successful helper exit status'
++Assert-Equal $result.receipt.profile 'potbot.firewall-result/1' 'Result channel contract'
++Assert-Equal $result.receipt.purpose 'database' 'Result purpose'
++Assert-Equal $result.receipt.operation 'complete' 'Successful operation'
++Assert-Equal $result.receipt.exit_code 0 'Successful receipt status'
++Assert-Equal $result.receipt.repair $false 'Receipt must contain the verified final plan'
++if ($useNamedPipe) {
++    Assert-Equal $result.stdout.Trim() '' 'Pipe result must not leak duplicate JSON to stdout'
++}
++
++foreach ($case in @('failure', 'denied', 'rollback', 'invalid', 'escaped')) {
++    $result = Invoke-HelperCase $case
++    $expectedCode = if ($case -eq 'denied') { 5 } else { 1 }
++    $expectedOperation = switch ($case) {
++        'denied' { 'inspect-policy' }
++        'invalid' { 'validate-request' }
++        default { 'repair-policy' }
++    }
++    $expectedMessage = switch ($case) {
++        'failure' { 'simulated rule rejected' }
++        'denied' { 'simulated access denied' }
++        'rollback' { 'simulated original repair failure' }
++        'invalid' { 'Invalid firewall request' }
++        'escaped' { 'simulated escaped error: ' }
++    }
++    Assert-Equal $result.exit_code $expectedCode ($case + ': process exit')
++    Assert-Equal $result.receipt.exit_code $expectedCode ($case + ': receipt exit')
++    Assert-Equal $result.receipt.purpose 'database' ($case + ': purpose')
++    Assert-Equal $result.receipt.operation $expectedOperation ($case + ': operation')
++    Assert-Equal ($result.receipt.message.Contains($expectedMessage)) $true ($case + ': original error')
++    if ($case -eq 'escaped') {
++        Assert-Equal ($result.receipt_bytes -le 16384) $true 'Escaped receipt must fit the reader byte limit'
++        Assert-Equal ($result.receipt.message.StartsWith($expectedMessage)) $true 'Truncation must retain the error start'
++    } else {
++        Assert-Equal ($result.receipt.message -match 'HRESULT=0x[0-9A-F]{8}') $true ($case + ': HRESULT')
++    }
++    if ($case -eq 'rollback') {
++        Assert-Equal ($result.receipt.message.Contains('rollback: simulated cleanup failure')) $true 'Rollback diagnostics'
++    }
++}
++Write-Output ('Custody firewall helper-result tests passed (6 child processes; native pipes=' + $useNamedPipe + ').')
+diff --git a/tests/windows/custody-firewall-unit.ps1 b/tests/windows/custody-firewall-unit.ps1
+index e2e0034fac33c17a515266757633cd850c757192..2642eebd694d65efabe83985f86db02126db4b81 100644
+--- a/tests/windows/custody-firewall-unit.ps1
++++ b/tests/windows/custody-firewall-unit.ps1
+@@ -34,6 +34,14 @@ function New-TestRule([string]$Name, [string]$Program = 'C:\uv\python.exe') {
+     }
+ }
+ $script:LiveProgram = 'C:\uv\python.exe'
++$script:CreatedRuleName = ''
++$script:ActiveReadbackDelay = 0
++$script:ActiveQueries = 0
++$script:ReadbackSleeps = @()
++$script:FailDisableName = ''
++$script:FailEnableName = ''
++$script:FailRemove = $false
++function Start-Sleep { param($Milliseconds) $script:ReadbackSleeps += $Milliseconds }
+ function Assert-LiveEndpoint($Request) { return $script:LiveProgram }
+ function Get-NetIPAddress { [pscustomobject]@{ InterfaceIndex=1 } }
+ function Get-NetConnectionProfile { [pscustomobject]@{ NetworkCategory='Private' } }
+@@ -52,7 +60,17 @@ function Get-NetFirewallRule {
+ }
+ function Get-NetFirewallApplicationFilter {
+     param($PolicyStore, [Parameter(ValueFromPipeline)]$Rule)
+-    process { if ($Rule) { $Rule.Application } else { $script:Rules.Application } }
++    process {
++        if ($Rule) { $Rule.Application } else {
++            if ($PolicyStore -eq 'ActiveStore') { $script:ActiveQueries++ }
++            if ($PolicyStore -eq 'ActiveStore' -and $script:CreatedRuleName -and
++                $script:ActiveReadbackDelay -gt 0) {
++                $script:ActiveReadbackDelay--
++                $script:Rules | Where-Object Name -ne $script:CreatedRuleName |
++                    ForEach-Object Application
++            } else { $script:Rules.Application }
++        }
++    }
+ }
+ function Get-NetFirewallServiceFilter {
+     param([Parameter(ValueFromPipeline)]$Rule) process { $Rule.ServiceFilter }
+@@ -80,6 +98,7 @@ function New-NetFirewallRule {
+     $new.AddressFilter.LocalAddress = $LocalAddress
+     $new.AddressFilter.RemoteAddress = $RemoteAddress
+     $script:Rules += $new
++    $script:CreatedRuleName = $Name
+ }
+ function Set-NetFirewallRule {
+     param($Name, $Program, $LocalAddress, $RemoteAddress, $Enabled, $PolicyStore, $ErrorAction)
+@@ -90,15 +109,19 @@ function Set-NetFirewallRule {
+ }
+ function Disable-NetFirewallRule {
+     param($Name, $PolicyStore)
+-    if ($script:FailDisable) { throw 'simulated policy update failure' }
++    if ($script:FailDisable -or $Name -eq $script:FailDisableName) {
++        throw 'simulated policy update failure'
++    }
+     ($script:Rules | Where-Object { $_.Name -like $Name }).Enabled = 'False'
+ }
+ function Enable-NetFirewallRule {
+     param($Name, $PolicyStore, $ErrorAction)
++    if ($Name -eq $script:FailEnableName) { throw 'simulated block rollback failure' }
+     ($script:Rules | Where-Object { $_.Name -like $Name }).Enabled = 'True'
+ }
+ function Remove-NetFirewallRule {
+     param($Name, $PolicyStore, $ErrorAction)
++    if ($script:FailRemove) { throw 'simulated allowance rollback failure' }
+     $script:Rules = @($script:Rules | Where-Object { $_.Name -notlike $Name })
+ }
+ 
+@@ -117,7 +140,9 @@ $script:Rules = @((New-TestRule 'matching-tcp'), $unrelated, $udp)
+ $plan = Get-FirewallPlan $request
+ Assert-Equal @($plan.blocks) @('matching-tcp') 'Only the exact TCP program block should change'
+ Assert-Equal $plan.repair $true 'A matching block requires repair'
+-Invoke-FirewallRepair $request $plan
++$verified = Invoke-FirewallRepair $request $plan
++Assert-Equal $verified.repair $false 'Successful repair must return its verified final plan'
++Assert-Equal @($verified.blocks) @() 'Returned plan must not retain repaired blocks'
+ Assert-Equal (Get-FirewallPlan $request).repair $false 'Effective policy must allow custody'
+ Assert-Equal $unrelated.Enabled 'True' 'Unrelated Python rules must remain enabled'
+ Assert-Equal $udp.Enabled 'True' 'UDP rules must remain enabled'
+@@ -130,7 +155,7 @@ $request.port = 49510
+ Assert-Equal (Get-FirewallPlan $request).repair $false 'A new ephemeral port keeps the same allowance'
+ $request.guest_address = '172.27.44.69'
+ Assert-Equal (Get-FirewallPlan $request).repair $true 'A changed WSL peer needs an updated allowance'
+-Invoke-FirewallRepair $request (Get-FirewallPlan $request)
++$null = Invoke-FirewallRepair $request (Get-FirewallPlan $request)
+ Assert-Equal (Get-FirewallPlan $request).repair $false 'Owned rule must track the new WSL peer'
+ Assert-Equal @($script:Rules | Where-Object Action -eq 'Allow').Count 1 'Repair must update its own rule'
+ $request.guest_address = '172.27.44.68'
+@@ -158,7 +183,7 @@ $script:FailDisable = $true
+ Assert-Throws { Invoke-FirewallRepair $request $plan } 'simulated policy update failure'
+ Assert-Equal @($script:Rules.Name) @('block[1]', 'block1') 'Failed repair must remove its new allowance'
+ $script:FailDisable = $false
+-Invoke-FirewallRepair $request $plan
++$null = Invoke-FirewallRepair $request $plan
+ Assert-Equal @($script:Rules | Where-Object Action -eq 'Block' | ForEach-Object Enabled) `
+     @('False', 'False') 'Rule identifiers containing wildcards must be matched literally'
+ 
+@@ -182,7 +207,7 @@ $databaseRequest = [pscustomobject]@{
+ $databasePlan = Get-FirewallPlan $databaseRequest
+ Assert-Equal $databasePlan.name ('Potbot-Database-' + $request.installation_id) 'Database rule identity'
+ Assert-Equal $databasePlan.profile 'potbot.database-firewall/1' 'Database result profile'
+-Invoke-FirewallRepair $databaseRequest $databasePlan
++$null = Invoke-FirewallRepair $databaseRequest $databasePlan
+ $databaseRule = $script:Rules | Where-Object Name -eq $databasePlan.name
+ Assert-Equal $databaseRule.DisplayName 'Potbot WSL Database' 'Database display name'
+ Assert-Equal $databaseRule.Group 'Potbot WSL database' 'Database rule group'
+@@ -195,6 +220,66 @@ $databaseRequest.purpose = 'arbitrary'
+ Assert-Throws { Get-FirewallPlan $databaseRequest } 'Invalid managed firewall purpose'
+ $script:LiveProgram = 'C:\uv\python.exe'
+ 
++# The persistent write can succeed before a queried active view includes the
++# allowance. Retry only that incomplete view, keeping the same narrow rule.
++$script:Rules = @((New-TestRule 'delayed-block'))
++$script:CreatedRuleName = ''
++$plan = Get-FirewallPlan $request
++$script:ActiveReadbackDelay = 2
++$before = $script:ActiveQueries
++$script:ReadbackSleeps = @()
++$verified = Invoke-FirewallRepair $request $plan
++Assert-Equal $verified.repair $false 'Delayed readback must return the final successful plan'
++Assert-Equal ($script:ActiveQueries - $before) 3 'Delayed readback must requery effective policy'
++Assert-Equal $script:ReadbackSleeps @(250, 250) 'Effective-policy retries must have bounded waits'
++Assert-Equal @($script:Rules | Where-Object Action -eq 'Allow').Count 1 'Retries must not add rules'
++
++# A permanently ineffective repair still rolls back the allowance and blocks.
++$block = New-TestRule 'permanent-block'
++$script:Rules = @($block)
++$script:CreatedRuleName = ''
++$plan = Get-FirewallPlan $request
++$script:ActiveReadbackDelay = 100
++$before = $script:ActiveQueries
++$script:ReadbackSleeps = @()
++Assert-Throws { Invoke-FirewallRepair $request $plan } 'not effective after verification'
++Assert-Equal ($script:ActiveQueries - $before) 4 'Readback attempts must be bounded'
++Assert-Equal $script:ReadbackSleeps @(250, 250, 250) 'Readback must stop after three waits'
++Assert-Equal @($script:Rules.Name) @('permanent-block') 'Ineffective allowance must be removed'
++Assert-Equal $block.Enabled 'True' 'Ineffective repair must restore the disabled block'
++$script:ActiveReadbackDelay = 0
++
++# A policy error is definitive and must not be retried as a transient view.
++$script:CreatedRuleName = ''
++$plan = Get-FirewallPlan $request
++$script:Profiles[0].AllowLocalFirewallRules = 'False'
++$script:ReadbackSleeps = @()
++Assert-Throws { Invoke-FirewallRepair $request $plan } 'policy disables local inbound exceptions'
++Assert-Equal $script:ReadbackSleeps @() 'Policy restrictions must fail without retry'
++Assert-Equal @($script:Rules.Name) @('permanent-block') 'Policy failure must remove its allowance'
++Assert-Equal $block.Enabled 'True' 'Policy failure must restore the disabled block'
++$script:Profiles[0].AllowLocalFirewallRules = 'True'
++
++# Rollback is best effort across all changed rules; its own errors must not
++# replace the initiating error or prevent the remaining cleanup operations.
++$script:Rules = @((New-TestRule 'first-block'), (New-TestRule 'second-block'))
++$script:CreatedRuleName = ''
++$plan = Get-FirewallPlan $request
++$script:FailDisableName = 'second-block'
++$script:FailEnableName = 'first-block'
++$script:FailRemove = $true
++$caught = $null
++try { $null = Invoke-FirewallRepair $request $plan } catch { $caught = $_ }
++Assert-Equal ($null -ne $caught) $true 'Failed repair must throw even when rollback also fails'
++Assert-Equal $caught.Exception.Message 'simulated policy update failure' 'Preserve initiating error'
++$rollback = @($caught.Exception.Data['PotbotFirewallRollbackErrors'])
++Assert-Equal $rollback.Count 2 'Both rollback failures must remain available for diagnostics'
++Assert-Equal ($rollback[0] -like '*simulated block rollback failure') $true 'Block rollback detail'
++Assert-Equal ($rollback[1] -like '*simulated allowance rollback failure') $true 'Allowance rollback detail'
++$script:FailDisableName = ''
++$script:FailEnableName = ''
++$script:FailRemove = $false
++
+ # A delayed UAC approval cannot repair an abandoned startup or an unrelated
+ # process that happens to reuse the same port/PID.
+ $script:StartTime = [datetime]'2026-11-25T03:00:00Z'

@@ -46,10 +46,21 @@ jobs:
       - name: Verify native PowerShell and BAT startup contracts
         shell: powershell
         run: .\tests\windows\launcher-smoke.ps1
+      - name: Verify Windows PowerShell 5.1 firewall policy repair and rollback
+        shell: powershell
+        run: .\tests\windows\custody-firewall-unit.ps1
+      - name: Verify Windows PowerShell 5.1 elevation result transport
+        shell: powershell
+        run: .\tests\windows\custody-firewall-elevation-unit.ps1
+      - name: Verify Windows PowerShell 5.1 helper success and error receipts
+        shell: powershell
+        run: .\tests\windows\custody-firewall-result-unit.ps1
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
           version: "0.12.23"
           enable-cache: true
+      - name: Verify conditional firewall elevation and database handoff
+        run: uv run --locked python -m pytest -q tests/unit/test_custody_firewall.py tests/unit/test_windows_database_handoff.py
       - name: Verify Windows temporary files, child readback and cleanup
         run: uv run --locked --extra security --extra semantics python -m pytest -q tests/unit/test_temporary.py tests/unit/test_pytest_temp_isolation.py tests/unit/test_check_runner.py tests/unit/test_syn_export.py tests/unit/test_identity_cli.py tests/unit/test_artifact_ranges.py tests/unit/test_artifact_uploads.py tests/unit/test_syn_operator_deployment.py
       - name: Verify WSL kernel bundles and activation transactions

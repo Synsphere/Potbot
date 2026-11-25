@@ -185,6 +185,10 @@ def test_uac_command_fits_windows_and_carries_only_public_identity(monkeypatch):
     assert firewall._elevate("powershell.exe", request) == 1223
     assert len(commands[0]) < 32000
     assert len(firewall._encoded_script(request, "Repair")) < 32000
+    assert len(subprocess.list2cmdline([
+        r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+        "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", commands[0],
+    ])) < 32760
     assert "-Verb RunAs" in commands[0]
 
 
@@ -254,3 +258,105 @@ def test_unsupported_purpose_is_rejected_before_any_firewall_action(setup_firewa
     with pytest.raises(CapabilityUnavailableError, match="Unsupported managed firewall purpose"):
         firewall.ensure_custody_firewall(manager, **options, purpose="arbitrary", tcp_probe=lambda: False)
     assert not stages and not elevations
+
+
+def repair_receipt(*, code=0, purpose="database", **changes):
+    return {
+        "profile": "potbot.firewall-result/1", "purpose": purpose,
+        "exit_code": code, "operation": "complete" if code == 0 else "repair-policy",
+        "message": "", "repair": code != 0, **changes,
+    }
+
+
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+def test_elevated_repair_requires_a_matching_verified_completion(monkeypatch, purpose):
+    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
+        returncode=0, stdout=json.dumps(repair_receipt(purpose=purpose)), stderr="",
+    ))
+    assert firewall._elevate("powershell.exe", {"purpose": purpose}) == 0
+
+
+@pytest.mark.parametrize("stdout", [
+    "", "[]", "not-json", "x" * 16385,
+    json.dumps(repair_receipt(purpose="custody")),
+    json.dumps(repair_receipt(repair=True)),
+    json.dumps(repair_receipt(exit_code=True)),
+    json.dumps(repair_receipt(exit_code=1)),
+    json.dumps(repair_receipt(operation="")),
+    json.dumps(repair_receipt(message="x" * 4097)),
+])
+def test_process_exit_zero_without_valid_receipt_cannot_count_as_repair(monkeypatch, stdout):
+    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
+        returncode=0, stdout=stdout, stderr="",
+    ))
+    with pytest.raises(CapabilityUnavailableError, match="no valid completion result"):
+        firewall._elevate("powershell.exe", {"purpose": "database"})
+
+
+def test_uac_approved_helper_error_reaches_the_startup_failure(setup_firewall, monkeypatch):
+    manager, options, stages, _elevations = setup_firewall
+    # Exercise the real elevation result parser through the caller, with the
+    # Windows launcher itself stubbed. This is the previously lost error path.
+    monkeypatch.undo()
+    monkeypatch.setattr(firewall, "_programs", lambda _python: [r"C:\uv\python.exe"])
+    monkeypatch.setattr(firewall, "_inspect", lambda *_args: plan())
+    message = "New-NetFirewallRule: The parameter is incorrect [HRESULT=0x80070057]"
+    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
+        returncode=1, stdout=json.dumps(repair_receipt(code=1, message=message)), stderr="",
+    ))
+    with pytest.raises(CapabilityUnavailableError) as failure:
+        firewall.ensure_custody_firewall(
+            manager, **options, purpose="database", tcp_probe=lambda: False,
+        )
+    assert message in str(failure.value)
+    assert "database" in str(failure.value)
+    assert "exit 1, repair-policy" in str(failure.value)
+    assert "declined" not in str(failure.value)
+    assert stages == ["database-firewall", "database-firewall-admin", "database-firewall-failed"]
+
+
+def test_elevation_launcher_exception_keeps_its_error_and_exit_code(monkeypatch):
+    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
+        returncode=1, stdout="", stderr="Windows Firewall elevation failed: Access is denied\n",
+    ))
+    with pytest.raises(CapabilityUnavailableError, match=r"database.*exit 1.*Access is denied"):
+        firewall._elevate("powershell.exe", {"purpose": "database"})
+
+
+def test_reported_access_denial_is_not_uac_cancellation(monkeypatch):
+    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
+        returncode=5,
+        stdout=json.dumps(repair_receipt(code=5, message="Firewall provider denied access")),
+        stderr="",
+    ))
+    with pytest.raises(CapabilityUnavailableError, match=r"exit 5.*provider denied access"):
+        firewall._elevate("powershell.exe", {"purpose": "database"})
+
+
+@pytest.mark.parametrize("pipe", ["..\\report.txt", "potbot-firewall-'", "", "x" * 200])
+def test_result_channel_is_only_a_generated_pipe_name(pipe):
+    with pytest.raises(ValueError, match="Invalid firewall result pipe"):
+        firewall._encoded_script({}, "Repair", result_pipe=pipe)
+
+
+def test_firewall_shell_uses_its_system_directory_and_sanitized_environment(monkeypatch):
+    calls = []
+    monkeypatch.setenv("SystemRoot", "C:/Windows")
+    monkeypatch.setenv("POTBOT_DSN", "must-not-reach-helper")
+    monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_SERVER_TOKEN", "must-not-reach-helper")
+    monkeypatch.setattr(firewall.subprocess, "run", lambda command, **kwargs:
+                        calls.append((command, kwargs)) or SimpleNamespace(returncode=0))
+    powershell = "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+    firewall._run(powershell, "Write-Output 'public status'", timeout=10, command=True)
+    command, kwargs = calls[0]
+    assert command[0] == powershell
+    assert kwargs["cwd"] == str(Path(powershell).parent)
+    assert "POTBOT_DSN" not in kwargs["env"]
+    assert "POTBOT_PARENT_KEYSTORE_SERVER_TOKEN" not in kwargs["env"]
+
+
+def test_oversized_helper_command_is_rejected_before_windows_launch(monkeypatch):
+    monkeypatch.setattr(firewall.subprocess, "run", lambda *_a, **_kw:
+                        pytest.fail("oversized command reached Windows"))
+    with pytest.raises(CapabilityUnavailableError, match="process command limit"):
+        firewall._run("powershell.exe", "x" * 32760, timeout=10)

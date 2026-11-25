@@ -1,6 +1,7 @@
 param(
     [string]$RequestBase64,
-    [ValidateSet('Inspect', 'Repair')][string]$Mode = 'Inspect'
+    [ValidateSet('Inspect', 'Repair')][string]$Mode = 'Inspect',
+    [string]$ResultPipe
 )
 
 # This helper is encoded and passed directly to Windows PowerShell. Elevated
@@ -244,29 +245,74 @@ function Invoke-FirewallRepair($Request, $Plan) {
                 -Name ([Management.Automation.WildcardPattern]::Escape($name)) | Out-Null
             $changed += $name
         }
-        if ((Get-FirewallPlan $Request).repair) { throw 'Firewall repair is not effective' }
+        # Retry only an incomplete effective-policy view. Validation and policy
+        # errors must still abort immediately, without weakening the exception.
+        for ($attempt = 0; $attempt -lt 4; $attempt++) {
+            $verified = Get-FirewallPlan $Request
+            if (-not $verified.repair) { return $verified }
+            if ($attempt -lt 3) { Start-Sleep -Milliseconds 250 }
+        }
+        throw 'Firewall repair is not effective after verification'
     } catch {
+        $repairFailure = $_
+        $rollbackFailures = @()
         foreach ($name in $changed) {
-            Enable-NetFirewallRule -PolicyStore PersistentStore `
-                -Name ([Management.Automation.WildcardPattern]::Escape($name)) `
-                -ErrorAction Continue |
-                Out-Null
+            try {
+                Enable-NetFirewallRule -PolicyStore PersistentStore `
+                    -Name ([Management.Automation.WildcardPattern]::Escape($name)) `
+                    -ErrorAction Stop | Out-Null
+            } catch {
+                $rollbackFailures += ('Restore block ' + $name + ': ' + $_.Exception.Message)
+            }
         }
         if ($created) {
-            Remove-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name `
-                -ErrorAction Continue
+            try {
+                Remove-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name `
+                    -ErrorAction Stop | Out-Null
+            } catch {
+                $rollbackFailures += ('Remove allowance ' + $Plan.name + ': ' + $_.Exception.Message)
+            }
         } elseif ($previous) {
-            Set-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name @previous `
-                -ErrorAction Continue | Out-Null
+            try {
+                Set-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name @previous `
+                    -ErrorAction Stop | Out-Null
+            } catch {
+                $rollbackFailures += ('Restore allowance ' + $Plan.name + ': ' + $_.Exception.Message)
+            }
         }
-        throw
+        if ($rollbackFailures.Count) {
+            $repairFailure.Exception.Data['PotbotFirewallRollbackErrors'] = $rollbackFailures
+        }
+        throw $repairFailure
     }
 }
 
 if ($RequestBase64) {
+    $resultStream = $null
+    $resultWriter = $null
+    $receipt = $null
+    $exitCode = 0
+    $purpose = 'custody'
+    $operation = 'connect-result'
     try {
+        if ($ResultPipe) {
+            if ($Mode -ne 'Repair' -or $ResultPipe -cnotmatch '^potbot-firewall-[0-9a-f]{32}$') {
+                throw 'Invalid firewall result channel'
+            }
+            # Connect before any firewall mutation. A late UAC acceptance after
+            # the unelevated launcher has gone away cannot perform a repair.
+            # The client receives no commands; the server cannot impersonate it.
+            $resultStream = New-Object IO.Pipes.NamedPipeClientStream('.', $ResultPipe,
+                [IO.Pipes.PipeAccessRights]::WriteData, [IO.Pipes.PipeOptions]::None,
+                [Security.Principal.TokenImpersonationLevel]::Anonymous,
+                [IO.HandleInheritability]::None)
+            $resultStream.Connect(10000)
+            $resultWriter = New-Object IO.StreamWriter($resultStream, (New-Object Text.UTF8Encoding($false)))
+        }
+        $operation = 'validate-request'
         $request = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($RequestBase64)) |
             ConvertFrom-Json
+        $purpose = (Get-FirewallIdentity $request).purpose
         if ($request.installation_id -notmatch '^[0-9a-f]{32}$' -or
             $request.controller_created -notmatch '^[0-9]{10,20}$' -or
             $request.controller_pid -lt 1 -or $request.authority_pid -lt 1 -or
@@ -278,23 +324,66 @@ if ($RequestBase64) {
                 throw 'Firewall exception requires private WSL IPv4 addresses'
             }
         }
+        $operation = 'inspect-policy'
         $plan = Get-FirewallPlan $request
-        if ($Mode -eq 'Repair' -and $plan.repair) { Invoke-FirewallRepair $request $plan }
-        @{profile=$plan.profile; repair=$plan.repair; program=$plan.program;
-            blocks=@($plan.blocks)} | ConvertTo-Json -Compress
-        exit 0
+        if ($Mode -eq 'Repair' -and $plan.repair) {
+            $operation = 'repair-policy'
+            $plan = Invoke-FirewallRepair $request $plan
+        }
+        if ($resultWriter) {
+            $receipt = @{
+                profile='potbot.firewall-result/1'; purpose=$purpose; exit_code=0
+                operation='complete'; message=''; repair=$plan.repair
+            }
+        } else {
+            @{profile=$plan.profile; repair=$plan.repair; program=$plan.program;
+                blocks=@($plan.blocks)} | ConvertTo-Json -Compress
+        }
     } catch {
-        [Console]::Error.WriteLine($_.Exception.Message)
-        $failure = $_.Exception
+        $errorRecord = $_
+        $failure = $errorRecord.Exception
+        $exitCode = 1
         while ($failure) {
             if ($failure -is [UnauthorizedAccessException] -or
                 ($failure.HResult -band 0xFFFFFFFFL) -eq 0x80070005L -or
                 ($failure -is [ComponentModel.Win32Exception] -and
                     $failure.NativeErrorCode -eq 5) -or
                 ($failure.GetType().FullName -eq 'Microsoft.Management.Infrastructure.CimException' -and
-                    [string]$failure.NativeErrorCode -eq 'AccessDenied')) { exit 5 }
+                    [string]$failure.NativeErrorCode -eq 'AccessDenied')) { $exitCode = 5; break }
             $failure = $failure.InnerException
         }
-        exit 1
+        $command = ''
+        if ($errorRecord.InvocationInfo -and $errorRecord.InvocationInfo.MyCommand) {
+            $command = [string]$errorRecord.InvocationInfo.MyCommand.Name
+        }
+        $message = $errorRecord.Exception.Message + ' [' + $errorRecord.FullyQualifiedErrorId +
+            '; HRESULT=0x' + ($errorRecord.Exception.HResult -band 0xFFFFFFFFL).ToString('X8') + ']'
+        if ($command) { $message = $command + ': ' + $message }
+        if ($errorRecord.Exception.Data.Contains('PotbotFirewallRollbackErrors')) {
+            $message += '; rollback: ' + ($errorRecord.Exception.Data['PotbotFirewallRollbackErrors'] -join '; ')
+        }
+        # These diagnostics contain only firewall/process identity, never the
+        # database DSN, authority token or vault contents. JSON may escape each
+        # code unit into six bytes; reserve room within the 16 KiB pipe bound.
+        if ($message.Length -gt 2000) { $message = $message.Substring(0, 2000) }
+        [Console]::Error.WriteLine($message)
+        $receipt = @{
+            profile='potbot.firewall-result/1'; purpose=$purpose; exit_code=$exitCode
+            operation=$operation; message=$message; repair=$true
+        }
+    } finally {
+        try {
+            if ($resultWriter -and $receipt) {
+                $resultWriter.WriteLine(($receipt | ConvertTo-Json -Compress))
+                $resultWriter.Flush()
+            }
+        } catch {
+            [Console]::Error.WriteLine('Cannot return the firewall repair result: ' + $_.Exception.Message)
+            $exitCode = 1
+        } finally {
+            if ($resultWriter) { $resultWriter.Dispose() }
+            if ($resultStream) { $resultStream.Dispose() }
+        }
     }
+    exit $exitCode
 }

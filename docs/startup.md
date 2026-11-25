@@ -80,6 +80,15 @@ prompt. An interpreter or WSL address change can require another repair.
 Custom, generic or centrally managed block rules are reported for administrator
 review. Firewall profiles and the default inbound policy are not disabled.
 Declining UAC reports a specific failure and does not produce a prompt loop.
+On Windows PowerShell 5.1, the launcher waits on the elevated helper's process
+handle instead of using `Start-Process -Wait` across the UAC boundary. The helper
+returns its final result through a temporary local diagnostic pipe. Errors,
+including the failing operation, PowerShell error identifier and HRESULT, appear
+in Potbot's main service log even after the elevated window closes. The result
+channel carries firewall diagnostics only. It connects before any repair, so
+accepting an abandoned prompt cannot start a new firewall update.
+Effective-policy verification has a bounded retry, and a failed repair reports
+its original error together with any rollback errors.
 After a repair, startup checks WSL TCP connectivity and the existing authenticated
 custody health response before admitting the WSL runtime.
 
