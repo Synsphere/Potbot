@@ -563,6 +563,13 @@ class JobService:
             raise InvalidInputError("Worker kinds must identify installed job handlers.")
         self.expire(context)
         with self.database.transaction(context) as conn:
+            from potbot.controller.node_controls import admission_allowed
+            from potbot.domain.live_controls import WORKER_PREFIX
+
+            if worker_id.startswith(WORKER_PREFIX) and not admission_allowed(
+                conn, context, worker_id
+            ):
+                return None
             old = conn.execute(
                 "SELECT id FROM jobs WHERE workspace_id=%s AND owner_principal_id=%s AND state='queued' "
                 "AND job_type=ANY(%s) ORDER BY created_at,id FOR UPDATE SKIP LOCKED LIMIT 1",

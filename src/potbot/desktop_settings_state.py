@@ -6,6 +6,7 @@ import json
 import os
 import re
 import stat
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -151,11 +152,34 @@ class RevocationJournal:
                     "confirm": True,
                 }
             )
+            return self.store(workspace_id, principal_id, body)
+        except Exception:
+            raise NativeSettingsError("journal") from None
+
+    def store(
+        self,
+        workspace_id: str,
+        principal_id: str,
+        body: dict[str, Any],
+        *,
+        validator: Callable[[Any], dict[str, Any]] = validate_review,
+        maximum: int = 4096,
+        specific: bool = False,
+        maximum_records: int = 100,
+    ) -> dict[str, Any]:
+        """Reuse private immutable recovery storage for explicitly reviewed operations."""
+        try:
+            for identity in (workspace_id, principal_id):
+                if str(UUID(identity)) != identity or UUID(identity).int == 0:
+                    raise ValueError
+            body = validator(body)
+            if not 1 <= maximum_records <= 1000:
+                raise ValueError
             key = content_hash(
                 {
                     "workspace": workspace_id,
                     "principal": principal_id,
-                    **{k: v for k, v in body.items() if k != "requestId"},
+                    **{k: v for k, v in body.items() if specific or k != "requestId"},
                 }
             )
             # Check parents before creating children; a symlink may not redirect writes.
@@ -168,7 +192,13 @@ class RevocationJournal:
             target = self.directory / (key + ".json")
             if not target.exists():
                 with os.scandir(self.directory) as entries:
-                    if sum(1 for _, _entry in zip(range(101), entries, strict=False)) >= 100:
+                    if (
+                        sum(
+                            1
+                            for _, _entry in zip(range(maximum_records + 1), entries, strict=False)
+                        )
+                        >= maximum_records
+                    ):
                         raise ValueError
                 record = {"workspaceId": workspace_id, "principalId": principal_id, "review": body}
                 try:
@@ -191,15 +221,15 @@ class RevocationJournal:
                 opened = os.fstat(stream.fileno())
                 if (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino):
                     raise ValueError
-                raw = stream.read(4097)
-            if len(raw) > 4096:
+                raw = stream.read(maximum + 1)
+            if len(raw) > maximum:
                 raise ValueError
             saved = json.loads(raw)
-            retained = validate_review(saved["review"])
+            retained = validator(saved["review"])
             if (
                 saved["workspaceId"] != workspace_id
                 or saved["principalId"] != principal_id
-                or any(retained[k] != body[k] for k in body if k != "requestId")
+                or any(retained[k] != body[k] for k in body if specific or k != "requestId")
             ):
                 raise ValueError
             return retained

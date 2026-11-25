@@ -54,7 +54,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
           "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted."
         }
       ],
@@ -110,9 +110,9 @@
         {
           "path": "src/potbot/controller/jobs.py",
           "symbol": "JobService",
-          "sha256": "52ad4ce0cf863c984d33598ada6dbad45ec8331b48424681a84459099165b72d",
+          "sha256": "0dea0a479dba0b32e1274f189d89c2093a8e3b7a55aed6944b812ea410b5e44a",
           "basis": "Principal-owned queue, generation fences, immutable linked authority and original receipt replay without repeating work U04-T current-source review: Existing jobs retain immutable optional selection/binding provenance and recheck selected authority at final dispatch; legacy job lifecycle and scheduler remain the owners. U04-T follow-on: Existing persisted jobs retain immutable selected provenance and dispatch fences.",
-          "symbol_sha256": "073c0283d651aff27f72a0d2a17b239d188e4e27e242cc87f674968c5dbb1302"
+          "symbol_sha256": "e78e0616727b67519f715988d34d62aac69139683eabe62257d60c3b4ecee33b"
         },
         {
           "path": "src/potbot/api/ui_tool_upgrades.py",
@@ -131,8 +131,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
-          "symbol_sha256": "a20eac36b625aafa233ed31cb2e9be23acf7d99c65cef07e687e0d9079ffb190",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
+          "symbol_sha256": "84c771283ab14dcb803fa552de788148ea9c1b35c7a05d55c4d679c5dc083567",
           "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-M follow-on: Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-Q follow-on: Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-S follow-on: Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. U04-T follow-on: Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-A follow-on: Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted.",
           "historical_symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
           "symbol_sha256_basis": "UTF-8 AST source segment at the reviewed current file"
@@ -983,7 +983,7 @@
         {
           "path": "src/potbot/controller/jobs.py",
           "symbol": "_settle_cog",
-          "sha256": "52ad4ce0cf863c984d33598ada6dbad45ec8331b48424681a84459099165b72d",
+          "sha256": "0dea0a479dba0b32e1274f189d89c2093a8e3b7a55aed6944b812ea410b5e44a",
           "basis": "Sealed installed model profile and directed Syn Context work ports, exact job/deployment result binding, native reservation and worker-reported token settlement, explicit checked reasoning continuation and independent outcome review. Restricted database and explicit implementation fixtures only."
         }
       ],
@@ -2224,7 +2224,7 @@
         {
           "path": "src/potbot/tools/inventory.py",
           "symbol": "build_inventory",
-          "sha256": "2d64605789880687a105afceb491e2bdea509ec7923e7259137deec50b145792",
+          "sha256": "b34755935847d8af52ebe99bf27317680f45c87d7c4deafa2850e0cdec5309f0",
           "basis": "inspected integration owner; not whole-requirement implementation proof"
         },
         {
@@ -2568,7 +2568,7 @@
         {
           "path": "tests/unit/test_tool_inventory.py",
           "symbol": "test_every_committed_python_path_has_an_explicit_source_inventory_owner",
-          "sha256": "d38af9618106ef26e2dbe776dc9886b090d81d2085d0ca1ad5529f2cd5b5be8f",
+          "sha256": "f122b011c1e0a305db43495eb678bdc087a294696e4fdba3649949a5fd1d6801",
           "basis": "Committed Python path namespace with inert synthetic bodies; all existing root modules have explicit integration owners and unknown root modules still fail closed. This is not source-body or runtime qualification."
         }
       ],
@@ -2912,8 +2912,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
-          "symbol_sha256": "a20eac36b625aafa233ed31cb2e9be23acf7d99c65cef07e687e0d9079ffb190",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
+          "symbol_sha256": "84c771283ab14dcb803fa552de788148ea9c1b35c7a05d55c4d679c5dc083567",
           "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted.",
           "historical_symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
           "symbol_sha256_basis": "UTF-8 AST source segment at the reviewed current file"
@@ -4341,7 +4341,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
           "basis": "Additive migration40 extends the existing skill authority and preserves previous checksums and genuine authored sessions U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted."
         },
         {
@@ -5413,7 +5413,7 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "23eba8487ea8d00565048f6bfca081ada41dca5f16d51a80e7e0df627d297d0f",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
           "basis": "17 November source review: S12 release/admission/status and migration changes or browser fencing; preserve this family's stated evidence boundary. Test source is not a claim that every acceptance ran. Migration 39 appends owned operation jobs and immutable check/run bindings; earlier checksums and U00/runtime qualification scope are retained. U04-A current-source review: Migration40 extends the existing registry while previous migration checksums and the historical qualification boundary remain intact. U04-X current-source review: Additive migration41 extends the existing S11/S12 owner; previous migration identities and the historical audit boundary are retained. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage. 24 November cleanup/source reconciliation: current complete-file identity refreshed; prior family and runtime qualification dispositions are unchanged. Source/test definitions are not an executed deployment receipt. RW01 current-source review: application_migrations only appends migration 50; revisions 1-49 and existing sandbox registration are unchanged. Native records remain registered/planned/unqualified; the isolated PostgreSQL gate passed at d0548e1e88cde7b03e68d3ea10e14608ded03a54. No earlier family or live-host qualification disposition is promoted."
         },
         {
@@ -72160,17 +72160,17 @@
     },
     {
       "path": "docs/implementation/native-desktop-m1.md",
-      "sha256": "e040ed1e9e5bb4ec6154f79a6ce01a89a4e0bbc435f66fc9e0cd189dbf43c2cd",
+      "sha256": "a16a706cc8f66443ffd95b3d98db33c46c705899b2790c8049990f5fec07f918",
       "families": [
         "frontend",
         "recovery"
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
-      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates. CFG02 adds native Qt settings, inventories and reviewed swarm control through existing APIs; remote and assistive-technology qualification remain separate.",
+      "assessment": "24 November source/plan review: this supported increment reuses the existing authorities. Declared host/provider/fault acceptance and broader programme qualification remain separate; no live deployment is established by source or fixture tests. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates. CFG02 adds native Qt settings, inventories and reviewed swarm control through existing APIs; remote and assistive-technology qualification remain separate. CFG03 adds revisioned live workspace editing and protected native worker drain/restart; installed-host and remote-runtime acceptance remain separate.",
       "narrative": [
         {
-          "locator": "line:1-23",
-          "sha256": "80893e26b1a81f0d8159eed92bd81ac29d3b7ad5d211722f4c83eebb6398f050",
+          "locator": "line:1-26",
+          "sha256": "b17ead570703927dcd429abc65882566b72db5d47f23ac38bf43d66e0f5bc57f",
           "excerpt": "# Native desktop implementation\n\nPotbot now has two intentional user interfaces:\n\n- **Native local Qt 6 client** \u2014 the default local surface on Windows, macOS a",
           "families": [
             "frontend",
@@ -72178,7 +72178,7 @@
           ]
         },
         {
-          "locator": "line:24-31",
+          "locator": "line:27-34",
           "sha256": "382eb7e2f810aadbc9d860cf7adbee7f04cb5bb735ed5c43cc086d5d4fdff174",
           "excerpt": "## Startup contract\n\nThe local process creates and shows `QMainWindow` before starting the existing\none-click provisioning path in a daemon thread. The workspac",
           "families": [
@@ -72187,7 +72187,7 @@
           ]
         },
         {
-          "locator": "line:32-43",
+          "locator": "line:35-46",
           "sha256": "134817c42b903aa8209dc4489e6af059a2d507d2e1b151ec6c2e10d609a7ee70",
           "excerpt": "## Credential hardening included in M1\n\nManaged Windows WSL no longer makes Potbot's own `CredentialStore` depend on\nD-Bus Secret Service readiness. Potbot call",
           "families": [
@@ -72196,7 +72196,7 @@
           ]
         },
         {
-          "locator": "line:44-51",
+          "locator": "line:47-54",
           "sha256": "546b7cc9c088ee88724ee65ad8b966f1ed5a8b0de26b468a8ecb37d2bc03fa8f",
           "excerpt": "## Next milestones\n\n1. Move native chat/session history and reasoning graph views into Qt.\n2. Add native application inventory and launch controls.\n3. Reuse the",
           "families": [
@@ -82754,7 +82754,7 @@
     },
     {
       "path": "docs/implementation/cfg02-native-python-settings.md",
-      "sha256": "dc11ff043f6b8da2c8b5dc0726e7747d277f562522c5e35e4c60c16e22d05167",
+      "sha256": "cec7285782f44d2ead4fdc1eb1a3cf310cb2d557a01270e5d77ae582b02cface",
       "families": [
         "frontend",
         "configuration",
@@ -82762,7 +82762,7 @@
         "native-remote-workspaces"
       ],
       "disposition": "implemented_contract_with_separate_runtime_gates",
-      "assessment": "Real Qt widgets over existing APIs. Actual offscreen captures use explicit synthetic records; no production node or inference runtime qualification.",
+      "assessment": "Real Qt widgets over existing APIs. Actual offscreen captures use explicit synthetic records; no production node or inference runtime qualification. CFG03 adds revisioned live workspace editing and protected native worker drain/restart; installed-host and remote-runtime acceptance remain separate.",
       "narrative": [
         {
           "locator": "line:1-7",
@@ -82776,8 +82776,8 @@
           ]
         },
         {
-          "locator": "line:8-28",
-          "sha256": "11db73ecd1f79daad466bd825de7594960694e84961fd731a3951680445cd927",
+          "locator": "line:8-29",
+          "sha256": "a553fbb51338e3e34a061293c4267f181c2c99b3cce7bb25d235a0722e7d5f58",
           "excerpt": "## Use the native settings panels\n\nStart Potbot through the existing native desktop entry point. Select **Settings**\nin the left navigation for all fourteen cat",
           "families": [
             "frontend",
@@ -82787,7 +82787,7 @@
           ]
         },
         {
-          "locator": "line:29-47",
+          "locator": "line:30-48",
           "sha256": "208afbf736fe76b9f5b33092f84e7056feda819e1ee3703c0270617a01183588",
           "excerpt": "## Inspect model and tool inventories\n\nModels and Tools display searchable native tables with separate columns for\npresence, qualification, recorded health and ",
           "families": [
@@ -82798,8 +82798,8 @@
           ]
         },
         {
-          "locator": "line:48-68",
-          "sha256": "b2750b536c578630fae0b7636fe56eaef8c1ee24576d522387a4212711487814",
+          "locator": "line:49-71",
+          "sha256": "5495791155b90d8c4d13a38039df1b2feed24e83d731363b2c446baff8aacd6f",
           "excerpt": "## Manage workspace control grants\n\nWorkspace swarm has native tabs for nodes, deployments, direct control grants\nand management requests. Registered nodes rema",
           "families": [
             "frontend",
@@ -82809,7 +82809,7 @@
           ]
         },
         {
-          "locator": "line:69-86",
+          "locator": "line:72-89",
           "sha256": "dc51a45142ffb2321f52d262b14a1829823c161fd135c3b11aff783d9a4811ea",
           "excerpt": "## Connections and native credential custody\n\nThe default connection comes from the existing service configuration and its\nselected native vault profile. Option",
           "families": [
@@ -82820,7 +82820,7 @@
           ]
         },
         {
-          "locator": "line:87-110",
+          "locator": "line:90-113",
           "sha256": "fa75732967ecc3270a053242f20676005bd05e60ff0f5ee89ae367a87a22c2a4",
           "excerpt": "## Verification and remaining acceptance\n\nThe [native acceptance workflow](../../.github/workflows/native-settings.yml)\nrequires actual Qt tests on Windows and ",
           "families": [
@@ -82925,6 +82925,101 @@
       "disposition": "reviewed_optional_profile_with_runtime_limits",
       "assessment": "Generated contract illustration; asset identity only, not installed execution evidence.",
       "narrative": []
+    },
+    {
+      "path": "docs/images/live-configuration.png",
+      "sha256": "51da2b69293e20624408ed8940492f92cc62450c626e508c597c17321a69d0c2",
+      "families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Revisioned workspace editing and native worker lifecycle. Actual offscreen Qt captures contain synthetic records; real disposable SQL and owned process acceptance is required separately.",
+      "narrative": []
+    },
+    {
+      "path": "docs/images/live-node-applied.png",
+      "sha256": "00072e3baed894b16f96abfeeacfec514dd9191f90dad04543476bad5a06d4b0",
+      "families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Revisioned workspace editing and native worker lifecycle. Actual offscreen Qt captures contain synthetic records; real disposable SQL and owned process acceptance is required separately.",
+      "narrative": []
+    },
+    {
+      "path": "docs/implementation/cfg03-live-configuration-and-node-controls.md",
+      "sha256": "6b80a3c8f509ee557db97d18a89f89f3f8297196c4474458963dc0b10deb71a2",
+      "families": [
+        "frontend",
+        "configuration",
+        "models",
+        "native-remote-workspaces"
+      ],
+      "disposition": "implemented_contract_with_separate_runtime_gates",
+      "assessment": "Revisioned workspace editing and native worker lifecycle. Actual offscreen Qt captures contain synthetic records; real disposable SQL and owned process acceptance is required separately.",
+      "narrative": [
+        {
+          "locator": "line:1-7",
+          "sha256": "c31613e7e5013ef19a2ff5e2003a37b1fab8824f60d0540c27885e7c0e48a5f6",
+          "excerpt": "# Live configuration and native node worker controls\n\nThe Python GUI now edits live workspace configuration and queues reviewed drain\nand restart requests for s",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:8-40",
+          "sha256": "1f06f0415d44bd9da35b906cb957c69dd3322df3f97ca5e3e4609e882a07087c",
+          "excerpt": "## Edit workspace configuration\n\nIn **Settings**, choose **Live workspace configuration\u2026**. Eight fields can be\noverridden: policy versions, reasoning models, c",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:41-67",
+          "sha256": "964789bdace6119e12e8fb1f37497e1687b64fb8775e1abebf9db989be1bcaf7",
+          "excerpt": "## Supervise a registered worker on its node\n\nRun the native supervisor on the already registered node host, with its existing\nworkspace owner, restricted appli",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:68-98",
+          "sha256": "1220edbd32ccd45cc6cdd2059bde778a060b74d1ad20a7d06c77e5792554771e",
+          "excerpt": "## Drain, restart and inspect completion\n\nOpen **Workspace swarm \u2192 Node drain and restart\u2026**. Select a supervised node and\nchoose **Review drain** or **Review r",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        },
+        {
+          "locator": "line:99-127",
+          "sha256": "013bd8ad4ae77de3e0ba4e68808844ea15c339fd61b9403670137b4aaee22dd2",
+          "excerpt": "## API and verification boundary\n\n| Route | Behavior |\n| --- | --- |\n| `GET /v1/ui/settings/live` | Scoped safe workspace overrides, revision, hash and effectiv",
+          "families": [
+            "frontend",
+            "configuration",
+            "models",
+            "native-remote-workspaces"
+          ]
+        }
+      ]
     }
   ],
   "requirements": [
@@ -92558,6 +92653,19 @@
         },
         "at_reviewed_base": false,
         "qualification_limit": "Windows/Linux contract jobs passed at the recorded head; the installed-adapter job could not resolve the newly published version through its index. The following source pins the verified official wheel URL and SHA-256; its new execution result is not inferred from this source record. Worker-process adapter acceptance does not establish native Syn/image/production host qualification or pretrained semantic accuracy."
+      },
+      {
+        "path": ".github/workflows/live-controls.yml",
+        "sha256": "ae9b7a12960b44e97bd0b51c9bfb301bc7d00bdcf752d499d8745725bfb155c0",
+        "name": "Live configuration and native worker controls",
+        "state": "active",
+        "at_reviewed_base": false,
+        "scope": [
+          "Windows/Linux actual Qt review, conflict, recovery and owned-process acceptance without skips",
+          "Real PostgreSQL/RLS, task snapshot immutability, drain fencing, holds, uncertain leases and startup failure",
+          "Actual existing restricted jobs worker restart with empty queue and Qt/HTTP/SQL/process receipt"
+        ],
+        "qualification_limit": "Only inspected exact-source executed results establish these contracts. Fixtures do not qualify production hosts, remote transports or inference."
       }
     ],
     "baseline_checks": {
@@ -93135,8 +93243,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
+          "symbol_sha256": "84c771283ab14dcb803fa552de788148ea9c1b35c7a05d55c4d679c5dc083567",
           "basis": "Migration41 extends the existing S11/S12 table and immutable audit instead of introducing another installed-tool or scheduler authority. U04-D current-source review: Additive migration42 retains private discovery observations, immutable snapshots/events and signed decisions; previous migrations and the historical audit boundary are unchanged. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
         },
         {
@@ -93599,8 +93707,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
+          "symbol_sha256": "84c771283ab14dcb803fa552de788148ea9c1b35c7a05d55c4d679c5dc083567",
           "basis": "Migration42 adds scoped discovery evidence, not a duplicate skill/tool installation registry or worker scheduler. U04-M current-source review: Migration43 adds scoped signed MCP observations and immutable snapshots/events while all earlier migration identities and historical qualification boundaries remain retained. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
         },
         {
@@ -94033,7 +94141,7 @@
       "data_evidence": [
         {
           "path": "examples/registry/curated-capabilities.json",
-          "sha256": "e108d0cf398f7f7959abdd55b7ce8c1d3003f99a686ddf8d0a8fe5485b24492d",
+          "sha256": "dd89cbc856decf7ade01372b2f8f4a2edece5e74b96118fa813fe03abd9cee04",
           "basis": "Twenty source-only inspection profiles with exact retained implementation evidence and optional profiles explicitly unavailable; no bundled executable distribution."
         },
         {
@@ -94108,8 +94216,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
+          "symbol_sha256": "84c771283ab14dcb803fa552de788148ea9c1b35c7a05d55c4d679c5dc083567",
           "basis": "Additive migration 43 retains binding/attempt signatures, immutable snapshots/events, owner RLS and current attempt/snapshot references. U04-Q current-source review: Additive migration 44 registers principal-scoped signed qualification suites/attempts, immutable reports/events and current report references; earlier migration identities are preserved. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
         },
         {
@@ -94478,8 +94586,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
+          "symbol_sha256": "84c771283ab14dcb803fa552de788148ea9c1b35c7a05d55c4d679c5dc083567",
           "basis": "Migration 44 adds qualification owners without rewriting existing migration identities. U04-S current-source review: Additive migration 45 registers task-bound signed discovery searches, immutable results/selections and event heads with workspace/principal isolation; earlier migration identities remain preserved. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
         },
         {
@@ -94996,8 +95104,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
+          "symbol_sha256": "84c771283ab14dcb803fa552de788148ea9c1b35c7a05d55c4d679c5dc083567",
           "basis": "Additive migration 45 registers task discovery state without rewriting older migration identities. U04-T current-source review: Additive migration 46 attaches immutable optional selection provenance to existing jobs while preserving all earlier migration identities and legacy null fields. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
         }
       ],
@@ -95392,8 +95500,8 @@
         {
           "path": "src/potbot/controller/jobs.py",
           "symbol": "JobService",
-          "sha256": "8fa6ed2620c560c0a30bb4c68182f2ba4138ff7b59dd6e069fc5c56af5360efb",
-          "symbol_sha256": "073c0283d651aff27f72a0d2a17b239d188e4e27e242cc87f674968c5dbb1302",
+          "sha256": "0dea0a479dba0b32e1274f189d89c2093a8e3b7a55aed6944b812ea410b5e44a",
+          "symbol_sha256": "e78e0616727b67519f715988d34d62aac69139683eabe62257d60c3b4ecee33b",
           "basis": "Existing persisted jobs retain immutable selected provenance and dispatch fences."
         },
         {
@@ -95504,8 +95612,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
+          "symbol_sha256": "84c771283ab14dcb803fa552de788148ea9c1b35c7a05d55c4d679c5dc083567",
           "basis": "Registers additive migration 46 without rewriting prior application migrations. T05-A current-source review: Adds migration 47 for the external mode of existing research runs, retaining previous migration identities, local queue rows and existing task/budget/artifact/event owners. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
         },
         {
@@ -96027,8 +96135,8 @@
         {
           "path": "src/potbot/persistence/schema.py",
           "symbol": "application_migrations",
-          "sha256": "5a4e8aff5f77974e107dfe8fce594834f52bd638f9cc26e9179d00caf9de4686",
-          "symbol_sha256": "11748680ebd2ef02bc60d7ebfd12c45c47d7494d5cf5660c85a47197a0ce8324",
+          "sha256": "a19581b916bce8b3ffe4fec3bbf6519213e01739122367d0c9d57aee60226326",
+          "symbol_sha256": "84c771283ab14dcb803fa552de788148ea9c1b35c7a05d55c4d679c5dc083567",
           "basis": "Registers additive migration 47 without rewriting earlier application migrations. T05-B/R7.1 current-source review: Registers additive migration 48 without changing migrations 1-47 or historical application lineage."
         },
         {
@@ -97352,22 +97460,22 @@
         {
           "path": "src/potbot/desktop_settings.py",
           "symbol": "create_settings_widget",
-          "sha256": "d58b2bac2909c462502eb3861f791effdb496c9f5397f5d421585f6b4cc5fd86",
-          "symbol_sha256": "1ca2c3fea79a3bc4de90fa8e410e5f6f82a6345f224a15eaa4d693ad373bea4f",
+          "sha256": "b035de70595076f2eb5fb3a1f8a58a43adaa70c14db73d7bee1426f93d854e1c",
+          "symbol_sha256": "90a4a7a765f7018e4cb92a44a2dec6e264354c38bc688461f0718c09dabf4341",
           "basis": "Real native widgets, generation-fenced reads, conflict review and explicit grant intent."
         },
         {
           "path": "src/potbot/desktop_settings_client.py",
           "symbol": "NativeSettingsClient",
-          "sha256": "2d5b155f85184163f671e5d5326a41ffe5a929a3a797792ee958ccae9954eb9a",
-          "symbol_sha256": "cd9975c9fed6e0db02d631e42147c9b7a75b07ba2841186fd26e91c58c54a705",
+          "sha256": "dc6a573a45c1931d6d246cede4a6c9c9725625940b6e645c6cd80e0ec28b91db",
+          "symbol_sha256": "65bc61b46ae66139104a56ca2569e4cde478154a450d6b0949de7cd3f360b97c",
           "basis": "Fixed loopback API routes and scoped projections without administrator DSNs."
         },
         {
           "path": "src/potbot/desktop_settings_state.py",
           "symbol": "RevocationJournal",
-          "sha256": "4700744a1d8ed638ebb80b7fa1123ff5bed796d057107fe6a9c1ef0714ddbb68",
-          "symbol_sha256": "7be158f7276ab33f98bdb5592a23aae6a8fc1e1146caf9a7edfb5d5fec3de727",
+          "sha256": "74f619acfb6dc4c3b1c8e1b89b01ee396fae308c00e73fb3430c084b67976a08",
+          "symbol_sha256": "954eb18192d0510f3b6fcc59ab7fc50c657bb0b2134c6522836637349301b41d",
           "basis": "Persist an exact private review before explicit submission; no automatic retry."
         }
       ],
@@ -97396,12 +97504,84 @@
         {
           "path": "tests/unit/test_tool_inventory.py",
           "symbol": "test_native_settings_modules_keep_the_existing_entrypoint_owner",
-          "sha256": "d38af9618106ef26e2dbe776dc9886b090d81d2085d0ca1ad5529f2cd5b5be8f",
-          "symbol_sha256": "a08cf3a8008c6c053d21bdc6ff5601322f1603203f24b608d2d54ffcb526ac97",
+          "sha256": "f122b011c1e0a305db43495eb678bdc087a294696e4fdba3649949a5fd1d6801",
+          "symbol_sha256": "bc528e1c9badc69ab169a43a0322e667090c449ec0f1ff8889ceb0073e1249ce",
           "basis": "New native modules keep the maintained source inventory owner."
         }
       ],
       "next_action": "Inspect required native Windows/Linux and Qt/PostgreSQL CI; retain manual accessibility, installed profile and qualified node lifecycle acceptance."
+    },
+    {
+      "id": "CFG03/live-configuration-and-native-worker-control",
+      "implementation_base": "0956d071b360305434fff85297521c45bd9830dd",
+      "source_commit": "cf49cda830f587265d1b6fb052f201bcf20b8689",
+      "reviewed_on": "2026-11-25",
+      "source": "docs/implementation/cfg03-live-configuration-and-node-controls.md",
+      "review_family": "configuration",
+      "runtime_qualified": false,
+      "evidence_boundary": "Real Qt controls and protected backend state. Disposable PostgreSQL and owned-worker tests are separate from installed production, inference and remote-transport qualification.",
+      "code_evidence": [
+        {
+          "path": "src/potbot/controller/live_configuration.py",
+          "symbol": "LiveConfiguration",
+          "sha256": "d54e113ac7d5d16a1ff4707e323314367c8ecd826e17455aed6d8bb944155f85",
+          "symbol_sha256": "08289cd93a3d0cecce1cb228c7fb266a54cc75db3ee3112a0fd44e7ff91436c8",
+          "basis": "Owner-scoped immutable overrides, compare and swap and task admission resolution."
+        },
+        {
+          "path": "src/potbot/controller/node_controls.py",
+          "symbol": "NodeControls",
+          "sha256": "9da4be92fc47d2224baf4f8b3462a708e3164d89829c540fc46162399d21a2c3",
+          "symbol_sha256": "4c6679055f4436ff2f7d752300480c19220ed8b1df7d89f91bf48ff8d3938327",
+          "basis": "Exact owner/setup review and independently read native completion events."
+        },
+        {
+          "path": "src/potbot/tools/node_supervisor.py",
+          "symbol": "NativeNodeSupervisor",
+          "sha256": "a727bdfb572f1ca3f9b7e195dce894d9a16c571c9e7aa3519726280b0dfb059b",
+          "symbol_sha256": "3e832cdc2d646dba909481a7d7f1dd6d3b1b981d2aa4014612c4c3fef8c74a0f",
+          "basis": "Host-side drain, conservative holds, old-process exit and replacement readiness."
+        },
+        {
+          "path": "src/potbot/desktop_live_settings.py",
+          "symbol": "create_live_dialog",
+          "sha256": "0db48ac70fffa69a49ee06ba3f948c355a6cf4678f905e992aeceffd4fa95e47",
+          "symbol_sha256": "9ef1130bb998cfd222b262d00ac07be6cb5d9d166070ca7078078ad944dbc0e0",
+          "basis": "Real native configuration and worker-control reviews with retained identities."
+        }
+      ],
+      "test_evidence": [
+        {
+          "path": "tests/integration/test_live_controls.py",
+          "symbol": "test_drain_fences_claims_then_waits_for_jobs_and_both_kinds_of_holds",
+          "sha256": "b5e268be4bc12b1f1274ca4922e6daad19e0585997d16a21b68797e2494dab1b",
+          "symbol_sha256": "4d9d88a8f2b2a1e9bed511b12a32c4c51cb254271361fa32f71cdce35f802d6f",
+          "basis": "Actual SQL drain fences claims and waits for jobs, budget and atomic holds."
+        },
+        {
+          "path": "tests/integration/test_live_controls.py",
+          "symbol": "test_actual_restricted_jobs_worker_starts_and_restarts_with_empty_queue",
+          "sha256": "b5e268be4bc12b1f1274ca4922e6daad19e0585997d16a21b68797e2494dab1b",
+          "symbol_sha256": "3bdd7e7e602314fc81bf041dca3e6e65daa1a5aae7bd537bbe24b4bba451d4ae",
+          "basis": "Existing real restricted CLI worker startup and replacement; no model call."
+        },
+        {
+          "path": "tests/integration/test_desktop_live_controls.py",
+          "symbol": "test_qt_live_configuration_and_restart_have_actual_database_and_process_receipts",
+          "sha256": "e31b4960c75a5da90532697c469bd0896594777ad869f310c62477de5b14675f",
+          "symbol_sha256": "1266101960eec136052868bc17c314f7128149e87b96faedb014f0d6aad7f4eb",
+          "basis": "Actual native review through HTTP handlers and SQL into owned process replacement."
+        }
+      ],
+      "next_action": "Inspect exact-source Windows/Linux Qt and genuine PostgreSQL acceptance; retain separate manual accessibility, operator recording and production-host qualification.",
+      "migration_evidence": [
+        {
+          "version": 59,
+          "path": "src/potbot/persistence/live_controls_schema.py",
+          "sha256": "4ea351154c5c2644e59fe2754d331a563867966f054c288b6dd377a7fef647f4",
+          "basis": "Owner-only live overrides and session-bound live review journals; app INSERT/UPDATE and DELETE of native facts are denied separately while claim/review row-lock reads remain available."
+        }
+      ]
     }
   ],
   "current_delivery_order": {
