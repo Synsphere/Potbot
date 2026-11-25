@@ -97397,8 +97397,8 @@
     {
       "id": "CFG03/live-configuration-and-native-worker-control",
       "implementation_base": "0956d071b360305434fff85297521c45bd9830dd",
-      "source_commit": "1d9c9cf897cb4a0c51e35238b0b470c09f22c09f",
-      "reviewed_on": "2026-11-24",
+      "source_commit": "8cc32557121d030ae76cf91d2f1337aa83ceb8a2",
+      "reviewed_on": "2026-11-25",
       "source": "docs/implementation/cfg03-live-configuration-and-node-controls.md",
       "review_family": "configuration",
       "runtime_qualified": false,
@@ -97437,14 +97437,14 @@
         {
           "path": "tests/integration/test_live_controls.py",
           "symbol": "test_drain_fences_claims_then_waits_for_jobs_and_both_kinds_of_holds",
-          "sha256": "7b73b74fee212692c678a00a5d73034c92c3ab0ed4a9105bf2c3c8815a92ec00",
-          "symbol_sha256": "b3f3cedf7ce045b3e6637bcce62864993face3c5f275c2235238471295f11eef",
+          "sha256": "bb3e84ff7c99e67a5247f917496c1afd2644b0185291494911b5e27e69badb8c",
+          "symbol_sha256": "4d9d88a8f2b2a1e9bed511b12a32c4c51cb254271361fa32f71cdce35f802d6f",
           "basis": "Actual SQL drain fences claims and waits for jobs, budget and atomic holds."
         },
         {
           "path": "tests/integration/test_live_controls.py",
           "symbol": "test_actual_restricted_jobs_worker_starts_and_restarts_with_empty_queue",
-          "sha256": "7b73b74fee212692c678a00a5d73034c92c3ab0ed4a9105bf2c3c8815a92ec00",
+          "sha256": "bb3e84ff7c99e67a5247f917496c1afd2644b0185291494911b5e27e69badb8c",
           "symbol_sha256": "3bdd7e7e602314fc81bf041dca3e6e65daa1a5aae7bd537bbe24b4bba451d4ae",
           "basis": "Existing real restricted CLI worker startup and replacement; no model call."
         },

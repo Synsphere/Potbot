@@ -37300,7 +37300,7 @@
       "finding": "Separately authored source/section and 731-stage dispositions, code/test boundaries, all PRs/workflows and inaccessible-source records close U00-A only. Runtime qualification remains false."
     }
   ],
-  "review_sha256": "3b6850b0bb4b78d7782346a55798be3ac96b0a0c976cbe32cd3f1aa78f5420f4",
+  "review_sha256": "ce874eaaaa7281a6df2d430ef151755ff204f8cf8d45a8041f5659027b7c6884",
   "review_file": "docs/implementation/roadmap-review.json",
   "narrative_coverage": [
     {
