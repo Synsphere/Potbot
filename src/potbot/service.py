@@ -17,6 +17,8 @@ import signal
 import subprocess
 import sys
 import threading
+import time
+import urllib.request
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -407,6 +409,49 @@ def install(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+# Only fixed stage identifiers are accepted from the child process; never
+# copy arbitrary child output or custody credentials into the GUI status file.
+_XPRA_STAGES = {
+    "custody-quiesce", "custody-prepare", "custody-network", "custody-authority",
+    "custody-tcp", "custody-auth", "custody-tcp-failed", "custody-auth-failed",
+    "custody-ready", "wsl-launch", "secret-service", "operator-starting",
+    "operator-health", "xpra-starting", "xpra-wsl-ready", "runtime-failed",
+}
+
+
+def _xpra_health(workspace: str, token: str) -> bool:
+    request = urllib.request.Request(
+        "http://127.0.0.1:8766/v1/xpra/status",
+        headers={"Authorization": "Bearer " + token},
+    )
+    try:
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        with opener.open(request, timeout=0.8) as response:
+            raw = response.read(8193)
+        value = json.loads(raw) if len(raw) <= 8192 else None
+        return (
+            isinstance(value, dict)
+            and value.get("workspaceId") == workspace
+            and value.get("available") is True
+        )
+    except (OSError, ValueError):
+        return False
+
+
+def _write_xpra_status(home: Path, workspace: str, stage: str, ready: bool) -> None:
+    from potbot.core_runtime import _private_write
+
+    try:
+        _private_write(home / "xpra-status.json", {
+            "workspace": workspace, "stage": stage, "ready": ready,
+            "updated": time.time(),
+        })
+    except OSError:
+        # Windows may briefly hold the status file open in the desktop reader.
+        # The next supervisor tick retries; this is not a runtime authority file.
+        pass
+
+
 def _supervise(config: ServiceConfig) -> int:
     """Keep every mandatory Potbot core component under one service owner."""
     if config.credential_profile != credential_profile():
@@ -609,10 +654,24 @@ def _supervise(config: ServiceConfig) -> int:
         frontend_env.update(frontend_bridge_environment(config, xpra_token))
         child_envs["frontend"] = frontend_env
     threads: list[threading.Thread] = []
+    xpra_stage = "starting"
+    xpra_failures = 0
+    xpra_started = 0.0
+    xpra_blocked = False
+    xpra_lock = threading.Lock()
+    if xpra_token is not None:
+        _write_xpra_status(home, config.workspace_id, xpra_stage, False)
 
     def watch(name: str, process: subprocess.Popen[str]) -> None:
+        nonlocal xpra_stage
         assert process.stdout is not None
         for line in process.stdout:
+            if name == "xpra" and line.startswith("POTBOT_CORE_STAGE="):
+                stage = line.strip().removeprefix("POTBOT_CORE_STAGE=")
+                if stage in _XPRA_STAGES:
+                    with xpra_lock:
+                        if children.get(name) is process:
+                            xpra_stage = stage
             events.emit("service.console", source=name, line=line.rstrip("\n")[:8192])
 
     worker_blocked = False
@@ -621,6 +680,8 @@ def _supervise(config: ServiceConfig) -> int:
         while not stopped.is_set():
             for name, command in commands.items():
                 previous = children.get(name)
+                if name == "xpra" and xpra_blocked:
+                    continue
                 if name == "operator" and previous is not None:
                     # Never silently adopt a replacement operator epoch.
                     if previous.poll() is not None or (
@@ -651,6 +712,18 @@ def _supervise(config: ServiceConfig) -> int:
                     events.emit("service.worker_accounting_ready")
                 if stopped.is_set():
                     break
+                if name == "xpra":
+                    if previous is not None:
+                        xpra_failures += 1
+                        with xpra_lock:
+                            terminal = xpra_stage in {"custody-tcp-failed", "custody-auth-failed"}
+                        if terminal or xpra_failures >= 3:
+                            xpra_blocked = True
+                            events.emit("service.xpra_blocked", recovery_required=True)
+                            continue
+                    with xpra_lock:
+                        xpra_stage = "starting"
+                    xpra_started = time.monotonic()
                 if previous is not None:
                     events.emit("service.restart", component=name, return_code=previous.returncode)
                 process = subprocess.Popen(
@@ -682,6 +755,29 @@ def _supervise(config: ServiceConfig) -> int:
                     operator_attachment.require_healthy()
             if operator_attachment is not None:
                 operator_attachment.require_healthy()
+            if xpra_token is not None:
+                process = children.get("xpra")
+                ready = bool(
+                    not xpra_blocked and process is not None and process.poll() is None
+                    and _xpra_health(config.workspace_id, xpra_token)
+                )
+                with xpra_lock:
+                    stage = xpra_stage
+                if ready:
+                    xpra_failures = 0
+                    stage = "ready"
+                elif xpra_blocked:
+                    stage = stage if stage.endswith("-failed") else "restart-limit"
+                elif stage == "xpra-wsl-ready":
+                    stage = "host-bridge-unreachable"
+                elif (
+                    process is not None and process.poll() is None
+                    and time.monotonic() - xpra_started > 900
+                ):
+                    # Report a whole-launch timeout without forcibly reaping an
+                    # operator that might own indeterminate workspace operations.
+                    stage = "startup-timeout"
+                _write_xpra_status(home, config.workspace_id, stage, ready)
             stopped.wait(0.5 if operator_attachment is not None else 5)
     finally:
         # Stop API and worker before asking the history owner to exit.
@@ -705,6 +801,8 @@ def _supervise(config: ServiceConfig) -> int:
                 # Indeterminate workspace leases block clean operator shutdown;
                 # do not forcibly reap the owner and destroy recovery evidence.
                 events.emit("service.operator_stop_blocked", recovery_required=True)
+        if xpra_token is not None:
+            _write_xpra_status(home, config.workspace_id, "stopped", False)
         events.emit("service.stopped")
         events.close()
     return 0

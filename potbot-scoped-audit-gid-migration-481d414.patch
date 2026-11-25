@@ -1,0 +1,109 @@
+diff --git a/src/potbot/tools/scoped_provision.py b/src/potbot/tools/scoped_provision.py
+--- a/src/potbot/tools/scoped_provision.py
++++ b/src/potbot/tools/scoped_provision.py
+@@ -363,15 +363,34 @@ def _audit_directory(uid: int, gid: int) -> bool:
+         AUDIT.mkdir(mode=0o700)
+     except FileExistsError:
+         info = AUDIT.lstat()
+-        if not stat.S_ISDIR(info.st_mode) or (
+-            info.st_uid,
+-            info.st_gid,
+-            stat.S_IMODE(info.st_mode),
+-        ) != (uid, gid, 0o700):
++        if (
++            not stat.S_ISDIR(info.st_mode)
++            or info.st_uid != uid
++            or stat.S_IMODE(info.st_mode) != 0o700
++        ):
+             raise CapabilityUnavailableError(
+                 "Existing audit directory has a different owner or mode."
+             ) from None
++        if info.st_gid != gid:
++            try:
++                # The dedicated WSL host may migrate synoperator's primary
++                # group while preserving this private, service-owned audit tree.
++                # Only that exact owner+0700 case is safe to repair automatically.
++                os.chown(AUDIT, -1, gid)
++            except OSError:
++                raise CapabilityUnavailableError(
++                    "Existing private audit directory group migration failed."
++                ) from None
++            migrated = AUDIT.lstat()
++            if (
++                not stat.S_ISDIR(migrated.st_mode)
++                or (migrated.st_uid, migrated.st_gid, stat.S_IMODE(migrated.st_mode))
++                != (uid, gid, 0o700)
++            ):
++                raise CapabilityUnavailableError(
++                    "Existing private audit directory group migration failed."
++                )
+         return False
+     try:
+         os.chmod(AUDIT, 0o700)
+         os.chown(AUDIT, uid, gid)
+diff --git a/tests/unit/test_scoped_provision.py b/tests/unit/test_scoped_provision.py
+--- a/tests/unit/test_scoped_provision.py
++++ b/tests/unit/test_scoped_provision.py
+@@ -1,6 +1,7 @@
+ import subprocess
+ import sys
+ from pathlib import Path
++from types import SimpleNamespace
+ 
+ import pytest
+ 
+@@ -49,6 +50,54 @@ def test_runtime_units_use_discovered_cgroup_and_distinct_auditor_gid() -> None:
+     assert not any(item.startswith("--groups=") for item in worker_credentials)
+ 
+ 
++def test_existing_private_audit_directory_migrates_only_its_group(
++    tmp_path, monkeypatch
++) -> None:
++    audit = tmp_path / "audit"
++    audit.mkdir(mode=0o700)
++    audit.chmod(0o700)
++    actual = audit.lstat()
++    uid = actual.st_uid
++    old_gid, new_gid = 1000, 69
++    migrated = False
++    real_lstat = Path.lstat
++
++    def lstat(path: Path):
++        info = real_lstat(path)
++        if path != audit:
++            return info
++        return SimpleNamespace(
++            st_mode=info.st_mode,
++            st_uid=uid,
++            st_gid=new_gid if migrated else old_gid,
++        )
++
++    def chown(path: Path, owner: int, group: int) -> None:
++        nonlocal migrated
++        assert path == audit
++        assert owner == -1
++        assert group == new_gid
++        migrated = True
++
++    monkeypatch.setattr(provision, "AUDIT", audit)
++    monkeypatch.setattr(Path, "lstat", lstat)
++    monkeypatch.setattr(provision.os, "chown", chown)
++
++    assert provision._audit_directory(uid, new_gid) is False
++    assert migrated is True
++
++
++def test_existing_audit_directory_with_wrong_owner_or_mode_is_still_refused(
++    tmp_path, monkeypatch
++) -> None:
++    audit = tmp_path / "audit"
++    audit.mkdir(mode=0o755)
++    audit.chmod(0o755)
++    monkeypatch.setattr(provision, "AUDIT", audit)
++    with pytest.raises(CapabilityUnavailableError, match="different owner or mode"):
++        provision._audit_directory(audit.stat().st_uid, audit.stat().st_gid)
++
++
+ @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Linux systemd provisioning")
+ def test_failed_socket_start_rolls_back_fresh_keeper_and_launcher_files(tmp_path, monkeypatch):
+     units = tmp_path / "units"

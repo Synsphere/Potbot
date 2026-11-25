@@ -724,6 +724,7 @@ def _supervise_windows_core_runtime(python: str, state: str) -> int:
 
     manager = WslOperatorHost()
     with windows_host_custody(manager) as custody_environment:
+        print("POTBOT_CORE_STAGE=wsl-launch", flush=True)
         environment = _wsl_environment(custody_environment, token, application_dsn)
         result = subprocess.run(
             manager.command(
@@ -873,8 +874,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.action == "supervise":
             return _supervise_windows_core_runtime(args.python, args.state)
-    except (CapabilityUnavailableError, StateMismatchError, OSError, ValueError) as error:
-        print(str(error), file=sys.stderr)
+    except (
+        CapabilityUnavailableError, StateMismatchError, OSError, ValueError,
+        subprocess.TimeoutExpired,
+    ) as error:
+        print(
+            "Managed WSL startup operation timed out"
+            if isinstance(error, subprocess.TimeoutExpired) else str(error),
+            file=sys.stderr, flush=True,
+        )
         return 1
     return 1
 

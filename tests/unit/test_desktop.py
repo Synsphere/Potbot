@@ -28,6 +28,25 @@ def test_workspace_rendering_is_independent_of_xpra_or_backend() -> None:
     assert "Preparing" in empty.banner
 
 
+def test_xpra_status_requires_fresh_matching_workspace(tmp_path, monkeypatch):
+    import json
+    from potbot import desktop_state
+
+    monkeypatch.setattr(desktop_state.time, "time", lambda: 100.0)
+    path = tmp_path / "xpra-status.json"
+    document = {"workspace": "a", "stage": "ready", "ready": True, "updated": 99}
+    path.write_text(json.dumps(document), encoding="utf-8")
+    assert desktop_state._xpra_status(path, "a") == (True, "", False)
+    assert desktop_state._xpra_status(path, "b") == (False, "", False)
+    document.update(updated=50)
+    path.write_text(json.dumps(document), encoding="utf-8")
+    assert desktop_state._xpra_status(path, "a")[2]
+    document.update(updated=99, stage="custody-tcp-failed", ready=False)
+    path.write_text(json.dumps(document), encoding="utf-8")
+    ready, detail, failed = desktop_state._xpra_status(path, "a")
+    assert not ready and failed and "cannot reach" in detail
+
+
 def test_native_window_is_shown_before_background_startup_begins() -> None:
     source = Path(desktop.__file__).read_text(encoding="utf-8")
     assert source.index("window.show()") < source.index("QTimer.singleShot(0, window.start_stack)")

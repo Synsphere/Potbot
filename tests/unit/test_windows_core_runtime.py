@@ -422,13 +422,62 @@ def test_wsl_finalize_refreshes_qualification_without_treating_it_as_image_chang
     assert ledger.pin["qualification_sha256"] == next_qualification
     assert len(ledger.calls) == 2
 
-    ledger.pin["digest"] = "e" * 64
-    with pytest.raises(CapabilityUnavailableError, match="image pin differs"):
-        _activate_workspace_image_pin(
-            ledger,
-            workspace,
-            image_digest=digest,
-            image_source=source,
-            rootfs=rootfs,
-            qualification="f" * 64,
+    next_rootfs = tmp_path / "next-rootfs"
+    next_rootfs.mkdir()
+    # Even an identical receipt must not hide a changed image binding.
+    for expected, receipt in ((3, next_qualification), (4, "f" * 64), (4, "f" * 64)):
+        assert (
+            _activate_workspace_image_pin(
+                ledger,
+                workspace,
+                image_digest="e" * 64,
+                image_source="f" * 40,
+                rootfs=next_rootfs,
+                qualification=receipt,
+            )
+            == expected
         )
+    assert ledger.pin["digest"] == "e" * 64
+    assert ledger.pin["rootfs_path"] == str(next_rootfs)
+    assert len(ledger.calls) == 4
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Linux-only WSL runtime module")
+@pytest.mark.parametrize("scenario", ["missing", "disabled", "legacy", "foreign", "failed-stop"])
+def test_retire_legacy_user_service(monkeypatch, scenario):
+    from types import SimpleNamespace
+    from potbot import wsl_core_runtime as runtime
+
+    service = SimpleNamespace(pw_uid=1000, pw_name="synoperator", pw_dir="/home/synoperator")
+    fields = {
+        "LoadState": "loaded", "ActiveState": "active", "UnitFileState": "enabled",
+        "FragmentPath": "/home/synoperator/.config/systemd/user/potbot.service",
+        "ExecStart": "{ argv[]=/srv/potbot-debugger/venv/bin/python -m potbot.startup service run ; }",
+    }
+    if scenario == "missing":
+        fields["LoadState"] = "not-found"
+    elif scenario == "disabled":
+        fields.update(ActiveState="inactive", UnitFileState="disabled")
+    elif scenario == "foreign":
+        fields["ExecStart"] = "/usr/bin/other"
+    calls = []
+
+    def show(command, **kwargs):
+        assert command[-3:-1] == ["show", "potbot.service"]
+        return SimpleNamespace(returncode=0, stdout="\n".join(f"{k}={v}" for k, v in fields.items()))
+
+    def disable(command, **kwargs):
+        calls.append(command[-3:])
+        if scenario != "failed-stop":
+            fields.update(ActiveState="inactive", UnitFileState="disabled")
+
+    monkeypatch.setattr(runtime.subprocess, "run", show)
+    monkeypatch.setattr(runtime, "_run", disable)
+    if scenario in {"foreign", "failed-stop"}:
+        with pytest.raises(runtime.CapabilityUnavailableError):
+            runtime._retire_legacy_user_service(service)
+    else:
+        runtime._retire_legacy_user_service(service)
+    assert calls == (
+        [["disable", "--now", "potbot.service"]] if scenario in {"legacy", "failed-stop"} else []
+    )

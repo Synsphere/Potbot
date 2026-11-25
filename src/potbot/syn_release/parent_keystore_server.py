@@ -184,6 +184,7 @@ def serve(
             server.setsockopt(socket.SOL_SOCKET, cast(Any, socket).SO_EXCLUSIVEADDRUSE, 1)
             server.bind((host, port))
             server.listen(8)
+            print("[Potbot custody] authority listening", flush=True)
             while True:
                 channel, peer = server.accept()
                 with channel:
@@ -227,9 +228,13 @@ def serve(
                         response = {"ok": True, "result": result}
                     except (KeyError, TypeError, ValueError, UnicodeError, OSError) as error:
                         response = {"ok": False, "error": str(error)[:200]}
-                    if _HEX64.fullmatch(request_id or "") is None:
+                    if not isinstance(request_id, str) or _HEX64.fullmatch(request_id) is None:
                         request_id = "0" * 64
-                    channel.sendall(_response(token, request_id, response))
+                    try:
+                        channel.sendall(_response(token, request_id, response))
+                    except OSError:
+                        # A disconnected probe/client must not kill the authority.
+                        continue
 
 
 def main(argv: list[str] | None = None) -> int:

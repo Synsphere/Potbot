@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import json
-import socket
+import time
 import urllib.request
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from potbot.credentials import CredentialStore, credential_profile
@@ -14,6 +15,28 @@ from potbot.domain.errors import DomainError
 WEB_UI_URL = "http://127.0.0.1:3100"
 XPRA_HOST = "127.0.0.1"
 XPRA_PORT = 8766
+_XPRA_MESSAGES = {
+    "custody-quiesce": "Retiring obsolete managed operator services",
+    "custody-prepare": "Preparing Windows keystore authority",
+    "custody-network": "Checking managed WSL network identity",
+    "custody-authority": "Launching Windows keystore authority",
+    "custody-tcp": "Connecting WSL to Windows keystore",
+    "custody-auth": "Authenticating the parent keystore connection",
+    "custody-tcp-failed": "WSL cannot reach Windows keystore; inspect custody log",
+    "custody-auth-failed": "Parent keystore authentication/health check failed",
+    "custody-ready": "Windows keystore connection verified",
+    "wsl-launch": "Launching managed WSL runtime",
+    "secret-service": "Starting parent-backed Secret Service",
+    "operator-starting": "Starting managed operator",
+    "operator-health": "Waiting for managed operator health",
+    "xpra-starting": "Starting Xpra bridge",
+    "xpra-wsl-ready": "Xpra ready in WSL",
+    "host-bridge-unreachable": "Xpra is ready in WSL but unreachable from Windows",
+    "runtime-failed": "Managed WSL runtime failed; inspect supervisor log",
+    "restart-limit": "Xpra restart limit reached; restart Potbot after inspecting logs",
+    "startup-timeout": "Xpra startup timed out; inspect supervisor log",
+    "stopped": "Xpra supervisor stopped",
+}
 
 
 @dataclass(frozen=True)
@@ -23,6 +46,8 @@ class DesktopStatus:
     xpra: bool
     web: bool
     workspace_id: str | None = None
+    xpra_detail: str = ""
+    xpra_failed: bool = False
 
     @property
     def workspace_renderable(self) -> bool:
@@ -35,7 +60,7 @@ class DesktopStatus:
         if not self.backend:
             return "Starting Potbot backend and managed WSL…"
         if not self.xpra:
-            return "Backend online · starting Xpra application services…"
+            return self.xpra_detail or "Backend online · starting Xpra application services…"
         if not self.web:
             return "Local workspace ready · remote web interface is starting…"
         return "Potbot is ready"
@@ -71,12 +96,26 @@ def _backend_ready(config: Any) -> bool:
         return False
 
 
-def _xpra_ready() -> bool:
+def _xpra_status(path: Path, workspace: str) -> tuple[bool, str, bool]:
     try:
-        with socket.create_connection((XPRA_HOST, XPRA_PORT), timeout=0.25):
-            return True
-    except OSError:
-        return False
+        with path.open("rb") as stream:
+            raw = stream.read(8193)
+        document = json.loads(raw) if len(raw) <= 8192 else None
+        if not isinstance(document, dict) or document.get("workspace") != workspace:
+            return False, "", False
+        age = time.time() - float(document["updated"])
+        if not 0 <= age <= 20:
+            return False, "Xpra supervisor status is stale; inspect supervisor log", True
+        stage = document.get("stage")
+        if stage == "ready" and document.get("ready") is True:
+            return True, "", False
+        detail = _XPRA_MESSAGES.get(str(stage), "")
+        failed = str(stage).endswith("-failed") or stage in {
+            "restart-limit", "startup-timeout", "stopped", "host-bridge-unreachable",
+        }
+        return False, detail, failed
+    except (OSError, ValueError, KeyError, TypeError):
+        return False, "", False
 
 
 def _web_ready() -> bool:
@@ -94,10 +133,15 @@ def probe_status() -> DesktopStatus:
         config = service.ServiceConfig.load(path)
     except DomainError:
         return DesktopStatus(False, False, False, False)
+    xpra, detail, failed = _xpra_status(
+        service.service_home() / "xpra-status.json", config.workspace_id
+    )
     return DesktopStatus(
         configured=True,
         backend=_backend_ready(config),
-        xpra=_xpra_ready(),
+        xpra=xpra,
         web=_web_ready(),
         workspace_id=config.workspace_id,
+        xpra_detail=detail,
+        xpra_failed=failed,
     )

@@ -219,7 +219,11 @@ def main() -> int:
             self.status_labels["backend"].setText(
                 "Backend / managed WSL · " + self._label(status.backend)
             )
-            self.status_labels["xpra"].setText("Xpra applications · " + self._label(status.xpra))
+            self.status_labels["xpra"].setText(
+                "Xpra applications · " + self._label(
+                    status.xpra, "failed/unreachable" if status.xpra_failed else "starting"
+                )
+            )
             self.status_labels["web"].setText("Remote web interface · " + self._label(status.web))
             self.web_button.setEnabled(status.web)
             if status.backend and not self._settings_backend_ready:
@@ -233,8 +237,10 @@ def main() -> int:
                 )
             else:
                 self.app_message.setText(
-                    "Xpra is still starting. The workspace remains available while application "
-                    "services come online."
+                    status.xpra_detail or (
+                        "Xpra is still starting. The workspace remains available while application "
+                        "services come online."
+                    )
                 )
 
         def _refresh(self) -> None:

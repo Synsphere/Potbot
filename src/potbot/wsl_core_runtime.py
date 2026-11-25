@@ -15,6 +15,7 @@ import subprocess
 import sys
 import threading
 import time
+import urllib.request
 from pathlib import Path
 from typing import Any, TypedDict
 from uuid import UUID
@@ -105,6 +106,52 @@ def _ensure_user() -> tuple[pwd.struct_passwd, pwd.struct_passwd]:
     if service.pw_uid == auditor.pw_uid or service.pw_gid == auditor.pw_gid:
         raise CapabilityUnavailableError("Core runtime service and auditor identities must differ")
     return service, auditor
+
+
+def _retire_legacy_user_service(service: pwd.struct_passwd) -> None:
+    """Retire only the standalone API/worker unit in the owned WSL distro."""
+    runtime = f"/run/user/{service.pw_uid}"
+    command = [
+        "/usr/sbin/runuser", "-u", service.pw_name, "--", "/usr/bin/env",
+        f"XDG_RUNTIME_DIR={runtime}",
+        f"DBUS_SESSION_BUS_ADDRESS=unix:path={runtime}/bus",
+        "/usr/bin/systemctl", "--user",
+    ]
+
+    def query() -> dict[str, str]:
+        result = subprocess.run(
+            command + [
+                "show", "potbot.service",
+                "--property=LoadState,ActiveState,UnitFileState,FragmentPath,ExecStart",
+            ],
+            capture_output=True, text=True, check=False, timeout=30,
+        )
+        fields = dict(line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)
+        if fields.get("LoadState") == "not-found":
+            return fields
+        if result.returncode or fields.get("LoadState") != "loaded":
+            raise CapabilityUnavailableError("Cannot inspect legacy Potbot user service")
+        return fields
+
+    fields = query()
+    if fields.get("LoadState") == "not-found":
+        return
+    if fields.get("ActiveState") == "inactive" and fields.get("UnitFileState") == "disabled":
+        return
+    expected = Path(service.pw_dir) / ".config/systemd/user/potbot.service"
+    if (
+        fields.get("FragmentPath") != str(expected)
+        or "-m potbot.startup service run" not in fields.get("ExecStart", "")
+    ):
+        raise CapabilityUnavailableError("Unexpected Potbot user unit; refusing automatic migration")
+    _run(command + ["disable", "--now", "potbot.service"], timeout=60)
+    fields = query()
+    if fields.get("ActiveState") != "inactive" or fields.get("UnitFileState") != "disabled":
+        raise CapabilityUnavailableError("Legacy Potbot user service did not stop and disable")
+    print(
+        "[Potbot WSL] Retired legacy API/worker service; data retained",
+        file=sys.stderr, flush=True,
+    )
 
 
 def _sha(path: Path) -> str:
@@ -501,10 +548,9 @@ def _activate_workspace_image_pin(
 ) -> int:
     """Activate or refresh one exact image binding.
 
-    A live qualification receipt deliberately contains a fresh qualification ID,
-    so its receipt SHA changes on every successful requalification.  That is not
-    an image change.  Preserve the exact digest/source/platform/rootfs binding and
-    CAS-refresh only the qualification receipt when those immutable fields match.
+    A live qualification receipt may change without an image change. A newly
+    qualified image may also replace the old binding through the host ledger's
+    revision CAS and active/indeterminate lease checks.
     """
     image_ref = f"{IMAGE}@sha256:{image_digest}"
     arguments: _ImagePinArguments = {
@@ -526,13 +572,12 @@ def _activate_workspace_image_pin(
         "platform": "linux/amd64",
         "rootfs_path": str(rootfs),
     }
-    if any(pin.get(name) != value for name, value in immutable.items()):
-        raise CapabilityUnavailableError("Existing workspace image pin differs")
+    binding_matches = all(pin.get(name) == value for name, value in immutable.items())
 
     revision = pin.get("revision")
     if type(revision) is not int or revision < 1:
         raise CapabilityUnavailableError("Existing workspace image revision is invalid")
-    if pin.get("qualification_sha256") == qualification:
+    if binding_matches and pin.get("qualification_sha256") == qualification:
         return revision
 
     return ledger.pin_image(
@@ -670,6 +715,8 @@ def _prepare(args: argparse.Namespace) -> int:
 
     _qualification_stage("service-identities")
     service, auditor = _ensure_user()
+    _qualification_stage("legacy-service-migration")
+    _retire_legacy_user_service(service)
     python = source / ".venv/bin/python"
     if not python.is_file():
         raise CapabilityUnavailableError("Core runtime virtual environment is missing")
@@ -850,6 +897,37 @@ def _start_secret_service(source: Path, env: dict[str, str]) -> subprocess.Popen
     raise CapabilityUnavailableError("Parent-backed Secret Service did not become ready")
 
 
+def _core_stage(stage: str) -> None:
+    print("POTBOT_CORE_STAGE=" + stage, flush=True)
+
+
+def _await_xpra(process: subprocess.Popen[Any], workspace: UUID, token: str) -> None:
+    """Require an authenticated bridge response, not merely an open port."""
+    deadline = time.monotonic() + 45
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    request = urllib.request.Request(
+        "http://127.0.0.1:8766/v1/xpra/status",
+        headers={"Authorization": "Bearer " + token},
+    )
+    while time.monotonic() < deadline:
+        if process.poll() is not None:
+            raise CapabilityUnavailableError("Managed WSL Xpra bridge exited during startup")
+        try:
+            with opener.open(request, timeout=1) as response:
+                raw = response.read(8193)
+                document = json.loads(raw) if len(raw) <= 8192 else None
+                if (
+                    isinstance(document, dict)
+                    and document.get("workspaceId") == str(workspace)
+                    and document.get("available") is True
+                ):
+                    return
+        except (OSError, ValueError):
+            pass
+        time.sleep(0.25)
+    raise CapabilityUnavailableError("Managed WSL Xpra bridge readiness timed out")
+
+
 def _run_core(args: argparse.Namespace) -> int:
     if os.geteuid() == 0:
         raise CapabilityUnavailableError("Core operator/Xpra runtime must be unprivileged")
@@ -902,9 +980,11 @@ def _run_core(args: argparse.Namespace) -> int:
             "POTBOT_XPRA_BRIDGE_TOKEN": token,
         }
     )
+    _core_stage("secret-service")
     secret_service = _start_secret_service(source, env)
     operator = None
     try:
+        _core_stage("operator-starting")
         operator = subprocess.Popen(
             [
                 str(python),
@@ -921,6 +1001,7 @@ def _run_core(args: argparse.Namespace) -> int:
             ],
             env=env,
         )
+        _core_stage("operator-health")
         for _ in range(100):
             if operator.poll() is not None:
                 raise CapabilityUnavailableError("Managed WSL operator exited during startup")
@@ -931,6 +1012,7 @@ def _run_core(args: argparse.Namespace) -> int:
                 pass
             time.sleep(0.1)
         attachment.require_healthy()
+        _core_stage("xpra-starting")
         xpra = subprocess.Popen(
             [
                 str(python),
@@ -951,6 +1033,8 @@ def _run_core(args: argparse.Namespace) -> int:
             ],
             env=env,
         )
+        _await_xpra(xpra, workspace, token)
+        _core_stage("xpra-wsl-ready")
         stopped = threading.Event()
 
         def halt(_signum: int, _frame: object) -> None:
@@ -1016,8 +1100,17 @@ def main(argv: list[str] | None = None) -> int:
         if args.action == "finalize":
             return _finalize(args)
         return _run_core(args)
-    except (CapabilityUnavailableError, InvalidInputError, OSError, ValueError, KeyError) as error:
-        print(str(error), file=sys.stderr)
+    except (
+        CapabilityUnavailableError, InvalidInputError, OSError, ValueError, KeyError,
+        subprocess.TimeoutExpired,
+    ) as error:
+        if args.action == "run":
+            _core_stage("runtime-failed")
+        print(
+            "Managed WSL operation timed out"
+            if isinstance(error, subprocess.TimeoutExpired) else str(error),
+            file=sys.stderr, flush=True,
+        )
         return 1
 
 

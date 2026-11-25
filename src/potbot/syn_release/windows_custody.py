@@ -721,14 +721,17 @@ def _parent_environment(
     return values
 
 
-def _health_via_wsl(manager: WslOperatorHost, environment: dict[str, str], client: str) -> bool:
+def _health_via_wsl(
+    manager: WslOperatorHost, environment: dict[str, str], client: str,
+    *, timeout: float = 5,
+) -> bool:
     try:
         result = subprocess.run(
             manager.command(client, ["-Pipe", environment["SYN_HOST_CUSTODY_PIPE"]]),
             input='{"op":"health"}\n',
             capture_output=True,
             text=True,
-            timeout=5,
+            timeout=timeout,
             check=False,
             env=environment,
         )
@@ -744,15 +747,38 @@ def _health_via_wsl(manager: WslOperatorHost, environment: dict[str, str], clien
         return False
 
 
+def _custody_stage(stage: str) -> None:
+    print("POTBOT_CORE_STAGE=" + stage, flush=True)
+
+
+def _tcp_via_wsl(manager: WslOperatorHost, host: str, port: int, *, timeout: float = 4) -> bool:
+    # A bare TCP probe carries no credentials and never grants access.
+    code = (
+        "import socket,sys;"
+        "s=socket.create_connection((sys.argv[1],int(sys.argv[2])),2);s.close()"
+    )
+    try:
+        result = subprocess.run(
+            manager.command("/usr/bin/python3.12", ["-I", "-c", code, host, str(port)]),
+            capture_output=True, timeout=timeout, check=False,
+        )
+        return result.returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
 @contextmanager
 def windows_host_custody(manager: WslOperatorHost) -> Iterator[dict[str, str]]:
     if os.name != "nt":
         raise CapabilityUnavailableError("Windows host custody requires Windows")
+    _custody_stage("custody-quiesce")
     _quiesce_windows_lifetime(manager)
+    _custody_stage("custody-prepare")
     runtime = prepare_windows_host_custody(manager.root)
     project = Path(runtime["project"])
     python = Path(runtime["python"])
     server = Path(runtime["parent_server"])
+    _custody_stage("custody-network")
     host, guest = _wsl_network_identity(manager)
     client = _install_parent_client(manager)
     port = _allocate_parent_port(host)
@@ -765,6 +791,9 @@ def windows_host_custody(manager: WslOperatorHost) -> Iterator[dict[str, str]]:
         _parent_environment(host=host, port=port, session=session, token=token, client=client)
     )
     log_path = manager.root / "parent-keystore-authority.log"
+    _custody_stage("custody-authority")
+    print(f"[Potbot custody] authority log: {log_path}", flush=True)
+    print(f"[Potbot custody] endpoint {host}:{port}; expected WSL peer {guest}", flush=True)
     with log_path.open("wb") as log:
         parent = subprocess.Popen(
             [
@@ -797,7 +826,10 @@ def windows_host_custody(manager: WslOperatorHost) -> Iterator[dict[str, str]]:
             },
         )
         try:
-            for _ in range(100):
+            _custody_stage("custody-tcp")
+            deadline = time.monotonic() + 30
+            connected = False
+            while time.monotonic() < deadline:
                 if parent.poll() is not None:
                     log.flush()
                     try:
@@ -813,13 +845,29 @@ def windows_host_custody(manager: WslOperatorHost) -> Iterator[dict[str, str]]:
                         + suffix
                         + f"; inspect {log_path}"
                     )
-                if _health_via_wsl(manager, environment, client):
-                    break
-                time.sleep(0.1)
+                remaining = deadline - time.monotonic()
+                if not connected and remaining > 0:
+                    connected = _tcp_via_wsl(manager, host, port, timeout=min(4, remaining))
+                    if connected:
+                        _custody_stage("custody-auth")
+                if connected:
+                    remaining = deadline - time.monotonic()
+                    if remaining > 0 and _health_via_wsl(
+                        manager, environment, client, timeout=min(5, remaining)
+                    ):
+                        break
+                time.sleep(0.25)
             else:
-                raise CapabilityUnavailableError(
-                    f"Syn parent keystore authority did not become ready; inspect {log_path}"
+                stage = "custody-auth-failed" if connected else "custody-tcp-failed"
+                _custody_stage(stage)
+                reason = (
+                    "authenticated health check failed"
+                    if connected else "WSL-to-Windows TCP connection failed"
                 )
+                raise CapabilityUnavailableError(
+                    f"Syn parent keystore {reason}; inspect {log_path}"
+                )
+            _custody_stage("custody-ready")
             yield environment
         finally:
             if parent.poll() is None:
