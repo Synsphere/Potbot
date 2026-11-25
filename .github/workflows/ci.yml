@@ -49,6 +49,9 @@ jobs:
       - name: Verify Windows PowerShell 5.1 firewall policy repair and rollback
         shell: powershell
         run: .\tests\windows\custody-firewall-unit.ps1
+      - name: Verify Windows PowerShell 5.1 delayed pipe completion and cancellation
+        shell: powershell
+        run: .\tests\windows\custody-firewall-elevation-unit.ps1 -InMemory
       - name: Verify Windows PowerShell 5.1 elevation result transport
         shell: powershell
         run: .\tests\windows\custody-firewall-elevation-unit.ps1

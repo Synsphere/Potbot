@@ -87,9 +87,16 @@ including the failing operation, PowerShell error identifier and HRESULT, appear
 in Potbot's main service log even after the elevated window closes. The result
 channel carries firewall diagnostics only. It connects before any repair, so
 accepting an abandoned prompt cannot start a new firewall update.
+Cancelled pipe operations receive at most one second of cleanup time; their
+completion event stays alive until the background callback has signaled it.
 Effective-policy verification has a bounded retry, and a failed repair reports
 its original error together with any rollback errors.
-After a repair, startup checks WSL TCP connectivity and the existing authenticated
+After a verified administrator result, startup retries the actual WSL TCP
+connection before performing any further unelevated policy inspection. A
+disagreeing policy view cannot reject a working connection. If all three TCP
+attempts fail, the error identifies the host, port and WSL peer and includes the
+follow-up policy result, or explains why that inspection was unavailable.
+Startup still requires WSL TCP connectivity and the existing authenticated
 custody health response before admitting the WSL runtime.
 
 For Potbot's managed native database, Windows keeps PostgreSQL on

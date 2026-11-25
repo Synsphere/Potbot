@@ -10,6 +10,7 @@ import pytest
 
 from potbot.domain.errors import CapabilityUnavailableError
 from potbot.syn_release import custody_firewall as firewall
+from potbot.syn_release.custody_firewall import _elevate as real_elevate
 
 
 @pytest.fixture
@@ -55,13 +56,57 @@ def test_working_tcp_survives_restricted_policy_inspection(setup_firewall, monke
     assert not elevations
 
 
-def test_blocked_tcp_repairs_then_rechecks_policy_and_connection(setup_firewall, monkeypatch):
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+def test_verified_repair_retries_tcp_before_conflicting_non_admin_policy(
+    setup_firewall, monkeypatch, purpose,
+):
+    manager, options, stages, _elevations = setup_firewall
+    inspections, probes = [], []
+    monkeypatch.setattr(
+        firewall, "_inspect", lambda *_args: inspections.append(purpose) or plan(),
+    )
+    # Keep the real receipt parser: the helper has verified policy even though
+    # the unelevated view continues to report that repair is required.
+    monkeypatch.setattr(firewall, "_elevate", real_elevate)
+    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
+        returncode=0, stdout=json.dumps(repair_receipt(purpose=purpose)), stderr="",
+    ))
+
+    def probe():
+        result = bool(probes)
+        probes.append(result)
+        return result
+
+    firewall.ensure_custody_firewall(manager, **options, purpose=purpose, tcp_probe=probe)
+    assert probes == [False, True]
+    assert inspections == [purpose]
+    assert stages == [f"{purpose}-firewall", f"{purpose}-firewall-admin"]
+
+
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+@pytest.mark.parametrize("failed_retries", [1, 2])
+def test_blocked_tcp_can_recover_during_bounded_post_repair_retries(
+    setup_firewall, monkeypatch, purpose, failed_retries,
+):
     manager, options, stages, elevations = setup_firewall
-    inspections = iter([plan(), plan(False)])
-    probes = iter([False, False, True])
-    monkeypatch.setattr(firewall, "_inspect", lambda *_args: next(inspections))
-    firewall.ensure_custody_firewall(manager, **options, tcp_probe=lambda: next(probes))
-    assert stages == ["custody-firewall", "custody-firewall-admin"]
+    probes, sleeps = [], []
+
+    def inspect(*_args):
+        if probes:
+            pytest.fail("policy inspection must not interrupt live TCP recovery")
+        return plan()
+
+    def probe():
+        result = len(probes) > failed_retries
+        probes.append(result)
+        return result
+
+    monkeypatch.setattr(firewall, "_inspect", inspect)
+    monkeypatch.setattr(firewall.time, "sleep", sleeps.append)
+    firewall.ensure_custody_firewall(manager, **options, purpose=purpose, tcp_probe=probe)
+    assert probes == [False] * (1 + failed_retries) + [True]
+    assert sleeps == [0.5] * failed_retries
+    assert stages == [f"{purpose}-firewall", f"{purpose}-firewall-admin"]
     assert len(elevations) == 1
     request = elevations[0]
     assert request["port"] == 57880
@@ -70,16 +115,25 @@ def test_blocked_tcp_repairs_then_rechecks_policy_and_connection(setup_firewall,
         "installation_id", "host_address", "guest_address", "port", "authority_pid",
         "controller_pid", "controller_created", "programs", "purpose",
     }
-    assert request["purpose"] == "custody"
+    assert request["purpose"] == purpose
 
 
-def test_uac_decline_has_specific_failure_and_no_retry(setup_firewall, monkeypatch):
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+def test_uac_decline_has_specific_failure_and_no_retry(setup_firewall, monkeypatch, purpose):
     manager, options, stages, _elevations = setup_firewall
+    probes = []
     monkeypatch.setattr(firewall, "_inspect", lambda *_args: plan())
     monkeypatch.setattr(firewall, "_elevate", lambda *_args: 1223)
+
+    def probe():
+        result = bool(probes)
+        probes.append(result)
+        return result
+
     with pytest.raises(CapabilityUnavailableError, match="approval was declined"):
-        firewall.ensure_custody_firewall(manager, **options, tcp_probe=lambda: False)
-    assert stages[-1] == "custody-firewall-declined"
+        firewall.ensure_custody_firewall(manager, **options, purpose=purpose, tcp_probe=probe)
+    assert probes == [False]
+    assert stages[-1] == f"{purpose}-firewall-declined"
 
 
 def test_no_uac_when_effective_policy_already_allows_tcp(setup_firewall, monkeypatch):
@@ -135,8 +189,12 @@ def test_access_denied_status_is_distinct_from_other_inspection_failures(monkeyp
 
 
 @pytest.mark.parametrize("failure", [1, subprocess.TimeoutExpired("powershell", 180)])
-def test_failed_or_timed_out_repair_stops_startup(setup_firewall, monkeypatch, failure):
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+def test_failed_or_timed_out_repair_stops_before_another_probe(
+    setup_firewall, monkeypatch, failure, purpose,
+):
     manager, options, stages, _elevations = setup_firewall
+    probes = []
     monkeypatch.setattr(firewall, "_inspect", lambda *_args: plan())
 
     def elevate(*_args):
@@ -145,18 +203,94 @@ def test_failed_or_timed_out_repair_stops_startup(setup_firewall, monkeypatch, f
         return failure
 
     monkeypatch.setattr(firewall, "_elevate", elevate)
+
+    def probe():
+        result = bool(probes)
+        probes.append(result)
+        return result
+
     with pytest.raises(CapabilityUnavailableError):
-        firewall.ensure_custody_firewall(manager, **options, tcp_probe=lambda: False)
-    assert stages[-1] == "custody-firewall-failed"
+        firewall.ensure_custody_firewall(manager, **options, purpose=purpose, tcp_probe=probe)
+    assert probes == [False]
+    assert stages[-1] == f"{purpose}-firewall-failed"
 
 
-def test_repair_is_not_success_until_real_tcp_works(setup_firewall, monkeypatch):
-    manager, options, stages, _elevations = setup_firewall
-    inspections = iter([plan(), plan(False)])
-    monkeypatch.setattr(firewall, "_inspect", lambda *_args: next(inspections))
-    with pytest.raises(CapabilityUnavailableError, match="TCP still fails"):
-        firewall.ensure_custody_firewall(manager, **options, tcp_probe=lambda: False)
-    assert stages[-1] == "custody-firewall-failed"
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+@pytest.mark.parametrize("after_repair", [False, True])
+def test_failed_live_connection_uses_policy_only_after_bounded_retries(
+    setup_firewall, monkeypatch, purpose, after_repair,
+):
+    manager, options, stages, elevations = setup_firewall
+    probes, sleeps = [], []
+
+    def inspect(*_args):
+        if not probes:
+            return plan()
+        assert probes == [False] * 4
+        return plan(after_repair)
+
+    def probe():
+        probes.append(False)
+        assert len(probes) <= 4, "TCP retries exceeded their startup budget"
+        return False
+
+    monkeypatch.setattr(firewall, "_inspect", inspect)
+    monkeypatch.setattr(firewall.time, "sleep", sleeps.append)
+    with pytest.raises(CapabilityUnavailableError) as failure:
+        firewall.ensure_custody_firewall(manager, **options, purpose=purpose, tcp_probe=probe)
+    message = str(failure.value)
+    assert f"{purpose} TCP still fails" in message
+    assert f"{options['guest']} to {options['host']}:{options['port']}" in message
+    if after_repair:
+        assert "non-administrator policy check still requests repair" in message
+        assert "administrator helper's successful verification" in message
+    else:
+        assert "follow-up policy check also permits" in message
+    assert probes == [False] * 4
+    assert sleeps == [0.5, 0.5]
+    assert len(elevations) == 1
+    assert stages[-1] == f"{purpose}-firewall-failed"
+
+
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+@pytest.mark.parametrize("diagnostic_error", [
+    pytest.param(CapabilityUnavailableError("policy unavailable\n" + "x" * 1000), id="policy-error"),
+    pytest.param(firewall._InspectionNeedsAdmin("read access denied"), id="access-denied"),
+    pytest.param(OSError("diagnostic-detail-must-not-appear"), id="os-error"),
+    pytest.param(subprocess.TimeoutExpired("diagnostic-detail-must-not-appear", 30), id="timeout"),
+])
+def test_follow_up_inspection_errors_do_not_replace_failed_tcp(
+    setup_firewall, monkeypatch, purpose, diagnostic_error,
+):
+    manager, options, stages, elevations = setup_firewall
+    probes = []
+
+    def inspect(*_args):
+        if not probes:
+            return plan()
+        assert probes == [False] * 4
+        raise diagnostic_error
+
+    def probe():
+        probes.append(False)
+        assert len(probes) <= 4, "TCP retries exceeded their startup budget"
+        return False
+
+    monkeypatch.setattr(firewall, "_inspect", inspect)
+    with pytest.raises(CapabilityUnavailableError) as failure:
+        firewall.ensure_custody_firewall(manager, **options, purpose=purpose, tcp_probe=probe)
+    message = str(failure.value)
+    assert f"{purpose} TCP still fails" in message
+    assert "Follow-up policy inspection" in message
+    if isinstance(diagnostic_error, CapabilityUnavailableError):
+        assert str(diagnostic_error).splitlines()[0] in message
+        assert "x" * 801 not in message
+    else:
+        assert type(diagnostic_error).__name__ in message
+        assert "diagnostic-detail-must-not-appear" not in message
+    assert probes == [False] * 4
+    assert len(elevations) == 1
+    assert stages[-1] == f"{purpose}-firewall-failed"
 
 
 @pytest.mark.parametrize("address", ["0.0.0.0", "127.0.0.1", "8.8.8.8", "169.254.1.2", "::1"])
@@ -293,26 +427,60 @@ def test_process_exit_zero_without_valid_receipt_cannot_count_as_repair(monkeypa
         firewall._elevate("powershell.exe", {"purpose": "database"})
 
 
-def test_uac_approved_helper_error_reaches_the_startup_failure(setup_firewall, monkeypatch):
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+def test_uac_approved_helper_error_stops_before_another_probe(
+    setup_firewall, monkeypatch, purpose,
+):
     manager, options, stages, _elevations = setup_firewall
+    probes = []
     # Exercise the real elevation result parser through the caller, with the
     # Windows launcher itself stubbed. This is the previously lost error path.
-    monkeypatch.undo()
-    monkeypatch.setattr(firewall, "_programs", lambda _python: [r"C:\uv\python.exe"])
+    monkeypatch.setattr(firewall, "_elevate", real_elevate)
     monkeypatch.setattr(firewall, "_inspect", lambda *_args: plan())
     message = "New-NetFirewallRule: The parameter is incorrect [HRESULT=0x80070057]"
     monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
-        returncode=1, stdout=json.dumps(repair_receipt(code=1, message=message)), stderr="",
+        returncode=1,
+        stdout=json.dumps(repair_receipt(code=1, purpose=purpose, message=message)), stderr="",
     ))
+
+    def probe():
+        result = bool(probes)
+        probes.append(result)
+        return result
+
     with pytest.raises(CapabilityUnavailableError) as failure:
-        firewall.ensure_custody_firewall(
-            manager, **options, purpose="database", tcp_probe=lambda: False,
-        )
+        firewall.ensure_custody_firewall(manager, **options, purpose=purpose, tcp_probe=probe)
     assert message in str(failure.value)
-    assert "database" in str(failure.value)
+    assert purpose in str(failure.value)
     assert "exit 1, repair-policy" in str(failure.value)
     assert "declined" not in str(failure.value)
-    assert stages == ["database-firewall", "database-firewall-admin", "database-firewall-failed"]
+    assert probes == [False]
+    assert stages == [f"{purpose}-firewall", f"{purpose}-firewall-admin", f"{purpose}-firewall-failed"]
+
+
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+@pytest.mark.parametrize("missing_receipt", [False, True])
+def test_exit_zero_without_verified_repair_stops_before_another_probe(
+    setup_firewall, monkeypatch, purpose, missing_receipt,
+):
+    manager, options, stages, _elevations = setup_firewall
+    probes = []
+    monkeypatch.setattr(firewall, "_inspect", lambda *_args: plan())
+    monkeypatch.setattr(firewall, "_elevate", real_elevate)
+    stdout = "" if missing_receipt else json.dumps(repair_receipt(purpose=purpose, repair=True))
+    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
+        returncode=0, stdout=stdout, stderr="",
+    ))
+
+    def probe():
+        result = bool(probes)
+        probes.append(result)
+        return result
+
+    with pytest.raises(CapabilityUnavailableError, match="no valid completion result"):
+        firewall.ensure_custody_firewall(manager, **options, purpose=purpose, tcp_probe=probe)
+    assert probes == [False]
+    assert stages[-1] == f"{purpose}-firewall-failed"
 
 
 def test_elevation_launcher_exception_keeps_its_error_and_exit_code(monkeypatch):

@@ -268,25 +268,37 @@ def ensure_custody_firewall(
                 f"Windows Firewall {purpose} administrator repair failed; review the elevated "
                 "helper's error and the effective firewall policy"
             )
-        try:
-            after = _inspect(powershell, request)
-        except _InspectionNeedsAdmin:
-            # The elevated helper already rechecked effective policy. This
-            # caller may still lack read access; verify the real TCP path below.
-            after = {"repair": False}
-        if after["repair"]:
-            raise CapabilityUnavailableError(
-                f"Windows Firewall {purpose} repair did not become effective"
-            )
-        # Allow Windows Filtering Platform a short convergence window.
+        # _elevate accepts success only after the administrator helper has
+        # verified effective policy and returned a matching completion receipt.
+        # A second, unelevated inspection can disagree with that result. As
+        # before elevation, the live TCP path must decide whether we can proceed.
+        print(f"[Potbot {purpose}] Administrator firewall verification completed; "
+              f"checking WSL TCP from {guest} to {host}:{port}.", flush=True)
+        # Give the real connection a bounded retry after policy verification.
         for attempt in range(3):
             if tcp_probe():
                 return
             if attempt < 2:
                 time.sleep(0.5)
+        # Read-only policy inspection can add context to a failed connection,
+        # but must not prevent a connection test or replace its failure.
+        try:
+            after = _inspect(powershell, request)
+        except CapabilityUnavailableError as exc:
+            detail = " Follow-up policy inspection: " + " ".join(str(exc).split())[:800]
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            detail = f" Follow-up policy inspection could not complete ({type(exc).__name__})."
+        else:
+            detail = (
+                " The non-administrator policy check still requests repair, despite "
+                "the administrator helper's successful verification."
+                if after["repair"] else
+                " The follow-up policy check also permits this connection."
+            )
         raise CapabilityUnavailableError(
-            f"Windows Firewall was repaired, but WSL-to-Windows {purpose} TCP still fails; "
-            "check VPN/third-party filtering and the WSL network"
+            "Windows Firewall was verified by the administrator helper, but "
+            f"WSL-to-Windows {purpose} TCP still fails from {guest} to {host}:{port}."
+            + detail + " Check effective Windows policy, VPN/third-party filtering and the WSL network."
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         stage(prefix + "-failed")

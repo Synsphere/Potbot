@@ -25,6 +25,30 @@ function Wait-FirewallAsync($Pending, $Process, $Clock, [int]$Timeout, [string]$
     }
 }
 
+function Complete-FirewallCancellation($Pipe, $Pending, [bool]$Read) {
+    # Disposing the pipe requests cancellation; its .NET Framework completion
+    # callback still needs to signal the pending event. Never close it early,
+    # including when IsCompleted has changed but the event is not yet signaled.
+    try {
+        $Pipe.Dispose()
+        if ($Pending.AsyncWaitHandle.WaitOne(1000)) {
+            if ($Read) {
+                # EndRead releases the overlapped buffer and event, then may
+                # throw the cancellation error. Keep the original failure.
+                $null = $Pipe.EndRead($Pending)
+            } else {
+                # The connection callback releases its own overlapped state.
+                # EndWaitForConnection cannot run after pipe disposal.
+                $Pending.AsyncWaitHandle.Close()
+            }
+        }
+        # If cancellation has not completed, leave its event alive for the
+        # callback. This one-operation launcher exits after bounded cleanup.
+    } catch {
+        # Cleanup must not replace UAC cancellation or the original diagnostic.
+    }
+}
+
 function Read-FirewallReceipt($Pipe, $Process, $Clock, [int]$Timeout) {
     # One UTF-8 JSON line, at most 16 KiB including its newline. Async reads
     # allow a helper that crashes or stalls to fail without hanging startup.
@@ -32,14 +56,13 @@ function Read-FirewallReceipt($Pipe, $Process, $Clock, [int]$Timeout) {
     $used = 0
     while ($used -lt $buffer.Length) {
         $pending = $Pipe.BeginRead($buffer, $used, $buffer.Length - $used, $null, $null)
-        $completed = $false
+        $endReadCalled = $false
         try {
             Wait-FirewallAsync $pending $Process $Clock $Timeout 'receiving its diagnostic receipt'
+            $endReadCalled = $true
             $count = $Pipe.EndRead($pending)
-            $completed = $true
         } finally {
-            if (-not $completed) { $Pipe.Dispose() }
-            $pending.AsyncWaitHandle.Close()
+            if (-not $endReadCalled) { Complete-FirewallCancellation $Pipe $pending $true }
         }
         if ($count -eq 0) { throw 'Elevated firewall helper closed its pipe without a complete receipt' }
         $end = $used + $count
@@ -73,6 +96,7 @@ function Invoke-FirewallElevation([string]$Encoded, [string]$PipeName, [int]$Tim
     $pipe = $null
     $process = $null
     $connection = $null
+    $endConnectionCalled = $false
     $clock = [Diagnostics.Stopwatch]::StartNew()
     try {
         $pipe = New-FirewallResultPipe $PipeName
@@ -86,8 +110,8 @@ function Invoke-FirewallElevation([string]$Encoded, [string]$PipeName, [int]$Tim
         # remains available even if it finishes before a subsequent query.
         $null = $process.Handle
         Wait-FirewallAsync $connection $process $clock $Timeout 'connecting its diagnostic pipe'
+        $endConnectionCalled = $true
         $pipe.EndWaitForConnection($connection)
-        $connection.AsyncWaitHandle.Close()
         $connection = $null
         $line = Read-FirewallReceipt $pipe $process $clock $Timeout
         $receipt = $line | ConvertFrom-Json
@@ -124,8 +148,11 @@ function Invoke-FirewallElevation([string]$Encoded, [string]$PipeName, [int]$Tim
         [Console]::Error.WriteLine('Windows Firewall elevation failed: ' + $message)
         return 1
     } finally {
-        if ($pipe) { $pipe.Dispose() }
-        if ($connection) { $connection.AsyncWaitHandle.Close() }
+        if ($connection -and -not $endConnectionCalled) {
+            Complete-FirewallCancellation $pipe $connection $false
+        } elseif ($pipe) {
+            $pipe.Dispose()
+        }
         if ($process) { $process.Dispose() }
         $clock.Stop()
     }

@@ -9,6 +9,7 @@ $script:TestPowerShell = [Diagnostics.Process]::GetCurrentProcess().MainModule.F
 $script:WindowsHost = [Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT
 $script:LaunchMode = 'child'
 $script:Children = @()
+$script:CaseNumber = 0
 
 function Assert-True($Condition, [string]$Message) {
     if (-not $Condition) { throw $Message }
@@ -23,6 +24,9 @@ using System.IO;
 using System.Threading;
 public sealed class PotbotFirewallPending : IAsyncResult {
     public int Count;
+    public Exception CompletionError;
+    public bool CancellationRequested;
+    public readonly ManualResetEvent CallbackFinished = new ManualResetEvent(false);
     public object AsyncState { get { return null; } }
     public WaitHandle AsyncWaitHandle { get; private set; }
     public bool CompletedSynchronously { get { return IsCompleted; } }
@@ -30,21 +34,56 @@ public sealed class PotbotFirewallPending : IAsyncResult {
     public PotbotFirewallPending(bool ready, int count) {
         IsCompleted = ready; Count = count; AsyncWaitHandle = new ManualResetEvent(ready);
     }
+    public void CompleteAfterDisposal() {
+        CancellationRequested = true;
+        // Framework marks completion before it signals the event. Keep that
+        // gap deterministic so IsCompleted cannot be used as a cleanup gate.
+        IsCompleted = true;
+        ThreadPool.QueueUserWorkItem(delegate {
+            Thread.Sleep(50);
+            try { ((ManualResetEvent)AsyncWaitHandle).Set(); }
+            catch (Exception error) { CompletionError = error; }
+            finally { CallbackFinished.Set(); }
+        });
+    }
 }
 public sealed class PotbotFirewallTestPipe : MemoryStream {
-    public bool ConnectionReady = true, ReadReady = true, WasDisposed;
+    public bool ConnectionReady = true, ReadReady = true, WasDisposed, ReadFailure;
+    public PotbotFirewallPending ConnectionPending, ReadPending;
+    public int EndReadCalls;
     public int ChunkSize = 16384;
     public PotbotFirewallTestPipe(byte[] bytes) : base(bytes) {}
     public IAsyncResult BeginWaitForConnection(AsyncCallback callback, object state) {
-        return new PotbotFirewallPending(ConnectionReady, 0);
+        return ConnectionPending = new PotbotFirewallPending(ConnectionReady, 0);
     }
-    public void EndWaitForConnection(IAsyncResult pending) {}
+    public void EndWaitForConnection(IAsyncResult pending) {
+        pending.AsyncWaitHandle.WaitOne();
+        pending.AsyncWaitHandle.Close();
+    }
     public override IAsyncResult BeginRead(byte[] bytes, int offset, int count, AsyncCallback callback, object state) {
         int read = ReadReady ? Read(bytes, offset, Math.Min(count, ChunkSize)) : 0;
-        return new PotbotFirewallPending(ReadReady, read);
+        return ReadPending = new PotbotFirewallPending(ReadReady, read);
     }
-    public override int EndRead(IAsyncResult pending) { return ((PotbotFirewallPending)pending).Count; }
-    protected override void Dispose(bool disposing) { WasDisposed = true; base.Dispose(disposing); }
+    public override int EndRead(IAsyncResult pending) {
+        EndReadCalls++;
+        pending.AsyncWaitHandle.WaitOne();
+        pending.AsyncWaitHandle.Close();
+        if (!ReadReady) { throw new IOException("Read was cancelled after pipe disposal"); }
+        if (ReadFailure) { throw new IOException("Simulated completed read failure"); }
+        return ((PotbotFirewallPending)pending).Count;
+    }
+    protected override void Dispose(bool disposing) {
+        if (!WasDisposed) {
+            WasDisposed = true;
+            if (ConnectionPending != null && !ConnectionPending.IsCompleted) {
+                ConnectionPending.CompleteAfterDisposal();
+            }
+            if (ReadPending != null && !ReadPending.IsCompleted) {
+                ReadPending.CompleteAfterDisposal();
+            }
+        }
+        base.Dispose(disposing);
+    }
 }
 public sealed class PotbotFirewallTestProcess : IDisposable {
     public IntPtr Handle { get { return new IntPtr(1); } }
@@ -71,8 +110,11 @@ public sealed class PotbotFirewallTestProcess : IDisposable {
         $script:TestPipe = New-Object PotbotFirewallTestPipe(,$Bytes)
         $script:TestProcess = New-Object PotbotFirewallTestProcess
         $script:TestProcess.ExitCode = $Code
-        if ($Scenario -eq 'crash') { $script:TestPipe.ConnectionReady = $false }
+        if ($Scenario -eq 'crash' -or $script:LaunchMode -in @('declined', 'failure')) {
+            $script:TestPipe.ConnectionReady = $false
+        }
         if ($Scenario -eq 'fragmented') { $script:TestPipe.ChunkSize = 3 }
+        if ($Scenario -eq 'read-error') { $script:TestPipe.ReadFailure = $true }
         if ($Scenario -eq 'stall') {
             $script:TestPipe.ReadReady = $false; $script:TestProcess.HasExited = $false
         }
@@ -86,6 +128,16 @@ public sealed class PotbotFirewallTestProcess : IDisposable {
             Assert-True $script:TestPipe.WasDisposed 'Pipe was not disposed'
             if ($script:LaunchMode -eq 'child') {
                 Assert-True $script:TestProcess.WasDisposed 'Process handle was not disposed'
+            }
+            foreach ($pending in @($script:TestPipe.ConnectionPending, $script:TestPipe.ReadPending)) {
+                if ($pending -and $pending.CancellationRequested) {
+                    Assert-True ($pending.CallbackFinished.WaitOne(2000)) 'Cancellation callback did not finish'
+                    Assert-True ($null -eq $pending.CompletionError) `
+                        ('Cancellation callback signaled an already closed event: ' + $pending.CompletionError)
+                }
+            }
+            if ($Scenario -in @('stall', 'read-error')) {
+                Assert-True ($script:TestPipe.EndReadCalls -eq 1) 'Failed read must release its overlapped buffer once'
             }
             return [pscustomobject]@{ Code=$code; Output=$output.ToString(); Error=$errorOutput.ToString() }
         } finally {
@@ -133,7 +185,9 @@ public sealed class PotbotFirewallTestProcess : IDisposable {
     Assert-True ($result.Error -like '*did not exit after*') 'A stuck process was accepted'
     $result = Invoke-MemoryCase $good 0 'stall'
     Assert-True ($result.Error -like '*Timed out*') 'A stuck read exceeded its deadline'
-    Write-Output 'Custody firewall elevation tests passed (15 in-memory cases).'
+    $result = Invoke-MemoryCase $good 0 'read-error'
+    Assert-True ($result.Error -like '*Simulated completed read failure*') 'Completed read failure was replaced'
+    Write-Output 'Custody firewall elevation tests passed (16 in-memory cases).'
     return
 }
 
@@ -163,6 +217,8 @@ function Start-Process {
 }
 
 function Invoke-Case([string]$Body, [int]$Timeout = 15) {
+    $script:CaseNumber++
+    Write-Host ('Firewall elevation transport case ' + $script:CaseNumber + ' (' + $script:LaunchMode + ')')
     $name = 'potbot-firewall-' + [Guid]::NewGuid().ToString('N')
     $source = $Body.Replace('PIPE_NAME', $name)
     $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($source))
