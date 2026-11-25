@@ -338,6 +338,24 @@ def test_drain_fences_claims_then_waits_for_jobs_and_both_kinds_of_holds(app_env
 def test_protected_receipts_and_claim_trigger_cannot_be_forged(app_env, managed):
     supervisor, _children, nodes = managed
     review = node_review(read_nodes(app_env, nodes))
+    with pytest.raises(ScopeDeniedError):
+        with app_env.db.transaction(app_env.context) as connection:
+            connection.execute(
+                "DELETE FROM node_runtime_controls WHERE node_id=%s", (supervisor.node_id,)
+            )
+    # Exercise the additional row policy independently of default role grants.
+    # This is only this test's generated login in its disposable database.
+    from psycopg import sql
+
+    with admin_connection(app_env.admin_dsn, app_env.schema) as connection:
+        role = connection.execute(
+            "SELECT database_role FROM principals WHERE id=%s", (app_env.context.principal_id,)
+        ).fetchone()["database_role"]
+        connection.execute(
+            sql.SQL("GRANT DELETE ON {} TO {}").format(
+                sql.Identifier(app_env.schema, "node_runtime_controls"), sql.Identifier(role)
+            )
+        )
     with app_env.db.transaction(app_env.context) as connection:
         assert (
             connection.execute(
