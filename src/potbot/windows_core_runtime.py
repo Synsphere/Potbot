@@ -287,6 +287,10 @@ progress "service-runtime-probe"
   'import potbot.tools.scoped_provision; import potbot.tools.scoped_launcher'
 /usr/bin/python3.12 -I -B -c \
   'import importlib.metadata; import dbus_next; assert importlib.metadata.version("dbus-next") == "0.2.3"'
+/usr/sbin/runuser -u synoperator -- \
+  /usr/bin/python3.12 -I -B -c \
+  'import sys; sys.path.insert(0, sys.argv[1]); from potbot.syn_release.secret_service_proxy import _build_interfaces; _build_interfaces()' \
+  "$source_root/src"
 
 progress "complete"
 printf '%s\n' "$source_root/.venv/bin/python"

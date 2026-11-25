@@ -178,6 +178,9 @@ def test_cancellation_before_startup_does_not_launch_children(monkeypatch):
 def test_secret_service_probe_timeout_reaps_started_process(monkeypatch, tmp_path):
     from potbot import wsl_core_runtime as runtime
 
+    module = tmp_path / "src/potbot/syn_release/secret_service_proxy.py"
+    module.parent.mkdir(parents=True)
+    module.write_text("# Layout fixture; the child is replaced by a real sleeper below.\n")
     children = []
     popen = subprocess.Popen
 

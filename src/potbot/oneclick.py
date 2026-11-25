@@ -394,7 +394,56 @@ def _healthy(config: Any) -> bool:
                 return False
     except (OSError, ValueError, json.JSONDecodeError):
         return False
-    return _probe(_GUI_URL + "/api/ui/auth/status", json_key="configured")
+    return (
+        _probe(_GUI_URL + "/api/ui/auth/status", json_key="configured")
+        and _xpra_readiness(config)[0]
+    )
+
+
+def _xpra_readiness(config: Any) -> tuple[bool, str]:
+    """Only the live owner's authenticated Xpra result can complete startup."""
+    if not config.frontend_enabled:
+        return True, ""
+    from potbot.desktop_state import _XPRA_MESSAGES, _xpra_status
+    from potbot.instance import runtime_home
+
+    root = project_root()
+    receipt = runtime_home(root) / "service.json"
+    status = root / ".potbot" / "service" / "xpra-status.json"
+    try:
+        if owner_root("service", root=root) != root.resolve():
+            return False, ""
+        with receipt.open("rb") as stream:
+            generation = stream.read(8193)
+        if not generation or len(generation) > 8192:
+            return False, ""
+        # The lease receipt is atomically replaced at each supervisor start.
+        # A previous generation's recently-ready/failed file must not count
+        # while its replacement is still preparing WSL.
+        if status.stat().st_mtime_ns < receipt.stat().st_mtime_ns:
+            return False, ""
+        ready, detail, failed = _xpra_status(status, config.workspace_id)
+        with receipt.open("rb") as stream:
+            unchanged = stream.read(8193) == generation
+        if not unchanged or not is_running("service", root=root):
+            return False, ""
+    except (DomainError, OSError, ValueError):
+        return False, ""
+    terminal = {
+        _XPRA_MESSAGES[stage] for stage in (
+            "custody-tcp-failed", "custody-auth-failed", "custody-firewall-failed",
+            "custody-firewall-declined", "restart-limit", "startup-timeout",
+        )
+    }
+    # runtime-failed still has a supervisor retry budget; bridge forwarding can
+    # also be transient. Abort only when the supervisor has blocked startup.
+    return ready, detail if failed and detail in terminal else ""
+
+
+def _raise_xpra_failure(config: Any) -> None:
+    _, failure = _xpra_readiness(config)
+    if failure:
+        raise CapabilityUnavailableError("Potbot Xpra startup failed: " + failure)
 
 
 def _gui_accepts_current_password() -> bool:
@@ -467,6 +516,7 @@ def _wait_for_existing_service(config: Any, lease: InstanceLease, *, open_browse
             if open_browser and sys.stdout.isatty():
                 _open_browser()
             return 0
+        _raise_xpra_failure(config)
         if not is_running("service", root=lease.root):
             raise CapabilityUnavailableError(
                 "The existing Potbot service exited during startup; inspect its logs."
@@ -497,6 +547,7 @@ def _foreground(config: Any, *, open_browser: bool = True, lease: InstanceLease)
                     lease.check_stop()
                     lease.stopped.wait(0.5)
                 return child.returncode
+            _raise_xpra_failure(config)
             lease.stopped.wait(1)
         raise CapabilityUnavailableError("Backend/GUI did not become healthy; inspect service logs")
     except KeyboardInterrupt:
@@ -606,10 +657,11 @@ def _start_owned(root: Path, lease: InstanceLease, *, open_browser: bool) -> int
         lease.check_stop()
         if _healthy(config):
             _require_gui_login()
-            _notice("Backend and GUI are ready: " + _GUI_URL)
+            _notice("Backend, GUI and Xpra are ready: " + _GUI_URL)
             if open_browser and sys.stdout.isatty():
                 _open_browser()
             return 0
+        _raise_xpra_failure(config)
         lease.stopped.wait(1)
     raise CapabilityUnavailableError("Potbot service did not become healthy; run start.* logs")
 
@@ -724,6 +776,7 @@ def _change_password() -> int:
                 _require_gui_login()
                 _notice("Potbot GUI restarted; sign in with the password you chose")
                 return 0
+            _raise_xpra_failure(config)
             time.sleep(1)
         raise CapabilityUnavailableError(
             "GUI password saved but the service did not become healthy"

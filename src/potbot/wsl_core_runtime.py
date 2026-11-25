@@ -925,21 +925,38 @@ def _watch_parent_lifetime(stopped: threading.Event, fd: int = 0) -> None:
         stopped.set()
 
 
+def _secret_service_command(source: Path) -> list[str]:
+    # The system interpreter supplies Ubuntu's dbus-next. It has no Potbot
+    # installation, and -I deliberately ignores cwd, user site and PYTHONPATH.
+    # Import only the src directory from the already protected staged tree.
+    import_root = source / "src"
+    module = import_root / "potbot" / "syn_release" / "secret_service_proxy.py"
+    try:
+        valid = (
+            source == source.resolve(strict=True)
+            and import_root == import_root.resolve(strict=True)
+            and import_root.is_dir()
+            and module == module.resolve(strict=True)
+            and module.is_file()
+        )
+    except OSError:
+        valid = False
+    if not valid:
+        raise CapabilityUnavailableError("Staged Secret Service source package is missing or invalid")
+    code = (
+        "import sys;"
+        "sys.path.insert(0,sys.argv[1]);"
+        "from potbot.syn_release.secret_service_proxy import main;"
+        "raise SystemExit(main())"
+    )
+    return ["/usr/bin/python3.12", "-I", "-B", "-c", code, str(import_root)]
+
+
 def _start_secret_service(
     source: Path, env: dict[str, str], stopped: threading.Event
 ) -> subprocess.Popen[bytes]:
-    if source != source.resolve(strict=True) or source.is_symlink():
-        raise CapabilityUnavailableError("Core source root for Secret Service is invalid")
-    code = (
-        "import sys;"
-        + "sys.path.insert(0,"
-        + repr(str(source))
-        + ");"
-        + "from potbot.syn_release.secret_service_proxy import main;"
-        + "raise SystemExit(main())"
-    )
     process = subprocess.Popen(
-        ["/usr/bin/python3.12", "-I", "-B", "-c", code],
+        _secret_service_command(source),
         env=env,
         stdin=subprocess.DEVNULL,
     )

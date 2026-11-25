@@ -2,20 +2,71 @@
 
 from __future__ import annotations
 
+import signal
 import sys
 import threading
+from collections.abc import Iterator
+from contextlib import contextmanager
+from dataclasses import dataclass
 from queue import Empty, SimpleQueue
 from typing import Any
 
 from potbot.desktop_state import WEB_UI_URL, DesktopStatus, probe_status
 from potbot.domain.errors import CapabilityUnavailableError, DomainError
-from potbot.instance import InstanceBusy, InstanceLease, StartupCancelled
+from potbot.instance import InstanceBusy, InstanceLease, StartupCancelled, request_stop
+
+
+@dataclass
+class _DesktopInterrupt:
+    requested: bool = False
+    dispatched: bool = False
+
+    def handle(self, _signum: int, _frame: object) -> None:
+        # Python can deliver this inside a Qt callback or a lock operation.
+        # Defer event locks, file I/O and every Qt call to the normal timer.
+        self.requested = True
+
+    def dispatch(self, lease: InstanceLease) -> None:
+        if not self.requested or self.dispatched:
+            return
+        self.dispatched = True
+        lease.stopped.set()
+        try:
+            # Wake a foreground worker's cleanup and a manager-owned service.
+            # The full stop after Qt exits also covers a queued task that does
+            # not yet own a service lease at the time of this early request.
+            request_stop("service", root=lease.root)
+        except (DomainError, OSError):
+            # Final stop reports and verifies failures outside the Qt callback.
+            pass
+
+
+@contextmanager
+def _capture_interrupt() -> Iterator[_DesktopInterrupt]:
+    if threading.current_thread() is not threading.main_thread():
+        raise CapabilityUnavailableError("The native desktop must run on the main thread.")
+    interrupt = _DesktopInterrupt()
+    previous = signal.signal(signal.SIGINT, interrupt.handle)
+    try:
+        yield interrupt
+    finally:
+        signal.signal(signal.SIGINT, previous)
 
 
 def main() -> int:
     try:
-        with InstanceLease("desktop") as lease:
-            return _run_desktop(lease)
+        with _capture_interrupt() as interrupt:
+            with InstanceLease("desktop") as lease:
+                result = _run_desktop(lease, interrupt)
+            if interrupt.requested:
+                # _stop waits for the desktop lease, so release it first. Keep
+                # SIGINT trapped while the existing stop path verifies tasks,
+                # WSL and PostgreSQL instead of interrupting that cleanup.
+                from potbot.oneclick import main as oneclick_main
+
+                stopped = oneclick_main(["stop"])
+                return 130 if stopped == 0 else stopped
+            return result
     except InstanceBusy as error:
         print("[Potbot] " + str(error), file=sys.stderr, flush=True)
         return 1
@@ -24,7 +75,7 @@ def main() -> int:
         return 130
 
 
-def _run_desktop(lease: InstanceLease) -> int:
+def _run_desktop(lease: InstanceLease, interrupt: _DesktopInterrupt) -> int:
     try:
         from PySide6.QtCore import Qt, QTimer, QUrl
         from PySide6.QtGui import QDesktopServices
@@ -267,6 +318,7 @@ def _run_desktop(lease: InstanceLease) -> int:
                 )
 
         def _refresh(self) -> None:
+            interrupt.dispatch(lease)
             if lease.stopped.is_set():
                 self.retry_button.setEnabled(False)
                 self.banner.setText("Stopping Potbot…")

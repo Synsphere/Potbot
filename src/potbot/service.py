@@ -431,6 +431,23 @@ _XPRA_STAGES = {
     "custody-firewall", "custody-firewall-admin", "custody-firewall-declined",
     "custody-firewall-failed",
 }
+_XPRA_CUSTODY_FAILURES = {
+    "custody-tcp-failed", "custody-auth-failed",
+    "custody-firewall-declined", "custody-firewall-failed",
+}
+
+
+def _xpra_display_stage(stage: str, *, ready: bool, blocked: bool, timed_out: bool) -> str:
+    """Distinguish a retryable child failure from an exhausted restart budget."""
+    if ready:
+        return "ready"
+    if blocked:
+        return stage if stage in _XPRA_CUSTODY_FAILURES | {"startup-timeout"} else "restart-limit"
+    if stage == "xpra-wsl-ready":
+        return "host-bridge-unreachable"
+    if timed_out:
+        return "startup-timeout"
+    return stage
 
 
 def _xpra_health(workspace: str, token: str) -> bool:
@@ -787,10 +804,7 @@ def _supervise_owned(config: ServiceConfig, lease: Any) -> int:
                     if previous is not None:
                         xpra_failures += 1
                         with xpra_lock:
-                            terminal = xpra_stage in {
-                                "custody-tcp-failed", "custody-auth-failed",
-                                "custody-firewall-declined", "custody-firewall-failed",
-                            }
+                            terminal = xpra_stage in _XPRA_CUSTODY_FAILURES
                         if terminal or xpra_failures >= 3:
                             xpra_blocked = True
                             events.emit("service.xpra_blocked", recovery_required=True)
@@ -839,19 +853,15 @@ def _supervise_owned(config: ServiceConfig, lease: Any) -> int:
                     stage = xpra_stage
                 if ready:
                     xpra_failures = 0
-                    stage = "ready"
-                elif xpra_blocked:
-                    if not (stage.endswith("-failed") or stage == "custody-firewall-declined"):
-                        stage = "restart-limit"
-                elif stage == "xpra-wsl-ready":
-                    stage = "host-bridge-unreachable"
-                elif (
+                # Report a whole-launch timeout without forcibly reaping an
+                # operator that might own indeterminate workspace operations.
+                timed_out = bool(
                     xpra_process is not None and xpra_process.poll() is None
                     and time.monotonic() - xpra_started > 900
-                ):
-                    # Report a whole-launch timeout without forcibly reaping an
-                    # operator that might own indeterminate workspace operations.
-                    stage = "startup-timeout"
+                )
+                stage = _xpra_display_stage(
+                    stage, ready=ready, blocked=xpra_blocked, timed_out=timed_out,
+                )
                 _write_xpra_status(home, config.workspace_id, stage, ready)
             stopped.wait(0.5 if operator_attachment is not None else 5)
     finally:

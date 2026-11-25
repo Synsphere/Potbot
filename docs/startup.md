@@ -45,6 +45,13 @@ uv sync --locked --extra postgres --extra semantics --extra credentials --dev
 lock deliberately; the launcher does not silently resolve a new dependency set.
 The scripts propagate failed installation and application exit codes.
 
+Startup reports readiness only after the authenticated backend, GUI and Xpra
+bridge are ready. Xpra status must belong to the live supervisor and current
+workspace. A terminal custody error or exhausted Xpra restart budget ends the
+startup wait with a diagnostic. During WSL preparation, the launcher also checks
+that the system Python interpreter can import the staged Secret Service package
+and construct its D-Bus interfaces as the service account.
+
 ## Windows firewall and instance control
 
 `start.bat` and `start.ps1` check the Windows Firewall when the managed custody
@@ -83,6 +90,10 @@ Stop from either Command Prompt or PowerShell, including when startup is incompl
 the frontend. The optional `stop.ps1 -TimeoutSeconds 90` controls how long it
 waits for the launcher. An in-flight dependency installation is allowed to finish
 its current command, then cancelled before the application starts.
+
+Ctrl+C in the native desktop's launch terminal requests the same complete stop
+after the desktop releases its instance lock. Repeated Ctrl+C does not interrupt
+that cleanup.
 
 Shutdown signals the startup worker, desktop and service before waiting for them
 to release their OS locks. It also handles a verified older scheduled task and
