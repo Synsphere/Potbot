@@ -42,6 +42,7 @@ def test_exhausted_runtime_failure_reaches_startup_waiter(monkeypatch, tmp_path)
 @pytest.mark.parametrize("stage", [
     "custody-tcp-failed", "custody-auth-failed", "custody-firewall-failed",
     "custody-firewall-declined", "startup-timeout",
+    "database-firewall-declined", "database-firewall-failed", "database-failed",
 ])
 def test_terminal_failure_keeps_its_specific_diagnostic(stage):
     assert service._xpra_display_stage(

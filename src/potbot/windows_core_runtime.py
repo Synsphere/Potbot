@@ -4,14 +4,16 @@ The native Windows service continues to own PostgreSQL, API, hosted workers and
 the Next.js UI.  This module provisions and supervises the mandatory Linux-only
 operator/Xpra/sandbox layer inside Potbot's already-owned WSL distribution.
 
-No UI/API/database secret is copied into WSL.  Only the ephemeral Xpra bridge
-bearer is inherited by the one WSL child through WSLENV.
+The restricted application DSN and ephemeral runtime capabilities are inherited
+by the one WSL child through WSLENV. Administrative database credentials remain
+on Windows, and keystore operations use the authenticated parent TCP authority.
 """
 
 from __future__ import annotations
 
 import hashlib
 import io
+import json
 import os
 import re
 import stat
@@ -20,13 +22,14 @@ import sys
 import tarfile
 import threading
 import time
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
+from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, TextIO
 
 from potbot.dependencies import project_root
-from potbot.domain.errors import CapabilityUnavailableError, StateMismatchError
+from potbot.domain.errors import CapabilityUnavailableError, DomainError, StateMismatchError
 
 if TYPE_CHECKING:
     from potbot.service import ServiceConfig
@@ -270,7 +273,7 @@ test -f "$UV_PROJECT_ENVIRONMENT/bin/python"
 test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"
 umask 0027
 "$uv_bin" sync --locked --no-dev --no-editable --link-mode copy \
-  --extra web --extra security --extra semantics --extra credentials --extra skills \
+  --extra web --extra security --extra semantics --extra credentials --extra skills --extra postgres \
   --python "$UV_PROJECT_ENVIRONMENT/bin/python"
 test -x "$UV_PROJECT_ENVIRONMENT/bin/python"
 test ! -L "$UV_PROJECT_ENVIRONMENT/bin/python"
@@ -284,7 +287,7 @@ test -z "$(find "$UV_PROJECT_ENVIRONMENT" ! -group "$service_gid" -print -quit)"
 progress "service-runtime-probe"
 /usr/sbin/runuser -u synoperator -- \
   "$source_root/.venv/bin/python" -I -B -c \
-  'import potbot.tools.scoped_provision; import potbot.tools.scoped_launcher'
+  'import psycopg; from psycopg import pq; assert pq.version() > 0; import potbot.tools.scoped_provision; import potbot.tools.scoped_launcher; import potbot.tools.ai_workspace_operator; from potbot.context.operator_bootstrap import default_context_manager'
 /usr/bin/python3.12 -I -B -c \
   'import importlib.metadata; import dbus_next; assert importlib.metadata.version("dbus-next") == "0.2.3"'
 /usr/sbin/runuser -u synoperator -- \
@@ -717,6 +720,108 @@ def _wsl_environment(
     return env
 
 
+@contextmanager
+def _windows_database_connection(
+    manager: WslOperatorHost, custody: dict[str, str], application_dsn: str,
+) -> Iterator[str]:
+    """Keep the native database on loopback while admitting its WSL operator."""
+    from potbot.syn_release.custody_firewall import ensure_custody_firewall
+    from potbot.syn_release.windows_custody import (
+        _process_creation_filetime,
+        _tcp_via_wsl,
+        _wsl_network_identity,
+    )
+    from potbot.wsl_postgres import PostgresRelay, managed_loopback_target, rewrite_for_relay
+
+    last_stage = "database-prepare"
+
+    def stage(value: str) -> None:
+        nonlocal last_stage
+        last_stage = value
+        print("POTBOT_CORE_STAGE=" + value, flush=True)
+
+    stage("database-prepare")
+    with ExitStack() as resources:
+        try:
+            target = managed_loopback_target(application_dsn, root=project_root())
+            dsn = application_dsn
+            if target is not None:
+                host, guest = _wsl_network_identity(manager)
+                if host != custody.get("POTBOT_PARENT_KEYSTORE_HOST"):
+                    raise StateMismatchError("Managed WSL network changed during database preparation")
+                relay = resources.enter_context(PostgresRelay(host, guest, target=target))
+                ensure_custody_firewall(
+                    manager, python=Path(sys.executable), host=host, guest=guest, port=relay.port,
+                    authority_pid=os.getpid(), controller_created=_process_creation_filetime(),
+                    tcp_probe=lambda: _tcp_via_wsl(manager, host, relay.port), stage=stage,
+                    purpose="database",
+                )
+                dsn = rewrite_for_relay(application_dsn, host, relay.port)
+            # Remote databases retain their exact connection options and do
+            # not need a Windows loopback relay or a local firewall exception.
+        except (DomainError, OSError, ValueError):
+            if last_stage not in {"database-firewall-declined", "database-firewall-failed"}:
+                stage("database-failed")
+            raise
+        # Failures inside the guest-launch body keep their own stage. The relay
+        # stays open until that body's shutdown and wait have completed.
+        yield dsn
+
+
+_DATABASE_PROBE = r"""import json, os, re, sys
+try:
+    import psycopg
+    with psycopg.connect(
+        os.environ['POTBOT_DSN'], connect_timeout=5,
+        options='-c statement_timeout=5000 -c lock_timeout=1000',
+    ) as connection:
+        if connection.execute('SELECT 1').fetchone() != (1,):
+            raise RuntimeError('unexpected probe result')
+    print(json.dumps({'ready': True}))
+except Exception as error:
+    name = type(error).__name__
+    name = name if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,95}', name) else 'Exception'
+    state = getattr(error, 'sqlstate', None)
+    state = state if isinstance(state, str) and re.fullmatch(r'[0-9A-Z]{5}', state) else None
+    print(json.dumps({'ready': False, 'error_type': name, 'sqlstate': state}))
+    sys.exit(1)
+"""
+
+
+def _probe_wsl_database(
+    manager: WslOperatorHost, python: str, environment: dict[str, str],
+) -> None:
+    """Verify the actual guest login without printing its connection string."""
+    print("POTBOT_CORE_STAGE=database-health", flush=True)
+    try:
+        result = subprocess.run(
+            manager.command(python, ["-I", "-B", "-c", _DATABASE_PROBE]),
+            env=environment, stdin=subprocess.DEVNULL, capture_output=True,
+            text=True, timeout=20, check=False,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+        record = json.loads(result.stdout) if len(result.stdout) <= 4096 else None
+        if result.returncode == 0 and record == {"ready": True}:
+            print("POTBOT_CORE_STAGE=database-ready", flush=True)
+            return
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        record = None
+    detail = ""
+    if isinstance(record, dict):
+        name = record.get("error_type")
+        if isinstance(name, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,95}", name):
+            detail = " (" + name
+            state = record.get("sqlstate")
+            if isinstance(state, str) and re.fullmatch(r"[0-9A-Z]{5}", state):
+                detail += ", SQLSTATE " + state
+            detail += ")"
+    print("POTBOT_CORE_STAGE=database-failed", flush=True)
+    raise CapabilityUnavailableError(
+        "Managed WSL cannot authenticate to the application database" + detail
+        + "; inspect the Windows PostgreSQL log and configured application connection"
+    )
+
+
 def _supervise_windows_core_runtime(python: str, state: str) -> int:
     if os.name != "nt":
         raise CapabilityUnavailableError("Windows core runtime supervisor requires Windows")
@@ -729,32 +834,34 @@ def _supervise_windows_core_runtime(python: str, state: str) -> int:
 
     manager = WslOperatorHost()
     with windows_host_custody(manager) as custody_environment:
-        print("POTBOT_CORE_STAGE=wsl-launch", flush=True)
-        environment = _wsl_environment(custody_environment, token, application_dsn)
-        process = subprocess.Popen(
-            manager.command(
-                python,
-                [
-                    "-I", "-B", "-m", "potbot.wsl_core_runtime", "run", "--state", state,
-                    "--parent-stdin",
-                ],
-            ),
-            env=environment,
-            stdin=subprocess.PIPE,
-        )
-        try:
-            # This pipe carries no requests, credentials or other payload. Its
-            # sole writer belongs to this Windows process. Closing it (including
-            # TerminateProcess/job cleanup) tells the guest to stop its children.
-            return process.wait()
-        finally:
-            if process.stdin is not None:
-                process.stdin.close()
+        with _windows_database_connection(manager, custody_environment, application_dsn) as dsn:
+            environment = _wsl_environment(custody_environment, token, dsn)
+            _probe_wsl_database(manager, python, environment)
+            print("POTBOT_CORE_STAGE=wsl-launch", flush=True)
+            process = subprocess.Popen(
+                manager.command(
+                    python,
+                    [
+                        "-I", "-B", "-m", "potbot.wsl_core_runtime", "run", "--state", state,
+                        "--parent-stdin",
+                    ],
+                ),
+                env=environment,
+                stdin=subprocess.PIPE,
+            )
             try:
-                process.wait(timeout=25)
-            except subprocess.TimeoutExpired:
-                process.terminate()
-                process.wait(timeout=5)
+                # This pipe carries no requests, credentials or other payload.
+                # Its closure tells the guest to stop its children. Keep the
+                # database relay and custody alive until that cleanup finishes.
+                return process.wait()
+            finally:
+                if process.stdin is not None:
+                    process.stdin.close()
+                try:
+                    process.wait(timeout=25)
+                except subprocess.TimeoutExpired:
+                    process.terminate()
+                    process.wait(timeout=5)
 
 
 def _stop_owned_distribution(manager: WslOperatorHost) -> bool:
@@ -928,6 +1035,8 @@ def prepare_windows_core_runtime(config: ServiceConfig, token: str) -> WindowsCo
             config.workspace_id,
             "--principal-id",
             config.principal_id,
+            "--schema",
+            config.schema,
             "--source-root",
             f"/var/lib/potbot/core-source/{source_sha}",
             "--source-sha256",
@@ -977,10 +1086,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.action == "supervise":
             return _supervise_windows_core_runtime(args.python, args.state)
-    except (
-        CapabilityUnavailableError, StateMismatchError, OSError, ValueError,
-        subprocess.TimeoutExpired,
-    ) as error:
+    except (DomainError, OSError, ValueError, subprocess.TimeoutExpired) as error:
         print(
             "Managed WSL startup operation timed out"
             if isinstance(error, subprocess.TimeoutExpired) else str(error),

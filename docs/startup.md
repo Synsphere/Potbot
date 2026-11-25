@@ -52,6 +52,12 @@ startup wait with a diagnostic. During WSL preparation, the launcher also checks
 that the system Python interpreter can import the staged Secret Service package
 and construct its D-Bus interfaces as the service account.
 
+The WSL production environment includes the PostgreSQL driver and checks its
+native adapter before starting the operator. Workspace, principal and schema
+are handed over in a private `operator-context.json` beside the WSL controller
+ledger. This receipt contains no credentials; the operator still verifies its
+restricted database login and workspace membership.
+
 ## Windows firewall and instance control
 
 `start.bat` and `start.ps1` check the Windows Firewall when the managed custody
@@ -76,6 +82,24 @@ review. Firewall profiles and the default inbound policy are not disabled.
 Declining UAC reports a specific failure and does not produce a prompt loop.
 After a repair, startup checks WSL TCP connectivity and the existing authenticated
 custody health response before admitting the WSL runtime.
+
+For Potbot's managed native database, Windows keeps PostgreSQL on
+`127.0.0.1:55436`. The core supervisor provides a temporary TCP relay on the
+current WSL host interface, accepting only the current WSL guest and forwarding
+only to that fixed database endpoint. It verifies the owned cluster and its
+SCRAM authentication configuration first. A separate `Potbot WSL Database`
+firewall rule uses the same live-listener check and conditional UAC repair.
+The restricted application connection is tested from WSL before the operator
+starts, and the relay remains available until the guest's shutdown completes.
+
+An explicitly configured remote database retains its connection parameters.
+Service files, Unix sockets and multiple-host database configurations are not
+accepted by this managed WSL handoff. The original connection stays in the
+Windows vault; only the per-run WSL environment receives the relay address.
+
+Operator failures include a startup stage, exception class and bounded code
+locations in the service log. These diagnostics omit exception messages,
+local variables, passwords, connection strings and absolute file paths.
 
 Stop from either Command Prompt or PowerShell, including when startup is incomplete:
 

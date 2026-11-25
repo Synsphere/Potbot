@@ -433,6 +433,7 @@ def _xpra_readiness(config: Any) -> tuple[bool, str]:
         _XPRA_MESSAGES[stage] for stage in (
             "custody-tcp-failed", "custody-auth-failed", "custody-firewall-failed",
             "custody-firewall-declined", "restart-limit", "startup-timeout",
+            "database-firewall-declined", "database-firewall-failed", "database-failed",
         )
     }
     # runtime-failed still has a supervisor retry budget; bridge forwarding can

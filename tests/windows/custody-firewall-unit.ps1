@@ -33,7 +33,8 @@ function New-TestRule([string]$Name, [string]$Program = 'C:\uv\python.exe') {
         }
     }
 }
-function Assert-LiveEndpoint($Request) { return 'C:\uv\python.exe' }
+$script:LiveProgram = 'C:\uv\python.exe'
+function Assert-LiveEndpoint($Request) { return $script:LiveProgram }
 function Get-NetIPAddress { [pscustomobject]@{ InterfaceIndex=1 } }
 function Get-NetConnectionProfile { [pscustomobject]@{ NetworkCategory='Private' } }
 function Get-NetFirewallProfile { $script:Profiles }
@@ -72,9 +73,10 @@ function Get-NetFirewallSecurityFilter {
     param([Parameter(ValueFromPipeline)]$Rule) process { $Rule.SecurityFilter }
 }
 function New-NetFirewallRule {
-    param($Name, $Program, $LocalAddress, $RemoteAddress, $Description, $Group)
+    param($Name, $Program, $LocalAddress, $RemoteAddress, $Description, $Group, $DisplayName)
     $new = New-TestRule $Name $Program
     $new.Profile = 0; $new.Action = 'Allow'; $new.Description = $Description; $new.Group = $Group
+    $new.DisplayName = $DisplayName
     $new.AddressFilter.LocalAddress = $LocalAddress
     $new.AddressFilter.RemoteAddress = $RemoteAddress
     $script:Rules += $new
@@ -165,6 +167,34 @@ Assert-Equal (Test-AddressScope @('172.27.32.2-172.27.32.9') '172.27.32.1') 0 'R
 Assert-Equal (Test-AddressScope @('LocalSubnet') '172.27.32.1') (-1) 'Dynamic scope must stay unknown'
 Assert-Equal (Test-PortScope @('49152-65535') 57880) 1 'Port range matching failed'
 
+# A database relay has an independent stable rule. Original requests without a
+# purpose keep custody's previously installed rule identity exactly.
+$oldIdentity = Get-FirewallIdentity $request
+Assert-Equal $oldIdentity.name ('Potbot-Custody-' + $request.installation_id) 'Custody identity changed'
+Assert-Equal $oldIdentity.description ('Potbot managed WSL custody firewall v1; host ' +
+    $request.installation_id) 'Custody description changed'
+$custodyRule = $script:Rules | Where-Object Name -eq $oldIdentity.name
+$script:LiveProgram = 'C:\relay\python.exe'
+$databaseRequest = [pscustomobject]@{
+    purpose='database'; installation_id=$request.installation_id
+    host_address=$request.host_address; guest_address=$request.guest_address; port=53117
+}
+$databasePlan = Get-FirewallPlan $databaseRequest
+Assert-Equal $databasePlan.name ('Potbot-Database-' + $request.installation_id) 'Database rule identity'
+Assert-Equal $databasePlan.profile 'potbot.database-firewall/1' 'Database result profile'
+Invoke-FirewallRepair $databaseRequest $databasePlan
+$databaseRule = $script:Rules | Where-Object Name -eq $databasePlan.name
+Assert-Equal $databaseRule.DisplayName 'Potbot WSL Database' 'Database display name'
+Assert-Equal $databaseRule.Group 'Potbot WSL database' 'Database rule group'
+Assert-Equal $databaseRule.Application.Program 'C:\relay\python.exe' 'Database exact listener program'
+Assert-Equal $custodyRule.Application.Program 'C:\uv\python.exe' 'Database repair changed custody'
+Assert-Equal @($script:Rules | Where-Object Action -eq 'Allow').Count 2 'Purpose rules must coexist'
+$databaseRequest.port = 53118
+Assert-Equal (Get-FirewallPlan $databaseRequest).repair $false 'Database ephemeral port should reuse rule'
+$databaseRequest.purpose = 'arbitrary'
+Assert-Throws { Get-FirewallPlan $databaseRequest } 'Invalid managed firewall purpose'
+$script:LiveProgram = 'C:\uv\python.exe'
+
 # A delayed UAC approval cannot repair an abandoned startup or an unrelated
 # process that happens to reuse the same port/PID.
 $script:StartTime = [datetime]'2026-11-25T03:00:00Z'
@@ -184,6 +214,7 @@ function Get-CimInstance {
 }
 $live = [pscustomobject]@{
     host_address='172.27.32.1'; port=57880; controller_pid=700; authority_pid=800
+    installation_id=('a' * 32)
     controller_created=$script:StartTime.ToUniversalTime().ToFileTimeUtc().ToString()
     programs=@('C:\venv\python.exe', 'C:\uv\python.exe')
 }
@@ -196,4 +227,10 @@ Assert-Throws { & $script:ValidateEndpoint $live } 'prepared Python runtime'
 $script:ListenerImage = 'C:\uv\python.exe'
 $script:Ancestor = 999
 Assert-Throws { & $script:ValidateEndpoint $live } 'does not belong to this Potbot startup'
+$live | Add-Member -NotePropertyName purpose -NotePropertyValue 'database'
+$live.controller_pid = 900
+$live.authority_pid = 900
+Assert-Equal (& $script:ValidateEndpoint $live) 'C:\uv\python.exe' 'Same-process relay ownership'
+$script:StartTime = $script:StartTime.AddSeconds(1)
+Assert-Throws { & $script:ValidateEndpoint $live } 'startup owner has changed'
 Write-Output 'Custody firewall policy tests passed.'

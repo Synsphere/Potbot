@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from pathlib import Path
 from types import SimpleNamespace
@@ -67,8 +68,9 @@ def test_blocked_tcp_repairs_then_rechecks_policy_and_connection(setup_firewall,
     assert request["programs"] == [r"C:\uv\python.exe"]
     assert set(request) == {
         "installation_id", "host_address", "guest_address", "port", "authority_pid",
-        "controller_pid", "controller_created", "programs",
+        "controller_pid", "controller_created", "programs", "purpose",
     }
+    assert request["purpose"] == "custody"
 
 
 def test_uac_decline_has_specific_failure_and_no_retry(setup_firewall, monkeypatch):
@@ -198,3 +200,57 @@ def test_actual_venv_and_base_interpreter_are_discovered(monkeypatch):
     monkeypatch.setenv("SystemRoot", "C:/Windows")
     monkeypatch.setenv("POTBOT_PARENT_KEYSTORE_SERVER_TOKEN", "must-not-reach-helper")
     assert firewall._programs(Path("python.exe")) == [r"C:\venv\python.exe", r"C:\uv\python.exe"]
+
+
+def test_database_relay_uses_its_own_stage_labels_and_controller_identity(
+    setup_firewall, monkeypatch, capsys,
+):
+    manager, options, stages, elevations = setup_firewall
+    options["authority_pid"] = os.getpid()
+    inspections = iter([plan(), plan(False)])
+    probes = iter([False, True])
+    monkeypatch.setattr(firewall, "_inspect", lambda *_args: next(inspections))
+    firewall.ensure_custody_firewall(
+        manager, **options, purpose="database", tcp_probe=lambda: next(probes),
+    )
+    assert stages == ["database-firewall", "database-firewall-admin"]
+    assert len(elevations) == 1
+    assert elevations[0]["purpose"] == "database"
+    assert elevations[0]["authority_pid"] == elevations[0]["controller_pid"] == os.getpid()
+    assert "[Potbot database]" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("result,stage", [
+    (1223, "database-firewall-declined"), (1, "database-firewall-failed"),
+])
+def test_database_repair_failure_cannot_be_mistaken_for_custody(
+    setup_firewall, monkeypatch, result, stage,
+):
+    manager, options, stages, _elevations = setup_firewall
+    monkeypatch.setattr(firewall, "_inspect", lambda *_args: plan())
+    monkeypatch.setattr(firewall, "_elevate", lambda *_args: result)
+    with pytest.raises(CapabilityUnavailableError, match="database"):
+        firewall.ensure_custody_firewall(manager, **options, purpose="database", tcp_probe=lambda: False)
+    assert stages[-1] == stage
+    assert not any(value.startswith("custody-") for value in stages)
+
+
+@pytest.mark.parametrize("purpose", ["custody", "database"])
+def test_firewall_receipt_must_match_requested_purpose(monkeypatch, purpose):
+    request = {"purpose": purpose, "programs": [r"C:\uv\python.exe"]}
+    response = {**plan(), "profile": f"potbot.{purpose}-firewall/1"}
+    monkeypatch.setattr(firewall, "_run", lambda *_a, **_kw: SimpleNamespace(
+        returncode=0, stdout=json.dumps(response), stderr="",
+    ))
+    assert firewall._inspect("powershell.exe", request)["profile"] == response["profile"]
+    response["profile"] = "potbot.database-firewall/1" if purpose == "custody" else "potbot.custody-firewall/1"
+    with pytest.raises(CapabilityUnavailableError, match="invalid check result"):
+        firewall._inspect("powershell.exe", request)
+
+
+def test_unsupported_purpose_is_rejected_before_any_firewall_action(setup_firewall, monkeypatch):
+    manager, options, stages, elevations = setup_firewall
+    monkeypatch.setattr(firewall, "_programs", lambda _: pytest.fail("unsupported purpose reached host"))
+    with pytest.raises(CapabilityUnavailableError, match="Unsupported managed firewall purpose"):
+        firewall.ensure_custody_firewall(manager, **options, purpose="arbitrary", tcp_probe=lambda: False)
+    assert not stages and not elevations

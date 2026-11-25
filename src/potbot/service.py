@@ -430,10 +430,14 @@ _XPRA_STAGES = {
     "operator-health", "xpra-starting", "xpra-wsl-ready", "runtime-failed",
     "custody-firewall", "custody-firewall-admin", "custody-firewall-declined",
     "custody-firewall-failed",
+    "database-prepare", "database-firewall", "database-firewall-admin",
+    "database-firewall-declined", "database-firewall-failed",
+    "database-health", "database-ready", "database-failed",
 }
-_XPRA_CUSTODY_FAILURES = {
+_XPRA_STARTUP_FAILURES = {
     "custody-tcp-failed", "custody-auth-failed",
     "custody-firewall-declined", "custody-firewall-failed",
+    "database-firewall-declined", "database-firewall-failed", "database-failed",
 }
 
 
@@ -442,7 +446,7 @@ def _xpra_display_stage(stage: str, *, ready: bool, blocked: bool, timed_out: bo
     if ready:
         return "ready"
     if blocked:
-        return stage if stage in _XPRA_CUSTODY_FAILURES | {"startup-timeout"} else "restart-limit"
+        return stage if stage in _XPRA_STARTUP_FAILURES | {"startup-timeout"} else "restart-limit"
     if stage == "xpra-wsl-ready":
         return "host-bridge-unreachable"
     if timed_out:
@@ -804,7 +808,7 @@ def _supervise_owned(config: ServiceConfig, lease: Any) -> int:
                     if previous is not None:
                         xpra_failures += 1
                         with xpra_lock:
-                            terminal = xpra_stage in _XPRA_CUSTODY_FAILURES
+                            terminal = xpra_stage in _XPRA_STARTUP_FAILURES
                         if terminal or xpra_failures >= 3:
                             xpra_blocked = True
                             events.emit("service.xpra_blocked", recovery_required=True)

@@ -6,6 +6,7 @@ by the separate integration suite, not by these bootstrap-order tests.
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 from contextlib import contextmanager
@@ -35,6 +36,7 @@ class Runtime:
 @pytest.fixture
 def bootstrap_rig(tmp_path, monkeypatch):
     monkeypatch.delenv("POTBOT_OPERATOR_REQUIRED", raising=False)
+    monkeypatch.delenv("POTBOT_OPERATOR_CONTEXT_CONFIG", raising=False)
     monkeypatch.delenv("POTBOT_CONTEXT_SCHEMA", raising=False)
     areas = []
     for name in ("rootfs", "home", "staging", "models", "tools", "config", "past"):
@@ -196,6 +198,66 @@ def test_native_service_uses_existing_schema_and_principal(bootstrap_rig, monkey
     assert manager.service.database.schema == rig.config.schema
     assert manager.principal.principal_id == rig.principal
     manager.close()
+
+
+def _wsl_scope(rig, monkeypatch, **changes):
+    import json
+
+    value = {
+        "profile": "potbot.operator-context/1", "workspace_id": str(rig.workspace),
+        "principal_id": str(rig.principal), "schema": "wsl_schema",
+    }
+    value.update(changes)
+    path = rig.private / "operator-context.json"
+    path.write_text(json.dumps(value))
+    path.chmod(0o600)
+    monkeypatch.setenv("POTBOT_OPERATOR_REQUIRED", "1")
+    monkeypatch.setenv("POTBOT_OPERATOR_CONTEXT_CONFIG", str(path))
+    return path
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Managed WSL scope uses POSIX custody")
+def test_wsl_scope_uses_private_receipt_without_native_service_config(bootstrap_rig, monkeypatch):
+    rig = bootstrap_rig
+    _wsl_scope(rig, monkeypatch)
+    monkeypatch.setattr(
+        sys.modules["potbot.service"], "config_path",
+        lambda: pytest.fail("Managed WSL must not load native Windows service configuration"),
+    )
+    manager = bootstrap.default_context_manager(rig.paths)
+    assert manager.service.database.schema == "wsl_schema"
+    assert manager.principal.principal_id == rig.principal
+    assert [event[0] for event in rig.events].index("restricted") < [
+        event[0] for event in rig.events
+    ].index("triple")
+    manager.close()
+
+
+@pytest.mark.parametrize("mismatch", ["workspace", "principal", "schema", "unmanaged"])
+@pytest.mark.skipif(os.name != "posix", reason="Managed WSL scope uses POSIX custody")
+def test_wsl_scope_cannot_override_manifest_or_cli_scope(bootstrap_rig, monkeypatch, mismatch):
+    rig = bootstrap_rig
+    _wsl_scope(rig, monkeypatch, **({"workspace_id": str(uuid4())} if mismatch == "workspace" else {}))
+    options = {}
+    if mismatch == "principal":
+        options["principal_id"] = uuid4()
+    elif mismatch == "schema":
+        options["schema"] = "another_schema"
+    elif mismatch == "unmanaged":
+        monkeypatch.delenv("POTBOT_OPERATOR_REQUIRED")
+    with pytest.raises(ScopeDeniedError):
+        bootstrap.default_context_manager(rig.paths, **options)
+    assert rig.events == []
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Managed WSL scope uses POSIX custody")
+def test_wsl_scope_cannot_forge_the_database_login_principal(bootstrap_rig, monkeypatch):
+    rig = bootstrap_rig
+    _wsl_scope(rig, monkeypatch, principal_id=str(uuid4()))
+    with pytest.raises(ScopeDeniedError, match="matching workspace identity"):
+        bootstrap.default_context_manager(rig.paths)
+    assert any(event[0] == "restricted" for event in rig.events)
+    assert not any(event[0] == "triple" for event in rig.events)
 
 
 @pytest.mark.parametrize("mismatch", ["workspace", "principal", "schema"])

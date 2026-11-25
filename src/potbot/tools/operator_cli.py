@@ -16,6 +16,7 @@ import signal
 import sys
 import threading
 import time
+from collections import deque
 from collections.abc import Callable, Sequence
 from contextlib import ExitStack
 from dataclasses import dataclass
@@ -25,6 +26,7 @@ from uuid import UUID
 
 from potbot.domain.errors import (
     CapabilityUnavailableError,
+    DomainError,
     InvalidInputError,
     ScopeDeniedError,
     StateMismatchError,
@@ -54,6 +56,47 @@ _FIELDS = frozenset(
 _ENTRYPOINT = re.compile(
     r"/usr/local/tools/[a-z][a-z0-9-]{1,62}/(?:environment|static)/[A-Za-z0-9_./+-]{1,220}\Z"
 )
+_DIAGNOSTIC_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,95}\Z")
+_DIAGNOSTIC_SOURCE = re.compile(r"(?:[A-Za-z_][A-Za-z0-9_]*/)*[A-Za-z_][A-Za-z0-9_]*\.py\Z")
+
+
+def _failure_event(error: Exception, stage: str) -> dict[str, object]:
+    """Locate a startup failure without formatting secret-bearing exceptions.
+
+    Only this installed package's code locations are published. Never obtain
+    source excerpts, frame locals, exception arguments/messages, or raw paths.
+    The last package frames identify the relevant call into an external driver.
+    """
+    kind = type(error).__name__
+    if not _DIAGNOSTIC_IDENTIFIER.fullmatch(kind):
+        kind = "Exception"
+    package = Path(__file__).resolve().parents[1]
+    frames: deque[dict[str, object]] = deque(maxlen=8)
+    count = 0
+    scanned = 0
+    trace = error.__traceback__
+    while trace is not None and scanned < 128:
+        scanned += 1
+        code = trace.tb_frame.f_code
+        try:
+            source = Path(code.co_filename).relative_to(package).as_posix()
+        except ValueError:
+            source = ""
+        if len(source) <= 240 and _DIAGNOSTIC_SOURCE.fullmatch(source):
+            function = code.co_name
+            if not _DIAGNOSTIC_IDENTIFIER.fullmatch(function):
+                function = "<code>"
+            frames.append({"file": "potbot/" + source, "function": function, "line": trace.tb_lineno})
+            count += 1
+        trace = trace.tb_next
+    return {
+        "operator": "failed",
+        "error_code": error.code.value if isinstance(error, DomainError) else "internal_error",
+        "stage": stage,
+        "exception_type": kind,
+        "frames": list(frames),
+        "frames_truncated": count > 8 or trace is not None,
+    }
 
 
 @dataclass(frozen=True, slots=True)
@@ -378,6 +421,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="explicit legacy migration mode; does not qualify MODEL.md integration",
     )
     args = parser.parse_args(argv)
+    stage = "manifest-validation"
     try:
         paths = parse_manifest(args.manifest)
         manager = None
@@ -392,6 +436,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             ):
                 raise InvalidInputError("Legacy mode conflicts with context configuration")
         else:
+            stage = "context-bootstrap"
             from potbot.context.operator_bootstrap import default_context_manager
 
             manager = default_context_manager(
@@ -401,6 +446,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 schema=args.context_schema,
                 shared_skills=args.shared_skills,
             )
+        stage = "operator-runtime"
         stopped = threading.Event()
         for sig in (signal.SIGINT, signal.SIGTERM):
             if sig is not None:
@@ -416,13 +462,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         print(json.dumps({"operator": "stopped", "workspace_id": str(paths.workspace_id)}))
         return 0
-    except (CapabilityUnavailableError, InvalidInputError, ScopeDeniedError) as error:
-        print(json.dumps({"operator": "failed", "error_code": error.code.value}), file=sys.stderr)
-        return 1
-    except Exception:
-        # No raw pathname, lease metadata, process arguments, or inotify stack
-        # diagnostics on stdout/stderr in the normal managed service log.
-        print('{"operator":"failed","error_code":"internal_error"}', file=sys.stderr)
+    except Exception as error:
+        print(json.dumps(_failure_event(error, stage)), file=sys.stderr, flush=True)
         return 1
 
 

@@ -592,7 +592,10 @@ def _activate_workspace_image_pin(
 def _finalize(args: argparse.Namespace) -> int:
     if os.geteuid() == 0:
         raise CapabilityUnavailableError("Final core runtime ownership must be unprivileged")
+    from potbot.persistence.database import _identifier
+
     workspace, principal = UUID(args.workspace_id), UUID(args.principal_id)
+    schema = _identifier(args.schema)
     home = Path(args.home).resolve(strict=True)
     private = Path(args.private).resolve(strict=True)
     rootfs = Path(args.rootfs).resolve(strict=True)
@@ -634,6 +637,15 @@ def _finalize(args: argparse.Namespace) -> int:
             "qualification_sha256": qualification,
             "rootfs": str(rootfs),
             **{name: str(value) for name, value in paths.items()},
+        },
+    )
+    _write_private(
+        private / "operator-context.json",
+        {
+            "profile": "potbot.operator-context/1",
+            "workspace_id": str(workspace),
+            "principal_id": str(principal),
+            "schema": schema,
         },
     )
     policy = private / "xpra-apps.json"
@@ -713,6 +725,9 @@ def _prepare(args: argparse.Namespace) -> int:
     ):
         raise InvalidInputError("Core source identity is invalid")
     source = _protected_root(Path(args.source_root))
+    from potbot.persistence.database import _identifier
+
+    schema = _identifier(args.schema)
     os.environ["POTBOT_CORE_CONSUMER_COMMIT"] = args.consumer_commit
 
     _qualification_stage("service-identities")
@@ -772,6 +787,8 @@ def _prepare(args: argparse.Namespace) -> int:
         args.workspace_id,
         "--principal-id",
         args.principal_id,
+        "--schema",
+        schema,
         "--rootfs",
         str(rootfs),
         "--image-digest",
@@ -1095,6 +1112,7 @@ def _run_core_owned(args: argparse.Namespace, stopped: threading.Event) -> int:
     env.update(
         {
             "POTBOT_OPERATOR_REQUIRED": "1",
+            "POTBOT_OPERATOR_CONTEXT_CONFIG": str(private / "operator-context.json"),
             "POTBOT_OPERATOR_SOCKET": str(socket_path),
             "POTBOT_OPERATOR_WORKSPACE_ID": str(workspace),
             "POTBOT_OPERATOR_IMAGE_DIGEST": paths.image_digest,
@@ -1195,6 +1213,7 @@ def main(argv: list[str] | None = None) -> int:
     prepare = commands.add_parser("prepare")
     prepare.add_argument("--workspace-id", required=True)
     prepare.add_argument("--principal-id", required=True)
+    prepare.add_argument("--schema", default="potbot")
     prepare.add_argument("--source-root", required=True)
     prepare.add_argument("--source-sha256", required=True)
     prepare.add_argument("--consumer-commit", required=True)
@@ -1203,6 +1222,7 @@ def main(argv: list[str] | None = None) -> int:
     finalize = commands.add_parser("finalize")
     finalize.add_argument("--workspace-id", required=True)
     finalize.add_argument("--principal-id", required=True)
+    finalize.add_argument("--schema", default="potbot")
     finalize.add_argument("--rootfs", required=True)
     finalize.add_argument("--image-digest", required=True)
     finalize.add_argument("--image-source", required=True)

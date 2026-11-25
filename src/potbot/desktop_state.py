@@ -29,6 +29,14 @@ _XPRA_MESSAGES = {
     "custody-tcp-failed": "WSL cannot reach Windows keystore; inspect custody log",
     "custody-auth-failed": "Parent keystore authentication/health check failed",
     "custody-ready": "Windows keystore connection verified",
+    "database-prepare": "Preparing the operator connection to the Windows database",
+    "database-firewall": "Checking Windows Firewall for the WSL database connection",
+    "database-firewall-admin": "Approve the Windows administrator prompt for the database connection",
+    "database-firewall-declined": "Database firewall repair was declined; restart Potbot to try again",
+    "database-firewall-failed": "Database firewall repair failed; inspect the supervisor log",
+    "database-health": "Checking the application database login from WSL",
+    "database-ready": "Application database connection verified from WSL",
+    "database-failed": "WSL application database connection failed; inspect the supervisor log",
     "wsl-launch": "Launching managed WSL runtime",
     "secret-service": "Starting parent-backed Secret Service",
     "operator-starting": "Starting managed operator",
@@ -117,6 +125,7 @@ def _xpra_status(path: Path, workspace: str) -> tuple[bool, str, bool]:
         failed = str(stage).endswith("-failed") or stage in {
             "restart-limit", "startup-timeout", "stopped", "host-bridge-unreachable",
             "custody-firewall-declined",
+            "database-firewall-declined",
         }
         return False, detail, failed
     except (OSError, ValueError, KeyError, TypeError):

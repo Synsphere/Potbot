@@ -97,6 +97,7 @@ def test_rejects_supervisor_generation_change_during_probe(monkeypatch, running)
 @pytest.mark.parametrize("stage", [
     "custody-tcp-failed", "custody-auth-failed", "custody-firewall-failed",
     "custody-firewall-declined", "restart-limit", "startup-timeout",
+    "database-firewall-declined", "database-firewall-failed", "database-failed",
 ])
 def test_terminal_runtime_failure_aborts_wait_immediately(running, stage):
     config, lease, _, publish = running

@@ -66,35 +66,52 @@ function Test-Any($Values) {
     return $items.Count -eq 1 -and ($items[0] -eq 'Any' -or $items[0] -eq '*')
 }
 
+function Get-FirewallIdentity($Request) {
+    # Missing purpose is the original custody request contract. Keep its exact
+    # rule identity so an upgrade reuses the rule already approved by the user.
+    $purpose = 'custody'
+    if ($Request.PSObject.Properties['purpose']) { $purpose = [string]$Request.purpose }
+    if ($purpose -cnotin @('custody', 'database')) { throw 'Invalid managed firewall purpose' }
+    $title = if ($purpose -eq 'custody') { 'Custody' } else { 'Database' }
+    return @{
+        purpose=$purpose; profile=('potbot.' + $purpose + '-firewall/1')
+        name=('Potbot-' + $title + '-' + $Request.installation_id)
+        description=('Potbot managed WSL ' + $purpose + ' firewall v1; host ' + $Request.installation_id)
+        group=('Potbot WSL ' + $purpose); display_name=('Potbot WSL ' + $title)
+    }
+}
+
 function Assert-LiveEndpoint($Request) {
+    $purpose = (Get-FirewallIdentity $Request).purpose
     $controller = Get-Process -Id $Request.controller_pid -ErrorAction Stop
     if ($controller.StartTime.ToUniversalTime().ToFileTimeUtc().ToString() -cne
         $Request.controller_created) { throw 'Potbot startup owner has changed' }
     $listeners = @(Get-NetTCPConnection -State Listen -LocalAddress $Request.host_address `
         -LocalPort $Request.port -ErrorAction SilentlyContinue)
-    if ($listeners.Count -ne 1) { throw 'Potbot custody listener is not ready or is ambiguous' }
+    if ($listeners.Count -ne 1) { throw ('Potbot ' + $purpose + ' listener is not ready or is ambiguous') }
     $process = Get-CimInstance Win32_Process -Filter ('ProcessId=' + $listeners[0].OwningProcess)
     $program = [string]$process.ExecutablePath
     if (-not $program -or $Request.programs -notcontains $program) {
-        throw 'Custody listener does not belong to the prepared Python runtime'
+        throw ('Potbot ' + $purpose + ' listener does not belong to the prepared Python runtime')
     }
     $found = $false
     for ($i = 0; $i -lt 5 -and $process; $i++) {
         if ($process.ProcessId -eq $Request.authority_pid) { $found = $true; break }
         $process = Get-CimInstance Win32_Process -Filter ('ProcessId=' + $process.ParentProcessId)
     }
-    if (-not $found) { throw 'Custody listener does not belong to this Potbot startup' }
+    if (-not $found) { throw ('Potbot ' + $purpose + ' listener does not belong to this Potbot startup') }
     return $program
 }
 
 function Get-FirewallPlan($Request) {
+    $identity = Get-FirewallIdentity $Request
     $program = Assert-LiveEndpoint $Request
-    $name = 'Potbot-Custody-' + $Request.installation_id
-    $description = 'Potbot managed WSL custody firewall v1; host ' + $Request.installation_id
+    $name = $identity.name
+    $description = $identity.description
     $own = @(Get-NetFirewallRule -PolicyStore PersistentStore -Name $name `
         -ErrorAction SilentlyContinue)
     if ($own.Count -gt 1 -or ($own.Count -eq 1 -and
-        ($own[0].Description -cne $description -or $own[0].Group -cne 'Potbot WSL custody'))) {
+        ($own[0].Description -cne $description -or $own[0].Group -cne $identity.group))) {
         throw 'The managed Potbot firewall rule name is already owned by another rule'
     }
     $ip = Get-NetIPAddress -IPAddress $Request.host_address -AddressFamily IPv4
@@ -166,7 +183,7 @@ function Get-FirewallPlan($Request) {
                 [string]$rule.PolicyStoreSourceType -ne 'Local' -or
                 -not (Test-Any $addresses.LocalAddress) -or
                 -not (Test-Any $addresses.RemoteAddress) -or -not (Test-Any $port.LocalPort)) {
-                throw ('A custom or managed firewall block prevents custody: ' + $rule.DisplayName)
+                throw ('A custom or managed firewall block prevents ' + $identity.purpose + ': ' + $rule.DisplayName)
             }
             $localRule = @(Get-NetFirewallRule -PolicyStore PersistentStore `
                 -Name ([Management.Automation.WildcardPattern]::Escape($rule.Name)) `
@@ -178,8 +195,9 @@ function Get-FirewallPlan($Request) {
         }
     }
     return @{
-        profile = 'potbot.custody-firewall/1'; program = $program; name = $name
+        profile = $identity.profile; program = $program; name = $name
         description = $description; blocks = @($blocks); own = $own
+        group = $identity.group; display_name = $identity.display_name
         repair = ($blocks.Count -gt 0 -or ($allowed -band $mask) -ne $mask)
     }
 }
@@ -217,8 +235,8 @@ function Invoke-FirewallRepair($Request, $Plan) {
                 -Program $Plan.program -LocalAddress $Request.host_address `
                 -RemoteAddress $Request.guest_address -Enabled True | Out-Null
         } else {
-            New-NetFirewallRule @parameters -DisplayName 'Potbot WSL Custody' `
-                -Description $Plan.description -Group 'Potbot WSL custody' | Out-Null
+            New-NetFirewallRule @parameters -DisplayName $Plan.display_name `
+                -Description $Plan.description -Group $Plan.group | Out-Null
             $created = $true
         }
         foreach ($name in $Plan.blocks) {
