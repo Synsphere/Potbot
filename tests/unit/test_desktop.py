@@ -30,6 +30,7 @@ def test_workspace_rendering_is_independent_of_xpra_or_backend() -> None:
 
 def test_xpra_status_requires_fresh_matching_workspace(tmp_path, monkeypatch):
     import json
+
     from potbot import desktop_state
 
     monkeypatch.setattr(desktop_state.time, "time", lambda: 100.0)
@@ -51,7 +52,7 @@ def test_native_window_is_shown_before_background_startup_begins() -> None:
     source = Path(desktop.__file__).read_text(encoding="utf-8")
     assert source.index("window.show()") < source.index("QTimer.singleShot(0, window.start_stack)")
     assert "No X applications are running yet. The workspace remains available." in source
-    assert "start_services(open_browser=False)" in source
+    assert "start_services(open_browser=False, stop_event=lease.stopped)" in source
 
 
 def test_local_ui_defaults_to_native_but_headless_linux_keeps_web_mode() -> None:

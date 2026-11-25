@@ -12,8 +12,10 @@ import hmac
 import json
 import os
 import secrets
+import socket
 import subprocess
 import sys
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -38,9 +40,11 @@ from potbot.domain.errors import (
     InvalidInputError,
     ScopeDeniedError,
 )
+from potbot.instance import InstanceLease, is_running, owner_root, request_stop, wait_stopped
 
 _GUI_URL = "http://127.0.0.1:3100"
 _STARTUP_HEALTH_ATTEMPTS = 1800
+_STOP_LISTENER_WAIT_SECONDS = 10
 
 
 def _notice(value: str) -> None:
@@ -455,39 +459,74 @@ def platform_release() -> str:
     return platform.release()
 
 
-def _foreground(config: Any, *, open_browser: bool = True) -> int:
+def _wait_for_existing_service(config: Any, lease: InstanceLease, *, open_browser: bool) -> int:
+    _notice("An existing Potbot service is starting; waiting for it")
+    for _ in range(_STARTUP_HEALTH_ATTEMPTS):
+        lease.check_stop()
+        if _healthy(config) and _gui_accepts_current_password():
+            if open_browser and sys.stdout.isatty():
+                _open_browser()
+            return 0
+        if not is_running("service", root=lease.root):
+            raise CapabilityUnavailableError(
+                "The existing Potbot service exited during startup; inspect its logs."
+            )
+        lease.stopped.wait(1)
+    raise CapabilityUnavailableError("The existing Potbot service did not become ready")
+
+
+def _foreground(config: Any, *, open_browser: bool = True, lease: InstanceLease) -> int:
     """WSL/headless fallback when no user service manager is available."""
     _notice("Native service manager unavailable; supervising Potbot in this terminal")
     child = subprocess.Popen([sys.executable, "-m", "potbot.startup", "service", "run"])
     try:
         for _ in range(_STARTUP_HEALTH_ATTEMPTS):
+            lease.check_stop()
             if child.poll() is not None:
+                if is_running("service", root=lease.root):
+                    # A queued native task may have acquired the service lease
+                    # first after its manager reported a launch failure.
+                    return _wait_for_existing_service(config, lease, open_browser=open_browser)
                 raise CapabilityUnavailableError("Backend or GUI supervisor exited; inspect logs")
             if _healthy(config):
                 _require_gui_login()
                 _notice("Potbot is running at " + _GUI_URL)
                 if open_browser and sys.stdout.isatty():
                     _open_browser()
-                return child.wait()
-            time.sleep(1)
+                while child.poll() is None:
+                    lease.check_stop()
+                    lease.stopped.wait(0.5)
+                return child.returncode
+            lease.stopped.wait(1)
         raise CapabilityUnavailableError("Backend/GUI did not become healthy; inspect service logs")
     except KeyboardInterrupt:
         return 0
     finally:
         if child.poll() is None:
-            child.terminate()
+            request_stop("service", root=lease.root)
             try:
-                child.wait(timeout=20)
+                child.wait(timeout=30)
             except subprocess.TimeoutExpired:
-                child.kill()
+                child.terminate()
                 child.wait(timeout=5)
 
 
-def _start(*, open_browser: bool = True) -> int:
+def _start(*, open_browser: bool = True, stop_event: threading.Event | None = None) -> int:
+    root = project_root()
+    with InstanceLease("startup", root=root, stop_event=stop_event) as lease:
+        return _start_owned(root, lease, open_browser=open_browser)
+
+
+def _start_owned(root: Path, lease: InstanceLease, *, open_browser: bool) -> int:
     from potbot import service
     from potbot.native_postgres import ensure_running, is_managed
 
-    root = project_root()
+    lease.check_stop()
+    running_root = owner_root("service", root=root)
+    if running_root is not None and running_root != root.resolve():
+        raise CapabilityUnavailableError(
+            f"Potbot is running from {running_root}. Run stop.bat from that checkout first."
+        )
     # A previously managed native cluster may be stopped after Windows login.
     # Start it before any backend health check or service-manager activation.
     if is_managed(root):
@@ -495,11 +534,15 @@ def _start(*, open_browser: bool = True) -> int:
     # Opening the app again must not run npm ci or replace a live Next.js
     # build. Explicit restart stops the managed service before rebuilding.
     saved = service.config_path()
-    password_chosen = False
+    password_chosen = _ensure_secrets() if saved.is_file() else False
+    # A supervisor may still be preparing WSL. A second launcher must wait for
+    # that generation instead of rebuilding assets or replacing its process.
+    if saved.is_file() and not password_chosen and is_running("service", root=root):
+        current = service.ServiceConfig.load(saved)
+        return _wait_for_existing_service(current, lease, open_browser=open_browser)
     if saved.is_file():
         # This must run BEFORE the already-healthy fast path: older launchers
         # created random passwords without asking the operator.
-        password_chosen = _ensure_secrets()
         current = service.ServiceConfig.load(saved)
         if (
             current.frontend_enabled
@@ -511,7 +554,12 @@ def _start(*, open_browser: bool = True) -> int:
             if open_browser and sys.stdout.isatty():
                 _open_browser()
             return 0
+        if password_chosen and is_running("service", root=root):
+            service.manager_action("stop")
+            lease.check_stop()
+    lease.check_stop()
     config, newly_chosen, first_setup = _install_or_upgrade(root)
+    lease.check_stop()
     password_chosen = password_chosen or newly_chosen
     if password_chosen:
         _notice("Your chosen GUI password is stored securely; restarting the GUI login service")
@@ -527,30 +575,133 @@ def _start(*, open_browser: bool = True) -> int:
         return 0
     # A new install registers the existing per-user manager. Refresh on upgrades
     # so Windows scheduled tasks and systemd/launchd keep their old privileges.
+    if os.name == "nt":
+        from potbot.windows_core_runtime import stop_owned_windows_runtime
+        from potbot.windows_service_control import stop_registered_task
+
+        # Retire a pre-lease scheduled task while its process tree can still
+        # be identified. A failed ownership check must never fall through to
+        # another foreground supervisor.
+        stop_registered_task(root)
+        stop_owned_windows_runtime()
+    elif not first_setup:
+        try:
+            service.manager_action("stop")
+        except (OSError, DomainError):
+            pass
+    lease.check_stop()
+    _require_ports_available(config)
     try:
-        if not first_setup:
-            try:
-                service.manager_action("stop")
-            except (OSError, DomainError):
-                pass
         service.install_manager(scoped_worker_launcher=config.scoped_worker_launcher)
+        lease.check_stop()
         service.manager_action("start")
     except (OSError, DomainError):
-        return _foreground(config, open_browser=open_browser)
+        lease.check_stop()
+        # The manager can report failure after actually launching a process.
+        # The supervisor's own OS lease is the final guard in this race.
+        if not is_running("service", root=root):
+            _require_ports_available(config)
+            return _foreground(config, open_browser=open_browser, lease=lease)
     for _ in range(_STARTUP_HEALTH_ATTEMPTS):
+        lease.check_stop()
         if _healthy(config):
             _require_gui_login()
             _notice("Backend and GUI are ready: " + _GUI_URL)
             if open_browser and sys.stdout.isatty():
                 _open_browser()
             return 0
-        time.sleep(1)
+        lease.stopped.wait(1)
     raise CapabilityUnavailableError("Potbot service did not become healthy; run start.* logs")
 
 
-def start_services(*, open_browser: bool = False) -> int:
+def start_services(
+    *, open_browser: bool = False, stop_event: threading.Event | None = None,
+) -> int:
     """Start/upgrade the supervised stack for a native local client."""
-    return _start(open_browser=open_browser)
+    return _start(open_browser=open_browser, stop_event=stop_event)
+
+
+def _busy_ports(config: Any = None) -> list[int]:
+    endpoints = {("127.0.0.1", 3100), ("127.0.0.1", 8766)}
+    host = getattr(config, "host", "127.0.0.1")
+    host = "127.0.0.1" if host == "0.0.0.0" else "::1" if host == "::" else host
+    endpoints.add((host, getattr(config, "port", 8765)))
+    busy = []
+    for address, port in sorted(endpoints):
+        try:
+            with socket.create_connection((address, port), timeout=0.3):
+                busy.append(port)
+        except OSError:
+            pass
+    return busy
+
+
+def _require_ports_available(config: Any = None) -> None:
+    busy = _busy_ports(config)
+    if busy:
+        raise CapabilityUnavailableError(
+            "Potbot cannot start another service while these ports are occupied: "
+            + ", ".join(map(str, busy))
+            + ". Run stop.bat first. If an older launcher or another application still "
+            "owns them, close it before retrying."
+        )
+
+
+def _stop(*, stop_database: bool = True, timeout: float = 60) -> int:
+    """Stop known generations and verify shutdown before permitting a new start."""
+    from potbot import service
+    from potbot.native_postgres import stop_if_managed
+
+    root = project_root()
+    with InstanceLease("stopping", root=root):
+        roles = ("startup", "desktop", "service")
+        for role in roles:
+            running_root = owner_root(role, root=root)
+            if running_root is not None and running_root != root.resolve():
+                raise CapabilityUnavailableError(
+                    f"Potbot is running from {running_root}. Run stop.bat from that checkout."
+                )
+        # Notify every owner before waiting: the desktop may be waiting for the
+        # startup worker, which in turn may be waiting for the service.
+        for role in roles:
+            request_stop(role, root=root)
+        deadline = time.monotonic() + timeout
+        for role in roles:
+            if not wait_stopped(role, root=root, timeout=max(0, deadline - time.monotonic())):
+                raise CapabilityUnavailableError(
+                    f"Potbot {role} has not exited. Shutdown is still pending; "
+                    "run stop.bat again before starting another instance."
+                )
+        if os.name == "nt":
+            from potbot.windows_core_runtime import stop_owned_windows_runtime
+            from potbot.windows_service_control import stop_registered_task
+
+            stop_registered_task(root, include_desktop=True)
+            stop_owned_windows_runtime()
+        elif service.config_path().is_file():
+            try:
+                service.manager_action("stop")
+            except (DomainError, OSError):
+                # A foreground run need not have a registered manager. The OS
+                # leases and listener checks remain mandatory either way.
+                pass
+        path = service.config_path()
+        config = service.ServiceConfig.load(path) if path.is_file() else None
+        deadline = time.monotonic() + _STOP_LISTENER_WAIT_SECONDS
+        while _busy_ports(config) and time.monotonic() < deadline:
+            time.sleep(0.25)
+        busy = _busy_ports(config)
+        if busy:
+            raise CapabilityUnavailableError(
+                "Potbot shutdown could not be verified: ports "
+                + ", ".join(map(str, busy))
+                + " remain occupied. Close the earlier launch terminal or the application "
+                "using those ports, then run stop.bat again. No new instance was started."
+            )
+        if stop_database:
+            stop_if_managed(root)
+        _notice("Potbot has stopped; no owned startup, desktop or service instance remains")
+    return 0
 
 
 def _change_password() -> int:
@@ -621,14 +772,8 @@ def main(arguments: list[str] | None = None) -> int:
             # passwords must never be printed by a diagnostic command.
             return _change_password()
         if action in {"stop", "restart"}:
-            if not service.config_path().is_file():
-                raise InvalidInputError("Potbot has not been configured")
-            service.manager_action("stop")
-            _notice("Stopped the Potbot service")
+            _stop(stop_database=action == "stop")
             if action == "stop":
-                from potbot.native_postgres import stop_if_managed
-
-                stop_if_managed(project_root())
                 return 0
             return _start()
         return 1

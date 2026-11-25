@@ -752,6 +752,8 @@ def _custody_stage(stage: str) -> None:
 
 
 def _tcp_via_wsl(manager: WslOperatorHost, host: str, port: int, *, timeout: float = 4) -> bool:
+    from .host import windows_environment
+
     # A bare TCP probe carries no credentials and never grants access.
     code = (
         "import socket,sys;"
@@ -761,6 +763,7 @@ def _tcp_via_wsl(manager: WslOperatorHost, host: str, port: int, *, timeout: flo
         result = subprocess.run(
             manager.command("/usr/bin/python3.12", ["-I", "-c", code, host, str(port)]),
             capture_output=True, timeout=timeout, check=False,
+            env=windows_environment(),
         )
         return result.returncode == 0
     except (OSError, subprocess.TimeoutExpired):
@@ -826,6 +829,28 @@ def windows_host_custody(manager: WslOperatorHost) -> Iterator[dict[str, str]]:
             },
         )
         try:
+            # The vault may briefly wait for a retired authority to release it.
+            # Inspect the actual listener only once it is ready; a firewall
+            # change cannot fix a server that never bound its socket.
+            ready_deadline = time.monotonic() + 20
+            while parent.poll() is None and time.monotonic() < ready_deadline:
+                if b"[Potbot custody] authority listening" in log_path.read_bytes()[-4096:]:
+                    from .custody_firewall import ensure_custody_firewall
+
+                    ensure_custody_firewall(
+                        manager, python=python, host=host, guest=guest, port=port,
+                        authority_pid=parent.pid, controller_created=_process_creation_filetime(),
+                        tcp_probe=lambda: _tcp_via_wsl(manager, host, port), stage=_custody_stage,
+                    )
+                    break
+                time.sleep(0.2)
+            else:
+                if parent.poll() is None:
+                    _custody_stage("custody-tcp-failed")
+                    raise CapabilityUnavailableError(
+                        "Syn parent keystore authority did not report a listening socket; "
+                        f"firewall repair was not attempted. Inspect {log_path}"
+                    )
             _custody_stage("custody-tcp")
             deadline = time.monotonic() + 30
             connected = False

@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import plistlib
+import queue
 import secrets
 import signal
 import subprocess
@@ -266,6 +267,17 @@ def install_manager(*, scoped_worker_launcher: bool = False) -> None:
 
 
 def manager_action(action: str) -> None:
+    if action == "stop":
+        from potbot.instance import request_stop, wait_stopped
+
+        # /End and TerminateProcess skip Python finally blocks. Ask the live
+        # owner to stop and prove it relinquished its kernel lease first.
+        if request_stop("service", root=project_root()):
+            if not wait_stopped("service", root=project_root(), timeout=60):
+                raise CapabilityUnavailableError(
+                    "Potbot is still stopping; its instance lock remains held."
+                )
+            return
     manager = _manager()
     if manager == "systemd_user":
         _managed(["systemctl", "--user", action, UNIT_NAME])
@@ -416,6 +428,8 @@ _XPRA_STAGES = {
     "custody-tcp", "custody-auth", "custody-tcp-failed", "custody-auth-failed",
     "custody-ready", "wsl-launch", "secret-service", "operator-starting",
     "operator-health", "xpra-starting", "xpra-wsl-ready", "runtime-failed",
+    "custody-firewall", "custody-firewall-admin", "custody-firewall-declined",
+    "custody-firewall-failed",
 }
 
 
@@ -454,15 +468,82 @@ def _write_xpra_status(home: Path, workspace: str, stage: str, ready: bool) -> N
 
 def _supervise(config: ServiceConfig) -> int:
     """Keep every mandatory Potbot core component under one service owner."""
+    from potbot.instance import InstanceLease, StartupCancelled
+
+    stopped = threading.Event()
+    with InstanceLease("service", root=project_root(), stop_event=stopped) as lease:
+        previous_handlers = {}
+
+        def halt(_sig: int, _frame: Any) -> None:
+            stopped.set()
+
+        for name in ("SIGTERM", "SIGINT"):
+            if hasattr(signal, name):
+                signum = getattr(signal, name)
+                previous_handlers[signum] = signal.getsignal(signum)
+                signal.signal(signum, halt)
+        try:
+            lease.check_stop()
+            if config.credential_profile != credential_profile():
+                raise InvalidInputError(
+                    "Service credential profile does not match the running user."
+                )
+            if config.frontend_enabled:
+                from potbot.native_postgres import ensure_running, is_managed
+
+                if is_managed(project_root()):
+                    # PostgreSQL has its own managed lifetime. Start it before
+                    # containment so a service crash does not kill the database.
+                    ensure_running(project_root())
+            lease.check_stop()
+            if os.name == "nt":
+                from potbot.windows_process_job import contain_service_process
+
+                contain_service_process()
+                # Windows releases this only when the process exits and its job
+                # tears down descendants, including grandchildren and uv.
+                lease.retain_until_exit()
+            return _supervise_owned(config, lease)
+        except StartupCancelled:
+            return 0
+        finally:
+            for signum, previous in previous_handlers.items():
+                signal.signal(signum, previous)
+
+
+def _prepare_windows(config: ServiceConfig, token: str, lease: Any) -> Any:
+    """Allow stop to exit a Windows supervisor during lengthy WSL preparation.
+
+    The worker is daemonized, and both job and instance lease stay alive until
+    process teardown. It cannot spawn children after a new owner is admitted.
+    """
+    from potbot.windows_core_runtime import prepare_windows_core_runtime
+
+    result: queue.Queue[tuple[bool, Any]] = queue.Queue(maxsize=1)
+
+    def prepare() -> None:
+        try:
+            result.put((True, prepare_windows_core_runtime(config, token)))
+        except BaseException as error:
+            result.put((False, error))
+
+    threading.Thread(target=prepare, daemon=True).start()
+    while True:
+        lease.check_stop()
+        try:
+            succeeded, value = result.get(timeout=0.1)
+        except queue.Empty:
+            continue
+        lease.check_stop()
+        if succeeded:
+            return value
+        raise value
+
+
+def _supervise_owned(config: ServiceConfig, lease: Any) -> int:
     if config.credential_profile != credential_profile():
         raise InvalidInputError("Service credential profile does not match the running user.")
-    if config.frontend_enabled:
-        # User services can start after reboot before an interactive start.*
-        # invocation. Restart only the exact private cluster Potbot created.
-        from potbot.native_postgres import ensure_running, is_managed
-
-        if is_managed(project_root()):
-            ensure_running(project_root())
+    stopped = lease.stopped
     home = service_home()
     home.mkdir(parents=True, exist_ok=True, mode=0o700)
     if home.is_symlink():
@@ -479,15 +560,14 @@ def _supervise(config: ServiceConfig) -> int:
     if config.frontend_enabled:
         xpra_token = secrets.token_urlsafe(48)
         if os.name == "nt":
-            from potbot.windows_core_runtime import prepare_windows_core_runtime
-
-            remote = prepare_windows_core_runtime(config, xpra_token)
+            remote = _prepare_windows(config, xpra_token, lease)
             xpra_remote_command = remote.command
             xpra_remote_environment = remote.environment
         else:
             from potbot.core_runtime import prepare_core_runtime
 
             xpra_policy, xpra_home = prepare_core_runtime(config)
+    lease.check_stop()
     common = [
         "--workspace-id",
         config.workspace_id,
@@ -556,15 +636,6 @@ def _supervise(config: ServiceConfig) -> int:
                 str(xpra_policy),
             ]
         commands["frontend"] = _service_command()[:2] + ["potbot.frontend_worker"]
-    stopped = threading.Event()
-
-    def halt(_sig: int, _frame: Any) -> None:
-        stopped.set()
-
-    for name in ("SIGTERM", "SIGINT"):
-        if hasattr(signal, name):
-            signal.signal(getattr(signal, name), halt)
-
     children: dict[str, subprocess.Popen[str]] = {}
     env = dict(os.environ)
     env.pop("POTBOT_ADMIN_DSN", None)  # Privileged migration authority never reaches workers.
@@ -716,7 +787,10 @@ def _supervise(config: ServiceConfig) -> int:
                     if previous is not None:
                         xpra_failures += 1
                         with xpra_lock:
-                            terminal = xpra_stage in {"custody-tcp-failed", "custody-auth-failed"}
+                            terminal = xpra_stage in {
+                                "custody-tcp-failed", "custody-auth-failed",
+                                "custody-firewall-declined", "custody-firewall-failed",
+                            }
                         if terminal or xpra_failures >= 3:
                             xpra_blocked = True
                             events.emit("service.xpra_blocked", recovery_required=True)
@@ -756,9 +830,9 @@ def _supervise(config: ServiceConfig) -> int:
             if operator_attachment is not None:
                 operator_attachment.require_healthy()
             if xpra_token is not None:
-                process = children.get("xpra")
+                xpra_process = children.get("xpra")
                 ready = bool(
-                    not xpra_blocked and process is not None and process.poll() is None
+                    not xpra_blocked and xpra_process is not None and xpra_process.poll() is None
                     and _xpra_health(config.workspace_id, xpra_token)
                 )
                 with xpra_lock:
@@ -767,11 +841,12 @@ def _supervise(config: ServiceConfig) -> int:
                     xpra_failures = 0
                     stage = "ready"
                 elif xpra_blocked:
-                    stage = stage if stage.endswith("-failed") else "restart-limit"
+                    if not (stage.endswith("-failed") or stage == "custody-firewall-declined"):
+                        stage = "restart-limit"
                 elif stage == "xpra-wsl-ready":
                     stage = "host-bridge-unreachable"
                 elif (
-                    process is not None and process.poll() is None
+                    xpra_process is not None and xpra_process.poll() is None
                     and time.monotonic() - xpra_started > 900
                 ):
                     # Report a whole-launch timeout without forcibly reaping an
@@ -801,6 +876,9 @@ def _supervise(config: ServiceConfig) -> int:
                 # Indeterminate workspace leases block clean operator shutdown;
                 # do not forcibly reap the owner and destroy recovery evidence.
                 events.emit("service.operator_stop_blocked", recovery_required=True)
+                # Keep the service lease until this owner really exits. A new
+                # supervisor must not overlap an indeterminate operator epoch.
+                operator_process.wait()
         if xpra_token is not None:
             _write_xpra_status(home, config.workspace_id, "stopped", False)
         events.emit("service.stopped")

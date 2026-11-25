@@ -16,6 +16,8 @@ import sys
 import threading
 import time
 import urllib.request
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, TypedDict
 from uuid import UUID
@@ -861,7 +863,71 @@ def _core_child_environment(token: str) -> dict[str, str]:
     return env
 
 
-def _start_secret_service(source: Path, env: dict[str, str]) -> subprocess.Popen[bytes]:
+class _CoreStopped(Exception):
+    """The Windows owner disappeared or requested shutdown during startup."""
+
+
+def _check_core_stop(stopped: threading.Event) -> None:
+    if stopped.is_set():
+        raise _CoreStopped
+
+
+@contextmanager
+def _core_runtime_lock(path: Path | None = None) -> Iterator[None]:
+    """One core runtime per Linux user, including across workspace/source copies."""
+    import fcntl
+
+    path = path or Path(f"/run/user/{os.geteuid()}/potbot-core-runtime.lock")
+    directory = path.parent
+    info = directory.stat()
+    if (
+        directory.resolve(strict=True) != directory
+        or not directory.is_dir()
+        or info.st_uid != os.geteuid()
+        or stat.S_IMODE(info.st_mode) & 0o077
+    ):
+        raise InvalidInputError("Core runtime lock directory is not private")
+    fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
+    try:
+        info = os.fstat(fd)
+        if (
+            not stat.S_ISREG(info.st_mode)
+            or info.st_uid != os.geteuid()
+            or info.st_nlink != 1
+            or stat.S_IMODE(info.st_mode) & 0o077
+        ):
+            raise InvalidInputError("Core runtime lock file is not private")
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise CapabilityUnavailableError(
+                "A Potbot WSL core runtime is already running or stopping"
+            ) from None
+        # Keep the inode: unlinking a lock lets a new process lock a different
+        # inode while this generation is still cleaning up.
+        yield
+    finally:
+        os.close(fd)
+
+
+def _watch_parent_lifetime(stopped: threading.Event, fd: int = 0) -> None:
+    """EOF on the owner-only control pipe requests cleanup; no payload is accepted."""
+    import select
+
+    try:
+        while not stopped.is_set():
+            ready, _, _ = select.select([fd], [], [], 0.5)
+            if ready:
+                os.read(fd, 1)
+                stopped.set()
+                return
+    except (OSError, ValueError):
+        stopped.set()
+
+
+def _start_secret_service(
+    source: Path, env: dict[str, str], stopped: threading.Event
+) -> subprocess.Popen[bytes]:
     if source != source.resolve(strict=True) or source.is_symlink():
         raise CapabilityUnavailableError("Core source root for Secret Service is invalid")
     code = (
@@ -877,31 +943,44 @@ def _start_secret_service(source: Path, env: dict[str, str]) -> subprocess.Popen
         env=env,
         stdin=subprocess.DEVNULL,
     )
-    for _ in range(50):
-        if process.poll() is not None:
-            raise CapabilityUnavailableError("Parent-backed Secret Service exited during startup")
-        probe = subprocess.run(
-            ["/usr/bin/busctl", "--user", "--quiet", "status", "org.freedesktop.secrets"],
-            env=env,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            timeout=2,
-            check=False,
-        )
-        if probe.returncode == 0:
-            return process
-        time.sleep(0.1)
-    process.terminate()
-    process.wait(timeout=5)
-    raise CapabilityUnavailableError("Parent-backed Secret Service did not become ready")
+    try:
+        for _ in range(50):
+            _check_core_stop(stopped)
+            if process.poll() is not None:
+                raise CapabilityUnavailableError(
+                    "Parent-backed Secret Service exited during startup"
+                )
+            probe = subprocess.run(
+                ["/usr/bin/busctl", "--user", "--quiet", "status", "org.freedesktop.secrets"],
+                env=env,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=2,
+                check=False,
+            )
+            if probe.returncode == 0:
+                return process
+            stopped.wait(0.1)
+        raise CapabilityUnavailableError("Parent-backed Secret Service did not become ready")
+    except BaseException:
+        if process.poll() is None:
+            process.terminate()
+        try:
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=5)
+        raise
 
 
 def _core_stage(stage: str) -> None:
     print("POTBOT_CORE_STAGE=" + stage, flush=True)
 
 
-def _await_xpra(process: subprocess.Popen[Any], workspace: UUID, token: str) -> None:
+def _await_xpra(
+    process: subprocess.Popen[Any], workspace: UUID, token: str, stopped: threading.Event
+) -> None:
     """Require an authenticated bridge response, not merely an open port."""
     deadline = time.monotonic() + 45
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -910,6 +989,7 @@ def _await_xpra(process: subprocess.Popen[Any], workspace: UUID, token: str) -> 
         headers={"Authorization": "Bearer " + token},
     )
     while time.monotonic() < deadline:
+        _check_core_stop(stopped)
         if process.poll() is not None:
             raise CapabilityUnavailableError("Managed WSL Xpra bridge exited during startup")
         try:
@@ -924,13 +1004,41 @@ def _await_xpra(process: subprocess.Popen[Any], workspace: UUID, token: str) -> 
                     return
         except (OSError, ValueError):
             pass
-        time.sleep(0.25)
+        stopped.wait(0.25)
     raise CapabilityUnavailableError("Managed WSL Xpra bridge readiness timed out")
 
 
 def _run_core(args: argparse.Namespace) -> int:
     if os.geteuid() == 0:
         raise CapabilityUnavailableError("Core operator/Xpra runtime must be unprivileged")
+    with _core_runtime_lock():
+        stopped = threading.Event()
+        previous = {}
+
+        def halt(_signum: int, _frame: object) -> None:
+            stopped.set()
+
+        for name in ("SIGTERM", "SIGINT", "SIGHUP"):
+            signum = getattr(signal, name)
+            previous[signum] = signal.signal(signum, halt)
+        watcher = None
+        if args.parent_stdin:
+            watcher = threading.Thread(target=_watch_parent_lifetime, args=(stopped,), daemon=True)
+            watcher.start()
+        try:
+            return _run_core_owned(args, stopped)
+        except _CoreStopped:
+            return 0
+        finally:
+            stopped.set()
+            if watcher is not None:
+                watcher.join(timeout=1)
+            for signum, handler in previous.items():
+                signal.signal(signum, handler)
+
+
+def _run_core_owned(args: argparse.Namespace, stopped: threading.Event) -> int:
+    _check_core_stop(stopped)
     state = Path(args.state)
     if (
         not state.is_absolute()
@@ -981,9 +1089,11 @@ def _run_core(args: argparse.Namespace) -> int:
         }
     )
     _core_stage("secret-service")
-    secret_service = _start_secret_service(source, env)
+    _check_core_stop(stopped)
+    secret_service = _start_secret_service(source, env, stopped)
     operator = None
     try:
+        _check_core_stop(stopped)
         _core_stage("operator-starting")
         operator = subprocess.Popen(
             [
@@ -1000,9 +1110,11 @@ def _run_core(args: argparse.Namespace) -> int:
                 str(socket_path),
             ],
             env=env,
+            stdin=subprocess.DEVNULL,
         )
         _core_stage("operator-health")
         for _ in range(100):
+            _check_core_stop(stopped)
             if operator.poll() is not None:
                 raise CapabilityUnavailableError("Managed WSL operator exited during startup")
             try:
@@ -1010,8 +1122,9 @@ def _run_core(args: argparse.Namespace) -> int:
                     break
             except Exception:
                 pass
-            time.sleep(0.1)
+            stopped.wait(0.1)
         attachment.require_healthy()
+        _check_core_stop(stopped)
         _core_stage("xpra-starting")
         xpra = subprocess.Popen(
             [
@@ -1032,17 +1145,10 @@ def _run_core(args: argparse.Namespace) -> int:
                 str(policy),
             ],
             env=env,
+            stdin=subprocess.DEVNULL,
         )
-        _await_xpra(xpra, workspace, token)
+        _await_xpra(xpra, workspace, token, stopped)
         _core_stage("xpra-wsl-ready")
-        stopped = threading.Event()
-
-        def halt(_signum: int, _frame: object) -> None:
-            stopped.set()
-
-        for name in ("SIGTERM", "SIGINT"):
-            if hasattr(signal, name):
-                signal.signal(getattr(signal, name), halt)
         while not stopped.wait(0.5):
             if operator.poll() is not None:
                 raise CapabilityUnavailableError("Managed WSL operator stopped")
@@ -1055,11 +1161,12 @@ def _run_core(args: argparse.Namespace) -> int:
         for process in (locals().get("xpra"), operator, secret_service):
             if process is not None and process.poll() is None:
                 process.terminate()
+        deadline = time.monotonic() + 15
         for process in (locals().get("xpra"), operator, secret_service):
             if process is None:
                 continue
             try:
-                process.wait(timeout=15)
+                process.wait(timeout=max(0.1, deadline - time.monotonic()))
             except subprocess.TimeoutExpired:
                 process.kill()
                 process.wait(timeout=5)
@@ -1093,6 +1200,7 @@ def main(argv: list[str] | None = None) -> int:
 
     run = commands.add_parser("run")
     run.add_argument("--state", required=True)
+    run.add_argument("--parent-stdin", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     try:
         if args.action == "prepare":

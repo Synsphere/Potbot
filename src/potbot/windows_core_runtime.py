@@ -19,6 +19,7 @@ import subprocess
 import sys
 import tarfile
 import threading
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -726,15 +727,113 @@ def _supervise_windows_core_runtime(python: str, state: str) -> int:
     with windows_host_custody(manager) as custody_environment:
         print("POTBOT_CORE_STAGE=wsl-launch", flush=True)
         environment = _wsl_environment(custody_environment, token, application_dsn)
-        result = subprocess.run(
+        process = subprocess.Popen(
             manager.command(
                 python,
-                ["-I", "-B", "-m", "potbot.wsl_core_runtime", "run", "--state", state],
+                [
+                    "-I", "-B", "-m", "potbot.wsl_core_runtime", "run", "--state", state,
+                    "--parent-stdin",
+                ],
             ),
-            check=False,
             env=environment,
+            stdin=subprocess.PIPE,
         )
-    return result.returncode
+        try:
+            # This pipe carries no requests, credentials or other payload. Its
+            # sole writer belongs to this Windows process. Closing it (including
+            # TerminateProcess/job cleanup) tells the guest to stop its children.
+            return process.wait()
+        finally:
+            if process.stdin is not None:
+                process.stdin.close()
+            try:
+                process.wait(timeout=25)
+            except subprocess.TimeoutExpired:
+                process.terminate()
+                process.wait(timeout=5)
+
+
+def _stop_owned_distribution(manager: WslOperatorHost) -> bool:
+    """Stop only the registration proved by Potbot's existing host receipt.
+
+    Callers must first stop the Windows supervisor while holding the start/stop
+    exclusion. wsl.exe's process lifetime alone does not own Linux descendants.
+    This final shutdown also covers an older runtime without a lifetime pipe.
+    """
+    from potbot.syn_release.host import DISTRO, _registered_distro, run_host
+
+    registration = _registered_distro()
+    if not (manager.receipt.exists() or manager.receipt.is_symlink()):
+        if registration is not None:
+            raise StateMismatchError(
+                "Refusing to stop the named WSL distribution without a Potbot ownership receipt"
+            )
+        return False
+    record = manager._read_receipt()
+    if registration is None:
+        # No Linux processes can belong to an unregistered distribution. Do not
+        # create or repair an installation just to stop it.
+        return False
+    manager._require_registration(registration, record)
+
+    def running() -> bool:
+        output = run_host([manager.wsl, "--list", "--running", "--quiet"], timeout=15)
+        names = {line.strip().lstrip("\ufeff").casefold() for line in output.splitlines()}
+        return DISTRO.casefold() in names
+
+    if not running():
+        return False
+    if record["state"] == "ready":
+        # The EOF watcher normally reaps the guest children first. Wait for its
+        # flock to be released before terminating the remaining distro services.
+        # Older runtimes have no flock and are handled by the verified terminate.
+        quiet_probe = """import fcntl, os, time
+path = '/run/user/' + str(os.geteuid()) + '/potbot-core-runtime.lock'
+try:
+    fd = os.open(path, os.O_RDWR | os.O_NOFOLLOW)
+except FileNotFoundError:
+    print('legacy')
+else:
+    deadline = time.monotonic() + 25
+    while True:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            print('quiet')
+            break
+        except BlockingIOError:
+            if time.monotonic() >= deadline:
+                print('busy')
+                break
+            time.sleep(0.1)
+    os.close(fd)
+"""
+        try:
+            run_host(
+                manager.command("/usr/bin/python3.12", ["-I", "-B", "-c", quiet_probe]),
+                timeout=30,
+            )
+        except CapabilityUnavailableError:
+            # A half-prepared or already-exiting guest may not run the probe.
+            # Ownership was verified above, so a bounded final stop is valid.
+            pass
+    run_host([manager.wsl, "--terminate", DISTRO], timeout=60)
+    deadline = time.monotonic() + 15
+    while running():
+        if time.monotonic() >= deadline:
+            raise CapabilityUnavailableError(
+                "The owned Potbot WSL distribution is still running; shutdown is incomplete"
+            )
+        time.sleep(0.25)
+    return True
+
+
+def stop_owned_windows_runtime() -> bool:
+    """Idempotent shutdown of the owned guest; never install or unregister it."""
+    if os.name != "nt":
+        return False
+    from potbot.syn_release.host import WslOperatorHost
+
+    return _stop_owned_distribution(WslOperatorHost())
 
 
 def prepare_windows_core_runtime(config: ServiceConfig, token: str) -> WindowsCoreRuntime:

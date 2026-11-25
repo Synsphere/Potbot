@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from types import SimpleNamespace
 from uuid import uuid4
 
@@ -187,7 +188,9 @@ def test_installed_worker_waits_for_live_scoped_accounting(
     monkeypatch.setattr(
         service,
         "threading",
-        SimpleNamespace(Event=Stop, Thread=lambda **kw: SimpleNamespace(start=lambda: None)),
+        SimpleNamespace(
+            Event=Stop, Thread=lambda **kw: SimpleNamespace(start=lambda: None), Lock=threading.Lock,
+        ),
     )
 
     def popen(command, **kwargs):
@@ -263,7 +266,9 @@ def test_debugger_child_is_started_once_and_requires_explicit_recovery(monkeypat
     monkeypatch.setattr(
         service,
         "threading",
-        SimpleNamespace(Event=Stop, Thread=lambda **_: SimpleNamespace(start=lambda: None)),
+        SimpleNamespace(
+            Event=Stop, Thread=lambda **_: SimpleNamespace(start=lambda: None), Lock=threading.Lock,
+        ),
     )
     monkeypatch.setattr(service.subprocess, "Popen", popen)
     registration = tmp_path / "registration.json"

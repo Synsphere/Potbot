@@ -20,6 +20,10 @@ _XPRA_MESSAGES = {
     "custody-prepare": "Preparing Windows keystore authority",
     "custody-network": "Checking managed WSL network identity",
     "custody-authority": "Launching Windows keystore authority",
+    "custody-firewall": "Checking Windows Firewall for the WSL keystore connection",
+    "custody-firewall-admin": "Approve the Windows administrator prompt to repair the firewall",
+    "custody-firewall-declined": "Firewall repair was declined; restart Potbot to try again",
+    "custody-firewall-failed": "Windows Firewall repair failed; inspect the custody log",
     "custody-tcp": "Connecting WSL to Windows keystore",
     "custody-auth": "Authenticating the parent keystore connection",
     "custody-tcp-failed": "WSL cannot reach Windows keystore; inspect custody log",
@@ -112,6 +116,7 @@ def _xpra_status(path: Path, workspace: str) -> tuple[bool, str, bool]:
         detail = _XPRA_MESSAGES.get(str(stage), "")
         failed = str(stage).endswith("-failed") or stage in {
             "restart-limit", "startup-timeout", "stopped", "host-bridge-unreachable",
+            "custody-firewall-declined",
         }
         return False, detail, failed
     except (OSError, ValueError, KeyError, TypeError):

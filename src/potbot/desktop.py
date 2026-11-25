@@ -2,15 +2,29 @@
 
 from __future__ import annotations
 
+import sys
 import threading
 from queue import Empty, SimpleQueue
 from typing import Any
 
 from potbot.desktop_state import WEB_UI_URL, DesktopStatus, probe_status
 from potbot.domain.errors import CapabilityUnavailableError, DomainError
+from potbot.instance import InstanceBusy, InstanceLease, StartupCancelled
 
 
 def main() -> int:
+    try:
+        with InstanceLease("desktop") as lease:
+            return _run_desktop(lease)
+    except InstanceBusy as error:
+        print("[Potbot] " + str(error), file=sys.stderr, flush=True)
+        return 1
+    except StartupCancelled as error:
+        print("[Potbot] " + str(error), file=sys.stderr, flush=True)
+        return 130
+
+
+def _run_desktop(lease: InstanceLease) -> int:
     try:
         from PySide6.QtCore import Qt, QTimer, QUrl
         from PySide6.QtGui import QDesktopServices
@@ -176,10 +190,19 @@ def main() -> int:
             self.setStyleSheet(native_stylesheet(str(settings.get("theme", "system")), system_dark))
 
         def closeEvent(self, event: Any) -> None:
+            if self._starter is not None and self._starter.is_alive():
+                # Preserve ownership until the setup worker acknowledges this.
+                # The shared event also covers a worker not yet inside _start.
+                lease.stopped.set()
+                self.banner.setText("Cancelling Potbot startup…")
+                event.ignore()
+                return
             self.settings_panel.close()
             super().closeEvent(event)
 
         def start_stack(self, _checked: bool = False) -> None:
+            if lease.stopped.is_set():
+                return
             if self._starter is not None and self._starter.is_alive():
                 return
             self._startup_error = ""
@@ -187,7 +210,7 @@ def main() -> int:
 
             def worker() -> None:
                 try:
-                    code = start_services(open_browser=False)
+                    code = start_services(open_browser=False, stop_event=lease.stopped)
                     if code:
                         messages.put(("error", "Potbot startup returned a non-zero status."))
                     else:
@@ -244,6 +267,17 @@ def main() -> int:
                 )
 
         def _refresh(self) -> None:
+            if lease.stopped.is_set():
+                self.retry_button.setEnabled(False)
+                self.banner.setText("Stopping Potbot…")
+                # Keep the desktop lease until its startup thread finishes so
+                # stop cannot report success while setup is still running.
+                if self._starter is None or not self._starter.is_alive():
+                    self.close()
+                    application = QApplication.instance()
+                    if application is not None:
+                        application.quit()
+                return
             while True:
                 try:
                     kind, message = messages.get_nowait()

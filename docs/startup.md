@@ -45,6 +45,65 @@ uv sync --locked --extra postgres --extra semantics --extra credentials --dev
 lock deliberately; the launcher does not silently resolve a new dependency set.
 The scripts propagate failed installation and application exit codes.
 
+## Windows firewall and instance control
+
+`start.bat` and `start.ps1` check the Windows Firewall when the managed custody
+authority is listening. The check uses the live listener, the custody virtualenv
+and base Python executable, and the current WSL host and guest IPv4 addresses.
+Custody continues to use its authenticated TCP connection to the Windows DPAPI
+authority.
+
+If the WSL TCP probe succeeds, startup does not request administrator access.
+When a repair is needed, only a separate firewall helper requests UAC elevation.
+The desktop, service and keystore authority keep the original user's identity.
+The helper rechecks the live endpoint and effective firewall policy after UAC
+approval. It can disable ordinary local inbound TCP application block rules
+matching the actual listener executable, and creates or updates a Potbot rule
+allowing only that executable from the current WSL guest to its Windows host
+address. The rule permits TCP ports for that executable/address pair because
+custody selects a fresh port each launch; a port change alone needs no new UAC
+prompt. An interpreter or WSL address change can require another repair.
+
+Custom, generic or centrally managed block rules are reported for administrator
+review. Firewall profiles and the default inbound policy are not disabled.
+Declining UAC reports a specific failure and does not produce a prompt loop.
+After a repair, startup checks WSL TCP connectivity and the existing authenticated
+custody health response before admitting the WSL runtime.
+
+Stop from either Command Prompt or PowerShell, including when startup is incomplete:
+
+```powershell
+.\stop.bat
+# Equivalent:
+.\stop.ps1
+```
+
+`start.bat stop` uses the same stop script. Stopping uses the installed
+`.venv\Scripts\python.exe`; it does not download Python, run `uv sync`, or build
+the frontend. The optional `stop.ps1 -TimeoutSeconds 90` controls how long it
+waits for the launcher. An in-flight dependency installation is allowed to finish
+its current command, then cancelled before the application starts.
+
+Shutdown signals the startup worker, desktop and service before waiting for them
+to release their OS locks. It also handles a verified older scheduled task and
+its process tree, closes the owned `Potbot-SynOperator` WSL distribution, and
+stops Potbot's managed PostgreSQL through `pg_ctl`. It does not unregister WSL,
+delete PostgreSQL data, or change stored credentials. Other WSL distributions
+and unidentified processes are not stopped. If a live owner or listener remains,
+the command fails with a diagnostic instead of claiming that shutdown completed.
+
+Windows launch, desktop and service ownership is per user, across checkouts.
+Run stop from the checkout that owns the instance. Duplicate starts are refused
+before a second supervisor can run, including direct `service run` invocations.
+Kernel locks are released after a crash, so stale PID files cannot block startup
+or cause another process to be killed. A Windows process job contains supervised
+descendants; a separate empty lifetime pipe tells the WSL core to clean up when
+its Windows owner disappears. That pipe carries no keystore requests or secrets.
+
+For an upgrade while an old version is running, apply the patch, run `stop.bat`,
+and start again only after stop succeeds. If an unrelated application occupies
+a required port, stop identifies the port and leaves that application alone.
+
 ## PostgreSQL on first startup
 
 The default launcher now configures the application rather than printing CLI help.

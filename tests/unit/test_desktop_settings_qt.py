@@ -345,4 +345,6 @@ def test_native_desktop_navigation_opens_qt_panels_without_a_browser(
     assert desktop.main() == 0
     timer.stop()
     assert not errors, errors
-    assert starts == [{"open_browser": False}]
+    assert len(starts) == 1
+    assert starts[0]["open_browser"] is False
+    assert isinstance(starts[0]["stop_event"], threading.Event)

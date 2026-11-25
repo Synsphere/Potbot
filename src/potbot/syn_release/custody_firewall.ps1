@@ -1,0 +1,282 @@
+param(
+    [string]$RequestBase64,
+    [ValidateSet('Inspect', 'Repair')][string]$Mode = 'Inspect'
+)
+
+# This helper is encoded and passed directly to Windows PowerShell. Elevated
+# execution receives only public process/network identity, never custody tokens.
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version 2
+[Console]::OutputEncoding = New-Object Text.UTF8Encoding($false)
+
+function ConvertTo-IPv4Number([string]$Value) {
+    $address = $null
+    if (-not [Net.IPAddress]::TryParse($Value, [ref]$address) -or
+        $address.AddressFamily -ne [Net.Sockets.AddressFamily]::InterNetwork) { return $null }
+    $bytes = $address.GetAddressBytes()
+    [Array]::Reverse($bytes)
+    return [uint64][BitConverter]::ToUInt32($bytes, 0)
+}
+
+function Test-AddressScope($Values, [string]$Address) {
+    $number = ConvertTo-IPv4Number $Address
+    $unknown = $false
+    foreach ($value in @($Values)) {
+        if ($value -eq 'Any' -or $value -eq '*') { return 1 }
+        if ($value -eq $Address) { return 1 }
+        if ($value -match '^([^/]+)/([0-9]{1,2})$') {
+            $start = ConvertTo-IPv4Number $Matches[1]
+            $bits = [int]$Matches[2]
+            if ($null -ne $start -and $bits -le 32) {
+                $size = [uint64][Math]::Pow(2, 32 - $bits)
+                $first = $start - ($start % $size)
+                if ($number -ge $first -and $number -lt ($first + $size)) { return 1 }
+                continue
+            }
+        }
+        if ($value -match '^([0-9.]+)-([0-9.]+)$') {
+            $first = ConvertTo-IPv4Number $Matches[1]
+            $last = ConvertTo-IPv4Number $Matches[2]
+            if ($null -ne $first -and $null -ne $last) {
+                if ($number -ge $first -and $number -le $last) { return 1 }
+                continue
+            }
+        }
+        $parsed = $null
+        if ([Net.IPAddress]::TryParse(($value -split '/')[0], [ref]$parsed)) { continue }
+        $unknown = $true
+    }
+    if ($unknown) { return -1 }
+    return 0
+}
+
+function Test-PortScope($Values, [int]$Port) {
+    foreach ($value in @($Values)) {
+        if ($value -eq 'Any' -or $value -eq '*') { return 1 }
+        if ($value -match '^[0-9]+$' -and [int]$value -eq $Port) { return 1 }
+        if ($value -match '^([0-9]+)-([0-9]+)$') {
+            if ($Port -ge [int]$Matches[1] -and $Port -le [int]$Matches[2]) { return 1 }
+        } elseif ($value -notmatch '^[0-9]+$') { return -1 }
+    }
+    return 0
+}
+
+function Test-Any($Values) {
+    $items = @($Values)
+    return $items.Count -eq 1 -and ($items[0] -eq 'Any' -or $items[0] -eq '*')
+}
+
+function Assert-LiveEndpoint($Request) {
+    $controller = Get-Process -Id $Request.controller_pid -ErrorAction Stop
+    if ($controller.StartTime.ToUniversalTime().ToFileTimeUtc().ToString() -cne
+        $Request.controller_created) { throw 'Potbot startup owner has changed' }
+    $listeners = @(Get-NetTCPConnection -State Listen -LocalAddress $Request.host_address `
+        -LocalPort $Request.port -ErrorAction SilentlyContinue)
+    if ($listeners.Count -ne 1) { throw 'Potbot custody listener is not ready or is ambiguous' }
+    $process = Get-CimInstance Win32_Process -Filter ('ProcessId=' + $listeners[0].OwningProcess)
+    $program = [string]$process.ExecutablePath
+    if (-not $program -or $Request.programs -notcontains $program) {
+        throw 'Custody listener does not belong to the prepared Python runtime'
+    }
+    $found = $false
+    for ($i = 0; $i -lt 5 -and $process; $i++) {
+        if ($process.ProcessId -eq $Request.authority_pid) { $found = $true; break }
+        $process = Get-CimInstance Win32_Process -Filter ('ProcessId=' + $process.ParentProcessId)
+    }
+    if (-not $found) { throw 'Custody listener does not belong to this Potbot startup' }
+    return $program
+}
+
+function Get-FirewallPlan($Request) {
+    $program = Assert-LiveEndpoint $Request
+    $name = 'Potbot-Custody-' + $Request.installation_id
+    $description = 'Potbot managed WSL custody firewall v1; host ' + $Request.installation_id
+    $own = @(Get-NetFirewallRule -PolicyStore PersistentStore -Name $name `
+        -ErrorAction SilentlyContinue)
+    if ($own.Count -gt 1 -or ($own.Count -eq 1 -and
+        ($own[0].Description -cne $description -or $own[0].Group -cne 'Potbot WSL custody'))) {
+        throw 'The managed Potbot firewall rule name is already owned by another rule'
+    }
+    $ip = Get-NetIPAddress -IPAddress $Request.host_address -AddressFamily IPv4
+    $network = @(Get-NetConnectionProfile -InterfaceIndex $ip.InterfaceIndex `
+        -ErrorAction SilentlyContinue)
+    $mask = 0
+    foreach ($item in $network) {
+        switch ([string]$item.NetworkCategory) {
+            'DomainAuthenticated' { $mask = $mask -bor 1 }
+            'Private' { $mask = $mask -bor 2 }
+            'Public' { $mask = $mask -bor 4 }
+        }
+    }
+    # WSL's virtual adapter may have no NetworkListManager profile of its own.
+    if (-not $mask) { $mask = (New-Object -ComObject HNetCfg.FwPolicy2).CurrentProfileTypes }
+    $enabled = 0
+    $defaultAllow = 0
+    foreach ($profile in @(Get-NetFirewallProfile -PolicyStore ActiveStore)) {
+        $bit = switch ([string]$profile.Name) { 'Domain' {1} 'Private' {2} 'Public' {4} }
+        if (-not ($mask -band $bit)) { continue }
+        if ([string]$profile.Enabled -eq 'False') { $defaultAllow = $defaultAllow -bor $bit; continue }
+        $enabled = $enabled -bor $bit
+        if ([string]$profile.AllowInboundRules -eq 'False' -or
+            [string]$profile.AllowLocalFirewallRules -eq 'False') {
+            throw 'Windows policy disables local inbound exceptions; ask its administrator'
+        }
+        if ([string]$profile.DefaultInboundAction -eq 'Allow') {
+            $defaultAllow = $defaultAllow -bor $bit
+        }
+    }
+    $blocks = @()
+    $allowed = $defaultAllow
+    $applications = @(Get-NetFirewallApplicationFilter -PolicyStore ActiveStore |
+        Where-Object {
+            $candidate = [Environment]::ExpandEnvironmentVariables([string]$_.Program)
+            $candidate -eq $program -or $candidate -eq 'Any'
+        })
+    $rules = @($applications | Get-NetFirewallRule -PolicyStore ActiveStore -TracePolicyStore |
+        Where-Object { [string]$_.Enabled -eq 'True' -and $_.Direction -eq 'Inbound' })
+    foreach ($rule in $rules) {
+        $profiles = [int]$rule.Profile
+        if ($profiles -eq 0) { $profiles = 7 }
+        if (-not ($profiles -band $enabled)) { continue }
+        $app = $rule | Get-NetFirewallApplicationFilter
+        $candidate = [Environment]::ExpandEnvironmentVariables([string]$app.Program)
+        if ($candidate -ne $program -and $candidate -ne 'Any') { continue }
+        $service = $rule | Get-NetFirewallServiceFilter
+        if ($service.Service -ne 'Any' -or $app.Package -notin @('Any', $null, '')) { continue }
+        $port = $rule | Get-NetFirewallPortFilter
+        if ([string]$port.Protocol -notin @('TCP', '6', 'Any', '256')) { continue }
+        $addresses = $rule | Get-NetFirewallAddressFilter
+        $local = Test-AddressScope $addresses.LocalAddress $Request.host_address
+        $remote = Test-AddressScope $addresses.RemoteAddress $Request.guest_address
+        $localPort = Test-PortScope $port.LocalPort $Request.port
+        if ($local -eq 0 -or $remote -eq 0 -or $localPort -eq 0) { continue }
+        $interface = $rule | Get-NetFirewallInterfaceFilter
+        $types = $rule | Get-NetFirewallInterfaceTypeFilter
+        $security = $rule | Get-NetFirewallSecurityFilter
+        $simple = (Test-Any $port.RemotePort) -and
+            (Test-Any $interface.InterfaceAlias) -and $types.InterfaceType -eq 'Any' -and
+            $security.Authentication -eq 'NotRequired' -and
+            $security.LocalUser -eq 'Any' -and $security.RemoteUser -eq 'Any' -and
+            $security.RemoteMachine -eq 'Any' -and $local -eq 1 -and $remote -eq 1 -and
+            $localPort -eq 1
+        if ([string]$rule.Action -eq 'Block') {
+            # Only ordinary local per-application block rules are auto-repaired.
+            # Custom scopes and broad/enterprise rules need their administrator.
+            if (-not $simple -or $candidate -ne $program -or
+                [string]$rule.PolicyStoreSourceType -ne 'Local' -or
+                -not (Test-Any $addresses.LocalAddress) -or
+                -not (Test-Any $addresses.RemoteAddress) -or -not (Test-Any $port.LocalPort)) {
+                throw ('A custom or managed firewall block prevents custody: ' + $rule.DisplayName)
+            }
+            $localRule = @(Get-NetFirewallRule -PolicyStore PersistentStore `
+                -Name ([Management.Automation.WildcardPattern]::Escape($rule.Name)) `
+                -ErrorAction SilentlyContinue)
+            if ($localRule.Count -ne 1) { throw 'An effective block cannot be repaired locally' }
+            $blocks += $rule.Name
+        } elseif ($simple -and [string]$rule.Action -eq 'Allow') {
+            $allowed = $allowed -bor ($profiles -band $mask)
+        }
+    }
+    return @{
+        profile = 'potbot.custody-firewall/1'; program = $program; name = $name
+        description = $description; blocks = @($blocks); own = $own
+        repair = ($blocks.Count -gt 0 -or ($allowed -band $mask) -ne $mask)
+    }
+}
+
+function Invoke-FirewallRepair($Request, $Plan) {
+    $changed = @()
+    $created = $false
+    $previous = $null
+    if ($Plan.own.Count -eq 1) {
+        $rule = $Plan.own[0]
+        $previous = @{
+            Program = ($rule | Get-NetFirewallApplicationFilter).Program
+            LocalAddress = ($rule | Get-NetFirewallAddressFilter).LocalAddress
+            RemoteAddress = ($rule | Get-NetFirewallAddressFilter).RemoteAddress
+            Enabled = $rule.Enabled
+        }
+        # Do not overwrite an administrator's customisation of our rule.
+        $port = $rule | Get-NetFirewallPortFilter
+        if ($rule.Action -ne 'Allow' -or $rule.Direction -ne 'Inbound' -or
+            [int]$rule.Profile -ne 0 -or [string]$port.Protocol -notin @('TCP', '6') -or
+            -not (Test-Any $port.LocalPort) -or -not (Test-Any $port.RemotePort)) {
+            throw 'The managed Potbot firewall rule was customised; review it manually'
+        }
+    }
+    try {
+        $null = Assert-LiveEndpoint $Request
+        $parameters = @{
+            PolicyStore='PersistentStore'; Name=$Plan.name; Enabled='True'; Action='Allow'
+            Direction='Inbound'; Profile='Any'; Protocol='TCP'; LocalPort='Any'
+            RemotePort='Any'; Program=$Plan.program; LocalAddress=$Request.host_address
+            RemoteAddress=$Request.guest_address; EdgeTraversalPolicy='Block'
+        }
+        if ($previous) {
+            Set-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name `
+                -Program $Plan.program -LocalAddress $Request.host_address `
+                -RemoteAddress $Request.guest_address -Enabled True | Out-Null
+        } else {
+            New-NetFirewallRule @parameters -DisplayName 'Potbot WSL Custody' `
+                -Description $Plan.description -Group 'Potbot WSL custody' | Out-Null
+            $created = $true
+        }
+        foreach ($name in $Plan.blocks) {
+            Disable-NetFirewallRule -PolicyStore PersistentStore `
+                -Name ([Management.Automation.WildcardPattern]::Escape($name)) | Out-Null
+            $changed += $name
+        }
+        if ((Get-FirewallPlan $Request).repair) { throw 'Firewall repair is not effective' }
+    } catch {
+        foreach ($name in $changed) {
+            Enable-NetFirewallRule -PolicyStore PersistentStore `
+                -Name ([Management.Automation.WildcardPattern]::Escape($name)) `
+                -ErrorAction Continue |
+                Out-Null
+        }
+        if ($created) {
+            Remove-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name `
+                -ErrorAction Continue
+        } elseif ($previous) {
+            Set-NetFirewallRule -PolicyStore PersistentStore -Name $Plan.name @previous `
+                -ErrorAction Continue | Out-Null
+        }
+        throw
+    }
+}
+
+if ($RequestBase64) {
+    try {
+        $request = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($RequestBase64)) |
+            ConvertFrom-Json
+        if ($request.installation_id -notmatch '^[0-9a-f]{32}$' -or
+            $request.controller_created -notmatch '^[0-9]{10,20}$' -or
+            $request.controller_pid -lt 1 -or $request.authority_pid -lt 1 -or
+            $request.port -lt 1 -or $request.port -gt 65535) { throw 'Invalid firewall request' }
+        foreach ($value in @($request.host_address, $request.guest_address)) {
+            $ip = [Net.IPAddress]::Parse($value)
+            if ($ip.AddressFamily -ne [Net.Sockets.AddressFamily]::InterNetwork -or
+                $value -notmatch '^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)') {
+                throw 'Firewall exception requires private WSL IPv4 addresses'
+            }
+        }
+        $plan = Get-FirewallPlan $request
+        if ($Mode -eq 'Repair' -and $plan.repair) { Invoke-FirewallRepair $request $plan }
+        @{profile=$plan.profile; repair=$plan.repair; program=$plan.program;
+            blocks=@($plan.blocks)} | ConvertTo-Json -Compress
+        exit 0
+    } catch {
+        [Console]::Error.WriteLine($_.Exception.Message)
+        $failure = $_.Exception
+        while ($failure) {
+            if ($failure -is [UnauthorizedAccessException] -or
+                ($failure.HResult -band 0xFFFFFFFFL) -eq 0x80070005L -or
+                ($failure -is [ComponentModel.Win32Exception] -and
+                    $failure.NativeErrorCode -eq 5) -or
+                ($failure.GetType().FullName -eq 'Microsoft.Management.Infrastructure.CimException' -and
+                    [string]$failure.NativeErrorCode -eq 'AccessDenied')) { exit 5 }
+            $failure = $failure.InnerException
+        }
+        exit 1
+    }
+}

@@ -8,6 +8,10 @@ $PotbotUvVersion = '0.12.23'
 $PotbotUvDirectory = Join-Path $PotbotRoot '.potbot\runtime\uv'
 $PotbotUv = $null
 $PotbotTemporaryRoot = $null
+$PotbotStartMutex = $null
+$PotbotOwnsStartMutex = $false
+$PotbotStopEvent = $null
+$PotbotRuntimeEvent = $null
 
 function Write-PotbotProgress([string] $Message) {
     [Console]::Error.WriteLine('[Potbot startup] ' + $Message)
@@ -22,6 +26,9 @@ function ConvertTo-PotbotNativeArgument([AllowEmptyString()][string] $Value) {
 }
 
 function Invoke-PotbotProcess([string] $Executable, [string[]] $Arguments) {
+    if ($PotbotStopEvent -and $PotbotStopEvent.WaitOne(0)) {
+        throw [System.OperationCanceledException]::new('Potbot startup was cancelled by stop.bat.')
+    }
     $Info = New-Object System.Diagnostics.ProcessStartInfo
     $Info.FileName = $Executable
     $Info.Arguments = (($Arguments | ForEach-Object { ConvertTo-PotbotNativeArgument $_ }) -join ' ')
@@ -53,6 +60,40 @@ function Test-PotbotUv([string] $Candidate) {
 try {
     if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
         throw 'Use start.sh on Linux or macOS.'
+    }
+    if ($PotbotOriginalArguments.Count -eq 1 -and $PotbotOriginalArguments[0] -eq 'stop') {
+        # Shutdown must work offline and must not install or upgrade anything.
+        & (Join-Path $PotbotRoot 'stop.ps1')
+        exit $LASTEXITCODE
+    }
+    if ($PotbotOriginalArguments.Count -eq 0 -or
+        ($PotbotOriginalArguments.Count -eq 1 -and $PotbotOriginalArguments[0] -eq 'start')) {
+        $PotbotSid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+        $PotbotStopMutex = [Threading.Mutex]::new($false, ('Global\Potbot.Stop.' + $PotbotSid))
+        $PotbotOwnsStopMutex = $false
+        try {
+            try { $PotbotOwnsStopMutex = $PotbotStopMutex.WaitOne(0) }
+            catch [Threading.AbandonedMutexException] { $PotbotOwnsStopMutex = $true }
+            if (-not $PotbotOwnsStopMutex) { throw 'Potbot is stopping. Wait for stop.bat to finish.' }
+            $PotbotStartMutex = [Threading.Mutex]::new($false, ('Global\Potbot.Start.' + $PotbotSid))
+            try { $PotbotOwnsStartMutex = $PotbotStartMutex.WaitOne(0) }
+            catch [Threading.AbandonedMutexException] { $PotbotOwnsStartMutex = $true }
+            if (-not $PotbotOwnsStartMutex) {
+                Write-PotbotProgress 'Potbot is already starting or its desktop is open. Use stop.bat to stop it.'
+                exit 1
+            }
+            $PotbotStopEvent = [Threading.EventWaitHandle]::new($false, [Threading.EventResetMode]::ManualReset, ('Global\Potbot.Start.Stop.' + $PotbotSid))
+            $PotbotRuntimeEvent = [Threading.EventWaitHandle]::new($false, [Threading.EventResetMode]::ManualReset, ('Global\Potbot.Start.Runtime.' + $PotbotSid))
+            $PotbotStopEvent.Reset() | Out-Null
+            $PotbotRuntimeEvent.Reset() | Out-Null
+            # The Python lease checks this too, closing the race where stop
+            # arrives between Process.Start(uv) and Python importing Potbot.
+            $env:POTBOT_START_STOP_EVENT = 'Global\Potbot.Start.Stop.' + $PotbotSid
+        }
+        finally {
+            if ($PotbotOwnsStopMutex) { $PotbotStopMutex.ReleaseMutex() }
+            $PotbotStopMutex.Dispose()
+        }
     }
     $SelectedTemporaryRoot = if ($env:POTBOT_TEMP_ROOT) { $env:POTBOT_TEMP_ROOT } else { Join-Path $PotbotRoot '.potbot\temporary' }
     $PotbotTemporaryRoot = [System.IO.Path]::GetFullPath($SelectedTemporaryRoot)
@@ -111,10 +152,21 @@ try {
     $Code = Invoke-PotbotProcess $PotbotUv @('sync', '--project', $PotbotRoot, '--locked', '--all-extras', '--no-dev', '--python', '3.12', '--managed-python')
     if ($Code -ne 0) { exit $Code }
     Write-PotbotProgress '4/4 Starting Potbot'
+    if ($PotbotRuntimeEvent) { $PotbotRuntimeEvent.Set() | Out-Null }
     $Code = Invoke-PotbotProcess $PotbotUv (@('run', '--project', $PotbotRoot, '--no-sync', 'python', '-m', 'potbot.startup') + $PotbotOriginalArguments)
     exit $Code
 }
+catch [System.OperationCanceledException] {
+    Write-PotbotProgress 'Startup cancelled by stop.bat.'
+    exit 130
+}
 catch {
-    Write-PotbotProgress "Startup failed. Check connectivity, disk space, project access and scratch root '$PotbotTemporaryRoot'. Select an accessible POTBOT_TEMP_ROOT if needed. On Linux/macOS use start.sh."
+    Write-PotbotProgress "Startup failed: $($_.Exception.Message)"
     exit 1
+}
+finally {
+    if ($PotbotRuntimeEvent) { $PotbotRuntimeEvent.Dispose() }
+    if ($PotbotStopEvent) { $PotbotStopEvent.Dispose() }
+    if ($PotbotOwnsStartMutex) { $PotbotStartMutex.ReleaseMutex() }
+    if ($PotbotStartMutex) { $PotbotStartMutex.Dispose() }
 }
