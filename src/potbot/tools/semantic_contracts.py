@@ -263,6 +263,7 @@ class ToolSemanticCatalog:
         from potbot.tools.artifact_uploads import schemas as artifact_upload_schemas
         from potbot.tools.browser_cog_contracts import schemas as browser_schemas
         from potbot.tools.execution_schemas import schemas as execution_schemas
+        from potbot.tools.pixelcue_cog import schemas as pixelcue_schemas
         from potbot.tools.python_profile_cog import schemas as profile_schemas
         from potbot.tools.queue_transport import schemas as queue_schemas
         from potbot.tools.rest_cog import schemas as rest_schemas
@@ -278,6 +279,7 @@ class ToolSemanticCatalog:
                     **browser_schemas(),
                     **queue_schemas(),
                     **profile_schemas(),
+                    **pixelcue_schemas(),
                     **rest_schemas(),
                     **rest_schemas(graphql=True),
                     **rest_schemas(grpc=True),
@@ -348,6 +350,17 @@ class ToolSemanticCatalog:
         }
         if ref in browser_ports:
             validate_request(browser_ports[ref], value.value)
+
+        from potbot.tools.pixelcue_worker import REQUEST as PIXELCUE_REQUEST
+        from potbot.tools.pixelcue_worker import validate_request as validate_pixelcue_request
+
+        if ref == PIXELCUE_REQUEST:
+            try:
+                validate_pixelcue_request(value.value)
+            except ValueError as error:
+                raise InvalidInputError(
+                    "PixelCue request exceeds its confined analysis scope"
+                ) from error
 
         if ref in {REQUEST, RESULT}:
             payload = value.value["input" if ref == REQUEST else "result"]

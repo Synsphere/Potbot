@@ -66,6 +66,7 @@ def execution_cog_snapshot(
     graphql_read: bool = False,
     grpc_read: bool = False,
     python_profile: bool = False,
+    pixelcue: bool = False,
 ) -> SynSnapshot:
     from potbot.cogs.debugger import debugger_cog_snapshot
     from potbot.cogs.registry import _type, builtin_cog_snapshot
@@ -116,6 +117,12 @@ def execution_cog_snapshot(
         profiling = profile_schemas()
         wire_schemas.update(profiling)
         refs += tuple(profiling)
+    if pixelcue:
+        from potbot.tools.pixelcue_cog import schemas as pixelcue_schemas
+
+        visual = pixelcue_schemas()
+        wire_schemas.update(visual)
+        refs += tuple(visual)
     for ref in refs:
         types.append(
             replace(
@@ -171,7 +178,9 @@ def execution_cog_snapshot(
     return replace(
         base,
         source_label=(
-            "potbot-execution-queue-transport-v1"
+            "potbot-execution-pixelcue-v1"
+            if pixelcue
+            else "potbot-execution-queue-transport-v1"
             if queue_transport
             else "potbot-execution-rest-read-v1"
             if rest_read
@@ -198,6 +207,7 @@ def execution_ember_bundle(
     graphql_read: bool = False,
     grpc_read: bool = False,
     python_profile: bool = False,
+    pixelcue: bool = False,
 ) -> EmberContractBundle:
     from potbot.cogs.tool_contracts import contract_ember_bundle
 
@@ -211,6 +221,7 @@ def execution_ember_bundle(
             graphql_read=graphql_read,
             grpc_read=grpc_read,
             python_profile=python_profile,
+            pixelcue=pixelcue,
         ),
         _installed=EXECUTION_COGS,
         _cog_type=WORK_COG,

@@ -1711,14 +1711,20 @@
         {
           "path": "src/potbot/cogs/execution.py",
           "symbol": "execute",
-          "sha256": "0331337e6661edaa054cfa72fa901796a97eec8f7571401ecb6d3fae2e618573",
+          "sha256": "360f1bfd9bdc69346d5d0711ce8e617e1039fc39ee4b2e24bd07a1c8a4de10df",
           "basis": "U01-A queue transport source or test definition. Exact-revision execution evidence is tracked in CI."
         },
         {
           "path": "src/potbot/controller/execution_cogs.py",
           "symbol": "HostOperation",
-          "sha256": "c79ea438a44f7562e2c8ef39736c939574e8d73c853c8ae96e281adbfead5c5a",
+          "sha256": "521fc81c5083cf1d8292ff3bd41994fa9f854637331ca0e130a9504aaa4a6780",
           "basis": "U01-A queue transport source or test definition. Exact-revision execution evidence is tracked in CI."
+        },
+        {
+          "path": "src/potbot/tools/pixelcue_cog.py",
+          "symbol": "install_pixelcue",
+          "sha256": "7c1af00ddecbc997b9c5e4951784ad568daba066820991875deb9f5219388ea1",
+          "basis": "PixelCue optional sealed profile source/test definition; portable checks do not establish installed native Syn host qualification."
         }
       ],
       "tests": [
@@ -1727,9 +1733,21 @@
           "symbol": "test_all_six_contracts_and_linked_invocation_round_trip",
           "sha256": "b9297028e3a3550a39f6a454636cf51ff1b85e63e257d521af1d952e98750120",
           "basis": "source inspection; test definition is not an individual executed result"
+        },
+        {
+          "path": "tests/unit/test_pixelcue_cog.py",
+          "symbol": "test_exact_compact_output_matches_sealed_schema",
+          "sha256": "9afce53fb9882a4528ab668e1500583527a5b0e8f0ede60b59e4de1276307793",
+          "basis": "PixelCue optional sealed profile source/test definition; portable checks do not establish installed native Syn host qualification."
+        },
+        {
+          "path": "tests/unit/test_pixelcue_admission.py",
+          "symbol": "test_controller_automatically_selects_and_binds_the_pixelcue_profile",
+          "sha256": "1784f71d649967d6183dbeebaf7b9aa68f6580b773e0b1848f897103b255e3a3",
+          "basis": "Real controller construction with explicit database/artifact/sandbox doubles verifies automatic profile and compiled schema admission; no production identity or native-host qualification."
         }
       ],
-      "assessment": "Typed installed Cogs, sealed ports, controller-only grants and distinct transformation/dispatch/verification receipts are implemented for selected core operations. Every adapter and specialist still needs its own admitted binding.",
+      "assessment": "Typed installed Cogs, sealed ports, controller-only grants and distinct transformation/dispatch/verification receipts are implemented for selected core operations. Every adapter and specialist still needs its own admitted binding. The optional PixelCue profile supplies specialised local media analysis through the existing tool Cog; installed worker/image/Syn qualification remains separate.",
       "support_scope": "Core canonical tool contracts and installed runtime, not all 48 stages or arbitrary native/Cog declarations.",
       "remaining": [
         "Complete each enabled operation binding, inherited Ember and handler/executable drift checks",
@@ -5611,7 +5629,7 @@
         {
           "path": "src/potbot/controller/execution_cogs.py",
           "symbol": "ExecutionCogRuntime",
-          "sha256": "c79ea438a44f7562e2c8ef39736c939574e8d73c853c8ae96e281adbfead5c5a",
+          "sha256": "521fc81c5083cf1d8292ff3bd41994fa9f854637331ca0e130a9504aaa4a6780",
           "basis": "U01-A queue transport source or test definition. Exact-revision execution evidence is tracked in CI."
         },
         {
@@ -5906,33 +5924,37 @@
     },
     {
       "path": "README.md",
-      "sha256": "ee6e78d37a6042a2bef3e1d602c27cb8e7211444bbaa324b70e8f7881ebaccb2",
+      "sha256": "5fb4080f6018ecd14affa6f5bd57002bfe013cc9633f5dce99b8c75cb8738065",
       "families": [
         "durable",
         "evaluation",
         "frontend",
         "identity",
+        "models",
         "reasoning",
-        "research"
+        "research",
+        "tool-schema"
       ],
       "disposition": "reviewed_follow_on_with_explicit_runtime_limits",
-      "assessment": "Records bounded external research, source citations and literal agreement without broader runtime or task-completion claims. T05-B/R7.1 follow-on: Records the bounded specialist research and temporal steering increments, additive migration 48 and the user-directed Syn release deferral. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates.",
+      "assessment": "Records bounded external research, source citations and literal agreement without broader runtime or task-completion claims. T05-B/R7.1 follow-on: Records the bounded specialist research and temporal steering increments, additive migration 48 and the user-directed Syn release deferral. Current-source review retains historical qualification limits and the separately recorded R7.2/R7.3/native Windows rollout gates. PixelCue follow-on: documents the optional specialised media tool and its independent installation/qualification boundary; preview identity advances to 0.5.0.dev16.",
       "narrative": [
         {
-          "locator": "line:1-194",
-          "sha256": "77f1357d417307fb4e4d0875aca5b639f0588dfbb0563fcafa49d1f9a477c3f6",
+          "locator": "line:1-201",
+          "sha256": "5b82f46034fc41e176179710e2bb4b6237fa856bffba0cd5f403edbe8e80cc1d",
+          "excerpt": "# potbot\n\nThe optional [PixelCue tool](docs/pixelcue-tool.md) adds bounded local image and\nvideo analysis through the existing supervised tool Cog: object detec",
           "families": [
             "durable",
             "evaluation",
             "frontend",
             "identity",
+            "models",
             "reasoning",
-            "research"
-          ],
-          "excerpt": "# potbot\n\nAn evidence-driven, multi-model coding agent, built in stages from the architecture\nand implementation plan in `docs/`.\n\nFor the current delivery orde"
+            "research",
+            "tool-schema"
+          ]
         },
         {
-          "locator": "line:195-271",
+          "locator": "line:202-278",
           "sha256": "394b8c050a40ba5cdbc86900df8b70b04e7543e6796d86b8b1bb5c1057c1c8d6",
           "families": [
             "durable",
@@ -5945,7 +5967,7 @@
           "excerpt": "## Install and check\n\n**Just run `start.bat`, `.\\start.ps1`, or `bash ./start.sh` with no arguments.**\nThe default entry point sets up and launches the backend,"
         },
         {
-          "locator": "line:272-287",
+          "locator": "line:279-294",
           "sha256": "5689f55fe90f94c53113dd0b1bbda33d5657a0f6c1c93e4a556178e094a78299",
           "families": [
             "durable",
@@ -5958,7 +5980,7 @@
           "excerpt": "## Work with tasks\n\nProvision the application schema, a workspace, and a restricted database principal\nwith `potbot admin`. Then submit and inspect tasks throug"
         },
         {
-          "locator": "line:288-306",
+          "locator": "line:295-313",
           "sha256": "4036e8789e575a45036555c7457f49d9bea65e48b66bb2118f94f4c27b4e27f0",
           "families": [
             "durable",
@@ -5971,7 +5993,7 @@
           "excerpt": "## First verified patch\n\nThe [Phase 4 guide](docs/phase-4.md) documents the full scripted fixture, its\ncheckpoint/resume commands, exported manifest, and accept"
         },
         {
-          "locator": "line:307-327",
+          "locator": "line:314-334",
           "sha256": "4133870806c1292b693f0a1dc54d1b0e284520d91d8f995e4f8e1799f71e12a3",
           "families": [
             "durable",
@@ -5984,7 +6006,7 @@
           "excerpt": "## Model foundation\n\nThe [Phase 5 guide](docs/phase-5.md) describes model proposal admission, exact\nrecipient contexts, separately budgeted schema repair, resta"
         },
         {
-          "locator": "line:328-350",
+          "locator": "line:335-357",
           "sha256": "f6eb0f8ce0d9553bd770e3aa012be90acdf0ba12894b7c4f0668ac37c6dcba85",
           "families": [
             "durable",
@@ -5997,7 +6019,7 @@
           "excerpt": "## OpenAI-compatible client API and persistent service\n\nThe [OpenAI compatibility and persistent service guide](docs/openai-compatible-service.md)\nadds `/v1/cha"
         },
         {
-          "locator": "line:351-363",
+          "locator": "line:358-370",
           "sha256": "fab7a8976917a66451ea5cd7555038ba69463d2a9821c64a3d9a668f00baea42",
           "families": [
             "durable",
@@ -6010,7 +6032,7 @@
           "excerpt": "## Model-aware prompting and R3/R4 reasoning\n\nThe [R3/R4 integration guide](docs/implementation/18-model-prompts-r3-r4.md)\nadds a versioned, model-aware prompt "
         },
         {
-          "locator": "line:364-384",
+          "locator": "line:371-391",
           "sha256": "96ad153d1dfaad68b6947f9cc63ac4b79f9bcea33512fd344719df58447d3cfb",
           "families": [
             "durable",
@@ -6023,7 +6045,7 @@
           "excerpt": "## Hosted models, API and job dashboard\n\nThe [hosted jobs guide](docs/hosted-jobs.md) covers credentials, operator policy,\ntask startup, accounting and this inc"
         },
         {
-          "locator": "line:385-393",
+          "locator": "line:392-400",
           "sha256": "f9d2022de0886f2ecdcf84e5e40516d96e024979eb788867c36955d4d064356c",
           "families": [
             "durable",
@@ -6036,7 +6058,7 @@
           "excerpt": "## DanceFlow KeywordMoves workflow acceptance\n\nThe [pinned KeywordMoves workflow acceptance guide](docs/implementation/22-danceflow-keywordmoves-workflow-accept"
         },
         {
-          "locator": "line:394-421",
+          "locator": "line:401-428",
           "sha256": "28ea5a68406567ec887ab4bdd1c37858f30910ac26eec99967a054b251c26d6b",
           "families": [
             "durable",
@@ -6049,7 +6071,7 @@
           "excerpt": "## Repository capture and controlled execution\n\nThe [Phase 3 guide](docs/phase-3.md) describes its original migration history and the complete\n`prepare`, `run`,"
         },
         {
-          "locator": "line:422-455",
+          "locator": "line:429-462",
           "sha256": "9688c327140530736187000f2da4c9c4cc01789f4f1aa49e0ab76a9130548057",
           "families": [
             "durable",
@@ -6062,7 +6084,7 @@
           "excerpt": "## Standard local vector embeddings\n\nThe reference integration uses **Qwen/Qwen3-Embedding-0.6B**, pinned to revision\n`97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3`"
         },
         {
-          "locator": "line:456-477",
+          "locator": "line:463-484",
           "sha256": "10c9775a16cb363018ded062b71dd42564189ff410d9144aacfe9c168151f9b5",
           "families": [
             "durable",
@@ -6075,7 +6097,7 @@
           "excerpt": "## SYN semantic catalogs and exact inventories\n\nImport public SYN snapshots, resolve scoped references, enumerate instances by\ndeclared type, and rank selected "
         },
         {
-          "locator": "line:478-501",
+          "locator": "line:485-508",
           "sha256": "28b05a6ab181b79140a25d2968a553d6bb3c9885d8b5775b671076ba6f372449",
           "families": [
             "durable",
@@ -6088,7 +6110,7 @@
           "excerpt": "### Expanded hierarchy and native primitive placement\n\nThe opt-in [Potbot hierarchy](docs/type-hierarchy-and-syn-primitives.md) adds the\n80 APS 0.2 declarations"
         },
         {
-          "locator": "line:502-515",
+          "locator": "line:509-522",
           "sha256": "c135f44d97c795b7faf116038158946f2ae2fe6321dba49b9de062187114e376",
           "families": [
             "durable",
@@ -6101,7 +6123,7 @@
           "excerpt": "## Semantic types and release identities\n\nThe committed [vocabulary package](vocab/) supplies 45 data types, including six\nabstract families, plus entity types,"
         },
         {
-          "locator": "line:516-523",
+          "locator": "line:523-530",
           "sha256": "d383330052d8a2c31d599506dcf027476ab5741cc5b449c06a32763bb06023e6",
           "families": [
             "durable",
@@ -6114,7 +6136,7 @@
           "excerpt": "## Object memory implementation plan\n\nThe [per-object memory implementation plan](docs/object-memory/implementation-plan.md)\nspecifies a separate memory graph f"
         },
         {
-          "locator": "line:524-537",
+          "locator": "line:531-544",
           "sha256": "b6e2a9c05e76b61c49a7a8dc33fd6af1a3dd21ee02892d3ad0e2ff482d585d29",
           "families": [
             "durable",
@@ -6127,7 +6149,7 @@
           "excerpt": "## Package boundaries\n\n| Package | Responsibility |\n| --- | --- |\n| `potbot.domain` | Immutable contracts, provenance, configuration, identity, error taxonomy |"
         },
         {
-          "locator": "line:538-547",
+          "locator": "line:545-554",
           "sha256": "39865c858d7b046cd4d93a5d3853113f664f3ac62b8f905400ab8d77f54d9214",
           "families": [
             "durable",
@@ -6140,7 +6162,7 @@
           "excerpt": "## Reuse before implementation\n\nThe standard reasoning policy requires discovery of existing libraries, tools, and\ninternal workflows before proposing new code."
         },
         {
-          "locator": "line:548-560",
+          "locator": "line:555-567",
           "sha256": "730b080416e9551dc00d2bf5ebf2ab7bed609895618fa82c3e9256717376f0d6",
           "families": [
             "durable",
@@ -6153,7 +6175,7 @@
           "excerpt": "## Live steering and evidence-ranked reasoning (R2.5/R5)\n\nThe `potbot` virtual model now evaluates queued user steering prompts at\nreasoning checkpoints and ran"
         },
         {
-          "locator": "line:561-568",
+          "locator": "line:568-575",
           "sha256": "5fa95998ef21805fb03a8636768bda09e5bfb2afec8acfd6bac63502c83be5fc",
           "families": [
             "durable",
@@ -6166,7 +6188,7 @@
           "excerpt": "### PostgreSQL-backed reasoning and upstream OpenAI/Gemini models\n\nThe [reasoning runtime/provider guide](docs/implementation/20-postgres-reasoning-and-model-pr"
         },
         {
-          "locator": "line:569-588",
+          "locator": "line:576-595",
           "sha256": "cd32e5febea707573895f57831105edf5ecfe8aaf31fa720ca9ef013d275556a",
           "families": [
             "durable",
@@ -6179,7 +6201,7 @@
           "excerpt": "## Model-role benchmarks and agentic graph monitoring\n\nPotbot includes an **opt-in**, source-reproducible benchmark runner for comparing\nsmall local models and "
         },
         {
-          "locator": "line:589-610",
+          "locator": "line:596-617",
           "sha256": "f2da1273708cc6fb7522280c8d6764c1aebac6274b58bbc317d9d5d8721845f5",
           "families": [
             "durable",
@@ -6192,7 +6214,7 @@
           "excerpt": "## Atomic task planning and small specialist models (R7 foundation)\n\nPotbot also supplies a bounded atomic-operation taxonomy, non-executing recursive\nDAG valid"
         },
         {
-          "locator": "line:611-630",
+          "locator": "line:618-637",
           "sha256": "bd90755f628c0be09c13ec76abd84d62275d698f99e8d97352c2a12ce7e32d14",
           "families": [
             "durable",
@@ -82831,6 +82853,80 @@
       "narrative": []
     },
     {
+      "path": "docs/pixelcue-tool.md",
+      "sha256": "aad5d4909fd27e8c7fd27d5f139d7f0686869c329e8c336f55d8f485d81bd72a",
+      "families": [
+        "tool-schema",
+        "models",
+        "sandbox"
+      ],
+      "disposition": "reviewed_optional_profile_with_runtime_limits",
+      "assessment": "Optional PixelCue sealed ports, confined media, cached CPU models, bounded observations and existing monitored installation. Fixture/interface evidence is distinct from production native Syn/image acceptance.",
+      "narrative": [
+        {
+          "locator": "line:1-12",
+          "sha256": "676649d1660ebeb0982aebfbdbf4b2434eb329afb2eed08fec0d8e0870dfe6cd",
+          "excerpt": "# PixelCue image and video tool\n\nPotbot can install an optional PixelCue operation through the existing native\n`tool` Cog. It uses the existing supervisor, admi",
+          "families": [
+            "tool-schema",
+            "models",
+            "sandbox"
+          ]
+        },
+        {
+          "locator": "line:13-57",
+          "sha256": "eee4ac73b0aba235dd69b3bc077e8a75571034656390ce37a546e967570afec1",
+          "excerpt": "## Install with the existing operator boundary\n\n1. Build/review a qualified Linux worker image with Python 3.13 and PixelCue's\n   media-analysis API. Potbot's c",
+          "families": [
+            "tool-schema",
+            "models",
+            "sandbox"
+          ]
+        },
+        {
+          "locator": "line:58-76",
+          "sha256": "5ba1d56c9c55a5ccd41ca5d60574f1a52a4990ff5833989e0996bb7cd2abda98",
+          "excerpt": "## Agent request\n\n```json\n{\"path\":\"media/clip.mp4\",\"models\":[\"rtdetr\",\"ocr\"],\"max_frames\":3,\"max_edge\":768}\n```\n\nAll four fields are explicit. `models: []` requ",
+          "families": [
+            "tool-schema",
+            "models",
+            "sandbox"
+          ]
+        },
+        {
+          "locator": "line:77-101",
+          "sha256": "c340440f698dd4a9cd75b06552df8a32eb26e741a8e8a4d69474b01d2d134ed4",
+          "excerpt": "## Result and interpretation\n\nThe typed `potbot.pixelcue-analysis/1` result contains source name/hash/size,\nPixelCue version, completed/partial state, explicit ",
+          "families": [
+            "tool-schema",
+            "models",
+            "sandbox"
+          ]
+        },
+        {
+          "locator": "line:102-125",
+          "sha256": "a2d0c442c761827f6203eafe88efef1d16d63c64f23e9931b4e1d71cbc15e907",
+          "excerpt": "## Verify without a database or pretrained downloads\n\n```sh\npython -m pytest -q tests/unit/test_pixelcue_cog.py tests/unit/test_pixelcue_admission.py\n```\n\nThe t",
+          "families": [
+            "tool-schema",
+            "models",
+            "sandbox"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/implementation/media/pixelcue-tool-contract.svg",
+      "sha256": "d36b6c6f26a6cf5565b2d1a4e9b90eeedbf9c8b434a16f2bfeb836e4b45644ec",
+      "families": [
+        "tool-schema",
+        "sandbox"
+      ],
+      "disposition": "reviewed_optional_profile_with_runtime_limits",
+      "assessment": "Generated contract illustration; asset identity only, not installed execution evidence.",
+      "narrative": []
+    },
+    {
       "path": "docs/images/live-configuration.png",
       "sha256": "51da2b69293e20624408ed8940492f92cc62450c626e508c597c17321a69d0c2",
       "families": [
@@ -92536,6 +92632,27 @@
           "No skipped native/database acceptance; labelled Qt fixture captures"
         ],
         "qualification_limit": "Only an actual inspected current-head run establishes execution. These fixtures do not qualify an installed production host, model or remote node."
+      },
+      {
+        "path": ".github/workflows/pixelcue-tool.yml",
+        "sha256": "7effd7ddb4dd25abcd5d6ea71ff48db4222cc85f5387ba4f0aa712f2e55ae1db",
+        "name": "PixelCue tool contracts and installed media adapter",
+        "state": "active",
+        "scope": [
+          "Sealed PixelCue ports and existing execution contracts on Windows/Linux",
+          "Existing Linux sandbox worker contracts",
+          "Exact published PixelCue wheel digest, actual OCR/video worker process, missing-model and confined-path cases"
+        ],
+        "latest_inspected_run": {
+          "id": 45517415480,
+          "html_url": "https://github.com/Synsphere/Potbot/actions/runs/45517415480",
+          "head_sha": "c234e96423cc0de2e7fc7203f9c8f44d52d11cf9",
+          "status": "completed",
+          "conclusion": "failure",
+          "event": "pull_request"
+        },
+        "at_reviewed_base": false,
+        "qualification_limit": "Windows/Linux contract jobs passed at the recorded head; the installed-adapter job could not resolve the newly published version through its index. The following source pins the verified official wheel URL and SHA-256; its new execution result is not inferred from this source record. Worker-process adapter acceptance does not establish native Syn/image/production host qualification or pretrained semantic accuracy."
       },
       {
         "path": ".github/workflows/live-controls.yml",

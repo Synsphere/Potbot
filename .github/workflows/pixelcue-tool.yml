@@ -1,0 +1,75 @@
+name: PixelCue tool contracts and installed media adapter
+
+on:
+  pull_request:
+    paths:
+      - 'src/potbot/tools/pixelcue_*.py'
+      - 'src/potbot/cogs/execution.py'
+      - 'tests/**/test_pixelcue*.py'
+      - '.github/workflows/pixelcue-tool.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/potbot/tools/pixelcue_*.py'
+      - 'src/potbot/cogs/execution.py'
+      - 'tests/**/test_pixelcue*.py'
+      - '.github/workflows/pixelcue-tool.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest jsonschema
+      - run: python -m pytest -q tests/unit/test_pixelcue_cog.py tests/unit/test_pixelcue_admission.py tests/unit/test_execution_provenance.py
+      - name: Verify existing Linux sandbox worker contracts
+        if: runner.os == 'Linux'
+        run: python -m pytest -q tests/unit/test_sandbox_cog_worker.py
+      - name: Record completion assessment
+        if: always()
+        shell: bash
+        run: |
+          echo 'Blogworthiness: FAIL. Routine contract fixture replay; evidence is this CI job.' >> "$GITHUB_STEP_SUMMARY"
+
+  installed-adapter:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: src
+      POTBOT_TEST_PIXELCUE: '1'
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+      - run: python -m pip install pytest jsonschema pillow numpy av pytesseract
+      - name: Install exact published PixelCue wheel and verify its digest
+        run: |
+          python -m pip install --no-deps 'https://files.pythonhosted.org/packages/98/c8/c3e13d180445d9f12728fdbe933892819b1b793933cb5c732a5023ab06d8/pixelcue-0.9.3-py3-none-any.whl#sha256=659d3458bced540b7d436f57e71ad8a43db7f0c35d9318c3bba59a96340199b9'
+      - name: Actual worker process, OCR, video, unavailable model and confinement
+        run: python -m pytest -q tests/integration/test_pixelcue_media.py --junitxml=artifacts/pixelcue-adapter.xml
+      - name: Record completion assessment
+        if: always()
+        run: |
+          echo 'Blogworthiness: FAIL. Routine installed adapter replay; evidence is this CI job and its JUnit output. Native Syn host qualification is separate.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pixelcue-installed-adapter
+          path: artifacts/pixelcue-adapter.xml

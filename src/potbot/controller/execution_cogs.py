@@ -205,9 +205,35 @@ class ExecutionCogRuntime:
         # The only installed *worker* implementation is an admitted sandbox
         # executable. Legacy HostOperation callbacks cannot dispatch model work.
         require_isolated_work(operations)
+        from potbot.tools.pixelcue_cog import require_pixelcue
+        from potbot.tools.pixelcue_worker import OPERATION as PIXELCUE_OPERATION
+        from potbot.tools.pixelcue_worker import REQUEST as PIXELCUE_REQUEST
+        from potbot.tools.pixelcue_worker import RESULT as PIXELCUE_RESULT
         from potbot.tools.python_profile_cog import require_python_profile
         from potbot.tools.python_profile_worker import REQUEST as PROFILE_REQUEST
 
+        pixelcue_operations = tuple(
+            op
+            for op in operations
+            if op.binding.operation_ref == PIXELCUE_OPERATION
+            or op.binding.input_type_ref == PIXELCUE_REQUEST
+            or op.binding.output_type_ref == PIXELCUE_RESULT
+        )
+        if pixelcue_operations:
+            if len(operations) != 1 or any(
+                item is not None
+                for item in (
+                    artifact_ranges,
+                    artifact_uploads,
+                    browser_service,
+                    receipts,
+                    rest_read,
+                    graphql_read,
+                    grpc_read,
+                )
+            ):
+                raise ScopeDeniedError("PixelCue requires its dedicated sealed profile")
+            require_pixelcue(pixelcue_operations[0])
         profile_operations = tuple(
             op
             for op in operations
@@ -360,6 +386,7 @@ class ExecutionCogRuntime:
                 graphql_read=bool(graphql_ops),
                 grpc_read=bool(grpc_ops),
                 python_profile=bool(profile_operations),
+                pixelcue=bool(pixelcue_operations),
             )
             from functools import partial
 
@@ -370,6 +397,7 @@ class ExecutionCogRuntime:
                 graphql_read=bool(graphql_ops),
                 grpc_read=bool(grpc_ops),
                 python_profile=bool(profile_operations),
+                pixelcue=bool(pixelcue_operations),
             )
             self._direct_operations = {}
         with database.transaction(actor) as connection:
