@@ -302,15 +302,17 @@ def test_drain_fences_claims_then_waits_for_jobs_and_both_kinds_of_holds(app_env
     assert observed["requests"][0]["state"] == "accepted"
     jobs.finish(app_env.context, lease, "failed", error_code="model_unavailable")
     supervisor.tick()
-    assert read_nodes(app_env, nodes)["nodes"][0]["phase"] == "draining"
-    budget.settle(app_env.context, UUID(hold["id"]), {"calls": 0}, "synthetic")
-    supervisor.tick()
-    assert read_nodes(app_env, nodes)["nodes"][0]["unsettled"] == 1
+    waiting = read_nodes(app_env, nodes)["nodes"][0]
+    assert waiting["phase"] == "draining" and waiting["unsettled"] == 1
+    # The existing job terminal trigger owns atomic-hold release. The native
+    # supervisor must still wait for the independently unsettled budget hold.
     with app_env.db.transaction(app_env.context) as connection:
-        connection.execute(
-            "UPDATE atomic_graph_resource_holds SET active=false,released_at=clock_timestamp() WHERE job_id=%s",
+        atomic = connection.execute(
+            "SELECT active,released_at FROM atomic_graph_resource_holds WHERE job_id=%s",
             (lease.job_id,),
-        )
+        ).fetchone()
+    assert not atomic["active"] and atomic["released_at"] is not None
+    budget.settle(app_env.context, UUID(hold["id"]), {"calls": 0}, "synthetic")
     supervisor.tick()
     drained = read_nodes(app_env, nodes)
     assert (
