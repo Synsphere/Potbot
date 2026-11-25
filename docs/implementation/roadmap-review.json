@@ -1717,13 +1717,13 @@
         {
           "path": "src/potbot/controller/execution_cogs.py",
           "symbol": "HostOperation",
-          "sha256": "c79ea438a44f7562e2c8ef39736c939574e8d73c853c8ae96e281adbfead5c5a",
+          "sha256": "521fc81c5083cf1d8292ff3bd41994fa9f854637331ca0e130a9504aaa4a6780",
           "basis": "U01-A queue transport source or test definition. Exact-revision execution evidence is tracked in CI."
         },
         {
           "path": "src/potbot/tools/pixelcue_cog.py",
           "symbol": "install_pixelcue",
-          "sha256": "081840a42ccb7e084d2d619a981d4fb1c427e5788d6c0c01810c1abaff050215",
+          "sha256": "7c1af00ddecbc997b9c5e4951784ad568daba066820991875deb9f5219388ea1",
           "basis": "PixelCue optional sealed profile source/test definition; portable checks do not establish installed native Syn host qualification."
         }
       ],
@@ -1739,6 +1739,12 @@
           "symbol": "test_exact_compact_output_matches_sealed_schema",
           "sha256": "9afce53fb9882a4528ab668e1500583527a5b0e8f0ede60b59e4de1276307793",
           "basis": "PixelCue optional sealed profile source/test definition; portable checks do not establish installed native Syn host qualification."
+        },
+        {
+          "path": "tests/unit/test_pixelcue_admission.py",
+          "symbol": "test_controller_automatically_selects_and_binds_the_pixelcue_profile",
+          "sha256": "1784f71d649967d6183dbeebaf7b9aa68f6580b773e0b1848f897103b255e3a3",
+          "basis": "Real controller construction with explicit database/artifact/sandbox doubles verifies automatic profile and compiled schema admission; no production identity or native-host qualification."
         }
       ],
       "assessment": "Typed installed Cogs, sealed ports, controller-only grants and distinct transformation/dispatch/verification receipts are implemented for selected core operations. Every adapter and specialist still needs its own admitted binding. The optional PixelCue profile supplies specialised local media analysis through the existing tool Cog; installed worker/image/Syn qualification remains separate.",
@@ -5623,7 +5629,7 @@
         {
           "path": "src/potbot/controller/execution_cogs.py",
           "symbol": "ExecutionCogRuntime",
-          "sha256": "c79ea438a44f7562e2c8ef39736c939574e8d73c853c8ae96e281adbfead5c5a",
+          "sha256": "521fc81c5083cf1d8292ff3bd41994fa9f854637331ca0e130a9504aaa4a6780",
           "basis": "U01-A queue transport source or test definition. Exact-revision execution evidence is tracked in CI."
         },
         {
@@ -82848,7 +82854,7 @@
     },
     {
       "path": "docs/pixelcue-tool.md",
-      "sha256": "5fdf2930ff561cfc3fe3a5906d3e1d917bd9796e8c45ae5de39cba02f95a3fd1",
+      "sha256": "aad5d4909fd27e8c7fd27d5f139d7f0686869c329e8c336f55d8f485d81bd72a",
       "families": [
         "tool-schema",
         "models",
@@ -82868,8 +82874,8 @@
           ]
         },
         {
-          "locator": "line:13-50",
-          "sha256": "9fc59dfc006582b53c815796efad0eb7ff8cc8eead8cea68df564a271940e350",
+          "locator": "line:13-57",
+          "sha256": "eee4ac73b0aba235dd69b3bc077e8a75571034656390ce37a546e967570afec1",
           "excerpt": "## Install with the existing operator boundary\n\n1. Build/review a qualified Linux worker image with Python 3.13 and PixelCue's\n   media-analysis API. Potbot's c",
           "families": [
             "tool-schema",
@@ -82878,7 +82884,7 @@
           ]
         },
         {
-          "locator": "line:51-69",
+          "locator": "line:58-76",
           "sha256": "5ba1d56c9c55a5ccd41ca5d60574f1a52a4990ff5833989e0996bb7cd2abda98",
           "excerpt": "## Agent request\n\n```json\n{\"path\":\"media/clip.mp4\",\"models\":[\"rtdetr\",\"ocr\"],\"max_frames\":3,\"max_edge\":768}\n```\n\nAll four fields are explicit. `models: []` requ",
           "families": [
@@ -82888,7 +82894,7 @@
           ]
         },
         {
-          "locator": "line:70-94",
+          "locator": "line:77-101",
           "sha256": "c340440f698dd4a9cd75b06552df8a32eb26e741a8e8a4d69474b01d2d134ed4",
           "excerpt": "## Result and interpretation\n\nThe typed `potbot.pixelcue-analysis/1` result contains source name/hash/size,\nPixelCue version, completed/partial state, explicit ",
           "families": [
@@ -82898,9 +82904,9 @@
           ]
         },
         {
-          "locator": "line:95-118",
-          "sha256": "57ef748155f29783cc69aee0b318a9fc1a7ba1ed79448d1c154521f83dab9560",
-          "excerpt": "## Verify without a database or pretrained downloads\n\n```sh\npython -m pytest -q tests/unit/test_pixelcue_cog.py\n```\n\nThe tests check the optional sealed schema,",
+          "locator": "line:102-125",
+          "sha256": "a2d0c442c761827f6203eafe88efef1d16d63c64f23e9931b4e1d71cbc15e907",
+          "excerpt": "## Verify without a database or pretrained downloads\n\n```sh\npython -m pytest -q tests/unit/test_pixelcue_cog.py tests/unit/test_pixelcue_admission.py\n```\n\nThe t",
           "families": [
             "tool-schema",
             "models",
@@ -92534,7 +92540,7 @@
       },
       {
         "path": ".github/workflows/pixelcue-tool.yml",
-        "sha256": "4a7aaf8f3c1355ec1a3daf3b37a82a250977b53d6afb51a1c6fbb409ca9e7498",
+        "sha256": "7effd7ddb4dd25abcd5d6ea71ff48db4222cc85f5387ba4f0aa712f2e55ae1db",
         "name": "PixelCue tool contracts and installed media adapter",
         "state": "active",
         "scope": [

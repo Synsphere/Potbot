@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install pytest jsonschema
-      - run: python -m pytest -q tests/unit/test_pixelcue_cog.py tests/unit/test_execution_provenance.py
+      - run: python -m pytest -q tests/unit/test_pixelcue_cog.py tests/unit/test_pixelcue_admission.py tests/unit/test_execution_provenance.py
       - name: Verify existing Linux sandbox worker contracts
         if: runner.os == 'Linux'
         run: python -m pytest -q tests/unit/test_sandbox_cog_worker.py

@@ -33,6 +33,13 @@ it is not evidence of installation or a native production run.*
    `syn://type/potbot-pixelcue-result-v1`. Use the existing task/controller route
    and the existing `tool` work Cog, rather than invoking a Python callback.
 
+`ExecutionCogRuntime` recognises the exact installed PixelCue operation and
+selects `BoundCogRegistry.provenance(pixelcue=True)` plus its matching Ember
+bundle automatically. The canonical semantic catalogue whitelists both ports
+and validates the confined request before dispatch. Worker arguments, semantic
+ports and effect class must match the installed binding. This dedicated profile
+cannot be mixed with a different transport or controller-service profile.
+
 ```python
 from potbot.cogs.execution import execution_cog_snapshot
 from potbot.tools.pixelcue_cog import install_pixelcue
@@ -95,7 +102,7 @@ biometric inference, rights decision or action tracking is added.
 ## Verify without a database or pretrained downloads
 
 ```sh
-python -m pytest -q tests/unit/test_pixelcue_cog.py
+python -m pytest -q tests/unit/test_pixelcue_cog.py tests/unit/test_pixelcue_admission.py
 ```
 
 The tests check the optional sealed schema, installed binding, confined media

@@ -130,3 +130,12 @@ def install_pixelcue(
         argv,
         checksum,
     )
+
+
+def require_pixelcue(operation: SandboxedCogOperation) -> None:
+    if len(operation.argv) != 2 or operation != install_pixelcue(
+        operation.executable_sha256,
+        operation.binding.policy,
+        models_dir=operation.argv[1],
+    ):
+        raise ScopeDeniedError("PixelCue requires its exact installed worker binding")
