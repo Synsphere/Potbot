@@ -41,7 +41,8 @@ jobs:
       - name: Record completion assessment
         if: always()
         shell: bash
-        run: echo 'Blogworthiness: FAIL. Routine contract fixture replay; evidence is this CI job.' >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo 'Blogworthiness: FAIL. Routine contract fixture replay; evidence is this CI job.' >> "$GITHUB_STEP_SUMMARY"
 
   installed-adapter:
     runs-on: ubuntu-24.04
@@ -63,7 +64,8 @@ jobs:
         run: python -m pytest -q tests/integration/test_pixelcue_media.py --junitxml=artifacts/pixelcue-adapter.xml
       - name: Record completion assessment
         if: always()
-        run: echo 'Blogworthiness: FAIL. Routine installed adapter replay; evidence is this CI job and its JUnit output. Native Syn host qualification is separate.' >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo 'Blogworthiness: FAIL. Routine installed adapter replay; evidence is this CI job and its JUnit output. Native Syn host qualification is separate.' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
