@@ -1,5 +1,12 @@
 # potbot
 
+The optional [PixelCue tool](docs/pixelcue-tool.md) adds bounded local image and
+video analysis through the existing supervised tool Cog: object detection,
+whole-image categorisation, document layout and OCR, with source hashes,
+decoded frame times, model status and explicit result truncation. Its sealed
+profile is opt-in, uses cached models and preserves native installation and
+host-qualification gates.
+
 An evidence-driven, multi-model coding agent, built in stages from the architecture
 and implementation plan in `docs/`.
 
