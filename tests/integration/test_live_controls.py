@@ -28,7 +28,7 @@ from potbot.domain.errors import (
     ScopeDeniedError,
     StateMismatchError,
 )
-from potbot.domain.live_controls import NODE_OPERATION, worker_identity
+from potbot.domain.live_controls import NODE_OPERATION, proof, worker_identity
 from potbot.domain.serialization import content_hash
 from potbot.models.hosted_policy import HostedPolicy
 from potbot.persistence.database import admin_connection
@@ -368,6 +368,32 @@ def test_protected_receipts_and_claim_trigger_cannot_be_forged(app_env, managed)
         "review": review,
         "proof": "0" * 64,
     }
+    member = replace(app_env.other_context, workspace_id=app_env.context.workspace_id)
+    with admin_connection(app_env.admin_dsn, app_env.schema) as connection:
+        connection.execute(
+            "INSERT INTO workspace_memberships(workspace_id,principal_id) VALUES(%s,%s)",
+            (member.workspace_id, member.principal_id),
+        )
+    # Even possession of the setup key cannot let a different restricted
+    # principal manufacture a journal row claiming the native owner's identity.
+    signed = {
+        **forged,
+        "proof": proof(app_env.context.workspace_id, app_env.context.principal_id, review, SETUP),
+    }
+    with pytest.raises(ScopeDeniedError):
+        with app_env.other_db.transaction(member) as connection:
+            connection.execute(
+                "INSERT INTO command_results(workspace_id,id,principal_id,operation,idempotency_key,request_hash,result) VALUES(%s,%s,%s,%s,%s,%s,%s)",
+                (
+                    app_env.context.workspace_id,
+                    uuid4(),
+                    app_env.context.principal_id,
+                    NODE_OPERATION,
+                    review["requestId"],
+                    content_hash(review),
+                    Jsonb(signed),
+                ),
+            )
     with app_env.db.transaction(app_env.context) as connection:
         connection.execute(
             "INSERT INTO command_results(workspace_id,id,principal_id,operation,idempotency_key,request_hash,result) VALUES(%s,%s,%s,%s,%s,%s,%s)",

@@ -40,6 +40,11 @@ MIGRATION_STATEMENTS = (
         AND EXISTS(SELECT 1 FROM remote_workspace_owners o
             WHERE o.workspace_id=workspace_configuration_revisions.workspace_id
             AND o.principal_id=workspace_configuration_revisions.principal_id))""",
+    """CREATE POLICY live_review_principal ON command_results AS RESTRICTIVE
+        FOR INSERT WITH CHECK (
+            operation NOT IN ('save_live_configuration','node_service_control/v1')
+            OR principal_id=NULLIF(pg_catalog.current_setting('potbot.principal_id',true),'')::uuid
+        )""",
     """CREATE TABLE node_runtime_controls (
         workspace_id uuid NOT NULL,
         node_id uuid NOT NULL,
